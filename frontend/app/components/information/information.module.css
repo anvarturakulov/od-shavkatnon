@@ -1,0 +1,82 @@
+
+.infoBox{
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: center;
+    gap: 5px;
+}
+
+.dataBox{
+    display: grid;
+    grid-template-columns: 5fr 1fr;
+    gap: 10px
+}
+
+.TMZ{
+    border: 0.6px dotted var(--black-300);
+    padding: 20px 10px;
+}
+
+.boxTMZ{
+    display: grid;
+    grid-template-columns: 0.5fr 4fr 1fr 1fr 1fr auto;
+    gap: 10px;
+    align-items: center;
+    text-align: center;
+}
+
+.boxTMZwithWorkers {
+    display: grid;
+    grid-template-columns: 4fr 1fr 1fr 1fr auto;
+    gap: 10px;
+    align-items: center;
+    text-align: center;
+}
+
+.input {
+    display: inline-block;
+    padding: 10px 15px;
+    font-size: 16px;
+    line-height: 1.2;
+    margin: 10px 0;
+    width: 100%;
+    border: 0.6px dotted var(--black-300);
+}
+
+.button{
+    display: inline-block;
+}
+
+.boxBtn{
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 10px;
+    margin-top: 20px;
+    justify-content: left;
+}
+
+.btn{
+    font-size: 16px;
+    text-align: center;
+    padding: 10px;
+    width: 40px;
+    color: red;
+    font-weight: 700;
+}
+
+.docBox{
+    border: 1px dotted var(--black-300);
+    background-color: #eff5e3;
+    background-color: #EFEFEF;
+    padding: 15px 10px;
+    box-shadow: 5px 3px 11px -3px rgba(0, 0, 0, 0.36);
+}
+
+.partnersBox{
+    margin: 5px 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+}
+
+

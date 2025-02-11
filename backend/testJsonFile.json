@@ -1,0 +1,932 @@
+[
+  {
+    "reportType": "FINANCIAL",
+    "values": [
+      {
+        "innerReportType": "outZP",
+        "total": 0,
+        "innerValues": []
+      },
+      {
+        "innerReportType": "outPartner",
+        "total": 0,
+        "innerValues": []
+      },
+      {
+        "innerReportType": "outFounder",
+        "total": 0,
+        "innerValues": []
+      },
+      {
+        "innerReportType": "outCharge",
+        "total": 0,
+        "innerValues": []
+      },
+      {
+        "innerReportType": "incomeSale",
+        "total": 0,
+        "innerValues": []
+      },
+      {
+        "innerReportType": "incomeOther",
+        "total": 0,
+        "innerValues": []
+      }
+    ]
+  },
+  {
+    "reportType": "FOYDA",
+    "values": [
+      {
+        "section": "Чашма ",
+        "sectionId": "659ce07f523a48fdeb6ad8c3",
+        "productionAllDocsCount": 0,
+        "productionDocsCount": 0,
+        "productionCount": 0,
+        "saleCountWithOutMove": 0,
+        "countDeleviry": 0,
+        "saleWithMove": 0,
+        "zagatovka": 0,
+        "materials": 0,
+        "zp": 0,
+        "addingZp": 0,
+        "services": 0,
+        "addingCurrentPayment": 0,
+        "currentPayment": 0,
+        "currentEarning": 0,
+        "koefCurrentEarningToOneProduct": 0,
+        "addingLongeCharge": 0,
+        "longPayment": 0,
+        "realEarning": 0
+      },
+      {
+        "section": "Халкобод",
+        "sectionId": "659ce094523a48fdeb6ad8c7",
+        "productionAllDocsCount": 0,
+        "productionDocsCount": 0,
+        "productionCount": 0,
+        "saleCountWithOutMove": 0,
+        "countDeleviry": 0,
+        "saleWithMove": 0,
+        "zagatovka": 0,
+        "materials": 0,
+        "zp": 0,
+        "addingZp": 0,
+        "services": 0,
+        "addingCurrentPayment": 0,
+        "currentPayment": 0,
+        "currentEarning": 0,
+        "koefCurrentEarningToOneProduct": 0,
+        "addingLongeCharge": 0,
+        "longPayment": 0,
+        "realEarning": 0
+      },
+      {
+        "section": "Контенер",
+        "sectionId": "659ce0ab523a48fdeb6ad8cb",
+        "productionAllDocsCount": 0,
+        "productionDocsCount": 0,
+        "productionCount": 0,
+        "saleCountWithOutMove": 0,
+        "countDeleviry": 0,
+        "saleWithMove": 0,
+        "zagatovka": 0,
+        "materials": 0,
+        "zp": 0,
+        "addingZp": 0,
+        "services": 0,
+        "addingCurrentPayment": 0,
+        "currentPayment": 0,
+        "currentEarning": 0,
+        "koefCurrentEarningToOneProduct": 0,
+        "addingLongeCharge": 0,
+        "longPayment": 0,
+        "realEarning": 0
+      },
+      {
+        "section": "Буханка цех",
+        "sectionId": "659cf5fc523a48fdeb6ada0c",
+        "productionAllDocsCount": 0,
+        "productionDocsCount": 0,
+        "productionCount": 0,
+        "saleCountWithOutMove": 0,
+        "countDeleviry": 0,
+        "saleWithMove": 0,
+        "zagatovka": 0,
+        "materials": 0,
+        "zp": 0,
+        "addingZp": 0,
+        "services": 0,
+        "addingCurrentPayment": 0,
+        "currentPayment": 0,
+        "currentEarning": 0,
+        "koefCurrentEarningToOneProduct": 0,
+        "addingLongeCharge": 0,
+        "longPayment": 0,
+        "realEarning": 0
+      },
+      {
+        "section": "Самарканд",
+        "sectionId": "65d8ea57c94c5501899dcc39",
+        "productionAllDocsCount": 0,
+        "productionDocsCount": 0,
+        "productionCount": 0,
+        "saleCountWithOutMove": 0,
+        "countDeleviry": 0,
+        "saleWithMove": 0,
+        "zagatovka": 0,
+        "materials": 0,
+        "zp": 0,
+        "addingZp": 0,
+        "services": 0,
+        "addingCurrentPayment": 0,
+        "currentPayment": 0,
+        "currentEarning": 0,
+        "koefCurrentEarningToOneProduct": 0,
+        "addingLongeCharge": 0,
+        "longPayment": 0,
+        "realEarning": 0
+      }
+    ]
+  },
+  {
+    "reportType": "CASH",
+    "values": [
+      {
+        "section": "Чашма ",
+        "startBalans": 999998,
+        "sale": 0,
+        "moveIncome": 0,
+        "allIncome": 0,
+        "charges": 0,
+        "forPartner": 0,
+        "moveOut": 0,
+        "forFounder": 0,
+        "allOut": 0,
+        "endBalans": 999998
+      },
+      {
+        "section": "Халкобод",
+        "startBalans": -478000,
+        "sale": 0,
+        "moveIncome": 0,
+        "allIncome": 0,
+        "charges": 0,
+        "forPartner": 0,
+        "moveOut": 0,
+        "forFounder": 0,
+        "allOut": 0,
+        "endBalans": -478000
+      },
+      {
+        "section": "Буханка цех",
+        "startBalans": -352,
+        "sale": 0,
+        "moveIncome": 0,
+        "allIncome": 0,
+        "charges": 0,
+        "forPartner": 0,
+        "moveOut": 0,
+        "forFounder": 0,
+        "allOut": 0,
+        "endBalans": -352
+      },
+      {
+        "section": "Шавкат директор",
+        "startBalans": -520000,
+        "sale": 0,
+        "moveIncome": 0,
+        "allIncome": 0,
+        "charges": 0,
+        "forPartner": 0,
+        "moveOut": 0,
+        "forFounder": 0,
+        "allOut": 0,
+        "endBalans": -520000
+      }
+    ]
+  },
+  {
+    "reportType": "TAKING",
+    "values": []
+  },
+  {
+    "reportType": "GIVING",
+    "values": []
+  },
+  {
+    "reportType": "SECTION-BUXGALTER",
+    "values": [
+      {
+        "section": "Шавкат директор",
+        "sectionId": "659e113ca0272ef46688a750",
+        "startBalansCountNon": 0,
+        "startBalansCountBux": 0,
+        "prodCountNon": 0,
+        "prodCountBux": 0,
+        "moveIncomeCountNon": 0,
+        "moveIncomeCountBux": 0,
+        "saleCountNon": 0,
+        "saleCountBux": 0,
+        "maydaSavdoCount": 0,
+        "brakCountNon": 0,
+        "brakCountBux": 0,
+        "moveOutNon": 0,
+        "moveOutBux": 0,
+        "endBalansCountNon": 0,
+        "endBlanasCountBux": 0,
+        "startBalansSumma": -520000,
+        "incomeFromSaleSumma": 0,
+        "incomeFromMoveSumma": 0,
+        "outFromMoveSumma": 0,
+        "chargesSumma": 0,
+        "endBalansSumma": -520000
+      },
+      {
+        "section": "Хабибулла Ака гл. бух",
+        "sectionId": "65d877b707d829e2595d11c0",
+        "startBalansCountNon": 0,
+        "startBalansCountBux": 0,
+        "prodCountNon": 0,
+        "prodCountBux": 0,
+        "moveIncomeCountNon": 0,
+        "moveIncomeCountBux": 0,
+        "saleCountNon": 0,
+        "saleCountBux": 0,
+        "maydaSavdoCount": 0,
+        "brakCountNon": 0,
+        "brakCountBux": 0,
+        "moveOutNon": 0,
+        "moveOutBux": 0,
+        "endBalansCountNon": 0,
+        "endBlanasCountBux": 0,
+        "startBalansSumma": 0,
+        "incomeFromSaleSumma": 0,
+        "incomeFromMoveSumma": 0,
+        "outFromMoveSumma": 0,
+        "chargesSumma": 0,
+        "endBalansSumma": 0
+      },
+      {
+        "section": "Асосий склад - Ортик ака",
+        "sectionId": "65e169e3e15447c9598f6221",
+        "startBalansCountNon": 0,
+        "startBalansCountBux": 0,
+        "prodCountNon": 0,
+        "prodCountBux": 0,
+        "moveIncomeCountNon": 0,
+        "moveIncomeCountBux": 0,
+        "saleCountNon": 0,
+        "saleCountBux": 0,
+        "maydaSavdoCount": 0,
+        "brakCountNon": 0,
+        "brakCountBux": 0,
+        "moveOutNon": 0,
+        "moveOutBux": 0,
+        "endBalansCountNon": 0,
+        "endBlanasCountBux": 0,
+        "startBalansSumma": 0,
+        "incomeFromSaleSumma": 0,
+        "incomeFromMoveSumma": 0,
+        "outFromMoveSumma": 0,
+        "chargesSumma": 0,
+        "endBalansSumma": 0
+      }
+    ]
+  },
+  {
+    "reportType": "SECTION-FILIAL",
+    "values": [
+      {
+        "section": "Чашма ",
+        "sectionId": "659ce07f523a48fdeb6ad8c3",
+        "startBalansCountNon": -450,
+        "startBalansCountBux": -501,
+        "prodCountNon": 0,
+        "prodCountBux": 0,
+        "moveIncomeCountNon": 0,
+        "moveIncomeCountBux": 0,
+        "saleCountNon": 0,
+        "saleCountBux": 0,
+        "maydaSavdoCount": 0,
+        "brakCountNon": 0,
+        "brakCountBux": 0,
+        "moveOutNon": 0,
+        "moveOutBux": 0,
+        "endBalansCountNon": -450,
+        "endBlanasCountBux": -501,
+        "startBalansSumma": 999998,
+        "incomeFromSaleSumma": 0,
+        "incomeFromMoveSumma": 0,
+        "outFromMoveSumma": 0,
+        "chargesSumma": 0,
+        "endBalansSumma": 999998
+      },
+      {
+        "section": "Халкобод",
+        "sectionId": "659ce094523a48fdeb6ad8c7",
+        "startBalansCountNon": 0,
+        "startBalansCountBux": 0,
+        "prodCountNon": 0,
+        "prodCountBux": 0,
+        "moveIncomeCountNon": 0,
+        "moveIncomeCountBux": 0,
+        "saleCountNon": 0,
+        "saleCountBux": 0,
+        "maydaSavdoCount": 0,
+        "brakCountNon": 0,
+        "brakCountBux": 0,
+        "moveOutNon": 0,
+        "moveOutBux": 0,
+        "endBalansCountNon": 0,
+        "endBlanasCountBux": 0,
+        "startBalansSumma": -478000,
+        "incomeFromSaleSumma": 0,
+        "incomeFromMoveSumma": 0,
+        "outFromMoveSumma": 0,
+        "chargesSumma": 0,
+        "endBalansSumma": -478000
+      },
+      {
+        "section": "Контенер",
+        "sectionId": "659ce0ab523a48fdeb6ad8cb",
+        "startBalansCountNon": 170,
+        "startBalansCountBux": 0,
+        "prodCountNon": 0,
+        "prodCountBux": 0,
+        "moveIncomeCountNon": 0,
+        "moveIncomeCountBux": 0,
+        "saleCountNon": 0,
+        "saleCountBux": 0,
+        "maydaSavdoCount": 0,
+        "brakCountNon": 0,
+        "brakCountBux": 0,
+        "moveOutNon": 0,
+        "moveOutBux": 0,
+        "endBalansCountNon": 170,
+        "endBlanasCountBux": 0,
+        "startBalansSumma": 0,
+        "incomeFromSaleSumma": 0,
+        "incomeFromMoveSumma": 0,
+        "outFromMoveSumma": 0,
+        "chargesSumma": 0,
+        "endBalansSumma": 0
+      },
+      {
+        "section": "Буханка цех",
+        "sectionId": "659cf5fc523a48fdeb6ada0c",
+        "startBalansCountNon": 0,
+        "startBalansCountBux": 0,
+        "prodCountNon": 0,
+        "prodCountBux": 0,
+        "moveIncomeCountNon": 0,
+        "moveIncomeCountBux": 0,
+        "saleCountNon": 0,
+        "saleCountBux": 0,
+        "maydaSavdoCount": 0,
+        "brakCountNon": 0,
+        "brakCountBux": 0,
+        "moveOutNon": 0,
+        "moveOutBux": 0,
+        "endBalansCountNon": 0,
+        "endBlanasCountBux": 0,
+        "startBalansSumma": -352,
+        "incomeFromSaleSumma": 0,
+        "incomeFromMoveSumma": 0,
+        "outFromMoveSumma": 0,
+        "chargesSumma": 0,
+        "endBalansSumma": -352
+      },
+      {
+        "section": "Самарканд",
+        "sectionId": "65d8ea57c94c5501899dcc39",
+        "startBalansCountNon": 84,
+        "startBalansCountBux": 0,
+        "prodCountNon": 0,
+        "prodCountBux": 0,
+        "moveIncomeCountNon": 0,
+        "moveIncomeCountBux": 0,
+        "saleCountNon": 0,
+        "saleCountBux": 0,
+        "maydaSavdoCount": 0,
+        "brakCountNon": 0,
+        "brakCountBux": 0,
+        "moveOutNon": 0,
+        "moveOutBux": 0,
+        "endBalansCountNon": 84,
+        "endBlanasCountBux": 0,
+        "startBalansSumma": 0,
+        "incomeFromSaleSumma": 0,
+        "incomeFromMoveSumma": 0,
+        "outFromMoveSumma": 0,
+        "chargesSumma": 0,
+        "endBalansSumma": 0
+      }
+    ]
+  },
+  {
+    "reportType": "SECTION-DELIVERY",
+    "values": [
+      {
+        "section": "Комил Доставщик",
+        "sectionId": "65c38dfe84c5b8764b060fb9",
+        "startBalansCountNon": 520,
+        "startBalansCountBux": 0,
+        "prodCountNon": 0,
+        "prodCountBux": 0,
+        "moveIncomeCountNon": 0,
+        "moveIncomeCountBux": 0,
+        "saleCountNon": 0,
+        "saleCountBux": 0,
+        "maydaSavdoCount": 0,
+        "brakCountNon": 0,
+        "brakCountBux": 0,
+        "moveOutNon": 0,
+        "moveOutBux": 0,
+        "endBalansCountNon": 520,
+        "endBlanasCountBux": 0,
+        "startBalansSumma": 0,
+        "incomeFromSaleSumma": 0,
+        "incomeFromMoveSumma": 0,
+        "outFromMoveSumma": 0,
+        "chargesSumma": 0,
+        "endBalansSumma": 0
+      },
+      {
+        "section": "Аббос Доставшик",
+        "sectionId": "65e155c9377f1bc8662b44ec",
+        "startBalansCountNon": 0,
+        "startBalansCountBux": 0,
+        "prodCountNon": 0,
+        "prodCountBux": 0,
+        "moveIncomeCountNon": 0,
+        "moveIncomeCountBux": 0,
+        "saleCountNon": 0,
+        "saleCountBux": 0,
+        "maydaSavdoCount": 0,
+        "brakCountNon": 0,
+        "brakCountBux": 0,
+        "moveOutNon": 0,
+        "moveOutBux": 0,
+        "endBalansCountNon": 0,
+        "endBlanasCountBux": 0,
+        "startBalansSumma": 0,
+        "incomeFromSaleSumma": 0,
+        "incomeFromMoveSumma": 0,
+        "outFromMoveSumma": 0,
+        "chargesSumma": 0,
+        "endBalansSumma": 0
+      },
+      {
+        "section": "Мусо Доставщик",
+        "sectionId": "65e155d7377f1bc8662b44f1",
+        "startBalansCountNon": 0,
+        "startBalansCountBux": 0,
+        "prodCountNon": 0,
+        "prodCountBux": 0,
+        "moveIncomeCountNon": 0,
+        "moveIncomeCountBux": 0,
+        "saleCountNon": 0,
+        "saleCountBux": 0,
+        "maydaSavdoCount": 0,
+        "brakCountNon": 0,
+        "brakCountBux": 0,
+        "moveOutNon": 0,
+        "moveOutBux": 0,
+        "endBalansCountNon": 0,
+        "endBlanasCountBux": 0,
+        "startBalansSumma": 0,
+        "incomeFromSaleSumma": 0,
+        "incomeFromMoveSumma": 0,
+        "outFromMoveSumma": 0,
+        "chargesSumma": 0,
+        "endBalansSumma": 0
+      },
+      {
+        "section": "Жонибек Доставшик",
+        "sectionId": "65e155e5377f1bc8662b44f5",
+        "startBalansCountNon": 15,
+        "startBalansCountBux": 0,
+        "prodCountNon": 0,
+        "prodCountBux": 0,
+        "moveIncomeCountNon": 0,
+        "moveIncomeCountBux": 0,
+        "saleCountNon": 0,
+        "saleCountBux": 0,
+        "maydaSavdoCount": 0,
+        "brakCountNon": 0,
+        "brakCountBux": 0,
+        "moveOutNon": 0,
+        "moveOutBux": 0,
+        "endBalansCountNon": 15,
+        "endBlanasCountBux": 0,
+        "startBalansSumma": 0,
+        "incomeFromSaleSumma": 0,
+        "incomeFromMoveSumma": 0,
+        "outFromMoveSumma": 0,
+        "chargesSumma": 0,
+        "endBalansSumma": 0
+      }
+    ]
+  },
+  {
+    "reportType": "SKLAD",
+    "values": [
+      {
+        "section": "Чашма ",
+        "sectionId": "659ce07f523a48fdeb6ad8c3",
+        "items": []
+      },
+      {
+        "section": "Халкобод",
+        "sectionId": "659ce094523a48fdeb6ad8c7",
+        "items": []
+      },
+      {
+        "section": "Контенер",
+        "sectionId": "659ce0ab523a48fdeb6ad8cb",
+        "items": []
+      },
+      {
+        "section": "Буханка цех",
+        "sectionId": "659cf5fc523a48fdeb6ada0c",
+        "items": [
+          {
+            "name": "Маргарен",
+            "value": -150,
+            "valueSum": -1342500,
+            "price": 8950,
+            "bag": 0
+          }
+        ]
+      },
+      {
+        "section": "Самарканд",
+        "sectionId": "65d8ea57c94c5501899dcc39",
+        "items": [
+          {
+            "name": "Загатовка 27 кг",
+            "value": 32,
+            "valueSum": 7858620.69,
+            "price": 245581.8965625,
+            "bag": 0
+          }
+        ]
+      },
+      {
+        "section": "Асосий склад - Ортик ака",
+        "sectionId": "65e169e3e15447c9598f6221",
+        "items": [
+          {
+            "name": "Дарад Козок",
+            "value": 5000,
+            "valueSum": 34000000,
+            "price": 340000,
+            "bag": 100
+          },
+          {
+            "name": "Маргарен",
+            "value": 50,
+            "valueSum": 447500,
+            "price": 8950,
+            "bag": 0
+          },
+          {
+            "name": "Аладин",
+            "value": 13700,
+            "valueSum": 58791379.31,
+            "price": 214567.07777372262,
+            "bag": 274
+          }
+        ]
+      },
+      {
+        "section": "Кушрабод президент мактаби",
+        "sectionId": "6604086a3e7f32e728cd6a9d",
+        "items": []
+      }
+    ]
+  },
+  {
+    "reportType": "NORMA",
+    "values": [
+      {
+        "section": "Чашма ",
+        "items": [],
+        "countHamirs": 0
+      },
+      {
+        "section": "Халкобод",
+        "items": [],
+        "countHamirs": 0
+      },
+      {
+        "section": "Контенер",
+        "items": [],
+        "countHamirs": 0
+      },
+      {
+        "section": "Буханка цех",
+        "items": [],
+        "countHamirs": 0
+      },
+      {
+        "section": "Самарканд",
+        "items": [],
+        "countHamirs": 0
+      },
+      {
+        "section": "Асосий склад - Ортик ака",
+        "items": [],
+        "countHamirs": 0
+      },
+      {
+        "section": "Кушрабод президент мактаби",
+        "items": [],
+        "countHamirs": 0
+      }
+    ]
+  },
+  {
+    "reportType": "MATERIAL",
+    "values": []
+  },
+  {
+    "reportType": "SECTION-FOUNDER",
+    "values": [
+      {
+        "section": "Туропов Шавкат",
+        "sectionId": "664455bbadb82fe6d06df149",
+        "startBalansCountNon": 0,
+        "startBalansCountBux": 0,
+        "prodCountNon": 0,
+        "prodCountBux": 0,
+        "moveIncomeCountNon": 0,
+        "moveIncomeCountBux": 0,
+        "saleCountNon": 0,
+        "saleCountBux": 0,
+        "maydaSavdoCount": 0,
+        "brakCountNon": 0,
+        "brakCountBux": 0,
+        "moveOutNon": 0,
+        "moveOutBux": 0,
+        "endBalansCountNon": 0,
+        "endBlanasCountBux": 0,
+        "startBalansSumma": 70000,
+        "incomeFromSaleSumma": 0,
+        "incomeFromMoveSumma": 0,
+        "outFromMoveSumma": 0,
+        "chargesSumma": 0,
+        "endBalansSumma": 70000
+      },
+      {
+        "section": "Махсуд Набиев",
+        "sectionId": "664455daadb82fe6d06df14d",
+        "startBalansCountNon": 0,
+        "startBalansCountBux": 0,
+        "prodCountNon": 0,
+        "prodCountBux": 0,
+        "moveIncomeCountNon": 0,
+        "moveIncomeCountBux": 0,
+        "saleCountNon": 0,
+        "saleCountBux": 0,
+        "maydaSavdoCount": 0,
+        "brakCountNon": 0,
+        "brakCountBux": 0,
+        "moveOutNon": 0,
+        "moveOutBux": 0,
+        "endBalansCountNon": 0,
+        "endBlanasCountBux": 0,
+        "startBalansSumma": 0,
+        "incomeFromSaleSumma": 0,
+        "incomeFromMoveSumma": 0,
+        "outFromMoveSumma": 0,
+        "chargesSumma": 0,
+        "endBalansSumma": 0
+      }
+    ]
+  },
+  {
+    "reportType": "DEBITORKREDITOR",
+    "values": [
+      {
+        "innerReportType": "MATERIAL",
+        "totalDebitStart": 92791379.31,
+        "totalKreditStart": 895000,
+        "innersDebitStart": [
+          {
+            "name": "Дарад Козок",
+            "value": 34000000
+          },
+          {
+            "name": "Аладин",
+            "value": 58791379.31
+          }
+        ],
+        "innersKreditStart": [
+          {
+            "name": "Маргарен",
+            "value": 895000
+          }
+        ],
+        "totalDebitEnd": 92791379.31,
+        "totalKreditEnd": 895000,
+        "innersDebitEnd": [
+          {
+            "name": "Дарад Козок",
+            "value": 34000000
+          },
+          {
+            "name": "Аладин",
+            "value": 58791379.31
+          }
+        ],
+        "innersKreditEnd": [
+          {
+            "name": "Маргарен",
+            "value": 895000
+          }
+        ]
+      },
+      {
+        "innerReportType": "ZAGATOVKA",
+        "totalDebitStart": 5708620.689999999,
+        "totalKreditStart": 0,
+        "innersDebitStart": [
+          {
+            "name": "Загатовка 27 кг",
+            "value": 5708620.689999999
+          }
+        ],
+        "innersKreditStart": [],
+        "totalDebitEnd": 5708620.689999999,
+        "totalKreditEnd": 0,
+        "innersDebitEnd": [
+          {
+            "name": "Загатовка 27 кг",
+            "value": 5708620.689999999
+          }
+        ],
+        "innersKreditEnd": []
+      },
+      {
+        "innerReportType": "FILIAL",
+        "totalDebitStart": 999998,
+        "totalKreditStart": 478352,
+        "innersDebitStart": [
+          {
+            "name": "Чашма ",
+            "value": 999998
+          }
+        ],
+        "innersKreditStart": [
+          {
+            "name": "Халкобод",
+            "value": 478000
+          },
+          {
+            "name": "Буханка цех",
+            "value": 352
+          }
+        ],
+        "totalDebitEnd": 999998,
+        "totalKreditEnd": 478352,
+        "innersDebitEnd": [
+          {
+            "name": "Чашма ",
+            "value": 999998
+          }
+        ],
+        "innersKreditEnd": [
+          {
+            "name": "Халкобод",
+            "value": 478000
+          },
+          {
+            "name": "Буханка цех",
+            "value": 352
+          }
+        ]
+      },
+      {
+        "innerReportType": "BUXGALTER",
+        "totalDebitStart": 0,
+        "totalKreditStart": 520000,
+        "innersDebitStart": [],
+        "innersKreditStart": [
+          {
+            "name": "Шавкат директор",
+            "value": 520000
+          }
+        ],
+        "totalDebitEnd": 0,
+        "totalKreditEnd": 520000,
+        "innersDebitEnd": [],
+        "innersKreditEnd": [
+          {
+            "name": "Шавкат директор",
+            "value": 520000
+          }
+        ]
+      },
+      {
+        "innerReportType": "DELIVERY",
+        "totalDebitStart": 0,
+        "totalKreditStart": 0,
+        "innersDebitStart": [],
+        "innersKreditStart": [],
+        "totalDebitEnd": 0,
+        "totalKreditEnd": 0,
+        "innersDebitEnd": [],
+        "innersKreditEnd": []
+      },
+      {
+        "innerReportType": "PARTNERS",
+        "totalDebitStart": 0,
+        "totalKreditStart": 98935000,
+        "innersDebitStart": [],
+        "innersKreditStart": [
+          {
+            "name": "Умид",
+            "value": 98500000
+          },
+          {
+            "name": "Шодиер магазинчи",
+            "value": 150000
+          },
+          {
+            "name": "Думбок кунжутчи",
+            "value": 285000
+          }
+        ],
+        "totalDebitEnd": 0,
+        "totalKreditEnd": 98935000,
+        "innersDebitEnd": [],
+        "innersKreditEnd": [
+          {
+            "name": "Умид",
+            "value": 98500000
+          },
+          {
+            "name": "Шодиер магазинчи",
+            "value": 150000
+          },
+          {
+            "name": "Думбок кунжутчи",
+            "value": 285000
+          }
+        ]
+      },
+      {
+        "innerReportType": "FOUNDERS",
+        "totalDebitStart": 520000,
+        "totalKreditStart": 0,
+        "innersDebitStart": [
+          {
+            "name": "Туропов Шавкат",
+            "value": 520000
+          }
+        ],
+        "innersKreditStart": [],
+        "totalDebitEnd": 520000,
+        "totalKreditEnd": 0,
+        "innersDebitEnd": [
+          {
+            "name": "Туропов Шавкат",
+            "value": 520000
+          }
+        ],
+        "innersKreditEnd": []
+      },
+      {
+        "innerReportType": "WORKERS",
+        "totalDebitStart": 0,
+        "totalKreditStart": 730000,
+        "innersDebitStart": [],
+        "innersKreditStart": [
+          {
+            "name": "Илхом Рахимов",
+            "value": 150000
+          },
+          {
+            "name": "Жалол Забайдуллаев",
+            "value": 580000
+          }
+        ],
+        "totalDebitEnd": 0,
+        "totalKreditEnd": 730000,
+        "innersDebitEnd": [],
+        "innersKreditEnd": [
+          {
+            "name": "Илхом Рахимов",
+            "value": 150000
+          },
+          {
+            "name": "Жалол Забайдуллаев",
+            "value": 580000
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -1,0 +1,27 @@
+.sectionName{
+    background-color:rgb(240, 238, 234);
+}
+
+/* .number{
+    width: 50px;
+    text-align: center!important;
+} */
+
+.title{
+    text-align: left!important;
+    max-width: 300px!important;
+    /* padding-left: 10px!important; */
+}
+
+.total{
+    background-color: rgb(198, 228, 230);
+    /* font-size: 400!important; */
+}
+
+.totalTdKol{
+    font-size: 14px!important;
+    font-weight: 400!important;
+    /* color: blue; */
+    text-align: right!important;
+  }
+

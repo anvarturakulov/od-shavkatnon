@@ -1,0 +1,55 @@
+
+.box {
+    display: grid;
+    grid-template-columns: 2.5fr 0.5fr 0.5fr 1fr 1fr 1fr auto;
+    gap: 10px;
+    align-items: center;
+    text-align: center;
+}
+
+.boxWithBalance {
+    display: grid;
+    grid-template-columns: 2.5fr 0.5fr 0.5fr 1fr 1fr 1fr auto;
+    gap: 10px;
+    align-items: center;
+    text-align: center;
+}
+
+.boxWithWorkers {
+    display: grid;
+    grid-template-columns: 0.5fr 0.5fr 3fr 1.5fr 2fr auto;
+}
+
+.boxWithReciever{
+    grid-template-columns: 2.5fr 0.5fr 1fr 1fr 1fr 1fr 1fr auto;
+}
+
+.titleBox{
+    border-bottom: 0.3px dotted #000;
+    padding-bottom: 10px;
+}
+
+.notColor {
+    color: transparent;
+}
+
+.ico {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    color: blue;
+    fill: red;
+}
+
+.checkbox {
+    border: 1px dotted blue;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.btnBalance{
+    height: 40px;
+    border: 1px solid #000;
+    font-weight: 600;
+    cursor: pointer;
+}

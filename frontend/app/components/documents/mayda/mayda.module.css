@@ -1,0 +1,57 @@
+.container{
+    width: 100%;
+    height: 100%;
+    background:rgba(0,0,0,0.6);
+    padding: 50px 2px;
+    position: absolute;
+    z-index: 100;
+    top: 0;
+    left: 0;
+}
+.maydaBox{
+    width: 95%;
+    margin: 0 auto;
+    height: auto;
+    background: #fff;
+    padding: 20px 10px;
+    box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.13);
+}
+
+.input {
+    display: inline-block;
+    padding: 10px 15px;
+    font-size: 16px;
+    line-height: 1.2;
+    margin: 10px 0;
+    width: 100%;
+    border: 1px dotted #000;
+    background: rgba(40, 126, 238, 0.2);
+}
+
+.button{
+    display: inline-block;
+    font-size: 18px;
+    width: 150px;
+    
+}
+
+.boxBtn{
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 20px;
+    margin-top: 20px;
+    justify-content: left;
+}
+
+.label{
+    font-weight: 600;
+}
+
+.workersBox{
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    justify-content: center;
+    padding: 10px 0;
+}
+
+

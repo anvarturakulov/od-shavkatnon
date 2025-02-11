@@ -1,0 +1,56 @@
+.numberValue{
+    text-align: right !important;
+}
+
+.openValue {
+    cursor: zoom-in;
+}
+
+.tdNumber{
+  width: 30px;
+}
+
+.name{
+    width: 20%;
+}
+
+.trRow{
+    font-size: 13px;
+}
+
+.trRowMain{
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.unit{
+    text-align: center !important;
+    width: 50px;
+}
+
+.title{
+    font-size: 14px;
+    font-weight: 500;
+    padding: 5px 20px;
+    border-bottom: 0.1px solid #e1e1e1;
+}
+
+.price{
+    text-align: center !important;
+}
+
+.plus{
+    cursor: pointer;
+    width: 30px;
+}
+
+.opened{
+    background-color: bisque;
+}
+
+
+.innerItems{
+    font-size: 12px;
+    padding: 2px 0px;
+    color: red;
+}

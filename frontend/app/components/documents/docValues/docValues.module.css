@@ -1,0 +1,55 @@
+
+.valuesBox {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    align-items: center;
+    text-align: center;
+}
+
+.titleBox{
+    border-bottom: 0.3px dotted #000;
+    padding-bottom: 10px;
+}
+
+.notColor {
+    color: transparent;
+}
+
+.ico {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    color: blue;
+    fill: red;
+}
+
+.checkBoxs{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    width: 100%;
+    padding: 0px 0px;
+    margin-top: 10px;
+}
+
+.partnersBox{
+    display: grid;
+    gap: 10px;
+}
+
+.add{
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    color: blue;
+    fill: red;
+}
+
+.btnLoad {
+    width: 100%;
+    height: 50px;
+    font-weight: 600;
+    background-color: #fff;
+    cursor: pointer;
+    margin: 10px 0px;
+}

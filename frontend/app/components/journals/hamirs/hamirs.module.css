@@ -1,0 +1,139 @@
+.container {
+    width: 100%;
+    margin: 0 auto;
+    user-select: none;
+    margin-top: 20px;
+}
+
+.table {
+    border-collapse: collapse;
+    width: 100%;
+    border: 1px solid #f9f9f9;
+    margin-bottom: 10px;
+}
+
+.table td,
+.table th {
+    border-left: 0.1px dotted #ddd;
+    text-align: left;
+    padding: 10px 7px;
+    text-align: center;
+}
+
+.table tr:nth-child(even) {
+    background-color: #f5f5f5;
+    
+}
+
+.table tr {
+    margin: 5px 0;
+    border: 2px dotted blue;
+}
+
+.table tr:hover {
+    margin: 5px 0;
+    border: 1px solid green;
+}
+
+.table th {
+    font-weight: bold;
+}
+
+.table thead,
+.table tbody tr {
+    display: table;
+    width: 100%;
+}
+
+.table thead .theadWithTandir{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+.table thead {
+    width: calc(100% - 1.1em);
+    position: relative;
+}
+
+.table tbody {
+    display: block;
+    max-height: 400px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.table thead th:last-child:after {
+    content: ' ';
+    position: absolute;
+    width: 1.1em;
+    height: 40px;
+    right: -1.1em;
+    top: 0;
+}
+.proveden {
+    background-color: green!important;
+    color: #fff;
+}
+
+.bigTr{
+    display: grid!important;
+    width: 100%;
+    grid-template-columns: 1fr 1fr;
+}
+
+.title{
+    font-size: 23px;
+    margin: 10px 0px;
+    margin-bottom: 20px;
+}
+
+.button{
+    padding: 10px;
+    margin-right: 10px;
+    font-weight: 600;
+    background-color: white;
+    cursor: pointer;
+}
+
+.action{
+    min-width: 100px;
+}
+
+.width50{
+    width: 50%;
+}
+
+.sendBtn{
+    padding: 10px;
+    font-weight: 600;
+    margin: 0 auto;
+    color: var(--white);
+    background-color: var(--primary);
+    font-weight: 600;
+    border-radius: 10px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.order{
+    color: blue;
+    font-weight: 500;
+}
+
+.box{
+    margin-top: 20px;
+}
+
+.notVisible{
+    display: none;
+}
+
+.count{
+    padding: 10px;
+    border: 1px solid blue;
+    width: 100px;
+    font-size: 16px;
+}
+
+.disabledInput{
+    background: yellow;
+}

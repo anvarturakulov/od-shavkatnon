@@ -1,0 +1,30 @@
+.topBox{
+  display: grid;
+  grid-template-columns: auto 5fr auto;
+  /* border-bottom: 0.1px dotted #000;
+  border-top: 0.1px dotted #000; */
+  align-items: top;
+  position: relative;
+  align-items: center;
+  margin-bottom: 10px;
+  background-color: #F2F4F7;
+  padding: 10px;
+  box-shadow: 5px 3px 5px -3px rgba(0, 0, 0, 0.36);
+}
+
+.topBoxMini{
+  grid-template-columns: 5fr 1fr;
+  min-height: 50px;
+  align-items: center;
+}
+
+.logo{
+  font-weight: 600;
+  font-size: 16px;
+  color: #267CB5;
+}
+
+.logo span {
+  color: #000;
+  font-weight: 500;
+}

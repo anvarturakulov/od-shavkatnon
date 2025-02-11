@@ -1,0 +1,45 @@
+.container{
+  display: grid;
+  grid-template-columns: 1fr;
+  margin: 0 auto;
+  margin-top: 200px;
+  max-width: 900px;
+  border-radius: 20px;
+  box-shadow: 4px 4px 8px -5px rgba(34, 60, 80, 0.14);
+  position: relative;
+}
+
+.content{
+  padding: 10px 30px;
+  max-width: 300px;
+  margin: 0 auto;
+  
+}
+
+.content h3 {
+  color: blue;
+}
+
+.button{
+    display: inline-block;
+    padding: 10px 0px;
+    width: 150px;
+    text-align: center;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    background: none;
+    border: 1px solid var(--black-600);
+    color: var(--white);
+    font-weight: 600;
+    background-color: var(--primary);
+    margin-top: 10px;
+}
+
+.button:disabled{
+  background-color: #f5f5f5;
+  color: red;
+}
+

@@ -1,0 +1,56 @@
+.container {
+    width: 100%;
+    margin: 0 auto;
+    /* position: relative; */
+    padding: 20px;
+}
+
+.titleBox > div{
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.titleBox {
+    margin-bottom: 20px;
+}
+
+.titleBox span{
+    font-weight: 500;
+}
+
+.title{
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.button {
+    padding: 5px 20px;
+    text-align: center;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid #000;
+}
+
+.ico{
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    top: 15%;
+    right: 5%;
+    cursor: pointer;
+    fill: blue;
+}
+
+.ico:hover{
+    fill: red;
+    padding-right: 2px;
+}
+
+.titleBox .organization{
+    font-size: 14px;
+    text-align: left;
+}
+

@@ -1,0 +1,30 @@
+.button{
+    display: inline-block;
+    padding: 10px 0px;
+    width: 150px;
+    text-align: center;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    background: none;
+    border: 1px solid var(--black-600);
+}
+
+.primary{
+    color: var(--white);
+    background-color: var(--primary);
+    font-weight: 600;
+}
+
+.ghost:hover {
+    color: var(--white);
+    background: red;
+    border: 1px solid var(--white);
+}
+
+.disabled {
+    background-color: red;
+    color: #fff;
+}
