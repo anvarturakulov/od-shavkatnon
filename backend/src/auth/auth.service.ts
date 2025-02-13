@@ -1,85 +1,54 @@
-import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { AuthDto, UserRoles } from './dto/auth.dto';
-import { User, UserDocument } from './models/user.model';
-import { Model } from 'mongoose';
-import { compare, genSalt, hash } from 'bcryptjs';
-import { USER_NOT_FOUND_ERROR, WRONG_PASSWORD_ERROR } from './auth.constants';
+import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { UsersService } from 'src/users/users.service';
+import * as bcrypt from 'bcryptjs'
+import { User } from 'src/users/users.model';
 
 @Injectable()
 export class AuthService {
-  constructor(
-    @InjectModel(User.name) private userModel: Model<UserDocument>,
-    private readonly jwtService: JwtService
-    ) { }
 
-  async createUser(dto: AuthDto) {
-    const salt = await genSalt(10);
-    const newUser = new this.userModel({
-      email: dto.login,
-      passwordHash: await hash(dto.password, salt),
-      role: dto.role,
-      name: dto.name,
-      storageId: dto.storageId
-    })
+    constructor(private userService: UsersService,
+                private jwtService: JwtService){}
 
-    return newUser.save()
-  }
+    async login(userDto : CreateUserDto) {
+        const user = await this.validateUser(userDto)
+        if (user) {
+            return this.generateToken(user)
+        }
+    }
+    
+    async registration(userDto : CreateUserDto) {
+        const candidate = await this.userService.getUserByEmail(userDto.email)
+        if (candidate) {
+            throw new HttpException('Пользователь с таким email существует', HttpStatus.BAD_REQUEST)
+        }
 
-  async findUser(email: string) {
-    return this.userModel.findOne({email}).exec();
-  }
+        const hashPassword = await bcrypt.hash(userDto.password, 5);
+        const user = await this.userService.createUser({...userDto, password: hashPassword})
+        return this.generateToken(user)
 
-  async findUserByName(name: string) {
-    return this.userModel.findOne({ name }).exec();
-  }
-
-  // Promise<Pick<User, 'email' >>
-  async validateUser(email: string, password: string) {
-    const user = await this.findUser(email);
-    if (!user || (user && user.deleted)) {
-      throw new UnauthorizedException(USER_NOT_FOUND_ERROR);
     }
 
-    const isCorrectPassword = await compare(password, user.passwordHash);
-    if (!isCorrectPassword) {
-      throw new UnauthorizedException(WRONG_PASSWORD_ERROR);
+    private async generateToken(user: User) {
+        const payload = {email: user.email, id: user.id, roles: user.roles}
+        return {
+            token: this.jwtService.sign(payload)
+        }
     }
 
-    return { email: user.email, role: user.role, name: user.name, storageId: user.storageId, productId: user.productId }
-  }
+    private async validateUser(userDto: CreateUserDto) {
+        const user = await this.userService.getUserByEmail(userDto.email)
+        let passwordEquals
+        if (user) {
+            passwordEquals = await bcrypt.compare(userDto.password, user?.password)
+        }
+        if (passwordEquals) {
+            return user
+        }
 
-  async login(email: string, role: UserRoles, name: string, storageId: string, productId: string) {
-    const payload = { email };
-    return {
-      email,
-      role,
-      access_token: await this.jwtService.signAsync(payload),
-      name,
-      storageId,
-      productId,
+        throw new UnauthorizedException({ message: 'Некорректный email или пароль' })
     }
-  }
 
-  async markToDelete(id: string) {
-   const user = await this.userModel.findOne({_id: id})
-    if (!user?.name) {
-      throw new NotFoundException(USER_NOT_FOUND_ERROR);
-    }
-    const state = user.deleted ? false : true
-    return this.userModel.updateOne({ _id: id }, { $set: { deleted: state} })
-  }
- 
-  async getAllUsers(): Promise<UserDocument[]> {
-    return this.userModel.find().exec()
-  }
 
-  async findById(id: string) {
-    return this.userModel.findById(id).exec();
-  }
-
-  async updateById(id: string, dto: AuthDto) {
-    return this.userModel.updateOne({ _id: id }, { $set: dto })
-  }
 }

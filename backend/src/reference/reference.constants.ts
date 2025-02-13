@@ -1,1 +1,0 @@
-export const REFERENCE_NOT_FOUND_ERROR = 'Reference not found'

@@ -1,29 +1,38 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { AuthModule } from './auth/auth.module';
+import { SequelizeModule } from '@nestjs/sequelize';
+import { UsersModule } from './users/users.module';
 import { ConfigModule } from '@nestjs/config';
-import { MongooseModule } from '@nestjs/mongoose';
-import { DocumentModule } from './document/document.module';
-import { ReferenceModule } from './reference/reference.module';
-import { ReportModule } from './report/report.module';
-import { HamirModule } from './hamir/hamir.module';
-
+import { User } from './users/users.model';
+import { AuthModule } from './auth/auth.module';
+import { PostsController } from './posts/posts.controller';
+import { PostsModule } from './posts/posts.module';
+import { Post } from './posts/post.model';
+import { FilesService } from './files/files.service';
+import { FilesModule } from './files/files.module';
 
 @Module({
-  imports: [
-    ConfigModule.forRoot(),
-    MongooseModule.forRoot('mongodb://127.0.0.1:27017/shavkatbase?directConnection=true&serverSelectionTimeoutMS=2000'),
-    // MongooseModule.forRoot(
-    //    'mongodb+srv://anvar:vqqaCNtEAjNUyUh5@cluster0.uoe1t.mongodb.net/',
-    // ),
-    AuthModule,
-    DocumentModule,
-    ReferenceModule,
-    ReportModule,
-    HamirModule,
-  ],
-  controllers: [AppController],
-  providers: [AppService],
+    controllers: [PostsController],
+    providers: [FilesService],
+    imports: [
+        ConfigModule.forRoot({
+            envFilePath: `.${process.env.NODE_ENV}.env`
+        }),
+        SequelizeModule.forRoot({
+            dialect: 'postgres',
+            host: process.env.POSTGRES_HOST,
+            port: Number(process.env.POSTGRES_PORT),
+            username: process.env.POSTGRES_USER,
+            password: process.env.POSTGRES_PASSWORD,
+            database: process.env.POSTGRES_DB,
+            models: [User, Post],
+            autoLoadModels: true
+
+          }),
+        UsersModule,
+        AuthModule,
+        PostsModule,
+        FilesModule,
+    ]
 })
+
 export class AppModule {}
