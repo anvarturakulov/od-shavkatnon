@@ -6,7 +6,7 @@
 /frontend/.next
 /.next
 
-#env
+*.env
 .env
 /frontend/.env
 docker-compose.yml
