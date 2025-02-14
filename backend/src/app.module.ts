@@ -4,15 +4,22 @@ import { UsersModule } from './users/users.module';
 import { ConfigModule } from '@nestjs/config';
 import { User } from './users/users.model';
 import { AuthModule } from './auth/auth.module';
-import { PostsController } from './posts/posts.controller';
-import { PostsModule } from './posts/posts.module';
-import { Post } from './posts/post.model';
 import { FilesService } from './files/files.service';
 import { FilesModule } from './files/files.module';
+import { ReferencesModule } from './references/references.module';
+import { Reference } from './references/references.model';
+import { RefValue } from './refvales/refValue.model';
+import { DocumentsModule } from './documents/documents.module';
+import { DocTableItemsModule } from './docTableItems/docTableItems.module';
+import { DocValuesController } from './docValues/docValues.controller';
+import { DocValuesService } from './docValues/docValues.service';
+import { RefValesModule } from './refvales/refVales.module';
+import { DocValuesModule } from './docValues/docValues.module';
+
 
 @Module({
-    controllers: [PostsController],
-    providers: [FilesService],
+    controllers: [DocValuesController],
+    providers: [FilesService, DocValuesService],
     imports: [
         ConfigModule.forRoot({
             envFilePath: `.${process.env.NODE_ENV}.env`
@@ -24,14 +31,17 @@ import { FilesModule } from './files/files.module';
             username: process.env.POSTGRES_USER,
             password: process.env.POSTGRES_PASSWORD,
             database: process.env.POSTGRES_DB,
-            models: [User, Post],
-            autoLoadModels: true
-
+            models: [User, Reference, RefValue],
+            autoLoadModels: true,
           }),
         UsersModule,
         AuthModule,
-        PostsModule,
         FilesModule,
+        ReferencesModule,
+        RefValesModule,
+        DocumentsModule,
+        DocValuesModule,
+        DocTableItemsModule,
     ]
 })
 
