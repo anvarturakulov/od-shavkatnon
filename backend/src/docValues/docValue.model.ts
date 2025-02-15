@@ -4,12 +4,12 @@ import { Document } from "src/documents/document.model";
 import { TypePartners, TypeSECTION, TypeTMZ } from "src/interfaces/reference.interface";
 import { Reference } from "src/references/references.model";
 
-interface DocValueCreationAttrs {
+interface DocTableItemCreationAttrs {
     referenceId: number,
 }
 
 @Table({tableName: 'docvalues'})
-export class DocValue extends Model<DocValue, DocValueCreationAttrs> {
+export class DocValue extends Model<DocValue, DocTableItemCreationAttrs> {
 
     @ApiProperty({example:'1', description: 'Уникальный иденфикатор'})
     @Column({type: DataType.BIGINT, unique: true, autoIncrement: true, primaryKey: true})
@@ -31,6 +31,10 @@ export class DocValue extends Model<DocValue, DocValueCreationAttrs> {
     @BelongsTo(() => Reference) 
     senderReference: Reference;
 
+    @ApiProperty({example:'654654', description: 'Старый id отправителя'})
+    @Column({type: DataType.NUMBER})
+    senderoldId: number;
+
     @ForeignKey(() => Reference)
     @ApiProperty({example:'12222897', description: 'Id - получателя'})
     @Column({type: DataType.INTEGER})
@@ -39,6 +43,10 @@ export class DocValue extends Model<DocValue, DocValueCreationAttrs> {
     @BelongsTo(() => Reference) 
     receiverReference: Reference;
 
+    @ApiProperty({example:'654654', description: 'Старый id получателя'})
+    @Column({type: DataType.NUMBER})
+    receiverOldId: number;
+
     @ForeignKey(() => Reference)
     @ApiProperty({example:'12222897', description: 'Id - аналитики'})
     @Column({type: DataType.INTEGER})
@@ -46,6 +54,10 @@ export class DocValue extends Model<DocValue, DocValueCreationAttrs> {
 
     @BelongsTo(() => Reference) 
     analiticReference: Reference;
+
+    @ApiProperty({example:'654654', description: 'Старый id аналитики'})
+    @Column({type: DataType.NUMBER})
+    analiticOldId: number;
 
     @ForeignKey(() => Reference)
     @ApiProperty({example:'12222897', description: 'Id - первого рабочего'})
@@ -70,9 +82,6 @@ export class DocValue extends Model<DocValue, DocValueCreationAttrs> {
 
     @BelongsTo(() => Reference) 
     thirdWorkerIdReference: Reference;
-
-
-
 
     @ApiProperty({example:'true', description: 'isWorker?'})
     @Column({type: DataType.BOOLEAN, defaultValue: false})

@@ -1,6 +1,8 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { BelongsTo, Column, DataType, Model, Table, HasMany, HasOne, ForeignKey } from "sequelize-typescript";
+import { DocTableItem } from "src/docTableItems/docTableItem.model";
 import { DocValue } from "src/docValues/docValue.model";
+import { Entry } from "src/entries/entry.model";
 import { DocSTATUS, DocumentType } from "src/interfaces/document.interface";
 import { User } from "src/users/users.model";
 
@@ -38,13 +40,17 @@ export class Document extends Model<Document, DocuemntCreationAttrs> {
     @Column({type: DataType.ENUM(...Object.values(DocSTATUS))})
     docStatus: DocSTATUS
 
-
-
     @BelongsTo(() => User) 
     user!: User;
 
     @HasOne(() => DocValue)
     docValue!: DocValue;
+
+    @HasMany(() => DocValue)
+    docTableItems!: DocTableItem[];
+
+    @HasMany(() => Entry)
+    entries!: Entry[];
 
     // @HasOne(() => RefValue)
     // refValue!: RefValue;

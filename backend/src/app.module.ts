@@ -15,6 +15,7 @@ import { DocValuesController } from './docValues/docValues.controller';
 import { DocValuesService } from './docValues/docValues.service';
 import { RefValesModule } from './refvales/refVales.module';
 import { DocValuesModule } from './docValues/docValues.module';
+import { EntriesModule } from './entries/entries.module';
 
 
 @Module({
@@ -42,6 +43,7 @@ import { DocValuesModule } from './docValues/docValues.module';
         DocumentsModule,
         DocValuesModule,
         DocTableItemsModule,
+        EntriesModule,
     ]
 })
 
