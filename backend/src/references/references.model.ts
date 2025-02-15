@@ -4,8 +4,9 @@ import { TypeReference } from "src/interfaces/reference.interface";
 import { RefValue } from "src/refvales/refValue.model";
 
 interface ReferenceCreationAttrs {
-    email: string,
-    password: string
+    oldId: string;
+    name: string;
+    typeReference: TypeReference
 }
 
 
@@ -18,7 +19,7 @@ export class Reference extends Model<Reference, ReferenceCreationAttrs> {
 
     @ApiProperty({example:'0000225522', description: 'Старый инденфикатор'})
     @Column({type: DataType.STRING})
-    oldId: number;
+    oldId: string;
 
     @ApiProperty({example:'Нон', description: 'Название справочника'})
     @Column({type: DataType.STRING, unique: true, allowNull: false})

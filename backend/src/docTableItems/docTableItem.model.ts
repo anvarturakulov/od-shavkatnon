@@ -5,7 +5,12 @@ import { TypePartners, TypeSECTION, TypeTMZ } from "src/interfaces/reference.int
 import { Reference } from "src/references/references.model";
 
 interface DocTableItemCreationAttrs {
-    referenceId: number,
+    docId: bigint
+    analiticId: number
+    analiticOldId: number
+    count: number
+    price: number
+    total: number
 }
 
 @Table({tableName: 'doctableitems'})
@@ -29,8 +34,8 @@ export class DocTableItem extends Model<DocTableItem, DocTableItemCreationAttrs>
     analiticId: number
 
     @ApiProperty({example:'654654', description: 'Старый id аналитики'})
-    @Column({type: DataType.NUMBER})
-    analiticOldId: number;
+    @Column({type: DataType.STRING})
+    analiticOldId: string;
 
     @BelongsTo(() => Reference) 
     analiticReference: Reference;

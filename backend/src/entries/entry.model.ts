@@ -6,8 +6,20 @@ import { Schet } from "src/interfaces/report.interface";
 import { Reference } from "src/references/references.model";
 
 interface EntryCreationAttrs {
-    email: string,
-    password: string
+    documentId: number
+    date: Date
+    documentType: DocumentType
+    debet: Schet
+    debetFirstSubcontoId: number
+    debetSecondSubcontoId: number
+    debetThirdSubcontoId: number
+    kredit: Schet
+    kreditFirstSubcontoId: number
+    kreditSecondSubcontoId: number
+    kreditThirdSubcontoId: number
+    count: number
+    total: number
+    description: string
 }
 
 

@@ -7,8 +7,11 @@ import { DocSTATUS, DocumentType } from "src/interfaces/document.interface";
 import { User } from "src/users/users.model";
 
 interface DocuemntCreationAttrs {
-    email: string,
-    password: string
+    date: Date;
+    userId: number
+    userOldId?: string
+    documentType: DocumentType
+    docStatus: DocSTATUS
 }
 
 
@@ -51,8 +54,5 @@ export class Document extends Model<Document, DocuemntCreationAttrs> {
 
     @HasMany(() => Entry)
     entries!: Entry[];
-
-    // @HasOne(() => RefValue)
-    // refValue!: RefValue;
 
 }

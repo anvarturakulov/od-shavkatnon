@@ -4,7 +4,17 @@ import { TypePartners, TypeSECTION, TypeTMZ } from "src/interfaces/reference.int
 import { Reference } from "src/references/references.model";
 
 interface RefValueCreationAttrs {
-    referenceId: number,
+    referenceId: number
+    clientForSectionId: number
+    typePartners: TypePartners
+    typeTMZ: TypeTMZ
+    typeSection: TypeSECTION
+    unit: string;
+    comment: string;
+    norma: number;
+    un: boolean;
+    longCharge: boolean;
+
 }
 
 @Table({tableName: 'refvalues'})
@@ -24,7 +34,7 @@ export class RefValue extends Model<RefValue, RefValueCreationAttrs> {
     
     @ApiProperty({example:'12222', description: 'Кому относится клиент - идентификатор подразделения'})
     @Column({type: DataType.INTEGER})
-    clientForSection: number
+    clientForSectionId: number
 
     @ApiProperty({example:'CLIENTS', description: 'Тип партнера - ( CLIENTS || SUPPLIERS )'})
     @Column({type: DataType.ENUM(...Object.values(TypePartners))})
@@ -42,7 +52,7 @@ export class RefValue extends Model<RefValue, RefValueCreationAttrs> {
     @Column({type: DataType.STRING})
     unit: string;
 
-    @ApiProperty({example:'кг', description: 'Единица измерения'})
+    @ApiProperty({example:'....', description: 'Комментарий'})
     @Column({type: DataType.STRING})
     comment: string;
 

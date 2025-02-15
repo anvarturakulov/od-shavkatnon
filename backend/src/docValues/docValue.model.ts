@@ -1,11 +1,29 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { BelongsTo, Column, DataType, Model, Table, HasMany, ForeignKey } from "sequelize-typescript";
 import { Document } from "src/documents/document.model";
-import { TypePartners, TypeSECTION, TypeTMZ } from "src/interfaces/reference.interface";
 import { Reference } from "src/references/references.model";
 
 interface DocTableItemCreationAttrs {
-    referenceId: number,
+    docId: bigint
+    senderId: number
+    senderoldId: number
+    receiverId: number
+    receiverOldId: number
+    analiticId: number
+    analiticOldId: number
+    firstWorkerId: number
+    secondWorkerId: number
+    secondWorkerReference: Reference
+    thirdWorkerId: number
+    thirdWorkerIdReference: Reference
+    isWorker: boolean
+    isPartner: boolean
+    isFounder: boolean
+    isCash: boolean
+    count: number
+    price: number
+    total: number
+    cashFromPartner: number
 }
 
 @Table({tableName: 'docvalues'})
@@ -114,6 +132,5 @@ export class DocValue extends Model<DocValue, DocTableItemCreationAttrs> {
     @ApiProperty({example:'150000', description: 'Полученные деньги с партнера'})
     @Column({type: DataType.NUMBER})
     cashFromPartner: number;
-
 
 }

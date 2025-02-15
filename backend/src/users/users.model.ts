@@ -1,12 +1,18 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { BelongsToMany, Column, DataType, Model, Table, HasMany, ForeignKey } from "sequelize-typescript";
+import { Column, DataType, Model, Table, HasMany, ForeignKey } from "sequelize-typescript";
 import { Document } from "src/documents/document.model";
 import { UserRoles } from "src/interfaces/user.interface";
 import { Reference } from "src/references/references.model";
 
 interface UserCreationAttrs {
-    email: string,
-    password: string
+    oldId: string;
+    email: string;
+    password: string;
+    banned: boolean;
+    banReason: string;
+    typeReference: UserRoles
+    sectionId: number
+    documents: Document[]
 }
 
 
