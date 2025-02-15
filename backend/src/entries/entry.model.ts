@@ -1,12 +1,9 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { BelongsTo, Column, DataType, Model, Table, HasMany, HasOne, ForeignKey } from "sequelize-typescript";
-import { DocTableItem } from "src/docTableItems/docTableItem.model";
+import { BelongsTo, Column, DataType, Model, Table, ForeignKey } from "sequelize-typescript";
 import { Document } from "src/documents/document.model";
-import { DocValue } from "src/docValues/docValue.model";
-import { DocSTATUS, DocumentType } from "src/interfaces/document.interface";
+import { DocumentType } from "src/interfaces/document.interface";
 import { Schet } from "src/interfaces/report.interface";
 import { Reference } from "src/references/references.model";
-import { User } from "src/users/users.model";
 
 interface EntryCreationAttrs {
     email: string,
@@ -37,7 +34,7 @@ export class Entry extends Model<Entry, EntryCreationAttrs> {
     @Column({type: DataType.ENUM(...Object.values(DocumentType))})
     documentType: DocumentType
 
-    @ApiProperty({example:'DELIVERY', description: 'Счет дебета'})
+    @ApiProperty({example:'6010', description: 'Счет дебета'})
     @Column({type: DataType.ENUM(...Object.values(Schet))})
     debet: Schet
 
@@ -65,7 +62,7 @@ export class Entry extends Model<Entry, EntryCreationAttrs> {
     @BelongsTo(() => Reference) 
     debetThirdSubcontoReference: Reference;
 
-    @ApiProperty({example:'DELIVERY', description: 'Счет кредита'})
+    @ApiProperty({example:'5010', description: 'Счет кредита'})
     @Column({type: DataType.ENUM(...Object.values(Schet))})
     kredit: Schet
 
@@ -100,5 +97,9 @@ export class Entry extends Model<Entry, EntryCreationAttrs> {
     @ApiProperty({example:'150000', description: 'Всего'})
     @Column({type: DataType.NUMBER})
     total: number;
+
+    @ApiProperty({example:'Поступление материалов', description: 'Описание проводки'})
+    @Column({type: DataType.STRING})
+    description: string;
     
 }
