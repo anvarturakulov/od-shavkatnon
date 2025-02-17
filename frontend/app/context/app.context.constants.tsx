@@ -35,7 +35,7 @@ export const defaultDocValue: DocValue = {
 }
 
 export const defaultDocument:DocumentModel = {
-    _id: '',
+    id: -1,
     date: 0,
     documentType: '',
     userId: 0,

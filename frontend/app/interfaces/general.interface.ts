@@ -33,13 +33,14 @@ export enum UserRoles {
 }
 
 export interface User {
+    id?: number,
     email: string,
     access_token: string;
     role: UserRoles,
     name: string,
-    storageId: string,
-    tandirId: string,
-    productId: string 
+    storageId: number,
+    tandirId: number,
+    productId: number 
 }
 
 export interface BodyForLogin {

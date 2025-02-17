@@ -7,14 +7,14 @@ import { getSchetForQuery } from './getSchetForQuery';
 export const getPriceAndBalance = (
   mainData: Maindata,
   setMainData: Function | undefined,
-  firstSubcontoId: string,
-  secondSubcontoId: string,
+  firstSubcontoId: number,
+  secondSubcontoId: number,
   endDate: number,
   forTable: boolean,
   indexTableItem: number,
 ) => {
 
-  const { contentName } = mainData;
+  const { contentName } = mainData.window;
   endDate = endDate + 10000;
   // console.log('Anvar', endDate)
 

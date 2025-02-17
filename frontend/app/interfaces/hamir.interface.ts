@@ -3,12 +3,10 @@ export interface HamirModel {
   date: number
   order?: number
   user: string
-  sectionId: string
-  analiticId: string
-  proveden: boolean,
-  firstWorker?: string | null,
-  secondWorker?: string | null,
-  thirdWorker?: string | null,
+  sectionId: number
+  analiticId: number
+  firstWorker?: number | null,
+  secondWorker?: number | null,
+  thirdWorker?: number | null,
   zuvala?: number,
-  fromHamirchi: boolean,
 }

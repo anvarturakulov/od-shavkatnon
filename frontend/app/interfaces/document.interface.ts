@@ -47,11 +47,11 @@ export interface DocTableItem {
 
 export interface DocValue {
     senderId: number,
-    senderoldId: string;
+    senderoldId?: string;
     receiverId: number,
-    receiverOldId: string;
+    receiverOldId?: string;
     analiticId: number,
-    analiticOldId: string;
+    analiticOldId?: string;
     firstWorkerId?: number | null,
     secondWorkerId?: number | null,
     thirdWorkerId?: number | null,
@@ -68,10 +68,10 @@ export interface DocValue {
 }
 
 export interface DocumentModel {
-    _id?: string,
+    id?: number,
     date: number,
     userId: number,
-    userOldId: string,
+    userOldId?: string,
     documentType: string,
     docStatus: DocSTATUS,
     docValue: DocValue

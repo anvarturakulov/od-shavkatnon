@@ -1,4 +1,4 @@
-import { DocumentType } from "../../../../interfaces/document.interface";
+import { DocumentType } from "../../../../../interfaces/document.interface";
 
 export const docsDependentToBalance = [
   `${DocumentType.SaleProd}`,

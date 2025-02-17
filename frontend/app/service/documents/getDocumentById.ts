@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { showMessage } from '../common/showMessage';
-import { defaultDocumentFormItems } from '@/app/context/app.context.constants';
+import { defaultDocument } from '@/app/context/app.context.constants';
 
 export const getDocumentById = (
   id: string | undefined,
@@ -17,7 +17,7 @@ export const getDocumentById = (
       setMainData('clearControlElements', true);
       setMainData('showDocumentWindow', false);
       setMainData('isNewDocument', false);
-      setMainData('currentDocument', { ...defaultDocumentFormItems });
+      setMainData('currentDocument', { ...defaultDocument });
     }
     
     const uri = process.env.NEXT_PUBLIC_DOMAIN + '/api/document/' + id;

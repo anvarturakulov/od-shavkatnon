@@ -1,7 +1,7 @@
 'use client'
 import { Htag } from '@/app/components';
 import styles from './page.module.css';
-import ReportWindow from '@/app/components/reports/reportWindow/reportWindow';
+import ReportWindow from '@/app/components/reports/simpleReports/reportWindow/reportWindow';
 import ReferenceJournal from '@/app/components/journals/referenceJournal/referenceJournal';
 import { useAppContext } from '@/app/context/app.context';
 import { Message } from '@/app/components/common/message/message';
@@ -12,7 +12,7 @@ import { IntervalWindow } from '@/app/components/common/intervalWindow/intervalW
 import TopBox from '@/app/components/common/topBox/topBox';
 import { Information } from '@/app/components/information/information';
 import { Spinner } from '@/app/components/common/spinner/spinner';
-import { Inform } from '@/app/components/dashboardReports/inform';
+import { Inform } from '@/app/components/reports/dashboardReports/inform';
 import UserJournal from '@/app/components/journals/userJournal/userJournal';
 
 export default function Dashboard() {

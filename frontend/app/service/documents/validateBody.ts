@@ -2,14 +2,10 @@ import { DocumentModel, DocumentType } from "../../interfaces/document.interface
 
 export const validateBody = (body: DocumentModel): Boolean => {
 
-  let { 
-    date, docNumber, documentType,
-    analiticId, senderId, receiverId, 
-    total, count, 
-    firstWorkerId, secondWorkerId, thirdWorkerId,
-    tableItems, balance } = body
+  const { date, id, documentType, docTableItems } = body
+  const { analiticId, senderId, receiverId, total, count } = body.docValue
 
-  if (!date || !docNumber || !documentType) return false
+  if (!date || !id || !documentType) return false
 
   const documentsWithAnalitic = [
     `${DocumentType.ComeMaterial}`,
@@ -41,7 +37,7 @@ export const validateBody = (body: DocumentModel): Boolean => {
     let totalNotEmpty = true
     let countOverBalance = true
     
-    tableItems.forEach(item => {
+    docTableItems.forEach(item => {
       if (item.balance <= 0) balanceNotEmpty = false
       if (item.count <= 0) countNotEmpty = false
       if (item.price <= 0) priceNotEmpty = false
@@ -52,7 +48,7 @@ export const validateBody = (body: DocumentModel): Boolean => {
     if (
         !balanceNotEmpty || !countNotEmpty || 
         !priceNotEmpty || !totalNotEmpty || 
-        !tableItems.length || !countOverBalance
+        !docTableItems.length || !countOverBalance
       ) {
       return false
     }
@@ -90,16 +86,6 @@ export const validateBody = (body: DocumentModel): Boolean => {
     }
   }
 
-  // const documentsComeProduct = [
-  //   `${DocumentType.ComeProduct}`,
-  // ]
-
-  // if (documentsComeProduct.includes(documentType)) {
-  //   if (!firstWorkerId || !secondWorkerId || !thirdWorkerId) {
-  //     return false
-  //   }
-  // }
-
   const documentsForCashFromPartners = [
     `${DocumentType.ComeCashFromPartners}`,
     `${DocumentType.MoveCash}`,
@@ -134,11 +120,6 @@ export const validateBody = (body: DocumentModel): Boolean => {
     `${DocumentType.LeaveMaterial}`,
     `${DocumentType.MoveMaterial}`,
   ]
-
-  // if (documentsWithBalance.includes(documentType)) {
-  //   if (balance && (count > balance || balance < 0) ) return false
-  // }
-
 
   return true
 

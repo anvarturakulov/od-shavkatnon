@@ -4,42 +4,48 @@ import { User, UserRoles } from '@/app/interfaces/general.interface'
 import { TypeReference } from '@/app/interfaces/reference.interface'
 
 export const getLabelForAnalitic = (currentDocument: DocumentModel, options: OptionsForDocument): string => {
-  if (currentDocument && currentDocument.isPartner) {
+  
+  let {isPartner, isWorker} = currentDocument.docValue
+
+  if (currentDocument && isPartner) {
     return 'Хамкор'
   }
-  if (currentDocument && currentDocument.isWorker) {
+  if (currentDocument && isWorker) {
     'Ходим'
   }
   return options.analiticLabel
 }
 
 export const getTypeReferenceForAnalitic = (currentDocument: DocumentModel, options: OptionsForDocument) => {
-  if (currentDocument && currentDocument.isPartner) {
+  let {isPartner, isWorker} = currentDocument.docValue
+
+  if (currentDocument && isPartner) {
     return TypeReference.PARTNERS
   }
-  if (currentDocument && currentDocument.isWorker) {
+  if (currentDocument && isWorker) {
     return TypeReference.WORKERS
   }
   return options.analiticType
 }
 
 
-export const saveItemId = (storageId: string | undefined, type: 'reciever' | 'sender', mainData: Maindata, setMainData: Function | undefined,) => {
-  let currentItem = { ...mainData.currentDocument };
-  if (storageId && type == 'reciever') currentItem.receiverId = storageId
-  if (storageId && type == 'sender') currentItem.senderId = storageId
+export const saveItemId = (storageId: number | undefined, type: 'reciever' | 'sender', mainData: Maindata, setMainData: Function | undefined,) => {
+  let currentItem = { ...mainData.document.currentDocument };
+  
+  if (storageId && type == 'reciever') currentItem.docValue.receiverId = storageId
+  if (storageId && type == 'sender') currentItem.docValue.senderId = storageId
 
   if (setMainData) {
     setMainData('currentDocument', { ...currentItem })
   }
 }
 
-export const getDefinedItemIdForReceiver = (role: UserRoles | undefined, storageIdFromUser: string | undefined, contentName: string) => {
+export const getDefinedItemIdForReceiver = (role: UserRoles | undefined, storageIdFromUser: number | undefined, contentName: string) => {
   if (role && (role == UserRoles.TANDIR || contentName == DocumentType.ComeHalfstuff)) {
     return storageIdFromUser
   }
   
-  if (role && role == UserRoles.GLBUX && contentName == DocumentType.ZpCalculate) return ''
+  if (role && role == UserRoles.GLBUX && contentName == DocumentType.ZpCalculate) return -1
   
   if (
       storageIdFromUser && 
@@ -55,26 +61,19 @@ export const getDefinedItemIdForReceiver = (role: UserRoles | undefined, storage
   ) return storageIdFromUser
   
 
-  if (
-      role && 
-      role == UserRoles.HAMIRCHI && 
-      contentName == DocumentType.LeaveHalfstuff
-  ) return "659d1ff7523a48fdeb6ada6d"
-  
-
   if (contentName == DocumentType.ComeMaterial) return storageIdFromUser
 
-  return ''
+  return -1
 }
 
-export const getDefinedItemIdForSender = (role: UserRoles | undefined, storageIdFromUser: string | undefined, contentName: string) => {
+export const getDefinedItemIdForSender = (role: UserRoles | undefined, storageIdFromUser: number | undefined, contentName: string) => {
 
   if (
     role && 
     (role == UserRoles.GLBUX || role == UserRoles.ZAMGLBUX) && (
       contentName == DocumentType.LeaveMaterial ||
       contentName == DocumentType.LeaveHalfstuff
-    )) return ''
+    )) return -1
   
 
   if (
@@ -87,7 +86,7 @@ export const getDefinedItemIdForSender = (role: UserRoles | undefined, storageId
     contentName != DocumentType.LeaveHalfstuff 
   ) return storageIdFromUser
 
-  return ''
+  return -1
 }
 
 
@@ -110,8 +109,8 @@ export const visibilityCommentValueInDocument = (contentName: string, user: User
 
 export const addItems = (setMainData: Function | undefined, mainData: Maindata, newItem: DocTableItem) => {
 
-  let newObj = { ...mainData.currentDocument };
-  newObj.tableItems?.push(newItem)
+  let newObj = { ...mainData.document.currentDocument };
+  newObj.docTableItems?.push(newItem)
 
   if (setMainData) {
     setMainData('currentDocument', { ...newObj })

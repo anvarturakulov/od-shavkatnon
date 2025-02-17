@@ -2,7 +2,7 @@
 import { MatOborotItemProps } from './matOborotItem.props';
 import styles from './matOborotItem.module.css';
 import { numberValue } from '@/app/service/common/converters';
-import { totalByKey } from '@/app/components/dashboardReports/inform';
+import { totalByKey } from '@/app/components/reports/dashboardReports/inform';
 
 export const MatOborotItem = ({className, item, section, ...props }: MatOborotItemProps) :JSX.Element => {
     let PDKOL = totalByKey('PDKOL', item?.items)

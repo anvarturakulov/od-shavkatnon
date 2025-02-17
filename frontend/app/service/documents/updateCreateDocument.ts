@@ -1,22 +1,28 @@
 import axios from 'axios';
 import { showMessage } from '../common/showMessage';
 import { Maindata } from '@/app/context/app.context.interfaces';
-import { defaultDocumentFormItems } from '@/app/context/app.context.constants';
-import { DocumentModel, DocumentType } from '@/app/interfaces/document.interface';
+import { DocSTATUS, DocumentModel, DocumentType } from '@/app/interfaces/document.interface';
 import { workersUsersList } from '@/app/interfaces/general.interface';
+import { defaultDocument } from '@/app/context/app.context.constants';
 
 export const updateCreateDocument = (mainData: Maindata, setMainData: Function | undefined) => {
-  const { user, currentDocument, isNewDocument, contentName } = mainData
+  const { user } = mainData.users
+  const { currentDocument } = mainData.document
+  const { isNewDocument, contentName } = mainData.window
 
   let body: DocumentModel = {
     ...currentDocument,
   }
   
   let docsForNoProveden: Array<string> = [DocumentType.MoveCash, DocumentType.MoveProd, DocumentType.LeaveCash]
-  delete body._id;
-  if (isNewDocument && docsForNoProveden.includes(contentName)) {
-    body.proveden = false
-  }
+  delete body.id;
+  if (isNewDocument) {
+    if (docsForNoProveden.includes(contentName)) {
+      body.docStatus = DocSTATUS.OPEN
+    } else {
+      body.docStatus = DocSTATUS.PROVEDEN
+    }
+  } 
 
   const config = {
     headers: { Authorization: `Bearer ${user?.access_token}` }
@@ -28,7 +34,7 @@ export const updateCreateDocument = (mainData: Maindata, setMainData: Function |
       setMainData('clearControlElements', true);
       setMainData('showDocumentWindow', false);
       setMainData('isNewDocument', false);
-      setMainData('currentDocument', { ...defaultDocumentFormItems });
+      setMainData('currentDocument', { ...defaultDocument });
       if (user && workersUsersList.includes(user?.role)) {
         setMainData('mainPage', true);
       }
@@ -36,7 +42,7 @@ export const updateCreateDocument = (mainData: Maindata, setMainData: Function |
   }
 
   const uriPost = process.env.NEXT_PUBLIC_DOMAIN + '/api/document/create';
-  const uriPatch = process.env.NEXT_PUBLIC_DOMAIN + '/api/document/' + currentDocument._id;
+  const uriPatch = process.env.NEXT_PUBLIC_DOMAIN + '/api/document/' + currentDocument.id;
 
   if (isNewDocument) {
     axios.post(uriPost, body, config)
@@ -49,7 +55,7 @@ export const updateCreateDocument = (mainData: Maindata, setMainData: Function |
         }
       });
   } else {
-    if (currentDocument._id) {
+    if (currentDocument.id) {
       axios.patch(uriPatch, body, config)
         .then(function () {
           actionWithMainData('хужжат янгиланди')

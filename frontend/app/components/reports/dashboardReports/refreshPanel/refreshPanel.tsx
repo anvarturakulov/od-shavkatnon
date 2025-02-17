@@ -2,7 +2,7 @@
 import { RefreshPanelProps } from './resfreshPanel.props';
 import styles from './refreshPanel.module.css';
 import { useAppContext } from '@/app/context/app.context';
-import { Button } from '../../common/button/Button';
+import { Button } from '../../../common/button/Button';
 import { Maindata } from '@/app/context/app.context.interfaces';
 import DateIco from './date.svg'
 import { dateNumberToString } from '@/app/service/common/converterForDates';

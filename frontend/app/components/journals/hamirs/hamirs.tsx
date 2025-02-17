@@ -5,22 +5,21 @@ import { useEffect } from 'react';
 import { useAppContext } from '@/app/context/app.context';
 import useSWR from 'swr';
 import cn from 'classnames';
-import { secondsToDateString } from '../../documents/doc/helpers/doc.functions';
 import { getDataForSwr } from '@/app/service/common/getDataForSwr';
 import { HamirModel } from '@/app/interfaces/hamir.interface';
 import { createHamirsForDayByUser } from '@/app/service/documents/createHamirsForDayByUser';
 import { Maindata } from '@/app/context/app.context.interfaces';
 import { getNameReference } from '../helpers/journal.functions';
-import { TypeReference } from '@/app/interfaces/reference.interface';
 import { changeStatusHamir } from '@/app/service/documents/changeStatusHamir';
 import { UserRoles } from '@/app/interfaces/general.interface';
 import { SelectReferenceForTandirs } from './selectReferenceForTandirs/selectReferenceForTandirs';
+import { secondsToDateString } from '../../documents/document/doc/helpers/doc.functions';
 
 
 export default function Hamirs({ className, ...props} : HamirsProps ):JSX.Element {
     
     const {mainData, setMainData} = useAppContext();
-    const { user } = mainData;
+    const { user } = mainData.users;
     const userName = user?.name;
     let tandir = user?.role == UserRoles.TANDIR
     
@@ -38,10 +37,10 @@ export default function Hamirs({ className, ...props} : HamirsProps ):JSX.Elemen
     useEffect(() => {
         mutate()
         setMainData && setMainData('updateHamirJournal', false);
-    }, [mainData.updateHamirJournal])
+    }, [mainData.journal.updateHamirJournal])
 
     const createHamirs = (date: number, userName: string | undefined, mainData: Maindata, setMainData: Function | undefined) => {
-        const {firstWorker, secondWorker, thirdWorker} = mainData.definedTandirWorkers
+        const {firstWorker, secondWorker, thirdWorker} = mainData.document.definedTandirWorkers
 
         let question = `Бугунги хамирларни -
         ${getNameReference(references, firstWorker)},
@@ -72,19 +71,11 @@ export default function Hamirs({ className, ...props} : HamirsProps ):JSX.Elemen
     }
 
     const sendHamir = (e:React.FormEvent<HTMLButtonElement>, item: HamirModel, mainDate: Maindata, setMainData: Function | undefined) => {
-        const { user } = mainData;
-
-        if (user?.role == UserRoles.HAMIRCHI) {
-            if (confirm(`${item.order} - хамирни цехга бердингизми`)) {
-                changeStatusHamir(item, mainData, setMainData)
-                setMainData && setMainData('updateHamirJournal', true)
-            }
-        }
+        const { user } = mainData.users;
 
         if (user?.role == UserRoles.TANDIR) {
             let target = e.currentTarget;
             let count = Number(target.parentNode?.parentNode?.querySelector('input')?.value);
-            // let analiticId = target.parentNode?.parentNode?.querySelector('select') || '';
             let select = target.parentNode?.parentNode?.querySelector('select')
             let selectedElement = select?.options[select.selectedIndex];
 

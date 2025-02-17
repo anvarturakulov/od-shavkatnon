@@ -9,7 +9,7 @@ export const setProvodkaToDocument = async (
   mainData: Maindata
 ) => {
   
-  const { user } = mainData;
+  const { user } = mainData.users;
   const token = user?.access_token;
 
   const config = {

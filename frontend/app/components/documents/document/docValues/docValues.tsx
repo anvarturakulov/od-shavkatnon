@@ -19,9 +19,11 @@ import { isAdmins } from '@/app/service/common/users';
 export const DocValues = ({ className, ...props }: DocValuesProps): JSX.Element => {
     
     const {mainData, setMainData} = useAppContext();
-    const { contentName, currentDocument, isNewDocument } = mainData;
-    const role = mainData.user?.role;
-    const storageIdFromUser = mainData.user?.storageId;
+    const { contentName, isNewDocument } = mainData.window;
+    const { currentDocument} = mainData.document;
+    const { user } = mainData.users;
+    const role = user?.role;
+    const storageIdFromUser = user?.storageId;
     
     let options: OptionsForDocument = getOptionOfDocumentElements(contentName)
 
@@ -31,7 +33,7 @@ export const DocValues = ({ className, ...props }: DocValuesProps): JSX.Element 
     let hasCash = (
         (contentName == DocumentType.MoveCash) ||
         (contentName == DocumentType.LeaveCash && role == UserRoles.GLBUX) ||
-        isAdmins(mainData.user)
+        isAdmins(user)
     );
     
     let defaultNewItemForTable = {...defaultDocumentTableItem}
@@ -46,7 +48,7 @@ export const DocValues = ({ className, ...props }: DocValuesProps): JSX.Element 
                     label={options.receiverLabel} 
                     typeReference={options.receiverType}
                     visibile={options.recieverIsVisible}
-                    currentItemId={currentDocument?.receiverId}
+                    currentItemId={currentDocument?.docValue.receiverId}
                     type='receiver'
                     definedItemId= {definedItemIdForReceiver}
                 />
@@ -54,7 +56,7 @@ export const DocValues = ({ className, ...props }: DocValuesProps): JSX.Element 
                     label={options.senderLabel} 
                     typeReference={options.senderType}
                     visibile={options.senderIsVisible}
-                    currentItemId={currentDocument?.senderId}
+                    currentItemId={currentDocument?.docValue.senderId}
                     type='sender'
                     definedItemId= {definedItemIdForSender}
                 />
@@ -84,7 +86,7 @@ export const DocValues = ({ className, ...props }: DocValuesProps): JSX.Element 
                     label={getLabelForAnalitic(currentDocument, options)} 
                     typeReference= {getTypeReferenceForAnalitic(currentDocument, options)}
                     visibile={options.analiticIsVisible}
-                    currentItemId={currentDocument?.analiticId}
+                    currentItemId={currentDocument?.docValue.analiticId}
                     type='analitic'
                 />
 
@@ -95,21 +97,21 @@ export const DocValues = ({ className, ...props }: DocValuesProps): JSX.Element 
                             label={'Ёпувчи исми'} 
                             typeReference= {TypeReference.WORKERS}
                             visibile={true}
-                            currentItemId={currentDocument?.firstWorkerId}
+                            currentItemId={currentDocument?.docValue.firstWorkerId}
                             type='firstWorker'
                         />
                         <SelectReferenceInForm 
                             label={'Биринчи зувалачи исми'} 
                             typeReference= {TypeReference.WORKERS}
                             visibile={options.analiticIsVisible}
-                            currentItemId={currentDocument?.secondWorkerId}
+                            currentItemId={currentDocument?.docValue.secondWorkerId}
                             type='secondWorker'
                         />
                         <SelectReferenceInForm 
                             label={'Иккинчи зувалачи исми'} 
                             typeReference= {TypeReference.WORKERS}
                             visibile={options.analiticIsVisible}
-                            currentItemId={currentDocument?.thirdWorkerId}
+                            currentItemId={currentDocument?.docValue.thirdWorkerId}
                             type='thirdWorker'
                         />
                     </>
@@ -123,8 +125,8 @@ export const DocValues = ({ className, ...props }: DocValuesProps): JSX.Element 
                             getPriceAndBalance(
                                 mainData,
                                 setMainData,
-                                currentDocument.senderId,
-                                currentDocument.analiticId,
+                                currentDocument.docValue.senderId,
+                                currentDocument.docValue.analiticId,
                                 currentDocument.date,
                                 false,
                                 0

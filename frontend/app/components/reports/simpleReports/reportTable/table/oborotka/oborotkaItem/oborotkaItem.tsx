@@ -2,7 +2,7 @@
 import { OborotkaItemProps } from './oborotkaItem.props';
 import styles from './oborotkaItem.module.css';
 import { numberValue } from '@/app/service/common/converters';
-import { totalByKey } from '@/app/components/dashboardReports/inform';
+import { totalByKey } from '@/app/components/reports/dashboardReports/inform';
 import { getAnalitic } from '@/app/service/reports/getAnalitic';
 import { useAppContext } from '@/app/context/app.context';
 

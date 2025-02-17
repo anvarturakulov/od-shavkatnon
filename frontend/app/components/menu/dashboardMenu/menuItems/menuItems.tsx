@@ -3,8 +3,8 @@ import styles from './menuItems.module.css'
 import cn from 'classnames';
 import {MenuItemsProps} from './menuItems.props'
 import { useEffect, useState } from 'react';
-import { MenuItem } from '../../../interfaces/menu.interface';
-import { ContentType, UserRoles } from '../../../interfaces/general.interface';
+import { MenuItem } from '../../../../interfaces/menu.interface';
+import { ContentType, UserRoles } from '../../../../interfaces/general.interface';
 import { useAppContext } from '@/app/context/app.context';
 import { defaultDocumentFormItems, defaultReportOptions } from '@/app/context/app.context.constants';
 import { getKeyEnum } from '@/app/service/common/getKeyEnum';

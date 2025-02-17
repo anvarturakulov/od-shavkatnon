@@ -23,33 +23,27 @@ export const getDocument = async (
 
 }
 
-export const getNameReference = (references: any, id: string | undefined | null): String => {
+export const getNameReference = (references: any, id: number | undefined | null): String => {
   if (references && references.length > 0) {
     return references.filter((item: ReferenceModel) => item._id == id)[0]?.name
   }
   return 'Аникланмади'
 }
 
-export const deleteItemDocument = (id: string | undefined, docDate: number| undefined, docProveden: boolean | undefined, token: string | undefined, setMainData: Function | undefined, mainData: Maindata) => {
-  const { user, contentName } = mainData
+export const deleteItemDocument = (id: number | undefined, docDate: number| undefined, token: string | undefined, setMainData: Function | undefined, mainData: Maindata) => {
+  const { user } = mainData.users
+  const { contentName } = mainData.window
+
   if (docDate == undefined) docDate = 0
   const oneDay = (24 * 60 * 60 * 1000)
   const now = Date.now()
   const remainTime = now % oneDay
   const oneDayAgo = ( now - remainTime ) - oneDay - 1
-  // console.log(dateToStr(docDate))
-  // console.log(dateToStr(Date.now()))
-  // let k = 0;
+  
 
   if (
     user?.role == UserRoles.ADMIN || 
     user?.role == UserRoles.HEADCOMPANY || 
-    // (
-    //   user?.role == UserRoles.GLBUX && 
-    //   ( contentName != DocumentType.LeaveCash || !docProveden ) && 
-    //   // ( dateToStr(Date.now()) == dateToStr(docDate) )
-    //   (oneDayAgo < docDate)
-    // )
     ( 
       user?.role == UserRoles.ZP && 
       contentName == DocumentType.ZpCalculate &&
@@ -67,7 +61,8 @@ export const setProvodkaToDoc = (id: string | undefined, token: string | undefin
   if (proveden != undefined && proveden == false) {
 
     let yes = confirm('Хужжатга провдка берамизми')
-    const { user, contentName } = mainData
+    const { user } = mainData.users
+    const { contentName } = mainData.window
 
     if (
         yes && 
@@ -83,7 +78,7 @@ export const setProvodkaToDoc = (id: string | undefined, token: string | undefin
 
 export const getTotalValueForDocument = (document: DocumentModel): number => {
   
-  return document.total;
+  return document.docValue.total;
 }
 
 export const isFounder = (references: any, id: string | undefined | null): boolean => {
