@@ -6,17 +6,17 @@ import { Entry } from "src/entries/entry.model";
 import { DocSTATUS, DocumentType } from "src/interfaces/document.interface";
 import { User } from "src/users/users.model";
 
-interface DocuemntCreationAttrs {
+interface DocumentCreationAttrs {
     date: Date;
     userId: number
-    userOldId?: string
+    userOldId: string
     documentType: DocumentType
     docStatus: DocSTATUS
 }
 
 
 @Table({tableName: 'documents'})
-export class Document extends Model<Document, DocuemntCreationAttrs> {
+export class Document extends Model<Document, DocumentCreationAttrs> {
 
     @ApiProperty({example:'1', description: 'Уникальный иденфикатор'})
     @Column({type: DataType.BIGINT, unique: true, autoIncrement: true, primaryKey: true})

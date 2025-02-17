@@ -12,7 +12,7 @@ import { IntervalWindow } from '@/app/components/common/intervalWindow/intervalW
 import TopBox from '@/app/components/common/topBox/topBox';
 import { Information } from '@/app/components/information/information';
 import { Spinner } from '@/app/components/common/spinner/spinner';
-import { Inform } from '@/app/components/inform/inform';
+import { Inform } from '@/app/components/dashboardReports/inform';
 import UserJournal from '@/app/components/journals/userJournal/userJournal';
 
 export default function Dashboard() {

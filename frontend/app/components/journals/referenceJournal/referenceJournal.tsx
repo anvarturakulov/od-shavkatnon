@@ -3,7 +3,7 @@ import styles from './referenceJournal.module.css'
 import cn from 'classnames';
 import IcoTrash from './ico/trash.svg'
 import { useEffect } from 'react';
-import { Reference } from '../../references/reference/reference';
+import { Reference } from '../../reference/reference';
 import { ReferenceModel } from '../../../interfaces/reference.interface';
 import useSWR from 'swr';
 import { ReferenceJournalProps } from './referenceJournal.props';

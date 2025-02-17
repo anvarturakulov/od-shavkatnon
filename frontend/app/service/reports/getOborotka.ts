@@ -8,8 +8,11 @@ export const getOborotka = (
   mainData: Maindata
 ) => {
 
-  const { user, reportOption } = mainData;
-  const { startDate, endDate, firstReferenceId, schet } = reportOption;
+  const {report, users} = mainData
+  const { reportOption } = report;
+  const {user} = users
+
+  const { startDate, endDate, schet } = reportOption;
 
   const config = {
     headers: { Authorization: `Bearer ${user?.access_token}` }

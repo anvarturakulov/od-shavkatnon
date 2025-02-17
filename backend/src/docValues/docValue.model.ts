@@ -6,24 +6,22 @@ import { Reference } from "src/references/references.model";
 interface DocTableItemCreationAttrs {
     docId: bigint
     senderId: number
-    senderoldId: number
+    senderoldId?: string
     receiverId: number
-    receiverOldId: number
+    receiverOldId?: string
     analiticId: number
-    analiticOldId: number
-    firstWorkerId: number
-    secondWorkerId: number
-    secondWorkerReference: Reference
-    thirdWorkerId: number
-    thirdWorkerIdReference: Reference
-    isWorker: boolean
-    isPartner: boolean
-    isFounder: boolean
-    isCash: boolean
-    count: number
-    price: number
-    total: number
-    cashFromPartner: number
+    analiticOldId?: string
+    firstWorkerId?: number
+    secondWorkerId?: number
+    thirdWorkerId?: number
+    isWorker?: boolean
+    isPartner?: boolean
+    isFounder?: boolean
+    isCash?: boolean
+    count?: number
+    price?: number
+    total?: number
+    cashFromPartner?: number
 }
 
 @Table({tableName: 'docvalues'})
@@ -50,8 +48,8 @@ export class DocValue extends Model<DocValue, DocTableItemCreationAttrs> {
     senderReference: Reference;
 
     @ApiProperty({example:'654654', description: 'Старый id отправителя'})
-    @Column({type: DataType.NUMBER})
-    senderoldId: number;
+    @Column({type: DataType.STRING})
+    senderoldId: string;
 
     @ForeignKey(() => Reference)
     @ApiProperty({example:'12222897', description: 'Id - получателя'})
@@ -62,8 +60,8 @@ export class DocValue extends Model<DocValue, DocTableItemCreationAttrs> {
     receiverReference: Reference;
 
     @ApiProperty({example:'654654', description: 'Старый id получателя'})
-    @Column({type: DataType.NUMBER})
-    receiverOldId: number;
+    @Column({type: DataType.STRING})
+    receiverOldId: string;
 
     @ForeignKey(() => Reference)
     @ApiProperty({example:'12222897', description: 'Id - аналитики'})
@@ -74,8 +72,8 @@ export class DocValue extends Model<DocValue, DocTableItemCreationAttrs> {
     analiticReference: Reference;
 
     @ApiProperty({example:'654654', description: 'Старый id аналитики'})
-    @Column({type: DataType.NUMBER})
-    analiticOldId: number;
+    @Column({type: DataType.STRING})
+    analiticOldId: string;
 
     @ForeignKey(() => Reference)
     @ApiProperty({example:'12222897', description: 'Id - первого рабочего'})
@@ -118,19 +116,23 @@ export class DocValue extends Model<DocValue, DocTableItemCreationAttrs> {
     isCash: boolean;
 
     @ApiProperty({example:'10', description: 'Количество'})
-    @Column({type: DataType.NUMBER})
+    @Column({type: DataType.FLOAT})
     count: number;
 
     @ApiProperty({example:'15000', description: 'Цена'})
-    @Column({type: DataType.NUMBER})
+    @Column({type: DataType.FLOAT})
     price: number;
 
     @ApiProperty({example:'150000', description: 'Всего'})
-    @Column({type: DataType.NUMBER})
+    @Column({type: DataType.FLOAT})
     total: number;
 
     @ApiProperty({example:'150000', description: 'Полученные деньги с партнера'})
-    @Column({type: DataType.NUMBER})
+    @Column({type: DataType.FLOAT})
     cashFromPartner: number;
+
+    @ApiProperty({example:'....', description: 'Комментарий к документу'})
+    @Column({type: DataType.STRING})
+    comment: string;
 
 }

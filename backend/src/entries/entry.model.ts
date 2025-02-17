@@ -12,14 +12,14 @@ interface EntryCreationAttrs {
     debet: Schet
     debetFirstSubcontoId: number
     debetSecondSubcontoId: number
-    debetThirdSubcontoId: number
+    debetThirdSubcontoId?: number
     kredit: Schet
     kreditFirstSubcontoId: number
     kreditSecondSubcontoId: number
-    kreditThirdSubcontoId: number
+    kreditThirdSubcontoId?: number
     count: number
     total: number
-    description: string
+    description?: string
 }
 
 
@@ -103,11 +103,11 @@ export class Entry extends Model<Entry, EntryCreationAttrs> {
     kreditThirdSubcontoReference: Reference;
 
     @ApiProperty({example:'10', description: 'Количество'})
-    @Column({type: DataType.NUMBER})
+    @Column({type: DataType.FLOAT})
     count: number;
 
     @ApiProperty({example:'150000', description: 'Всего'})
-    @Column({type: DataType.NUMBER})
+    @Column({type: DataType.FLOAT})
     total: number;
 
     @ApiProperty({example:'Поступление материалов', description: 'Описание проводки'})

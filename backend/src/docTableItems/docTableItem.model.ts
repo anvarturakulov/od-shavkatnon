@@ -7,7 +7,7 @@ import { Reference } from "src/references/references.model";
 interface DocTableItemCreationAttrs {
     docId: bigint
     analiticId: number
-    analiticOldId: number
+    analiticOldId?: number
     count: number
     price: number
     total: number
@@ -41,15 +41,15 @@ export class DocTableItem extends Model<DocTableItem, DocTableItemCreationAttrs>
     analiticReference: Reference;
 
     @ApiProperty({example:'10', description: 'Количество'})
-    @Column({type: DataType.NUMBER})
+    @Column({type: DataType.FLOAT})
     count: number;
 
     @ApiProperty({example:'15000', description: 'Цена'})
-    @Column({type: DataType.NUMBER})
+    @Column({type: DataType.FLOAT})
     price: number;
 
     @ApiProperty({example:'150000', description: 'Всего'})
-    @Column({type: DataType.NUMBER})
+    @Column({type: DataType.FLOAT})
     total: number;
 
 }

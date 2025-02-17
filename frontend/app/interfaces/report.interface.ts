@@ -12,7 +12,6 @@ export interface ReportOptions {
     firstReferenceId: string,
     secondReferenceId?: string,
     showReport: boolean,
-    entrys: Array<EntryItem>,
     startReport: boolean,
     schet: Schet,
 }
@@ -50,25 +49,6 @@ export interface EntryItem {
     comment: string,
 }
 
-export enum TypeQuery {
-    PDSUM = 'PDSUM',
-    PDKOL = 'PDKOL',
-    PKSUM = 'PKSUM',
-    PKKOL = 'PKKOL',
-    TDSUM = 'TDSUM',
-    TDKOL = 'TDKOL',
-    TKSUM = 'TKSUM',
-    TKKOL = 'TKKOL',
-    MPRICE = 'MPRICE',
-    BALANCE = 'BALANCE',
-    TDSUMEntrys = 'TDSUMEntrys',
-    TKSUMEntrys = 'TKSUMEntrys',
-    AllEntrys = 'AllEntrys',
-    ODS = 'ODS',
-    OKS = 'OKS',
-    ODK = 'ODK',
-    OKK = 'OKK',
-}
 
 export enum OborotType {
     S20 = 'Харажатлар', // СЧЕТА УЧЕТА ОСНОВНОГО ПРОИЗВОДСТВА И СЧЕТА УЧЕТА РАСХОДОВ ПЕРИОДА

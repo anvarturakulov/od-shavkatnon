@@ -5,15 +5,15 @@ import { Reference } from "src/references/references.model";
 
 interface RefValueCreationAttrs {
     referenceId: number
-    clientForSectionId: number
-    typePartners: TypePartners
-    typeTMZ: TypeTMZ
-    typeSection: TypeSECTION
-    unit: string;
-    comment: string;
-    norma: number;
-    un: boolean;
-    longCharge: boolean;
+    clientForSectionId?: number
+    typePartners?: TypePartners
+    typeTMZ?: TypeTMZ
+    typeSection?: TypeSECTION
+    unit?: string;
+    comment?: string;
+    norma?: number;
+    un?: boolean;
+    longCharge?: boolean;
 
 }
 
@@ -30,7 +30,7 @@ export class RefValue extends Model<RefValue, RefValueCreationAttrs> {
     referenceId: number
 
     @BelongsTo(() => Reference) 
-    reference!: Reference;
+    reference: Reference;
     
     @ApiProperty({example:'12222', description: 'Кому относится клиент - идентификатор подразделения'})
     @Column({type: DataType.INTEGER})

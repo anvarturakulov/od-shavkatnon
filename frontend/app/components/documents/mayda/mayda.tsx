@@ -15,7 +15,7 @@ import { defaultDocumentFormItems } from '@/app/context/app.context.constants';
 import useSWR from 'swr';
 import { getDataForSwr } from '@/app/service/common/getDataForSwr';
 import { getPropertySubconto } from '@/app/service/reports/getPropertySubconto';
-import { CheckBoxInTable } from '../inputs/checkBoxInForm/checkBoxInForm';
+import { CheckBoxInTable } from '../document/inputs/checkBoxInForm/checkBoxInForm';
 
 export const Mayda = ({className, ...props }: MaydaProps) :JSX.Element => {
     

@@ -6,7 +6,7 @@ import { MenuData } from '@/app/data/menu';
 import { useAppContext } from '@/app/context/app.context';
 import { useEffect, useState } from 'react';
 import { redirect } from 'next/navigation';
-import UserMenu from '@/app/components/userMenu/userMenu';
+import UserMenu from '@/app/components/workersMenu/workersMenu';
 import ReportWindow from '@/app/components/reports/reportWindow/reportWindow';
 import Journal from '@/app/components/journals/journal/journal';
 import { Message } from '@/app/components/common/message/message';

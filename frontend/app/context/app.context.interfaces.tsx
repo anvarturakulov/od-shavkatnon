@@ -5,45 +5,58 @@ import { EntryItem, ReportOptions } from '../interfaces/report.interface';
 import { UserModel } from '../interfaces/user.interface';
 
 export interface Maindata {
-  activeMenuKey: string,
-  contentType?: ContentType,
-  contentName: string,
-  contentTitle: string;
-  user: User | undefined,
-  mainPage: boolean,
-  showMessageWindow: boolean,
-  message: string | Array<EntryItem>,
-  messageType: MessageType,
-  showDocumentWindow: boolean,
-  isNewDocument: boolean,
-  currentDocument: DocumentModel,
-  updateDataForDocumentJournal: boolean,
-  clearControlElements: boolean,
-  showReferenceWindow: boolean,
-  isNewReference: boolean;
-  updateDataForRefenceJournal: boolean,
-  currentReference: ReferenceModel | undefined,
-  reportOption: ReportOptions,
-  showIntervalWindow: boolean,
-  showMayda: boolean,
-  definedTandirWorkers: DefinedTandirWorkers,
-  updateHamirJournal: boolean,
-  currentStorageIdInHamirsJournal: string,
-  interval: Interval,
-  loading: boolean,
-  informData: Array<any>,
-  matOborot: Array<any>,
-  oborotka: any,
-  journalChechboxs: JournalCheckboxs,
-  showUserWindow: boolean,
-  isNewUser: boolean,
-  currentUser: UserModel | undefined,
-  updateDataForUserJournal: boolean,
-  currentFinancialInnerReportType: string,
-  dashboardCurrentReportType: string,
-  currentDKInnerReportId: string,
-  currentDKInnerArrayId: string,
-  uploadingDashboard: boolean,
+  document: {
+    currentDocument: DocumentModel,
+    definedTandirWorkers: DefinedTandirWorkers,
+  },
+  reference: {
+    currentReference: ReferenceModel | undefined,
+  },
+  report: {
+    reportOption: ReportOptions,
+    loading: boolean,
+    informData: Array<any>,
+    matOborot: Array<any>,
+    oborotka: any,
+    currentDKInnerReportId: string,
+    currentDKInnerArrayId: string,
+    dashboardCurrentReportType: string,
+    currentFinancialInnerReportType: string,
+  },
+  journal: {
+    updateDataForDocumentJournal: boolean,
+    updateDataForUserJournal: boolean,
+    journalChechboxs: JournalCheckboxs,
+    updateDataForRefenceJournal: boolean,
+    currentStorageIdInHamirsJournal: string,
+    updateHamirJournal: boolean,
+  },
+  window: {
+    showMessageWindow: boolean,
+    message: string | Array<EntryItem>,
+    messageType: MessageType,
+    activeMenuKey: string,
+    clearControlElements: boolean,
+    showDocumentWindow: boolean,
+    isNewDocument: boolean,
+    showReferenceWindow: boolean,
+    isNewReference: boolean;
+    interval: Interval,
+    showIntervalWindow: boolean,
+    showMayda: boolean,
+    contentType?: ContentType,
+    contentName: string,
+    contentTitle: string;
+    mainPage: boolean,
+    uploadingDashboard: boolean,
+    showUserWindow: boolean,
+    isNewUser: boolean,
+  },
+  users: {
+    currentUser: UserModel | undefined,
+    user: User | undefined,
+  }
+  
 }
 
 export interface IAppContext {

@@ -2,7 +2,7 @@
 import styles from './topBox.module.css'
 import cn from 'classnames';
 import {TopBoxProps} from './topBox.props';
-import Menu from '../../menu/menu';
+import Menu from '../../dashboardMenu/menu';
 import { Htag } from '../htag/Htag';
 import { useAppContext } from '@/app/context/app.context';
 import User from './userTopBox/userTopBox';

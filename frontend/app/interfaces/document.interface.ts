@@ -1,5 +1,11 @@
 import { TypeReference } from './reference.interface'
 
+export enum DocSTATUS {
+    OPEN = 'OPEN',
+    DELETED = 'DELETED',
+    PROVEDEN = 'PROVEDEN'
+}
+
 export enum DocumentType {
 
     ComeMaterial = 'ComeMaterial',
@@ -31,40 +37,45 @@ export enum DocumentType {
 }
 
 export interface DocTableItem {
-    referenceId: string,
+    referenceId: number,
+    balance: number,
     count: number,
     price: number,
     total: number,
     comment: string,
-    balance: number,
 }
 
-
-export interface DocumentModel {
-    _id?: string,
-    date: number,
-    docNumber: number,
-    documentType: string,
-    deleted: boolean,
-    user: string,
-    senderId: string,
-    receiverId: string,
+export interface DocValue {
+    senderId: number,
+    senderoldId: string;
+    receiverId: number,
+    receiverOldId: string;
+    analiticId: number,
+    analiticOldId: string;
+    firstWorkerId?: number | null,
+    secondWorkerId?: number | null,
+    thirdWorkerId?: number | null,
     isWorker?: boolean,
     isPartner?: boolean,
     isFounder?: boolean,
     isCash?: boolean,
-    analiticId: string,
     count: number,
     balance?: number,
     price: number,
     total: number,
     cashFromPartner?: number,
     comment?: string,
-    proveden?: boolean,
-    firstWorkerId?: string | null,
-    secondWorkerId?: string | null,
-    thirdWorkerId?: string | null,
-    tableItems: Array<DocTableItem>,
+}
+
+export interface DocumentModel {
+    _id?: string,
+    date: number,
+    userId: number,
+    userOldId: string,
+    documentType: string,
+    docStatus: DocSTATUS,
+    docValue: DocValue
+    docTableItems: Array<DocTableItem>,
 };
 
 export interface OptionsForDocument {

@@ -48,9 +48,9 @@ export interface BodyForLogin {
 }
 
 export interface DefinedTandirWorkers {
-    firstWorker: string | null,
-    secondWorker: string | null,
-    thirdWorker: string | null,
+    firstWorker: number | null,
+    secondWorker: number | null,
+    thirdWorker: number | null,
 }
 
 export const dashboardUsersList = [UserRoles.ADMIN, UserRoles.HEADCOMPANY, UserRoles.GUEST, UserRoles.GLBUX, UserRoles.ZAMGLBUX, UserRoles.ZP];

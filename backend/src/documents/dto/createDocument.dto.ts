@@ -1,7 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {IsEmail, IsString, Length, IsEnum, IsDate, IsNumber, IsInt} from 'class-validator';
 import { DocSTATUS } from "src/interfaces/document.interface";
-import { UserRoles } from "src/interfaces/user.interface";
 
 export class CreateDocumentDto {
     @ApiProperty({example:'12-01-2025', description: 'Дата документа'})
@@ -14,7 +13,7 @@ export class CreateDocumentDto {
 
     @ApiProperty({example:'36899955', description: 'Старый идентификатор пользователя'})
     @IsString({message: 'userOldId - должен быть строкой'})
-    userOldId?: string
+    userOldId: string
 
     @ApiProperty({example:'ComeMaterial', description: 'Тип документа - из списка документов'})
     @IsEnum(DocumentType, {message: 'DocumentType - должен быть из списка типов документа'})

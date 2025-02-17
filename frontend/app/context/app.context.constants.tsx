@@ -1,27 +1,24 @@
-import { DocumentModel, DocumentType, Interval, JournalCheckboxs } from '../interfaces/document.interface'
+import { DocSTATUS, DocTableItem, DocumentModel, DocumentType, DocValue, Interval, JournalCheckboxs } from '../interfaces/document.interface'
 import { DefinedTandirWorkers } from '../interfaces/general.interface'
 import { ReportOptions, Schet } from '../interfaces/report.interface'
 import { Maindata } from './app.context.interfaces'
 
-export const defaultDocumentTableItem = {
-    referenceId: '',
+export const defaultDocumentTableItem: DocTableItem = {
+    referenceId: 0,
+    balance: 0,
     count: 0,
     price: 0,
     total: 0,
-    comment: '',
-    balance: 0
+    comment: ''
 }
 
-export const defaultDocumentFormItems:DocumentModel = {
-    _id: '',
-    date: 0,
-    docNumber: 0,
-    documentType: '',
-    deleted: false,
-    user: '',
-    senderId: '',
-    receiverId: '',
-    analiticId: '',
+export const defaultDocValue: DocValue = {
+    senderId: 0,
+    senderoldId: '',
+    receiverId: 0,
+    receiverOldId: '',
+    analiticId: 0,
+    analiticOldId: '',
     isWorker: false,
     isPartner: false,
     isFounder: false,
@@ -32,18 +29,26 @@ export const defaultDocumentFormItems:DocumentModel = {
     total: 0,
     cashFromPartner: 0,
     comment: '',
-    proveden: true,
-    firstWorkerId: '',
-    secondWorkerId: '',
-    thirdWorkerId: '',
-    tableItems: [defaultDocumentTableItem],
-    // мы его не используем
+    firstWorkerId: 0,
+    secondWorkerId: 0,
+    thirdWorkerId: 0,
+}
+
+export const defaultDocument:DocumentModel = {
+    _id: '',
+    date: 0,
+    documentType: '',
+    userId: 0,
+    userOldId: '',
+    docStatus: DocSTATUS.OPEN,
+    docValue: defaultDocValue,
+    docTableItems: [defaultDocumentTableItem],
 }
 
 export const defaultTandirWorkers: DefinedTandirWorkers = {
-    firstWorker: '',
-    secondWorker: '',
-    thirdWorker: '',
+    firstWorker: 0,
+    secondWorker: 0,
+    thirdWorker: 0,
 }
 
 export const defaultReportOptions: ReportOptions =  {
@@ -52,7 +57,6 @@ export const defaultReportOptions: ReportOptions =  {
     firstReferenceId: '',
     secondReferenceId: '',
     showReport: false,
-    entrys: [],
     startReport: false,
     schet: Schet.S20,
 }
@@ -69,43 +73,56 @@ export const defaultJournalCheckbox:JournalCheckboxs = {
 }
 
 export const defaultMainData: Maindata = {
-    activeMenuKey: '',
-    contentType: 'document',
-    contentName: '',
-    contentTitle: '',
-    user: undefined,
-    mainPage: true,
-    showMessageWindow: false,
-    message: 'Маълумотлар сакланди',
-    messageType: 'error',
-    showDocumentWindow: false,
-    isNewDocument: false,
-    updateDataForDocumentJournal: false,
-    currentDocument: {...defaultDocumentFormItems},
-    clearControlElements: false,
-    showReferenceWindow: false,
-    isNewReference: false,
-    updateDataForRefenceJournal: false,
-    currentReference: undefined,
-    reportOption: {...defaultReportOptions},
-    showIntervalWindow: false,
-    showMayda: false,
-    definedTandirWorkers: defaultTandirWorkers,
-    updateHamirJournal: false,
-    currentStorageIdInHamirsJournal: '',
-    interval: defaultInterval,
-    loading: false,
-    informData: [],
-    matOborot: [],
-    oborotka: [],
-    journalChechboxs: defaultJournalCheckbox,
-    showUserWindow: false,
-    isNewUser: false,
-    currentUser: undefined,
-    updateDataForUserJournal: false,
-    currentFinancialInnerReportType: 'outZP',
-    dashboardCurrentReportType: '',
-    currentDKInnerReportId: '',
-    currentDKInnerArrayId: '',
-    uploadingDashboard: false,
+    document: {
+        currentDocument: {...defaultDocument},
+        definedTandirWorkers: defaultTandirWorkers,
+    },
+    reference: {
+        currentReference: undefined,
+    },
+    report: {
+        reportOption: {...defaultReportOptions},
+        loading: false,
+        informData: [],
+        matOborot: [],
+        oborotka: [],
+        currentDKInnerReportId: '',
+        currentDKInnerArrayId: '',
+        dashboardCurrentReportType: '',
+        currentFinancialInnerReportType: 'outZP',
+    },
+    journal: {
+        updateDataForDocumentJournal: false,
+        updateDataForUserJournal: false,
+        journalChechboxs: defaultJournalCheckbox,
+        updateDataForRefenceJournal: false,
+        currentStorageIdInHamirsJournal: '',
+        updateHamirJournal: false,
+    },
+    window: {
+        showMessageWindow: false,
+        message: 'Маълумотлар сакланди',
+        messageType: 'error',
+        clearControlElements: false,
+        showDocumentWindow: false,
+        isNewDocument: false,
+        showReferenceWindow: false,
+        isNewReference: false,
+        interval: defaultInterval,
+        showIntervalWindow: false,
+        showMayda: false,
+        contentType: 'document',
+        contentName: '',
+        contentTitle: '',
+        activeMenuKey: '',
+        mainPage: true,
+        showUserWindow: false,
+        isNewUser: false,
+        uploadingDashboard: false,
+    },
+    users: {
+        user: undefined,
+        currentUser: undefined,
+    }
+    
   }
