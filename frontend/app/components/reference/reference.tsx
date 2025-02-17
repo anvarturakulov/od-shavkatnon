@@ -4,7 +4,7 @@ import { ReferenceProps } from './reference.props';
 import styles from './reference.module.css';
 import cn from 'classnames';
 import { Button} from '@/app/components';
-import { ReferenceModel, TypePartners, TypeReference, TypeTMZ } from '../../interfaces/reference.interface';
+import { ReferenceModel, TypePartners, TypeReference, TypeSECTION, TypeTMZ } from '../../interfaces/reference.interface';
 import { typePartnersList, typeTMZList } from './helpers/reference.constants';
 import { useAppContext } from '@/app/context/app.context';
 import { Select } from './helpers/reference.components';
@@ -18,31 +18,30 @@ import { SelectForReferences } from './selectForReferences/selectForReferences';
 export const Reference = ({ className, ...props }: ReferenceProps) :JSX.Element => {
 
     const {mainData, setMainData} = useAppContext();
-    const { contentName } = mainData;
+    const {isNewReference, showReferenceWindow} = mainData.window
+    const { user } = mainData.users
+    const { currentReference } = mainData.reference
+    const { contentName } = mainData.window;
     const typeReference = getTypeReference( contentName );
 
     const defaultBody: ReferenceModel = {
         name: '',
-        typeReference,
-        typePartners: undefined,
-        typeTMZ: undefined,
-        unit: '',
-        comment: '',
-        delivery: false,
-        filial: false,
-        sklad: false,
-        buxgalter: false,
-        un: false,
-        clientForDeliveryId: '',
-        firstPrice:0,
-        secondPrice:0,
-        thirdPrice:0,
-        deleted: false,
-        norma: 0,
-        longCharge: false,
-        director: false,
-        shavkat: false,
-        maxsud: false,
+        oldId: '',
+        typeReference, 
+        refValues : {
+            typePartners: undefined,
+            typeTMZ: undefined,
+            unit: '',
+            comment: '',
+            un: false,
+            clientForSectionId: -1,
+            firstPrice:0,
+            secondPrice:0,
+            thirdPrice:0,
+            markToDeleted: false,
+            norma: 0,
+            longCharge: false,
+        }
     }
 
     const [body, setBody] = useState<ReferenceModel>(defaultBody) 
@@ -54,7 +53,6 @@ export const Reference = ({ className, ...props }: ReferenceProps) :JSX.Element 
         if (target.id == 'typeTMZ') value = defineTypeTMZ(value)
         if (target.id == 'typePartners') value = defineTypePartners(value)
         
-        console.log(`${body.typeTMZ} ${body.typePartners}`)
         setBody((state:ReferenceModel) => {
             return {
                 ...state,
@@ -84,31 +82,25 @@ export const Reference = ({ className, ...props }: ReferenceProps) :JSX.Element 
 
     useEffect(()=> {
         setBody(defaultBody);
-    }, [mainData.clearControlElements])
-
-    useEffect(()=> {
-        // setBody(defaultBody);
-    },[] )
+    }, [mainData.window.clearControlElements])
 
     useEffect(() => {
-        const {currentReference} = mainData
+        const {currentReference} = mainData.reference
         if (currentReference != undefined) {
-            const { typePartners, typeTMZ, unit, comment } = currentReference
-            console.log('currentRef')
-            console.log(currentReference)
+            const { typePartners, typeTMZ, unit, comment } = currentReference.refValues
             let newBody: ReferenceModel = {
                 ...currentReference,
                 typeReference: getTypeReferenceByTitle(currentReference.typeReference),
-                typePartners: typePartners,
-                typeTMZ: typeTMZ,
-                unit: unit,
-                comment: comment,
+                refValues : {
+                    typePartners: typePartners,
+                    typeTMZ: typeTMZ,
+                    unit: unit,
+                    comment: comment,
+                }
             }
             setBody(newBody)
         }
-    }, [mainData.currentReference])
-
-    const {isNewReference, showReferenceWindow, user} = mainData
+    }, [ currentReference ])
 
     return (
         <div className={cn(styles.referenceBox, 
@@ -131,108 +123,107 @@ export const Reference = ({ className, ...props }: ReferenceProps) :JSX.Element 
                     }
                     <div>
                         <div>Улчов бирлиги</div>
-                        <input value={body.unit} type="text" id='unit' className={styles.input} onChange={(e)=>changeElements(e)}/>
+                        <input value={body.refValues.unit} type="text" id='unit' className={styles.input} onChange={(e)=>changeElements(e)}/>
                     </div>
                 </div>
             }
 
             <div className={styles.checkBoxs}>
                 {
-                    mainData.user?.role == UserRoles.ADMIN && 
+                    user?.role == UserRoles.ADMIN && 
                     body.typeReference == TypeReference.STORAGES &&
-                    <CheckBoxForReference label='Юк ташувчи' setCheckbox={setCheckbox} checked={body.delivery} id={'delivery'}/>
+                    <CheckBoxForReference label='Юк ташувчи' setCheckbox={setCheckbox} checked={body.refValues.typeSection == TypeSECTION.DELIVERY} id={'delivery'}/>
                 }
 
                 {
-                    mainData.user?.role == UserRoles.ADMIN && 
+                    user?.role == UserRoles.ADMIN && 
                     body.typeReference == TypeReference.STORAGES &&
-                    <CheckBoxForReference label='Умумий булим' setCheckbox={setCheckbox} checked={body.umumBulim} id={'umumBulim'}/>
+                    <CheckBoxForReference label='Умумий булим' setCheckbox={setCheckbox} checked={body.refValues.typeSection == TypeSECTION.COMMON} id={'umumBulim'}/>
                 }
 
                 {
-                    mainData.user?.role == UserRoles.ADMIN && 
+                    user?.role == UserRoles.ADMIN && 
                     body.typeReference == TypeReference.STORAGES &&
-                    <CheckBoxForReference label='Филиал' setCheckbox={setCheckbox} checked={body.filial} id={'filial'}/>
+                    <CheckBoxForReference label='Филиал' setCheckbox={setCheckbox} checked={body.refValues.typeSection == TypeSECTION.FILIAL} id={'filial'}/>
                 }
 
                 {
-                    mainData.user?.role == UserRoles.ADMIN && 
+                    user?.role == UserRoles.ADMIN && 
                     body.typeReference == TypeReference.STORAGES &&
-                    <CheckBoxForReference label='Склад' setCheckbox={setCheckbox} checked={body.sklad} id={'sklad'}/>
+                    <CheckBoxForReference label='Склад' setCheckbox={setCheckbox} checked={body.refValues.typeSection == TypeSECTION.STORAGE} id={'sklad'}/>
                 }
 
                 {
-                    ( mainData.user?.role == UserRoles.ADMIN || mainData.user?.role == UserRoles.HEADCOMPANY )  && 
+                    ( user?.role == UserRoles.ADMIN || user?.role == UserRoles.HEADCOMPANY )  && 
                     body.typeReference == TypeReference.TMZ &&
-                    <CheckBoxForReference label='Ун' setCheckbox={setCheckbox} checked={body.un} id={'un'}/>
+                    <CheckBoxForReference label='Ун' setCheckbox={setCheckbox} checked={body.refValues.un} id={'un'}/>
                 }
 
                 {
-                    ( mainData.user?.role == UserRoles.ADMIN || mainData.user?.role == UserRoles.HEADCOMPANY )  && 
+                    ( user?.role == UserRoles.ADMIN || user?.role == UserRoles.HEADCOMPANY )  && 
                     body.typeReference == TypeReference.STORAGES &&
-                    <CheckBoxForReference label='Бухгалтер' setCheckbox={setCheckbox} checked={body.buxgalter} id={'buxgalter'}/>
+                    <CheckBoxForReference label='Бухгалтер' setCheckbox={setCheckbox} checked={body.refValues.typeSection == TypeSECTION.ACCOUNTANT} id={'buxgalter'}/>
                 }
 
                 {
-                    mainData.user?.role == UserRoles.ADMIN && 
+                    user?.role == UserRoles.ADMIN && 
                     body.typeReference == TypeReference.CHARGES &&
-                    <CheckBoxForReference label='Ойлик харажат' setCheckbox={setCheckbox} checked={body.longCharge} id={'longCharge'}/>
+                    <CheckBoxForReference label='Ойлик харажат' setCheckbox={setCheckbox} checked={body.refValues.longCharge} id={'longCharge'}/>
                 }
                 
             </div>
 
             {
                 ( 
-                    mainData.user?.role == UserRoles.ADMIN || 
-                    mainData.user?.role == UserRoles.HEADCOMPANY 
+                    user?.role == UserRoles.ADMIN || 
+                    user?.role == UserRoles.HEADCOMPANY 
                 ) &&
                 body.typeReference == TypeReference.TMZ &&
-                body.typeTMZ == TypeTMZ.PRODUCT &&
+                body.refValues.typeTMZ == TypeTMZ.PRODUCT &&
 
                 <div className={styles.priceBox}>
                     <div>
                         <div>Биринчи нарх</div>
-                        <input value={body.firstPrice} type="number" id='firstPrice' className={styles.input} onChange={(e)=>changeElements(e)}/>
+                        <input value={body.refValues.firstPrice} type="number" id='firstPrice' className={styles.input} onChange={(e)=>changeElements(e)}/>
                     </div>
                     <div>
                         <div>Иккинчи нарх</div>
-                        <input value={body.secondPrice} type="number" id='secondPrice' className={styles.input} onChange={(e)=>changeElements(e)}/>
+                        <input value={body.refValues.secondPrice} type="number" id='secondPrice' className={styles.input} onChange={(e)=>changeElements(e)}/>
                     </div>
                     <div>
                         <div>Учинчи нарх</div>
-                        <input value={body.thirdPrice} type="number" id='thirdPrice' className={styles.input} onChange={(e)=>changeElements(e)}/>
+                        <input value={body.refValues.thirdPrice} type="number" id='thirdPrice' className={styles.input} onChange={(e)=>changeElements(e)}/>
                     </div>
                 </div>
             }
             
             {
-                ( mainData.user?.role == UserRoles.ADMIN || mainData.user?.role == UserRoles.HEADCOMPANY )  && 
-                (body.typePartners == TypePartners.CLIENTS) &&
-                <SelectForReferences label='Клиент сохиби' typeReference={TypeReference.STORAGES} currentItemId={mainData.currentReference?.clientForDeliveryId} setClientForDeliveryId={setClientForDeliveryId}/>
+                ( user?.role == UserRoles.ADMIN || user?.role == UserRoles.HEADCOMPANY )  && 
+                (body.refValues.typePartners == TypePartners.CLIENTS) &&
+                <SelectForReferences label='Клиент сохиби' typeReference={TypeReference.STORAGES} currentItemId={body.refValues.clientForSectionId} setClientForDeliveryId={setClientForDeliveryId}/>
             }
 
             {
-                ( mainData.user?.role == UserRoles.ADMIN || mainData.user?.role == UserRoles.HEADCOMPANY )  && 
-                (body.typeReference == TypeReference.TMZ) && (body.typeTMZ == TypeTMZ.MATERIAL) &&
+                ( user?.role == UserRoles.ADMIN || user?.role == UserRoles.HEADCOMPANY )  && 
+                (body.typeReference == TypeReference.TMZ) && (body.refValues.typeTMZ == TypeTMZ.MATERIAL) &&
                 <>
                 <div>Норма</div>
-                <input value={body.norma} type="number" id='norma' className={styles.input} onChange={(e)=>changeElements(e)}/>
+                <input value={body.refValues.norma} type="number" id='norma' className={styles.input} onChange={(e)=>changeElements(e)}/>
                 </>
             }
 
             {
-                ( mainData.user?.role == UserRoles.ADMIN )  && 
+                ( user?.role == UserRoles.ADMIN )  && 
                 (body.typeReference == TypeReference.STORAGES) &&
                 <>
                     <div>
-                        <CheckBoxForReference label='Директор' setCheckbox={setCheckbox} checked={body.director} id={'director'}/>
-                        <CheckBoxForReference label='Махсуд' setCheckbox={setCheckbox} checked={body.maxsud} id={'maxsud'}/>
+                        <CheckBoxForReference label='Директор' setCheckbox={setCheckbox} checked={body.refValues.typeSection == TypeSECTION.DIRECTOR} id={'director'}/>
                     </div>
                 </>
             }
 
             {
-                ( mainData.user?.role == UserRoles.ADMIN )  && 
+                ( user?.role == UserRoles.ADMIN )  && 
                 (body.typeReference == TypeReference.CHARGES || body.typeReference == TypeReference.STORAGES) &&
                 <>
                     <div>
@@ -245,13 +236,13 @@ export const Reference = ({ className, ...props }: ReferenceProps) :JSX.Element 
                 body.typeReference == TypeReference.WORKERS &&
                 <div>
                     <div>Телеграм ID</div>
-                    <input value={body.telegramId} type="text" id='telegramId' className={styles.input} onChange={(e)=>changeElements(e)}/>
+                    <input value={body.refValues.telegramId} type="text" id='telegramId' className={styles.input} onChange={(e)=>changeElements(e)}/>
                 </div>
             }
 
             <div>
                 <div>Изох</div>
-                <input value={body.comment} type="text" id='comment' className={styles.input} onChange={(e)=>changeElements(e)}/>
+                <input value={body.refValues.comment} type="text" id='comment' className={styles.input} onChange={(e)=>changeElements(e)}/>
             </div>
             
         <div className={styles.boxBtn}>

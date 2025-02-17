@@ -32,6 +32,10 @@ export class CreateReferenceValueDto {
     @IsString({message: 'comment - должен быть строкой'})
     comment?: string;
 
+    @ApiProperty({example:'false', description: 'Помечан на удаление?'})
+    @IsBoolean({message: 'markToDeleted - значание должно быть TRUE или FALSE'})
+    markToDeleted: boolean;
+
     @ApiProperty({example:'1.35', description: 'Норма затрат на ед. материала?'})
     @IsNumber({}, {message: 'norma - должен быть числом'})
     norma?: number;
@@ -43,5 +47,21 @@ export class CreateReferenceValueDto {
     @ApiProperty({example:'true', description: 'Долгосрочный тип затрат?'})
     @IsBoolean({message: 'longCharge - значание должно быть TRUE или FALSE'})
     longCharge?: boolean;
+
+    @ApiProperty({example:'3400', description: 'Первая цена'})
+    @IsNumber({}, {message: 'firstPrice - должен быть числом'})
+    firstPrice: number;
+
+    @ApiProperty({example:'3800', description: 'Вторая цена'})
+    @IsNumber({}, {message: 'secondPrice - должен быть числом'})
+    secondPrice: number;
+
+    @ApiProperty({example:'4000', description: 'Третья цена'})
+    @IsNumber({}, {message: 'thirdPrice - должен быть числом'})
+    thirdPrice: number;
+
+    @ApiProperty({example:'....', description: 'Id телеграм'})
+    @IsString({message: 'telegramId - должен быть строкой'})
+    telegramId: string;
 
 }

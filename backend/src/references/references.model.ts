@@ -1,9 +1,9 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { BelongsToMany, Column, DataType, Model, Table, HasMany, HasOne } from "sequelize-typescript";
+import { Column, DataType, Model, Table, HasOne } from "sequelize-typescript";
 import { DocValue } from "src/docValues/docValue.model";
 import { Entry } from "src/entries/entry.model";
 import { TypeReference } from "src/interfaces/reference.interface";
-import { RefValue } from "src/refvales/refValue.model";
+import { RefValues } from "src/refvalues/refValues.model";
 import { User } from "src/users/users.model";
 
 interface ReferenceCreationAttrs {
@@ -32,8 +32,8 @@ export class Reference extends Model<Reference, ReferenceCreationAttrs> {
     @Column({type: DataType.ENUM(...Object.values(TypeReference)), allowNull: false})
     typeReference: TypeReference
 
-    @HasOne(() => RefValue)
-    refValue: RefValue;
+    @HasOne(() => RefValues)
+    refValues: RefValues;
 
     @HasOne(() => User)
     user: User;

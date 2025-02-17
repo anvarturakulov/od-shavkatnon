@@ -8,12 +8,12 @@ import { FilesService } from './files/files.service';
 import { FilesModule } from './files/files.module';
 import { ReferencesModule } from './references/references.module';
 import { Reference } from './references/references.model';
-import { RefValue } from './refvales/refValue.model';
+import { RefValues } from './refvalues/refValues.model';
 import { DocumentsModule } from './documents/documents.module';
 import { DocTableItemsModule } from './docTableItems/docTableItems.module';
 import { DocValuesController } from './docValues/docValues.controller';
 import { DocValuesService } from './docValues/docValues.service';
-import { RefValesModule } from './refvales/refVales.module';
+import { RefValesModule } from './refvalues/refValues.module';
 import { DocValuesModule } from './docValues/docValues.module';
 import { EntriesModule } from './entries/entries.module';
 import { Entry } from './entries/entry.model';
@@ -39,7 +39,7 @@ import { UserRoles } from './roles/user-roles.model';
             username: process.env.POSTGRES_USER,
             password: process.env.POSTGRES_PASSWORD,
             database: process.env.POSTGRES_DB,
-            models: [User, Role, UserRoles, Reference, RefValue, Entry, DocValue, DocTableItem, Document],
+            models: [User, Role, UserRoles, Reference, RefValues, Entry, DocValue, DocTableItem, Document],
             autoLoadModels: true,
           }),
         UsersModule,

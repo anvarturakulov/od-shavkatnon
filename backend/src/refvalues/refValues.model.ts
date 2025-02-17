@@ -3,7 +3,7 @@ import { BelongsTo, Column, DataType, Model, Table, HasMany, ForeignKey } from "
 import { TypePartners, TypeSECTION, TypeTMZ } from "src/interfaces/reference.interface";
 import { Reference } from "src/references/references.model";
 
-interface RefValueCreationAttrs {
+interface RefValuesCreationAttrs {
     referenceId: number
     clientForSectionId?: number
     typePartners?: TypePartners
@@ -18,7 +18,7 @@ interface RefValueCreationAttrs {
 }
 
 @Table({tableName: 'refvalues'})
-export class RefValue extends Model<RefValue, RefValueCreationAttrs> {
+export class RefValues extends Model<RefValues, RefValuesCreationAttrs> {
 
     @ApiProperty({example:'1', description: 'Уникальный иденфикатор'})
     @Column({type: DataType.BIGINT, unique: true, autoIncrement: true, primaryKey: true})
@@ -56,6 +56,10 @@ export class RefValue extends Model<RefValue, RefValueCreationAttrs> {
     @Column({type: DataType.STRING})
     comment: string;
 
+    @ApiProperty({example:'false', description: 'Помечан на удаление?'})
+    @Column({type: DataType.BOOLEAN, defaultValue: false})
+    markToDeleted: boolean;
+
     @ApiProperty({example:'1.35', description: 'Норма затрат на ед. материала?'})
     @Column({type: DataType.FLOAT})
     norma: number;
@@ -67,5 +71,22 @@ export class RefValue extends Model<RefValue, RefValueCreationAttrs> {
     @ApiProperty({example:'true', description: 'Долгосрочный тип затрат?'})
     @Column({type: DataType.BOOLEAN, defaultValue: false})
     longCharge: boolean;
+
+    @ApiProperty({example:'3400', description: 'Первая цена'})
+    @Column({type: DataType.FLOAT})
+    firstPrice: number;
+
+    @ApiProperty({example:'3800', description: 'Вторая цена'})
+    @Column({type: DataType.FLOAT})
+    secondPrice: number;
+
+    @ApiProperty({example:'4000', description: 'Третья цена'})
+    @Column({type: DataType.FLOAT})
+    thirdPrice: number;
+
+    @ApiProperty({example:'....', description: 'Id телеграм'})
+    @Column({type: DataType.STRING})
+    telegramId: string;
+    
 
 }

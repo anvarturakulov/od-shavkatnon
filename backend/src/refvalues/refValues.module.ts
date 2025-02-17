@@ -1,15 +1,15 @@
 import { Module } from '@nestjs/common';
-import { RefValesService } from './refVales.service';
+import { RefValuesService } from './refValues.service';
 import { SequelizeModule } from '@nestjs/sequelize'
 import { Reference } from 'src/references/references.model';
-import { RefValue } from './refValue.model';
-import { RefValesController } from './refVales.controller';
+import { RefValues } from './refValues.model';
+import { RefValesController } from './refValues.controller';
 
 @Module({
   controllers: [RefValesController],
-  providers: [RefValesService],
+  providers: [RefValuesService],
   imports: [
-    SequelizeModule.forFeature([Reference, RefValue]),
+    SequelizeModule.forFeature([Reference, RefValues]),
   ],
 })
 export class RefValesModule {}

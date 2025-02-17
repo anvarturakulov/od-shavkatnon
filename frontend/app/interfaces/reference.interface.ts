@@ -18,31 +18,40 @@ export enum TypeTMZ {
     MATERIAL = 'MATERIAL',
 }
 
-export interface ReferenceModel {
-    _id?: string
-    name: string
-    typeReference: TypeReference
+export enum TypeSECTION {
+    DELIVERY = 'DELIVERY',
+    FILIAL = 'FILIAL',
+    COMMON = 'COMMON',
+    STORAGE = 'STORAGE',
+    ACCOUNTANT = 'ACCOUNTANT',
+    DIRECTOR = 'DIRECTOR',
+    FOUNDER = 'FOUNDER',
+    NOBODY = 'NOBODY'
+}
+
+export interface RefValues {
+    clientForSectionId?: number
     typePartners?: TypePartners | undefined
     typeTMZ?: TypeTMZ | undefined
+    typeSection?: TypeSECTION
     unit?: string
     comment?: string
-    deleted?: boolean
-    delivery?: boolean
-    filial?: boolean
-    umumBulim?: boolean
-    sklad?: boolean
-    buxgalter?: boolean
+    markToDeleted?: boolean;
+    norma?: number,
     un?: boolean
-    clientForDeliveryId?: string
+    longCharge?: boolean,
     firstPrice?: number,
     secondPrice?: number
     thirdPrice?: number,
     telegramId?: string,
-    norma?: number,
-    longCharge?: boolean,
-    director?: boolean,
-    shavkat?: boolean,
-    maxsud?: boolean
+}
+
+export interface ReferenceModel {
+    id?: number,
+    oldId: string,
+    name: string
+    typeReference: TypeReference
+    refValues : RefValues
 }
 
 
