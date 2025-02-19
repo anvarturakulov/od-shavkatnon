@@ -11,13 +11,13 @@ export class DocumentsController {
 
     constructor(private documentsService: DocumentsService) {}
 
-    @ApiOperation({summary: 'Создать новый документ'})
-    @ApiResponse({status: 200, type: Document})
-    @Roles('USER')
-    @UseGuards(RolesGuard)
-    // @UsePipes(ValidationPipe)
-    @Post('/create')
-    addRole(@Body() dto:CreateDocumentDto) {
-        return this.documentsService
-    }
+    // @ApiOperation({summary: 'Создать новый документ'})
+    // @ApiResponse({status: 200, type: Document})
+    // @Roles('USER')
+    // @UseGuards(RolesGuard)
+    // // @UsePipes(ValidationPipe)
+    // @Post('/create')
+    // addRole(@Body() dto:CreateDocumentDto) {
+    //     return this.documentsService
+    // }
 }

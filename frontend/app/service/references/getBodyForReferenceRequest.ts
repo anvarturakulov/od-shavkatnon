@@ -2,23 +2,32 @@ import { ReferenceModel, TypeReference } from '@/app/interfaces/reference.interf
 import { stat } from 'fs';
 
 export const getBodyForReferenceRequest = (state: ReferenceModel, typeReference: TypeReference) => {
+  
+  const {refValues} = state
+  
   let newReq = {
     name: state.name,
-    comment: state.comment,
     typeReference,
+    refValues : {
+      comment: refValues.comment,
+    },
   }
   switch (typeReference) {
     case TypeReference.CHARGES:
       return {
         ...newReq,
-        longCharge: state.longCharge,
-        shavkat: state.shavkat
+        refValues: {
+          longCharge: refValues.longCharge,
+          shavkatCharge: refValues.shavkatCharge
+        }
       };
     case TypeReference.PARTNERS:
       return {
         ...newReq,
-        typePartners: state.typePartners,
-        clientForDeliveryId: state.clientForDeliveryId
+        refValues: {
+          typePartners: refValues.typePartners,
+          clientForSectionId: refValues.clientForSectionId
+        }
       };;
     case TypeReference.PRICES:
       return {
@@ -27,30 +36,31 @@ export const getBodyForReferenceRequest = (state: ReferenceModel, typeReference:
     case TypeReference.STORAGES:
       return {
         ...newReq,
-        delivery: state.delivery,
-        filial: state.filial,
-        sklad: state.sklad,
-        buxgalter: state.buxgalter,
-        umumBulim: state.umumBulim,
-        director: state.director,
-        shavkat: state.shavkat,
-        maxsud: state.maxsud
+        refValues: {
+          shavkatCharge : refValues.shavkatCharge,
+          typeSection: refValues.typeSection
+        }
+        
       };
     case TypeReference.TMZ:
       return {
         ...newReq,
-        typeTMZ: state.typeTMZ,
-        unit: state.unit,
-        un: state.un,
-        firstPrice: state.firstPrice,
-        secondPrice: state.secondPrice,
-        thirdPrice: state.thirdPrice,
-        norma: state.norma
+        refValues: {
+          typeTMZ: refValues.typeTMZ,
+          unit: refValues.unit,
+          un: refValues.un,
+          firstPrice: refValues.firstPrice,
+          secondPrice: refValues.secondPrice,
+          thirdPrice: refValues.thirdPrice,
+          norma: refValues.norma
+        }
       };
     case TypeReference.WORKERS:
       return {
         ...newReq,
-        telegramId: state.telegramId
+        refValues: {
+          telegramId: refValues.telegramId
+        }
       };
     default:
       return {};

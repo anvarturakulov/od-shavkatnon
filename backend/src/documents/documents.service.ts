@@ -14,13 +14,13 @@ export class DocumentsService {
     constructor(@InjectModel(Document) private documentRepository: typeof Document ) {}
 
     async createDocument(dto: CreateDocumentDto) {
-        const user = await this.documentRepository.create(dto)
+        // const user = await this.documentRepository.create(dto)
         // const role = await this.roleService.getRoleByValue("USER")
         // if (role) {
         //     await user.$set('roles', [role.id])
         //     user.roles = [role]
         // }
-        return user;
+        // return user;
 
     }
 

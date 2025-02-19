@@ -8,23 +8,21 @@ import {  userRolesList } from './helpers/user.constants';
 import { useAppContext } from '@/app/context/app.context';
 import { SelectForUser } from './helpers/user.components';
 import { cancelSubmitUser, onSubmitUser } from './helpers/user.functions';
-import { UserRoles } from '@/app/interfaces/general.interface';
-import { UserModel } from '@/app/interfaces/user.interface';
+import { UserModel, UserRoles } from '@/app/interfaces/user.interface';
 
 export const User = ({ className, ...props }: UserProps) :JSX.Element => {
 
-    const {mainData, setMainData} = useAppContext();
-    
+    const { mainData, setMainData } = useAppContext();
+    const { user } = mainData.users
+    const { isNewUser, showUserWindow } = mainData.window
+
     const defaultBody: UserModel = {
-        _id: '',
-        login: '',
+        id: 0,
+        email: '',
         password: '',
-        role: UserRoles.HAMIRCHI,
         name: '',
-        storageId: '',
-        tandirId: '',
-        productId: '',
-        deleted: false,
+        sectionId: 0,
+        roles: [UserRoles.USER]
     }
 
     const [body, setBody] = useState<UserModel>(defaultBody) 
@@ -38,34 +36,22 @@ export const User = ({ className, ...props }: UserProps) :JSX.Element => {
         })
     }
 
-    // const setCheckbox = (checked: boolean, id: string) => {
-    //     setBody((state:ReferenceModel) => {
-    //         return {
-    //             ...state,
-    //             [`${id}`]: checked
-    //         }
-    //     })
-    // }
-
     useEffect(()=> {
         setBody(defaultBody);
-    }, [mainData.clearControlElements])
+    }, [mainData.window.clearControlElements])
 
     useEffect(() => {
-        const {currentUser} = mainData
+        const {currentUser} = mainData.users
         
         if (currentUser != undefined) {
-            const { login, password, role, name, storageId, tandirId,
-                productId, deleted } = currentUser
-                console.log('currentUser', currentUser)
+            const { email, password, name, sectionId } = currentUser
+
             let newBody: UserModel = {
                 ...currentUser,
             }
             setBody(newBody)
         }
-    }, [mainData.currentUser])
-
-    const {isNewUser, showUserWindow, user} = mainData
+    }, [mainData.users.currentUser])
 
     return (
         <div className={cn(styles.referenceBox, 
@@ -74,7 +60,7 @@ export const User = ({ className, ...props }: UserProps) :JSX.Element => {
             <div className={styles.box}>
                 <div className={styles.nameBox}>
                     <div>Email</div>
-                    <input value={body.login} type="text" id='login' className={styles.input} onChange={(e)=>changeElements(e)}/>
+                    <input value={body.email} type="text" id='login' className={styles.input} onChange={(e)=>changeElements(e)}/>
                 </div>
 
                 <div className={styles.nameBox}>
@@ -83,11 +69,9 @@ export const User = ({ className, ...props }: UserProps) :JSX.Element => {
                 </div>
             </div> 
             
-
             {
                 SelectForUser(userRolesList, body, 'Фойдаланувчи тури', changeElements)
             }
-
             
             <div className={styles.box}>
                 <div className={styles.nameBox}>
@@ -97,18 +81,10 @@ export const User = ({ className, ...props }: UserProps) :JSX.Element => {
             
                 <div className={styles.nameBox}>
                     <div>storageId</div>
-                    <input value={body.storageId} type="text" id='storageId' className={styles.input} onChange={(e)=>changeElements(e)}/>
+                    <input value={body.sectionId} type="text" id='storageId' className={styles.input} onChange={(e)=>changeElements(e)}/>
                 </div>
 
-                <div className={styles.nameBox}>
-                    <div>tandirId</div>
-                    <input value={body.tandirId} type="text" id='tandirId' className={styles.input} onChange={(e)=>changeElements(e)}/>
-                </div>
-
-                <div className={styles.nameBox}>
-                    <div>productId</div>
-                    <input value={body.productId} type="text" id='productId' className={styles.input} onChange={(e)=>changeElements(e)}/>
-                </div>
+                
             </div>
             
 

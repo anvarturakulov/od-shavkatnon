@@ -1,8 +1,9 @@
 import { DocumentType } from "../interfaces/document.interface";
-import {ServiceType, UserRoles } from "../interfaces/general.interface";
+import {ServiceType } from "../interfaces/general.interface";
 import { MenuItem } from "../interfaces/menu.interface";
 import { TypeReference } from "../interfaces/reference.interface";
 import { ReportType } from "../interfaces/report.interface";
+import { UserRoles } from "../interfaces/user.interface";
 
 export const MenuData:Array<MenuItem> = [
     {

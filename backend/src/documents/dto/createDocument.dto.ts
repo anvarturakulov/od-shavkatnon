@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {IsEmail, IsString, Length, IsEnum, IsDate, IsNumber, IsInt} from 'class-validator';
-import { DocSTATUS } from "src/interfaces/document.interface";
+import { DocSTATUS, DocumentType } from "src/interfaces/document.interface";
 
 export class CreateDocumentDto {
     @ApiProperty({example:'12-01-2025', description: 'Дата документа'})

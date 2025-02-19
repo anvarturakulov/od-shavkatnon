@@ -22,8 +22,8 @@ export const updateCreateReference = (
     }
   }
 
-  const id = body._id;
-  delete body._id;
+  const id = body.id;
+  delete body.id;
 
   const uriPost = process.env.NEXT_PUBLIC_DOMAIN + '/api/reference/create';
   const uriPatch = process.env.NEXT_PUBLIC_DOMAIN + '/api/reference/' + id;

@@ -41,6 +41,7 @@ export const Reference = ({ className, ...props }: ReferenceProps) :JSX.Element 
             markToDeleted: false,
             norma: 0,
             longCharge: false,
+            shavkatCharge: false
         }
     }
 
@@ -50,32 +51,44 @@ export const Reference = ({ className, ...props }: ReferenceProps) :JSX.Element 
         let target = e.currentTarget
         let value = target.value
         let id = target.id
-        if (target.id == 'typeTMZ') value = defineTypeTMZ(value)
-        if (target.id == 'typePartners') value = defineTypePartners(value)
+        if (id == 'typeTMZ') value = defineTypeTMZ(value)
+        if (id == 'typePartners') value = defineTypePartners(value)
         
         setBody((state:ReferenceModel) => {
-            return {
-                ...state,
-                [id]: value
+            if (id in ['name', 'typeReference']) {
+                return {
+                    ...state,
+                    [id]: value
+                }
+            } else {
+                return {
+                    ...state,
+                    refValues: {
+                        [id]: value
+                    }
+                }
             }
         })
-        console.log(id)
     }
 
     const setCheckbox = (checked: boolean, id: string) => {
         setBody((state:ReferenceModel) => {
             return {
                 ...state,
-                [`${id}`]: checked
+                refValues: {
+                    [`${id}`]: checked
+                }
             }
         })
     }
 
-    const setClientForDeliveryId = (id: string) => {
+    const setClientForSectionId = (id: number) => {
         setBody((state:ReferenceModel) => {
             return {
                 ...state,
-                clientForDeliveryId: id
+                refValues : {
+                    clientForSectionId : id
+                }
             }
         })
     }
@@ -200,7 +213,7 @@ export const Reference = ({ className, ...props }: ReferenceProps) :JSX.Element 
             {
                 ( user?.role == UserRoles.ADMIN || user?.role == UserRoles.HEADCOMPANY )  && 
                 (body.refValues.typePartners == TypePartners.CLIENTS) &&
-                <SelectForReferences label='Клиент сохиби' typeReference={TypeReference.STORAGES} currentItemId={body.refValues.clientForSectionId} setClientForDeliveryId={setClientForDeliveryId}/>
+                <SelectForReferences label='Клиент сохиби' typeReference={TypeReference.STORAGES} currentItemId={body.refValues.clientForSectionId} setClientForSectionId={setClientForSectionId}/>
             }
 
             {
@@ -227,7 +240,7 @@ export const Reference = ({ className, ...props }: ReferenceProps) :JSX.Element 
                 (body.typeReference == TypeReference.CHARGES || body.typeReference == TypeReference.STORAGES) &&
                 <>
                     <div>
-                        <CheckBoxForReference label='Шавкат' setCheckbox={setCheckbox} checked={body.shavkat} id={'shavkat'}/>
+                        <CheckBoxForReference label='Шавкат' setCheckbox={setCheckbox} checked={body.refValues.shavkatCharge} id={'shavkatCharge'}/>
                     </div>
                 </>
             }

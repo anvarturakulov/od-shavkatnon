@@ -26,7 +26,6 @@ export enum TypeSECTION {
     ACCOUNTANT = 'ACCOUNTANT',
     DIRECTOR = 'DIRECTOR',
     FOUNDER = 'FOUNDER',
-    NOBODY = 'NOBODY'
 }
 
 export interface RefValues {
@@ -40,10 +39,12 @@ export interface RefValues {
     norma?: number,
     un?: boolean
     longCharge?: boolean,
+    shavkatCharge?: boolean,
     firstPrice?: number,
     secondPrice?: number
     thirdPrice?: number,
     telegramId?: string,
+    
 }
 
 export interface ReferenceModel {

@@ -3,7 +3,7 @@ import { User } from './users.model';
 import { InjectModel } from '@nestjs/sequelize';
 import { CreateUserDto } from './dto/createUser.dto';
 import { RolesService } from 'src/roles/roles.service';
-import { AddRoleDto } from './dto/add-role.dto';
+import { AddRemoveRoleDto } from './dto/add-remove-role.dto';
 import { BanUserDto } from './dto/ban-user.dto';
 import { UserRoles } from 'src/roles/user-roles.model';
 import { Role } from 'src/roles/roles.model';
@@ -39,11 +39,21 @@ export class UsersService {
         return user
     }
 
-    async addRole(dto: AddRoleDto) {
+    async addRole(dto: AddRemoveRoleDto) {
         const user = await this.userRepository.findByPk(dto.userId)
         const role = await this.roleService.getRoleByValue(dto.value)
         if (user && role) {
             await user?.$add('role', role.id)
+            return dto
+        }
+        throw new HttpException('Пользователь или роль не нашлась', HttpStatus.NOT_FOUND)
+    }
+
+    async removeRole(dto: AddRemoveRoleDto) {
+        const user = await this.userRepository.findByPk(dto.userId)
+        const role = await this.roleService.getRoleByValue(dto.value)
+        if (user && role) {
+            await user?.$remove('role', role.id)
             return dto
         }
         throw new HttpException('Пользователь или роль не нашлась', HttpStatus.NOT_FOUND)
@@ -55,10 +65,9 @@ export class UsersService {
             let roles = user?.roles.map(item => {
                 return item.dataValues.value
             })
-            console.log('roles by user service', roles)
             return roles
         }
-        throw new HttpException('Роли не нашлась', HttpStatus.NOT_FOUND)
+        throw new HttpException('Роли не нашлись', HttpStatus.NOT_FOUND)
     }
 
 

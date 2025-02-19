@@ -1,6 +1,6 @@
 import { IsNumber, IsString } from "class-validator";
 
-export class AddRoleDto {
+export class AddRemoveRoleDto {
     @IsString({message: 'Должно быть строкой'})
     readonly value: string;
 

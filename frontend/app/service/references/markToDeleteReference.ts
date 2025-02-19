@@ -2,7 +2,7 @@ import axios from 'axios';
 import { showMessage } from '../common/showMessage';
 
 export const markToDeleteReference = (
-  id: string | undefined,
+  id: number | undefined,
   name: string, setMainData: Function | undefined,
   token: string | undefined
 ) => {

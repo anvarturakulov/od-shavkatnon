@@ -48,6 +48,10 @@ export class CreateReferenceValueDto {
     @IsBoolean({message: 'longCharge - значание должно быть TRUE или FALSE'})
     longCharge?: boolean;
 
+    @ApiProperty({example:'true', description: 'Личные затраты Шавката?'})
+    @IsBoolean({message: 'shavkatCharge - значание должно быть TRUE или FALSE'})
+    shavkatCharge: boolean;
+
     @ApiProperty({example:'3400', description: 'Первая цена'})
     @IsNumber({}, {message: 'firstPrice - должен быть числом'})
     firstPrice: number;

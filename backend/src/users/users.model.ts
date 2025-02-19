@@ -1,16 +1,15 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Column, DataType, Model, Table, HasMany, ForeignKey, BelongsTo, BelongsToMany } from "sequelize-typescript";
 import { Document } from "src/documents/document.model";
+import { EnumUserRoles } from "src/interfaces/user.interface";
 import { Reference } from "src/references/references.model";
-import { Role } from "src/roles/roles.model";
-import { UserRoles } from "src/roles/user-roles.model";
+
 
 interface UserCreationAttrs {
     email: string;
     password: string;
     oldId?: string;
 }
-
 
 @Table({tableName: 'users'})
 export class User extends Model<User, UserCreationAttrs> {
@@ -36,25 +35,26 @@ export class User extends Model<User, UserCreationAttrs> {
     banned: boolean;
 
     @ApiProperty({example:'За хулиганство', description: 'Причина блокировки'})
-    @Column({type: DataType.STRING, allowNull: true})
+    @Column({type: DataType.STRING})
     banReason: string;
 
-    // @ApiProperty({example:'ADMIN', description: 'Роль пользователя'})
-    // @Column({type: DataType.ENUM(...Object.values(UserRoles)), allowNull: false})
-    // role: UserRoles
+    @ApiProperty({example:'Анвар', description: 'Имя пользователя'})
+    @Column({type: DataType.STRING})
+    name: string;
 
     @ForeignKey(() => Reference)
     @ApiProperty({example:'12222897', description: 'Id - подразделения'})
     @Column({type: DataType.INTEGER})
     sectionId: number
 
+    @ApiProperty({example:'CLIENTS', description: 'Тип партнера - ( CLIENTS || SUPPLIERS )'})
+    @Column({type: DataType.ENUM(...Object.values(EnumUserRoles))})
+    temp: EnumUserRoles
+
     @BelongsTo(() => Reference) 
     referenceForSection: Reference;
 
     @HasMany(()=> Document)
     documents: Document[]
-
-    @BelongsToMany(()=> Role, () => UserRoles)
-    roles: Role[]
 
 }

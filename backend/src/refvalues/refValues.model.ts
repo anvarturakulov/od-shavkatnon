@@ -72,6 +72,10 @@ export class RefValues extends Model<RefValues, RefValuesCreationAttrs> {
     @Column({type: DataType.BOOLEAN, defaultValue: false})
     longCharge: boolean;
 
+    @ApiProperty({example:'true', description: 'Личные затраты Шавката?'})
+    @Column({type: DataType.BOOLEAN, defaultValue: false})
+    shavkatCharge: boolean;
+
     @ApiProperty({example:'3400', description: 'Первая цена'})
     @Column({type: DataType.FLOAT})
     firstPrice: number;
