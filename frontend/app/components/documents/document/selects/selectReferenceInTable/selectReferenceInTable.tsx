@@ -10,7 +10,8 @@ import { sortByName } from '@/app/service/references/sortByName';
 export const SelectReferenceInTable = ({  selectForReciever , typeReference, itemIndexInTable, currentItemId, className, ...props }: SelectReferenceInTableProps): JSX.Element => {
 
     const {mainData, setMainData} = useAppContext();
-    const { user, contentName } = mainData;
+    const { contentName } = mainData.window;
+    const { user } = mainData.users;
 
     const token = user?.access_token;
     const url = process.env.NEXT_PUBLIC_DOMAIN+'/api/reference/byType/'+typeReference;
@@ -19,25 +20,28 @@ export const SelectReferenceInTable = ({  selectForReciever , typeReference, ite
     
     const changeElements = (e: React.FormEvent<HTMLSelectElement>, itemIndex: number, setMainData: Function | undefined, mainData: Maindata) => {
         let target = e.currentTarget;
-        let {currentDocument, contentName} = mainData;
+        let {currentDocument } = mainData.document;
+        let {contentName} = mainData.window;
 
-        if (currentDocument && currentDocument.tableItems) {
+        if (currentDocument && currentDocument.docTableItems) {
             
-            let currentItem = {...currentDocument.tableItems[itemIndex]};
-            let id = target[target.selectedIndex].getAttribute('data-id');
+            let currentItem = {...currentDocument.docTableItems[itemIndex]};
+            let strId = target[target.selectedIndex].getAttribute('data-id');
+            let id: number = 0
+            if (strId) id = +strId
             let value = target.value;
 
             if (id != null) {
                 currentItem.referenceId = id
             } else {
-                currentItem.referenceId = ''                
+                currentItem.referenceId = 0                
             }
 
-            let newItems = [...currentDocument.tableItems]
+            let newItems = [...currentDocument.docTableItems]
             newItems[itemIndex] = {...currentItem}
             let newObj = {
                 ...currentDocument,
-                tableItems: [...newItems]
+                docTableItems: [...newItems]
             }
             
             if ( setMainData ) {
@@ -65,17 +69,17 @@ export const SelectReferenceInTable = ({  selectForReciever , typeReference, ite
 
                 {data && data.length>0 && 
                 data?.filter((item:ReferenceModel) => {
-                    return item.typeTMZ == 'MATERIAL'
+                    return item.refValues.typeTMZ == 'MATERIAL'
                 })
                 .sort(sortByName)
-                .filter((item:ReferenceModel) => !item.deleted)
+                .filter((item:ReferenceModel) => !item.refValues.markToDeleted)
                 .map((item:ReferenceModel, key:number) => (
                     <>
                         <option 
                             value={item.name}
                             data-type={item.typeReference}
-                            data-id={item._id}
-                            selected={item._id == currentItemId}
+                            data-id={item.id}
+                            selected={item.id == currentItemId}
                             >
                                 {item.name}
                         </option>

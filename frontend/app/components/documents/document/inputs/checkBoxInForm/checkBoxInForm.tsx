@@ -7,27 +7,27 @@ import { Maindata } from '@/app/context/app.context.interfaces';
 export const CheckBoxInTable = ({ className, id, label, ...props }: checkBoxInFormProps): JSX.Element => {
     
     const {mainData, setMainData} = useAppContext();
-    const { currentDocument } = mainData;
+    const { currentDocument } = mainData.document;
     let currentVal
     if (currentDocument) {
         
         if (id == 'partner') {
-            currentVal = currentDocument['isPartner']
+            currentVal = currentDocument.docValue['isPartner']
         } 
         if (id == 'worker') {
-            currentVal = currentDocument['isWorker']
+            currentVal = currentDocument.docValue['isWorker']
         }
         if (id == 'founder') {
-            currentVal = currentDocument['isFounder']
+            currentVal = currentDocument.docValue['isFounder']
         }
 
         if (id == 'cash') {
-            currentVal = currentDocument['isCash']
+            currentVal = currentDocument.docValue['isCash']
         }
 
-        if (id == 'proveden') {
-            currentVal = currentDocument['proveden']
-        }
+        // if (id == 'proveden') {
+        //     currentVal = currentDocument['proveden']
+        // }
     }
 
     const changeElements = (e: React.FormEvent<HTMLInputElement>, setMainData: Function | undefined, mainData: Maindata, id: CheckboxIdTypes) => {
@@ -35,35 +35,35 @@ export const CheckBoxInTable = ({ className, id, label, ...props }: checkBoxInFo
         let currentValues = {...currentDocument}
         if (currentDocument) {
             if (id == 'partner') {
-                currentValues.isPartner = target.checked
+                currentValues.docValue.isPartner = target.checked
                 if (target.checked) {
-                    currentValues.isWorker = false
-                    currentValues.isFounder = false
+                    currentValues.docValue.isWorker = false
+                    currentValues.docValue.isFounder = false
                 }
             } 
             if (id == 'worker') {
-                currentValues.isWorker = target.checked
+                currentValues.docValue.isWorker = target.checked
                 if (target.checked) {
-                    currentValues.isPartner = false
-                    currentValues.isFounder = false
+                    currentValues.docValue.isPartner = false
+                    currentValues.docValue.isFounder = false
                 }
             }
 
             if (id == 'founder') {
-                currentValues.isFounder = target.checked
+                currentValues.docValue.isFounder = target.checked
                 if (target.checked) {
-                    currentValues.isPartner = false
-                    currentValues.isWorker = false
+                    currentValues.docValue.isPartner = false
+                    currentValues.docValue.isWorker = false
                 }
             }
 
             if (id == 'cash') {
-                currentValues.isCash = target.checked
+                currentValues.docValue.isCash = target.checked
             }
 
-            if (id == 'proveden') {
-                currentValues.proveden = target.checked
-            }
+            // if (id == 'proveden') {
+            //     currentValues.proveden = target.checked
+            // }
 
             
             if ( setMainData ) {

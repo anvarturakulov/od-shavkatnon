@@ -4,6 +4,7 @@ import { CreateUserDto } from 'src/users/dto/createUser.dto';
 import { UsersService } from 'src/users/users.service';
 import * as bcrypt from 'bcryptjs'
 import { User } from 'src/users/users.model';
+import { UserLoginDto } from 'src/users/dto/userLogin.dto';
 
 @Injectable()
 export class AuthService {
@@ -11,10 +12,19 @@ export class AuthService {
     constructor(private userService: UsersService,
                 private jwtService: JwtService){}
 
-    async login(userDto : CreateUserDto) {
+    async login(userDto : UserLoginDto) {
         const user = await this.validateUser(userDto)
+
         if (user) {
-            return this.generateToken(user)
+            const {email, role, name, sectionId} = user
+            let {token} = await this.generateToken(user)
+            return {
+                email,
+                role,
+                access_token: token,
+                name,
+                sectionId
+            }
         }
     }
     
@@ -26,7 +36,7 @@ export class AuthService {
 
         const hashPassword = await bcrypt.hash(userDto.password, 5);
         const user = await this.userService.createUser({...userDto, password: hashPassword})
-        return this.generateToken(user)
+        return true
 
     }
 
@@ -37,7 +47,7 @@ export class AuthService {
         }
     }
 
-    private async validateUser(userDto: CreateUserDto) {
+    private async validateUser(userDto: UserLoginDto) {
         const user = await this.userService.getUserByEmail(userDto.email)
         let passwordEquals
         if (user) {

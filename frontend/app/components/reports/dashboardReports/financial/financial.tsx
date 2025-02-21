@@ -12,7 +12,7 @@ export const total = (key:string, data:any[]) => {
 
 export const Financial = ({className, data, ...props }: FinancialProps) :JSX.Element => {
     const {mainData, setMainData} = useAppContext();
-    const {currentFinancialInnerReportType} = mainData;
+    const {currentFinancialInnerReportType} = mainData.report;
     
     useEffect(()=> {
 

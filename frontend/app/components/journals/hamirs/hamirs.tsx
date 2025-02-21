@@ -11,9 +11,10 @@ import { createHamirsForDayByUser } from '@/app/service/documents/createHamirsFo
 import { Maindata } from '@/app/context/app.context.interfaces';
 import { getNameReference } from '../helpers/journal.functions';
 import { changeStatusHamir } from '@/app/service/documents/changeStatusHamir';
-import { UserRoles } from '@/app/interfaces/general.interface';
 import { SelectReferenceForTandirs } from './selectReferenceForTandirs/selectReferenceForTandirs';
 import { secondsToDateString } from '../../documents/document/doc/helpers/doc.functions';
+import { UserRoles } from '@/app/interfaces/user.interface';
+import { DocSTATUS } from '@/app/interfaces/document.interface';
 
 
 export default function Hamirs({ className, ...props} : HamirsProps ):JSX.Element {
@@ -64,7 +65,7 @@ export default function Hamirs({ className, ...props} : HamirsProps ):JSX.Elemen
     if (hamirs && hamirs.length) {
         visibilityFillBtn = !hamirs.filter((item: HamirModel)=> {
             return (
-                    item.sectionId == user?.storageId &&
+                    item.sectionId == user?.sectionId &&
                     item.user == user?.name
                 )
         }).length
@@ -79,10 +80,13 @@ export default function Hamirs({ className, ...props} : HamirsProps ):JSX.Elemen
             let select = target.parentNode?.parentNode?.querySelector('select')
             let selectedElement = select?.options[select.selectedIndex];
 
-            let analiticId = selectedElement?.getAttribute('data-id') || ''
+            let dataId = selectedElement?.getAttribute('data-id') || ''
+            let analiticId: number = -1
+            if (dataId) analiticId = +dataId
+
             if (count > 90) {
                 alert('Сон хато киритилди')
-            } else if ( count > 0 && analiticId.length > 0 && confirm(`${item.order} - хамирдан тандирга ${count} та зувала бердингизми`)) {
+            } else if ( count > 0 && analiticId > 0 && confirm(`${item.order} - хамирдан тандирга ${count} та зувала бердингизми`)) {
                 item.zuvala = count;
                 item.analiticId = analiticId;
                 changeStatusHamir(item, mainData, setMainData)
@@ -93,7 +97,7 @@ export default function Hamirs({ className, ...props} : HamirsProps ):JSX.Elemen
     }
     return (
         <>
-            <div className={styles.title}>{`Хамирлар руйхати${user?.productId}`}</div>
+            <div className={styles.title}>{`Хамирлар руйхати`}</div>
             {
                 <div className={styles.container} >
                     <table className={styles.table}>
@@ -117,7 +121,7 @@ export default function Hamirs({ className, ...props} : HamirsProps ):JSX.Elemen
                             })
                             .filter((item:HamirModel) => {
                                 return (
-                                    item.sectionId == user?.storageId
+                                    item.sectionId == user?.sectionId
                                     &&
                                     item.user == user.name
                                 )
@@ -132,7 +136,7 @@ export default function Hamirs({ className, ...props} : HamirsProps ):JSX.Elemen
                                     <tr 
                                         key={key} 
                                         className={cn(styles.trRow, {
-                                                [styles.proveden]: item.proveden,
+                                                [styles.proveden]: item.docStatus == DocSTATUS.PROVEDEN,
                                                 [styles.bigTr]: tandir
                                             })}>
                                         <td className={styles.date}>{secondsToDateString(item.date)}</td>
@@ -142,19 +146,19 @@ export default function Hamirs({ className, ...props} : HamirsProps ):JSX.Elemen
                                             tandir &&
                                             <td>
                                                 <input className={cn(styles.count, {
-                                                    [styles.disabledInput]: item.proveden
+                                                    [styles.disabledInput]: item.docStatus == DocSTATUS.PROVEDEN
                                                 })} type='number'
-                                                value={item.zuvala} disabled={item.proveden}
+                                                value={item.zuvala} disabled={item.docStatus == DocSTATUS.PROVEDEN}
                                                 />    
                                             </td>
                                         }
                                         <td> 
-                                            <SelectReferenceForTandirs idForSelect={`#${item.order}`} currentItemId={item.analiticId} disabled={item.proveden}/>
+                                            <SelectReferenceForTandirs idForSelect={`#${item.order}`} currentItemId={item.analiticId} disabled={item.docStatus == DocSTATUS.PROVEDEN}/>
                                         </td>
 
                                         <td className={styles.action}>
                                             <button className={cn(styles.sendBtn, {
-                                                                [styles.notVisible]: item.proveden,
+                                                                [styles.notVisible]: item.docStatus == DocSTATUS.PROVEDEN,
                                                               })}
                                                     onClick={(e) => sendHamir(e, item, mainData, setMainData)}
                                             >Жунатиш</button>

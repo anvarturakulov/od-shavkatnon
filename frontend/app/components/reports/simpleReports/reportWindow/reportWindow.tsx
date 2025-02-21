@@ -6,8 +6,8 @@ import LoadingIco from  './loading.svg'
 
 export default function ReportWindow({ className, ...props }: ReportWindowProps):JSX.Element {
     const {mainData, setMainData} = useAppContext()
-    const { startReport } = mainData.reportOption;
-    const { uploadingDashboard } = mainData
+    const { startReport } = mainData.report.reportOption;
+    const { uploadingDashboard } = mainData.window
 
     const content = !startReport ? <OptionsBox/> : <ReportTable/>;
     

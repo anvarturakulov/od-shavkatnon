@@ -7,22 +7,24 @@ import { ReferenceModel } from '@/app/interfaces/reference.interface';
 import { Maindata } from '@/app/context/app.context.interfaces';
 import { getDataForSwr } from '@/app/service/common/getDataForSwr';
 import { sortByName } from '@/app/service/references/sortByName';
-import { TandirWorkersType } from '../../document/selects/selectReferenceInForm/helper';
+import { TandirWorkersType } from '../../selects/selectReferenceInForm/helper';
 
 export const SelectWorkers = ({ label, currentItemId, type, visible, className, ...props }: SelectReferenceInFormProps): JSX.Element => {
     
     const {mainData, setMainData} = useAppContext();
-    const { user } = mainData;
+    const { user } = mainData.users;
     const token = user?.access_token;
     const url = process.env.NEXT_PUBLIC_DOMAIN+'/api/reference/byType/WORKERS';
     const { data, mutate } = useSWR(url, (url) => getDataForSwr(url, token));
 
     const changeElements = (e: React.FormEvent<HTMLSelectElement>, setMainData: Function | undefined, mainData: Maindata, type: TandirWorkersType) => {
-        const {definedTandirWorkers} = mainData
+        const {definedTandirWorkers} = mainData.document
         if (mainData) {
             let target = e.currentTarget;
             let currentValue = {...definedTandirWorkers};
-            let id = target[target.selectedIndex].getAttribute('data-id');
+            let strId = target[target.selectedIndex].getAttribute('data-id');
+            let id:number = 0   
+            if (strId) id = +strId
             
             if (type == 'firstWorker') currentValue.firstWorker = id
             if (type == 'secondWorker') currentValue.secondWorker = id
@@ -57,16 +59,16 @@ export const SelectWorkers = ({ label, currentItemId, type, visible, className, 
                 {data && data.length>0  &&
                 data
                 .sort(sortByName)
-                .filter(( item:ReferenceModel ) => !item.deleted )
+                .filter(( item:ReferenceModel ) => !item.refValues.markToDeleted )
                 .map(( item:ReferenceModel ) => (
                     <>
                         <option 
                             className={styles.option}
-                            key = {item._id}
+                            key = {item.id}
                             value={item.name}
                             data-type={item.typeReference} 
-                            data-id={item._id}
-                            selected={ item._id == currentItemId } 
+                            data-id={item.id}
+                            selected={ item.id == currentItemId } 
                             >
                                 {item.name}
                         </option>  

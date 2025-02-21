@@ -3,13 +3,14 @@ import styles from './inputForData.module.css';
 import cn from 'classnames';
 import { useAppContext } from '@/app/context/app.context';
 import { Maindata } from '@/app/context/app.context.interfaces';
-import { adminAndHeadCompany, UserRoles } from '@/app/interfaces/general.interface';
+import { adminAndHeadCompany, UserRoles } from '@/app/interfaces/user.interface';
 
 export const InputForData = ({label, className, ...props }: InputForDataProps): JSX.Element => {
     
     const {mainData, setMainData} = useAppContext();
-    const { currentDocument } = mainData;
-    const role = mainData.user?.role;
+    const { currentDocument } = mainData.document;
+    const { user } = mainData.users;
+    const role = user?.role;
     const isAdminOrHeadCompany = role && adminAndHeadCompany.includes(role)
     
     let dateDoc = currentDocument.date>0 ? 
@@ -19,10 +20,11 @@ export const InputForData = ({label, className, ...props }: InputForDataProps): 
     let currentVal = dateDoc.toISOString().split('T')[0]
 
     const changeElements = (e: React.FormEvent<HTMLInputElement>, setMainData: Function | undefined, mainData: Maindata) => {
+        let {currentDocument} = mainData.document;
+        let {user} = mainData.users;
         let target = e.currentTarget;
-        const role = mainData.user?.role;
+        const role = user?.role;
         let value = target.value;
-        let {currentDocument} = mainData;
         const valueDate = Date.parse(value)
         
         let newObj = {

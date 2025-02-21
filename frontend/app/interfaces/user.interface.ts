@@ -21,7 +21,7 @@ export interface User {
     banned?: boolean,
     banReason?: string,
     sectionId: number, 
-    roles: UserRoles[],
+    role: UserRoles,
 }
 
 export interface UserModel {
@@ -33,7 +33,7 @@ export interface UserModel {
     banned?: boolean,
     banReason?: string,
     sectionId?: number,
-    roles: UserRoles[]
+    role: UserRoles
 }
 
 export interface BodyForLogin {

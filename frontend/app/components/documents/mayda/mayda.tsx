@@ -4,26 +4,25 @@ import { MaydaProps } from './mayda.props';
 import styles from './mayda.module.css';
 import { Button, SelectReferenceInForm } from '@/app/components';
 import { useAppContext } from '@/app/context/app.context';
-import { DocumentModel, DocumentType } from '@/app/interfaces/document.interface';
+import { DocSTATUS, DocumentModel, DocumentType } from '@/app/interfaces/document.interface';
 import { getRandomID } from '@/app/service/documents/getRandomID';
-import { getDefinedItemIdForSender } from '../docValues/doc.values.functions';
 import { Maindata } from '@/app/context/app.context.interfaces';
 import axios from 'axios';
 import { showMessage } from '@/app/service/common/showMessage';
 import { TypeReference } from '@/app/interfaces/reference.interface';
-import { defaultDocumentFormItems } from '@/app/context/app.context.constants';
 import useSWR from 'swr';
 import { getDataForSwr } from '@/app/service/common/getDataForSwr';
 import { getPropertySubconto } from '@/app/service/reports/getPropertySubconto';
 import { CheckBoxInTable } from '../document/inputs/checkBoxInForm/checkBoxInForm';
+import { getDefinedItemIdForSender } from '../document/docValues/doc.values.functions';
+import { defaultDocument } from '@/app/context/app.context.constants';
 
 export const Mayda = ({className, ...props }: MaydaProps) :JSX.Element => {
     
     const {mainData, setMainData} = useAppContext();
     const [count, setCount] = useState<number>(0)
-    const {currentDocument} = mainData
-
-    const { user } = mainData;
+    const {currentDocument} = mainData.document
+    const { user } = mainData.users;
     const token = user?.access_token;
     const url = process.env.NEXT_PUBLIC_DOMAIN+'/api/reference/getAll/';
     const { data, mutate } = useSWR(url, (url) => getDataForSwr(url, token));
@@ -32,37 +31,37 @@ export const Mayda = ({className, ...props }: MaydaProps) :JSX.Element => {
     let dateDoc = new Date();
     let dateStr = dateDoc.toISOString().split('T')[0]
 
-    let definedItemIdForReceiver = '659d292d630ca82ec3dcae1c'
-    let definedItemIdForSender = getDefinedItemIdForSender(mainData.user?.role, mainData.user?.storageId, DocumentType.SaleProd)
-    let receiverId = definedItemIdForReceiver ? definedItemIdForReceiver : ''
-    let senderId = definedItemIdForSender ? definedItemIdForSender : ''
-    let analiticId = '659d2778630ca82ec3dcadf8'
-    let userName = mainData.user?.name ? mainData.user?.name : '' 
+    let definedItemIdForReceiver = 0
+    let definedItemIdForSender = getDefinedItemIdForSender(user?.role, user?.sectionId, DocumentType.SaleProd)
+    let receiverId = definedItemIdForReceiver ? definedItemIdForReceiver : 0
+    let senderId = definedItemIdForSender ? definedItemIdForSender : 0
+    let analiticId = 0
+    let userName = user?.name ? user?.name : '' 
 
     let newDocument: DocumentModel = {
         date: Date.parse(dateStr),
-        docNumber: num,
         documentType: DocumentType.SaleProd,
-        deleted: false,
-        user: userName,
-        senderId: senderId,
-        receiverId: receiverId,
-        isWorker: false,
-        isPartner: false,
-        isFounder: false,
-        isCash: false,
-        analiticId: analiticId,
-        count: 0,
-        balance: 0,
-        price: 0,
-        total: 0,
-        cashFromPartner: 0,
-        comment: '',
-        proveden: true,
-        firstWorkerId: '',
-        secondWorkerId: '',
-        thirdWorkerId: '',
-        tableItems: [],
+        docStatus: DocSTATUS.PROVEDEN,
+        userId: user?.id ? user.id : 0,
+        docValue : {
+            senderId: senderId,
+            receiverId: receiverId,
+            isWorker: false,
+            isPartner: false,
+            isFounder: false,
+            isCash: false,
+            analiticId: analiticId,
+            count: 0,
+            balance: 0,
+            price: 0,
+            total: 0,
+            cashFromPartner: 0,
+            comment: '',
+            firstWorkerId: 0,
+            secondWorkerId: 0,
+            thirdWorkerId: 0,
+        },
+        docTableItems: [],
     }   
     
     const cancelSubmit = (setMainData: Function | undefined) => {
@@ -77,37 +76,41 @@ export const Mayda = ({className, ...props }: MaydaProps) :JSX.Element => {
     }
 
     const onSubmit = (newDocument: DocumentModel, count: number, mainData: Maindata, setMainData: Function | undefined) => {
-        let price = getPropertySubconto(data, mainData.currentDocument.analiticId).thirdPrice
+        const {currentDocument} = mainData.document
+        let price = getPropertySubconto(data, currentDocument.docValue.analiticId).thirdPrice
         let total = price ? price * count : 0
 
         let body:DocumentModel = {
             ...newDocument,
-            analiticId: mainData.currentDocument.analiticId,
-            count,
-            total,
+            docValue : {
+                ...newDocument.docValue,
+                analiticId: currentDocument.docValue.analiticId,
+                count,
+                total,
+            }
         }
 
-        if (currentDocument.isWorker) {
-            if (!currentDocument.receiverId) {
+        if (currentDocument.docValue.isWorker) {
+            if (!currentDocument.docValue.receiverId) {
                 showMessage('Ходимни танланг', 'error', setMainData)
                 return
             } else {
-                body.receiverId = currentDocument.receiverId
+                body.docValue.receiverId = currentDocument.docValue.receiverId
             }
         } 
             
-        if ( !body.analiticId ) {
+        if ( !body.docValue.analiticId ) {
             showMessage('Махсулотни танланг', 'error', setMainData)
             return
         }
 
-        if ( !body.total ) {
+        if ( !body.docValue.total ) {
             showMessage('Махсулот суммаси йук', 'error', setMainData)
             return
         }
         // console.log(body)
-        const { user } = mainData
-        delete body._id;
+        const { user } = mainData.users
+        delete body.id;
   
         const config = {
             headers: { Authorization: `Bearer ${user?.access_token}` }
@@ -118,7 +121,7 @@ export const Mayda = ({className, ...props }: MaydaProps) :JSX.Element => {
         axios.post(uriPost, body, config)
         .then(function (request) {
             showMessage('Янги хужжат киритилди', 'success', setMainData)
-            let defValue = {...defaultDocumentFormItems} 
+            let defValue = {...defaultDocument} 
             setMainData && setMainData('currentDocument', {...defValue})
         })
         .catch(function (error) {
@@ -129,7 +132,7 @@ export const Mayda = ({className, ...props }: MaydaProps) :JSX.Element => {
         setMainData && setMainData('showMayda', false)
     } 
 
-    if (!mainData.showMayda) return <></>
+    if (!mainData.window.showMayda) return <></>
     return (
         <div className={styles.container}>
             <div className={styles.maydaBox}>
@@ -138,7 +141,7 @@ export const Mayda = ({className, ...props }: MaydaProps) :JSX.Element => {
                     label={'Махсулот'} 
                     typeReference= {TypeReference.TMZ}
                     visibile={true}
-                    currentItemId={currentDocument?.analiticId}
+                    currentItemId={currentDocument?.docValue.analiticId}
                     type='analitic'
                 />
                 <div className={styles.workersBox}>
@@ -146,8 +149,8 @@ export const Mayda = ({className, ...props }: MaydaProps) :JSX.Element => {
                     <SelectReferenceInForm 
                         label={''} 
                         typeReference= {TypeReference.WORKERS}
-                        visibile={currentDocument.isWorker}
-                        currentItemId={currentDocument?.receiverId}
+                        visibile={currentDocument.docValue.isWorker}
+                        currentItemId={currentDocument?.docValue.receiverId}
                         type='receiver'
                     />
                 </div>

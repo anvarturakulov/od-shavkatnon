@@ -4,7 +4,7 @@ import { getDocumentById } from './getDocumentById';
 import { Maindata } from '@/app/context/app.context.interfaces';
 
 export const setProvodkaToDocument = async (
-  id: string | undefined,
+  id: number | undefined,
   setMainData: Function | undefined,
   mainData: Maindata
 ) => {

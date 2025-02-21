@@ -3,6 +3,6 @@ import { DetailedHTMLProps, SelectHTMLAttributes } from "react";
 
 export interface SelectReferenceForTandirsProps extends DetailedHTMLProps<SelectHTMLAttributes<HTMLSelectElement>, HTMLSelectElement> {
     idForSelect: string,
-    currentItemId: string,
+    currentItemId: number,
     disabled: boolean
 }

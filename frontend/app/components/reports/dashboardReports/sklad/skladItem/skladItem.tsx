@@ -2,13 +2,7 @@
 import { SkladItemProps } from './skladItem.props';
 import styles from './skladItem.module.css';
 import { Htag } from '@/app/components';
-import { Schet, TypeQuery } from '@/app/interfaces/report.interface';
-import { useAppContext } from '@/app/context/app.context';
-import { query } from '@/app/service/reports/querys/query';
 import { numberValue } from '@/app/service/common/converters';
-import { getListSecondSubconts } from '@/app/service/reports/getListSecondSubconts';
-import { getPropertySubconto } from '@/app/service/reports/getPropertySubconto';
-import { UserRoles } from '@/app/interfaces/general.interface';
 
 export const SkladItem = ({className, item, ...props }: SkladItemProps) :JSX.Element => {
     

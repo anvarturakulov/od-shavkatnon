@@ -1,10 +1,9 @@
-import { Body, Controller, Get, Post, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { User } from './users.model';
 import { Roles } from 'src/auth/roles-auth.decorator';
 import { RolesGuard } from 'src/auth/roles.guard';
-import { AddRemoveRoleDto } from './dto/add-remove-role.dto';
 import { BanUserDto } from './dto/ban-user.dto';
 
 @ApiTags('Пользователи')
@@ -19,24 +18,6 @@ export class UsersController {
     @Get()
     getAll() {
         return this.usersService.getUsers()
-    }
-
-    @ApiOperation({summary: 'Выдать роль'})
-    // @ApiResponse({status: 200, type: [User]})
-    @Roles('ADMIN')
-    @UseGuards(RolesGuard)
-    @Post('/role')
-    addRole(@Body() dto:AddRemoveRoleDto) {
-        return this.usersService.addRole(dto)
-    }
-
-    @ApiOperation({summary: 'Убрать роль'})
-    // @ApiResponse({status: 200, type: [User]})
-    @Roles('ADMIN')
-    @UseGuards(RolesGuard)
-    @Post('/role')
-    removeRole(@Body() dto:AddRemoveRoleDto) {
-        return this.usersService.removeRole(dto)
     }
 
     @ApiOperation({summary: 'Забанить пользователя'})

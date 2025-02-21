@@ -1,7 +1,5 @@
-import { ReferenceModel, TypeReference } from '@/app/interfaces/reference.interface';
 import { UserModel } from '@/app/interfaces/user.interface';
 import { showMessage } from '@/app/service/common/showMessage';
-import { updateCreateReference } from '@/app/service/references/updateCreateReference';
 import { updateCreateUser } from '@/app/service/users/updateCreateUser';
 
 export const cancelSubmitUser = (setMainData: Function | undefined) => {

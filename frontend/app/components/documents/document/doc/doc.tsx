@@ -7,7 +7,7 @@ import { useAppContext } from '@/app/context/app.context';
 import { InputForData } from '../inputs/inputForData/inputForData';
 import { cancelSubmit, saveUser } from './helpers/doc.functions';
 import { isAdmins, isGlBuxs } from '@/app/service/common/users';
-import { DocumentModel, DocumentType } from '@/app/interfaces/document.interface';
+import { DocSTATUS, DocumentModel, DocumentType } from '@/app/interfaces/document.interface';
 import { Maindata } from '@/app/context/app.context.interfaces';
 import { validateBody } from '@/app/service/documents/validateBody';
 import { showMessage } from '@/app/service/common/showMessage';
@@ -16,20 +16,18 @@ import { updateCreateDocument } from '@/app/service/documents/updateCreateDocume
 export const Doc = ({className, ...props }: DocProps) :JSX.Element => {
     
     const {mainData, setMainData} = useAppContext();
-    const { contentTitle, currentDocument, isNewDocument, contentName } = mainData;
+    const { contentTitle, isNewDocument } = mainData.window;
+    const { currentDocument } = mainData.document;
     const [disabled, setDisabled] = useState<boolean>(false)
 
     useEffect(() => {
-        if (!currentDocument.user) {
+        if (!currentDocument.userId) {
             saveUser(setMainData, mainData)
         }
-        // if (contentName == DocumentType.MoveMaterial || contentName == DocumentType.LeaveMaterial) {
-        //     getEntrysJournal(setMainData, mainData, currentDocument.date);
-        // }
     },[])
 
     const onSubmit = ( mainData: Maindata, setMainData: Function| undefined ) => {
-        const {currentDocument} = mainData;
+        const {currentDocument} = mainData.document;
         setDisabled(true)
         let body: DocumentModel = {
             ...currentDocument,
@@ -49,17 +47,17 @@ export const Doc = ({className, ...props }: DocProps) :JSX.Element => {
             <div className={styles.infoBox}>
                 <div className={styles.dataBox}>
                     <InputForData label={contentTitle}/>
-                    <Info content={currentDocument.docNumber.toString()} label='№' className={styles.docNumber}/>
+                    <Info content={`${currentDocument.id}`} label='№' className={styles.docNumber}/>
                 </div>
             </div>
 
             <DocValues/>
-            {currentDocument.firstWorkerId}
+            {currentDocument.docValue.firstWorkerId}
             <div className={styles.boxBtn}>
                 {
                     ( 
                         isNewDocument || 
-                        (currentDocument.deleted && (isAdmins(mainData.user) || isGlBuxs(mainData.user)))  
+                        (currentDocument.docStatus == DocSTATUS.DELETED  && (isAdmins(mainData.users.user) || isGlBuxs(mainData.users.user)))  
                     ) 
                     &&
                    <>

@@ -11,9 +11,9 @@ import { Select } from './helpers/reference.components';
 import { cancelSubmit, defineTypePartners, defineTypeTMZ, onSubmit } from './helpers/reference.functions';
 import { getTypeReference } from '@/app/service/references/getTypeReference';
 import { getTypeReferenceByTitle } from '@/app/service/references/getTypeReferenceByTitle';
-import { UserRoles } from '@/app/interfaces/general.interface';
 import { CheckBoxForReference } from './checkBoxForDelivery/checkBoxForReference';
 import { SelectForReferences } from './selectForReferences/selectForReferences';
+import { UserRoles } from '@/app/interfaces/user.interface';
 
 export const Reference = ({ className, ...props }: ReferenceProps) :JSX.Element => {
 

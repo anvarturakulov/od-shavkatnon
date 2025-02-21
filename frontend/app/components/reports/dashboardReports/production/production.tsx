@@ -2,15 +2,7 @@
 import { ProductionProps } from './production.props';
 import styles from './production.module.css';
 import { ProductionItem } from './productionItem/productionItem';
-import { ReferenceModel } from '@/app/interfaces/reference.interface';
-import { query } from '@/app/service/reports/querys/query';
-import { Schet, TypeQuery } from '@/app/interfaces/report.interface';
-import { useAppContext } from '@/app/context/app.context';
 import { numberValue } from '@/app/service/common/converters';
-import { queryKor } from '@/app/service/reports/querys/queryKor';
-import { dateNumberToString } from '@/app/service/common/converterForDates';
-import { getDataForSwr } from '@/app/service/common/getDataForSwr';
-import useSWR from 'swr';
 import { useEffect, useState } from 'react';
 import { totalByKey } from '../inform';
 

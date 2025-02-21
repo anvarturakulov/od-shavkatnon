@@ -1,4 +1,4 @@
-import { UserRoles } from "./general.interface";
+import { UserRoles } from "./user.interface";
 
 export enum ReportType {
     MatOborot = 'MatOborot',
@@ -9,8 +9,8 @@ export enum ReportType {
 export interface ReportOptions {
     startDate: number,
     endDate: number,
-    firstReferenceId: string,
-    secondReferenceId?: string,
+    firstReferenceId: number,
+    secondReferenceId?: number,
     showReport: boolean,
     startReport: boolean,
     schet: Schet,

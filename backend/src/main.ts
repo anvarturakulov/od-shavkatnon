@@ -7,7 +7,14 @@ import { ValidationPipe } from "@nestjs/common";
 async function start() {
     const PORT = process.env.PORT || 5000;
     const app = await NestFactory.create(AppModule)
-
+    app.setGlobalPrefix('api');
+    app.enableCors({
+      origin: [
+        "https://shavkatnon.softhome.uz",
+        "http://localhost:3000",
+        "http://localhost:5000",
+      ],
+    });
     const config = new DocumentBuilder()
         .setTitle('Backend - Oson Dastur')
         .setDescription('REST API - documentation')

@@ -18,7 +18,9 @@ import { sortByName } from '@/app/service/references/sortByName';
 export default function ReferenceJournal({className, ...props}:ReferenceJournalProps):JSX.Element {
     
     const {mainData, setMainData} = useAppContext();
-    const { contentName, user } = mainData;
+    const { contentName, showReferenceWindow } = mainData.window;
+    const { user } = mainData.users;
+    const { updateDataForRefenceJournal } = mainData.journal
     const referenceType = getTypeReference(contentName);
     const token = user?.access_token;
     const url = process.env.NEXT_PUBLIC_DOMAIN+'/api/reference/byType/'+referenceType;
@@ -31,7 +33,7 @@ export default function ReferenceJournal({className, ...props}:ReferenceJournalP
     useEffect(() => {
         mutate()
         setMainData && setMainData('updateDataForRefenceJournal', false);
-    }, [mainData.showReferenceWindow, mainData.updateDataForRefenceJournal])
+    }, [showReferenceWindow, updateDataForRefenceJournal])
 
     return (
         <>  
@@ -72,13 +74,13 @@ export default function ReferenceJournal({className, ...props}:ReferenceJournalP
                             <>
                                 <tr 
                                     key={key+0} 
-                                    onDoubleClick={() => {getReference(item._id, setMainData, token)}} 
+                                    onDoubleClick={() => {getReference(item.id, setMainData, token)}} 
                                     className={cn(className, {
-                                            [styles.deleted]: item.deleted,
+                                            [styles.deleted]: item.refValues.markToDeleted,
                                             [styles.trRow]: 1,
                                         })}   
                                 >
-                                    <td className={styles.rowId}>{item._id}</td>
+                                    <td className={styles.rowId}>{item.id}</td>
                                     <td className={cn(className, {
                                             [styles.name]: 1,
                                         })}
@@ -86,25 +88,25 @@ export default function ReferenceJournal({className, ...props}:ReferenceJournalP
                                     {
                                         referenceType == 'TMZ' &&
                                         <>
-                                            <td className={styles.types}>{item.unit}</td>
-                                            <td className={styles.types}>{item.typeTMZ}</td>
+                                            <td className={styles.types}>{item.refValues.unit}</td>
+                                            <td className={styles.types}>{item.refValues.typeTMZ}</td>
                                         </>
                                     }
                                     {
                                         referenceType == 'PARTNERS' &&
                                         <>
-                                            <td className={styles.types}>{item.typePartners}</td>
-                                             <td className={styles.types}>{getNameReference(references,item.clientForDeliveryId)}</td>
+                                            <td className={styles.types}>{item.refValues.typePartners}</td>
+                                             <td className={styles.types}>{getNameReference(references,item.refValues.clientForSectionId)}</td>
                                         </>
                                     }
-                                    <td className={styles.comment}>{item.comment}</td>
+                                    <td className={styles.comment}>{item.refValues.comment}</td>
                                     <td className={styles.rowAction}>
                                         <IcoTrash 
                                             // className={styles.icoTrash}
                                             className={cn(className,styles.icoTrash, {
-                                                [styles.deleted]: item.deleted,
+                                                [styles.deleted]: item.refValues.markToDeleted,
                                             })}  
-                                            onClick = {() => deleteItemReference(item._id, item.name, token, setMainData)}
+                                            onClick = {() => deleteItemReference(item.id, item.name, token, setMainData)}
                                             />
                                     </td>
                                 </tr>

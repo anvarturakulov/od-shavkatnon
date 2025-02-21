@@ -9,7 +9,7 @@ import { sortByName } from '@/app/service/references/sortByName';
 export const SelectReferenceForTandirs = ({ idForSelect, currentItemId, disabled, className, ...props }: SelectReferenceForTandirsProps): JSX.Element => {
 
     const {mainData, setMainData} = useAppContext();
-    const { user } = mainData;
+    const { user } = mainData.users;
     const token = user?.access_token;
     const url = process.env.NEXT_PUBLIC_DOMAIN+'/api/reference/byType/'+'TMZ';
     
@@ -25,17 +25,17 @@ export const SelectReferenceForTandirs = ({ idForSelect, currentItemId, disabled
             >
                 {data && data.length>0 && 
                 data?.filter((item:ReferenceModel) => {
-                    return item.typeTMZ == 'PRODUCT'
+                    return item.refValues.typeTMZ == 'PRODUCT'
                 })
                 .sort(sortByName)
-                .filter((item:ReferenceModel) => !item.deleted)
+                .filter((item:ReferenceModel) => !item.refValues.markToDeleted)
                 .map((item:ReferenceModel, key:number) => (
                     <>
                         <option 
                             value={item.name}
                             data-type={item.typeReference}
-                            data-id={item._id}
-                            selected={item._id == currentItemId}
+                            data-id={item.id}
+                            selected={item.id == currentItemId}
                             >
                                 {item.name}
                         </option>

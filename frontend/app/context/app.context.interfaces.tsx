@@ -1,8 +1,8 @@
 import { DocumentModel, Interval, JournalCheckboxs } from '../interfaces/document.interface';
-import { ContentType, MessageType, DefinedTandirWorkers, User } from '../interfaces/general.interface';
+import { ContentType, MessageType } from '../interfaces/general.interface';
 import { ReferenceModel } from '../interfaces/reference.interface';
 import { EntryItem, ReportOptions } from '../interfaces/report.interface';
-import { UserModel } from '../interfaces/user.interface';
+import { DefinedTandirWorkers, User, UserModel } from '../interfaces/user.interface';
 
 export interface Maindata {
   document: {
@@ -18,8 +18,8 @@ export interface Maindata {
     informData: Array<any>,
     matOborot: Array<any>,
     oborotka: any,
-    currentDKInnerReportId: string,
-    currentDKInnerArrayId: string,
+    currentDKInnerReportId: number,
+    currentDKInnerArrayId: number,
     dashboardCurrentReportType: string,
     currentFinancialInnerReportType: string,
   },

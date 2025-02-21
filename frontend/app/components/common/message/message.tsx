@@ -3,12 +3,11 @@ import styles from './message.module.css';
 import cn from 'classnames';
 import { useAppContext } from '@/app/context/app.context';
 import { EntryItem } from '@/app/interfaces/report.interface';
-import { secondsToDateString } from '../../documents/doc/helpers/doc.functions';
 
 export const Message = ({className, ...props}: MessageProps): JSX.Element => {
     const {mainData, setMainData} = useAppContext()
 
-    const {messageType, message, showMessageWindow} = mainData
+    const {messageType, message, showMessageWindow} = mainData.window
     const label = messageType == 'error' ? 'Хатолик' : messageType == 'success' ? 'Рахмат': '';
 
     return (
@@ -49,7 +48,7 @@ export const Message = ({className, ...props}: MessageProps): JSX.Element => {
                      onClick={() => setMainData && setMainData('showMessageWindow', false)}
                      >
                     <div>
-                        {
+                        {/* {
                             message &&
                             message.length>0 && 
                             message.map((item: EntryItem, index: number)=> {
@@ -58,7 +57,7 @@ export const Message = ({className, ...props}: MessageProps): JSX.Element => {
                                         <div>{`${index+1}. сана: ${secondsToDateString(item.date)} ${item.comment ? `изох ${item.comment}`:''} ${item.count>0 ? `сон: ${item.count}`: ''} сумма: ${item.summa} (${item.documentType})`}</div>
                                 )
                             })
-                        }
+                        } */}
                     </div>
                 </div>
             }

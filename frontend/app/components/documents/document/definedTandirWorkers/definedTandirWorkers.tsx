@@ -3,18 +3,20 @@ import { DefinedTandirWorkersProps } from './definedTandirWorkers.props';
 import styles from './definedTandirWorkers.module.css';
 import { useAppContext } from '@/app/context/app.context';
 import { SelectWorkers } from './selectWorkers/selectWorkers';
-import { UserRoles } from '@/app/interfaces/general.interface';
+import { UserRoles } from '@/app/interfaces/user.interface';
 
 export const DefinedTandirWorkers = ({className, ...props }: DefinedTandirWorkersProps) :JSX.Element => {
     
     const {mainData, setMainData} = useAppContext();
-    const {definedTandirWorkers, user} = mainData;
+    const { user } = mainData.users;
+    const {definedTandirWorkers} = mainData.document;
+
     const role = user?.role;
 
     return (
         <div className={styles.box}>
             <SelectWorkers 
-              label={role == UserRoles.HAMIRCHI ? 'Хамирчи':'Тандирчи'} 
+              label={'Тандирчи'} 
               type='firstWorker'
               currentItemId={definedTandirWorkers?.firstWorker}
               visible={true}
@@ -24,14 +26,14 @@ export const DefinedTandirWorkers = ({className, ...props }: DefinedTandirWorker
               label='Биринчи зувалачи' 
               type='secondWorker'
               currentItemId={definedTandirWorkers?.secondWorker}
-              visible={role != UserRoles.HAMIRCHI}
+              visible={true}
               />   
             
             <SelectWorkers 
               label='Иккинчи зувалачи' 
               type='thirdWorker'
               currentItemId={definedTandirWorkers?.thirdWorker}
-              visible={role != UserRoles.HAMIRCHI}
+              visible={true}
               />   
         </div>   
     )

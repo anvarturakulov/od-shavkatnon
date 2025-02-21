@@ -1,4 +1,4 @@
-import { User, UserRoles } from '@/app/interfaces/general.interface';
+import { User, UserRoles } from "@/app/interfaces/user.interface"
 
 export const isAdmins = (user: User | undefined): boolean => {
   if (user && (user.role == UserRoles.ADMIN || user.role == UserRoles.HEADCOMPANY)) return true

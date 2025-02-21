@@ -1,7 +1,6 @@
 import { showMessage } from '../common/showMessage';
 import axios from 'axios';
 import { Maindata } from '@/app/context/app.context.interfaces';
-import { UserRoles } from '@/app/interfaces/general.interface';
 
 export const getInformation = (
   setMainData: Function | undefined, 
@@ -11,7 +10,9 @@ export const getInformation = (
   endDate?: number,
   ) => {
   
-  const { user, interval, dashboardCurrentReportType } = mainData
+  const { user } = mainData.users
+  const { interval } = mainData.window
+  const { dashboardCurrentReportType } = mainData.report
   let reportType = dashboardCurrentReportType
   const config = {
     headers: { Authorization: `Bearer ${user?.access_token}` }

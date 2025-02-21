@@ -16,7 +16,9 @@ import { User } from '../../user/user';
 export default function ReferenceJournal({className, ...props}:UserJournalProps):JSX.Element {
     
     const {mainData, setMainData} = useAppContext();
-    const { user } = mainData;
+    const { user } = mainData.users;
+    const { updateDataForUserJournal } = mainData.journal
+    const { showReferenceWindow } = mainData.window
     
     const token = user?.access_token;
     const url = process.env.NEXT_PUBLIC_DOMAIN+'/api/auth/getAll/';
@@ -26,7 +28,7 @@ export default function ReferenceJournal({className, ...props}:UserJournalProps)
     useEffect(() => {
         mutate()
         setMainData && setMainData('updateDataForUserJournal', false);
-    }, [mainData.showReferenceWindow, mainData.updateDataForUserJournal])
+    }, [showReferenceWindow, updateDataForUserJournal])
 
     return (
         <>  
@@ -53,25 +55,25 @@ export default function ReferenceJournal({className, ...props}:UserJournalProps)
                             <>
                                 <tr 
                                     key={key+0} 
-                                    onDoubleClick={() => {getUser(item._id, setMainData, token)}} 
+                                    onDoubleClick={() => {getUser(item.id, setMainData, token)}} 
                                     className={cn(className, {
-                                            [styles.deleted]: item.deleted,
+                                            [styles.deleted]: item.banned,
                                             [styles.trRow]: 1,
                                         })}   
                                 >
-                                    <td className={styles.rowId}>{item._id}</td>
+                                    <td className={styles.rowId}>{item.id}</td>
                                     <td className={cn(className, {
                                             [styles.name]: 1,
                                         })}
                                     >{item.name}</td>
-                                    <td className={styles.types}>{item.productId}</td>
+                                    <td className={styles.types}>{'????'}</td>
                                     <td className={styles.rowAction}>
                                         <IcoTrash 
                                             // className={styles.icoTrash}
                                             className={cn(className,styles.icoTrash, {
-                                                [styles.deleted]: item.deleted,
+                                                [styles.deleted]: item.banned,
                                             })}  
-                                            onClick = {() => deleteItemUser(item._id, item.name, token, setMainData)}
+                                            onClick = {() => deleteItemUser(item.id, item.name, token, setMainData)}
                                             />
                                     </td>
                                 </tr>

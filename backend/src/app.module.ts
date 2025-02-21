@@ -20,9 +20,7 @@ import { Entry } from './entries/entry.model';
 import { DocValue } from './docValues/docValue.model';
 import { DocTableItem } from './docTableItems/docTableItem.model';
 import { Document } from './documents/document.model';
-import { RolesModule } from './roles/roles.module';
-import { Role } from './roles/roles.model';
-import { UserRoles } from './roles/user-roles.model';
+
 
 
 @Module({
@@ -39,11 +37,10 @@ import { UserRoles } from './roles/user-roles.model';
             username: process.env.POSTGRES_USER,
             password: process.env.POSTGRES_PASSWORD,
             database: process.env.POSTGRES_DB,
-            models: [User, Role, UserRoles, Reference, RefValues, Entry, DocValue, DocTableItem, Document],
+            models: [User, Reference, RefValues, Entry, DocValue, DocTableItem, Document],
             autoLoadModels: true,
           }),
         UsersModule,
-        RolesModule,
         AuthModule,
         FilesModule,
         ReferencesModule,

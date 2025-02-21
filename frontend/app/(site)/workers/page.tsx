@@ -10,35 +10,35 @@ import UserMenu from '@/app/components/menu/workersMenu/workersMenu';
 import ReportWindow from '@/app/components/reports/simpleReports/reportWindow/reportWindow';
 import Journal from '@/app/components/journals/journal/journal';
 import { Message } from '@/app/components/common/message/message';
-import { UserRoles } from '@/app/interfaces/general.interface';
 import Hamirs from '@/app/components/journals/hamirs/hamirs';
-import { DefinedTandirWorkers } from '@/app/components/documents/definedTandirWorkers/definedTandirWorkers';
+import { UserRoles } from '@/app/interfaces/user.interface';
+import { DefinedTandirWorkers } from '@/app/components/documents/document/definedTandirWorkers/definedTandirWorkers';
 
 export default function Users() {
   
   const {mainData, setMainData} = useAppContext();
-  const {contentType, contentTitle, user} = mainData;
+  const { contentType, mainPage } = mainData.window;
+  const { user } = mainData.users;
   const [tandirworkers, setTandirWorkers] = useState<boolean>(false);
 
   useEffect(() => {
-    if (mainData.user == undefined) {
+    if (user == undefined) {
       redirect('/');
     }
-  }, [mainData.user]);
+  }, [user]);
 
   return (
     <>
       <div className={styles.container}>
         {
-          mainData.mainPage &&
+          mainData.window.mainPage &&
           <TopBox/>
         }
         
         {
-          mainData.mainPage &&
+          mainData.window.mainPage &&
           (
-            user?.role != UserRoles.TANDIR && 
-            user?.role != UserRoles.HAMIRCHI 
+            user?.role != UserRoles.TANDIR 
           ) && 
             <div className={styles.box}>
               <UserMenu menuData={MenuData}/>
@@ -46,10 +46,7 @@ export default function Users() {
         }
         
         {
-          mainData.mainPage &&
-          ( user?.role == UserRoles.HAMIRCHI ||
-            user?.role == UserRoles.TANDIR ) 
-          &&
+          mainData.window.mainPage && user?.role == UserRoles.TANDIR &&
           <>
             <Hamirs/>
             <button className={styles.btnForTandir} onClick={()=> setTandirWorkers(state => !state)}>Бугунги ходимлар руйхати</button>
@@ -62,7 +59,7 @@ export default function Users() {
         }
 
         <div className={styles.journalBox}>
-            { !mainData.mainPage && contentType=='document' && <Journal/> }
+            { !mainPage && contentType=='document' && <Journal/> }
         </div>
 
         <div className={styles.journalBox}>

@@ -4,14 +4,11 @@ import cn from 'classnames';
 import {MenuItemsProps} from './menuItems.props'
 import { useEffect, useState } from 'react';
 import { MenuItem } from '../../../../interfaces/menu.interface';
-import { ContentType, UserRoles } from '../../../../interfaces/general.interface';
+import { ContentType } from '../../../../interfaces/general.interface';
 import { useAppContext } from '@/app/context/app.context';
-import { defaultDocumentFormItems, defaultReportOptions } from '@/app/context/app.context.constants';
+import { defaultDocument, defaultReportOptions } from '@/app/context/app.context.constants';
 import { getKeyEnum } from '@/app/service/common/getKeyEnum';
 import { ReportOptions } from '@/app/interfaces/report.interface';
-import { getDefinedItemIdForReceiver, getDefinedItemIdForSender } from '../../documents/docValues/doc.values.functions';
-import { getRandomID } from '@/app/service/documents/getRandomID';
-import { DocumentType } from '@/app/interfaces/document.interface';
 import { setNewDocumentParams } from '@/app/service/documents/setNewDocumentParams';
 
 export default function MenuItems({menuData, className, ...props}:MenuItemsProps):JSX.Element {
@@ -19,8 +16,8 @@ export default function MenuItems({menuData, className, ...props}:MenuItemsProps
     const [menu, setMenu] = useState<Array<MenuItem>>([])
     
     const {mainData, setMainData} = useAppContext()
-    const role = mainData.user?.role;
-    let storageIdFromUser = mainData.user?.storageId
+    const { user } = mainData.users
+    const role = user?.role;
 
     const onClickItem = (e:any,currentTitle:string) => {
         let newMenu = [...menu]

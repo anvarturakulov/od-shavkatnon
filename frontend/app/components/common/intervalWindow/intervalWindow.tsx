@@ -9,7 +9,7 @@ import { dateNumberToString } from '@/app/service/common/converterForDates';
 export const IntervalWindow = ({className, ...props}: IntervalProps): JSX.Element => {
   
   const {mainData, setMainData} = useAppContext();
-  const [interval, setInterval] = useState<Interval>({...mainData.interval})
+  const [interval, setInterval] = useState<Interval>({...mainData.window.interval})
 
   const saveData = (interval: Interval, setMainData: Function | undefined) => {
     const {dateStart, dateEnd} = interval;
@@ -59,7 +59,7 @@ export const IntervalWindow = ({className, ...props}: IntervalProps): JSX.Elemen
 
   return (
       <>
-          { mainData.showIntervalWindow && 
+          { mainData.window.showIntervalWindow && 
             <div className={styles.box}>
               <div>Интервал саналарини киритинг</div>
               <input 

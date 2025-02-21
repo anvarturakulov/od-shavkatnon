@@ -1,5 +1,5 @@
 'use client'
-import styles from './userMenu.module.css'
+import styles from './workersMenu.module.css'
 import cn from 'classnames';
 import {UserMenuProps} from './workersMenu.props'
 import { useEffect, useState } from 'react';
@@ -8,7 +8,7 @@ import { defaultDocument, defaultReportOptions } from '@/app/context/app.context
 import { getKeyEnum } from '@/app/service/common/getKeyEnum';
 import { ReportOptions } from '@/app/interfaces/report.interface';
 import { MenuItem } from '@/app/interfaces/menu.interface';
-import { ContentType, UserRoles } from '@/app/interfaces/general.interface';
+import { ContentType } from '@/app/interfaces/general.interface';
 import { getRandomID } from '@/app/service/documents/getRandomID';
 import { getDefinedItemIdForReceiver, getDefinedItemIdForSender } from '../../documents/document/docValues/doc.values.functions';
 import { Section } from '../../reports/dashboardReports/section/section';
@@ -19,6 +19,7 @@ import { Button } from '../..';
 import { Maindata } from '@/app/context/app.context.interfaces';
 import MiniJournal from '../../journals/miniJournal/miniJournal';
 import LoadingIco from './ico/loading.svg'
+import { UserRoles } from '@/app/interfaces/user.interface';
 
 export default function UserMenu({menuData, className, ...props}:UserMenuProps):JSX.Element {
     
@@ -33,7 +34,7 @@ export default function UserMenu({menuData, className, ...props}:UserMenuProps):
     },[informData])
     
     const role = user?.role;
-    let storageIdFromUser = user?.storageId
+    let storageIdFromUser = user?.sectionId
 
     const onClickSubItem = (contentName: string, contentTitle: string, contentType: ContentType, mainData: Maindata) => {
         const keyItem = getKeyEnum(contentName, contentType)
@@ -56,7 +57,7 @@ export default function UserMenu({menuData, className, ...props}:UserMenuProps):
                 let dateStr = dateDoc.toISOString().split('T')[0]
 
                 // defValue.docNumber = num;
-                if (role == UserRoles.TANDIR || role == UserRoles.HAMIRCHI) {
+                if (role == UserRoles.TANDIR) {
                     let dateNowPlussedInNumber = Date.now() + 14400000
                     defValue.date = dateNowPlussedInNumber
                 } else {
@@ -67,12 +68,12 @@ export default function UserMenu({menuData, className, ...props}:UserMenuProps):
 
                 let definedItemIdForReceiver = getDefinedItemIdForReceiver(role, storageIdFromUser, contentName)
                 let definedItemIdForSender = getDefinedItemIdForSender(role, storageIdFromUser, contentName)
-                defValue.docValue.receiverId = definedItemIdForReceiver ? definedItemIdForReceiver : ''
-                defValue.docValue.senderId = definedItemIdForSender ? definedItemIdForSender : ''
+                defValue.docValue.receiverId = definedItemIdForReceiver ? definedItemIdForReceiver : 0
+                defValue.docValue.senderId = definedItemIdForSender ? definedItemIdForSender : 0
 
-                defValue.docValue.firstWorkerId = mainData.definedTandirWorkers.firstWorker
-                defValue.docValue.secondWorkerId = mainData.definedTandirWorkers.secondWorker
-                defValue.docValue.thirdWorkerId = mainData.definedTandirWorkers.thirdWorker
+                defValue.docValue.firstWorkerId = mainData.document.definedTandirWorkers.firstWorker
+                defValue.docValue.secondWorkerId = mainData.document.definedTandirWorkers.secondWorker
+                defValue.docValue.thirdWorkerId = mainData.document.definedTandirWorkers.thirdWorker
 
                 setMainData('currentDocument', {...defValue});
             }

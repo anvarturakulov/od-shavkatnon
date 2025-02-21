@@ -36,7 +36,7 @@ const rowData = (title: string, reportID: string, debitArrayId: string , kreditA
 
 export const DebitorKreditor = ({className, data, ...props }: DebitorKreditorProps) :JSX.Element => {
     const {mainData, setMainData} = useAppContext();
-    const {currentDKInnerReportId, currentDKInnerArrayId} = mainData;
+    const {currentDKInnerReportId, currentDKInnerArrayId} = mainData.report;
     
    
     let datas = data ? data.filter((item: any) => item?.reportType == 'DEBITORKREDITOR')[0]?.values : []

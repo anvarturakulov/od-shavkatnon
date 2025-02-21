@@ -22,7 +22,7 @@ export const User = ({ className, ...props }: UserProps) :JSX.Element => {
         password: '',
         name: '',
         sectionId: 0,
-        roles: [UserRoles.USER]
+        role: UserRoles.USER
     }
 
     const [body, setBody] = useState<UserModel>(defaultBody) 
@@ -81,7 +81,7 @@ export const User = ({ className, ...props }: UserProps) :JSX.Element => {
             
                 <div className={styles.nameBox}>
                     <div>storageId</div>
-                    <input value={body.sectionId} type="text" id='storageId' className={styles.input} onChange={(e)=>changeElements(e)}/>
+                    <input value={body.sectionId} type="number" id='storageId' className={styles.input} onChange={(e)=>changeElements(e)}/>
                 </div>
 
                 

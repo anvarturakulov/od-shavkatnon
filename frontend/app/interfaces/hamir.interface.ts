@@ -1,5 +1,7 @@
+import { DocSTATUS } from "./document.interface"
+
 export interface HamirModel {
-  _id?: string
+  id?: number
   date: number
   order?: number
   user: string
@@ -9,4 +11,5 @@ export interface HamirModel {
   secondWorker?: number | null,
   thirdWorker?: number | null,
   zuvala?: number,
+  docStatus: DocSTATUS
 }

@@ -1,39 +1,36 @@
 'use client'
 import styles from './userMenu.module.css'
 import cn from 'classnames';
-import {UserMenuProps} from './userMenu.props'
 import { useEffect, useState } from 'react';
 import { useAppContext } from '@/app/context/app.context';
-import { defaultDocumentFormItems, defaultReportOptions } from '@/app/context/app.context.constants';
+import { defaultDocument, defaultReportOptions } from '@/app/context/app.context.constants';
 import { getKeyEnum } from '@/app/service/common/getKeyEnum';
 import { ReportOptions } from '@/app/interfaces/report.interface';
 import { MenuItem } from '@/app/interfaces/menu.interface';
-import { ContentType, UserRoles } from '@/app/interfaces/general.interface';
+import { ContentType } from '@/app/interfaces/general.interface';
 import { getRandomID } from '@/app/service/documents/getRandomID';
-import { getDefinedItemIdForReceiver, getDefinedItemIdForSender } from '../documents/docValues/doc.values.functions';
 import { Section } from '../../reports/dashboardReports/section/section';
 import { RefreshPanel } from '../../reports/dashboardReports/refreshPanel/refreshPanel';
-import { Sklad } from '../../reports/dashboardReports/sklad/sklad';
 import { IntervalWindow } from '../../common/intervalWindow/intervalWindow';
 import { Mayda } from '../../documents/mayda/mayda';
 import { Button } from '../..';
 import { Maindata } from '@/app/context/app.context.interfaces';
 import MiniJournal from '../../journals/miniJournal/miniJournal';
-import { Norma } from '../../reports/dashboardReports/norma/norma';
 import LoadingIco from './ico/loading.svg'
+import { UserMenuProps } from '../workersMenu/workersMenu.props';
+import { UserRoles } from '@/app/interfaces/user.interface';
+import { getDefinedItemIdForReceiver, getDefinedItemIdForSender } from '../../documents/document/docValues/doc.values.functions';
 
 export default function UserMenu({menuData, className, ...props}:UserMenuProps):JSX.Element {
     
     const [menu, setMenu] = useState<Array<MenuItem>>([])
     const {mainData, setMainData} = useAppContext()
-    const { user, informData, uploadingDashboard } = mainData;
+    const { user } = mainData.users;
+    const { informData } = mainData.report;
+    const { uploadingDashboard } = mainData.window;
     
-    useEffect(()=>{
-        // console.log(mainData.informData)
-    },[mainData.informData])
-    
-    const role = mainData.user?.role;
-    let storageIdFromUser = mainData.user?.storageId
+    const role = user?.role;
+    let storageIdFromUser = user?.sectionId
 
     const onClickSubItem = (contentName: string, contentTitle: string, contentType: ContentType, mainData: Maindata) => {
         const keyItem = getKeyEnum(contentName, contentType)
@@ -50,13 +47,11 @@ export default function UserMenu({menuData, className, ...props}:UserMenuProps):
 
             if (contentType == 'document') {
                 
-                let defValue = {...defaultDocumentFormItems} 
-                let num = getRandomID()
+                let defValue = {...defaultDocument} 
                 let dateDoc = new Date();
                 let dateStr = dateDoc.toISOString().split('T')[0]
 
-                defValue.docNumber = num;
-                if (role == UserRoles.TANDIR || role == UserRoles.HAMIRCHI) {
+                if (role == UserRoles.TANDIR ) {
                     let dateNowPlussedInNumber = Date.now() + 14400000
                     defValue.date = dateNowPlussedInNumber
                 } else {
@@ -67,12 +62,12 @@ export default function UserMenu({menuData, className, ...props}:UserMenuProps):
 
                 let definedItemIdForReceiver = getDefinedItemIdForReceiver(role, storageIdFromUser, contentName)
                 let definedItemIdForSender = getDefinedItemIdForSender(role, storageIdFromUser, contentName)
-                defValue.receiverId = definedItemIdForReceiver ? definedItemIdForReceiver : ''
-                defValue.senderId = definedItemIdForSender ? definedItemIdForSender : ''
+                defValue.docValue.receiverId = definedItemIdForReceiver ? definedItemIdForReceiver : -1
+                defValue.docValue.senderId = definedItemIdForSender ? definedItemIdForSender : -1
 
-                defValue.firstWorkerId = mainData.definedTandirWorkers.firstWorker
-                defValue.secondWorkerId = mainData.definedTandirWorkers.secondWorker
-                defValue.thirdWorkerId = mainData.definedTandirWorkers.thirdWorker
+                defValue.docValue.firstWorkerId = mainData.document.definedTandirWorkers.firstWorker
+                defValue.docValue.secondWorkerId = mainData.document.definedTandirWorkers.secondWorker
+                defValue.docValue.thirdWorkerId = mainData.document.definedTandirWorkers.thirdWorker
 
                 setMainData('currentDocument', {...defValue});
             }

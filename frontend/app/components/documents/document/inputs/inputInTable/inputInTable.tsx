@@ -7,19 +7,20 @@ import { Maindata } from '@/app/context/app.context.interfaces';
 export const InputInTable = ({ className, nameControl, itemIndexInTable, ...props }: InputInTableProps): JSX.Element => {
     
     const {mainData, setMainData} = useAppContext();
-    const { user, currentDocument } = mainData;
+    const { user } = mainData.users;
+    const { currentDocument } = mainData.document;
     let currentVal;
-    if (currentDocument.tableItems) {
-        currentVal = currentDocument.tableItems[itemIndexInTable][nameControl]
+    if (currentDocument.docTableItems) {
+        currentVal = currentDocument.docTableItems[itemIndexInTable][nameControl]
     }
 
     const changeElements = (e: React.FormEvent<HTMLInputElement>, nameControl:string, itemIndex: number, setMainData: Function | undefined, mainData: Maindata) => {
         let target = e.currentTarget;
-        let {currentDocument} = mainData;
+        let {currentDocument} = mainData.document;
 
-        if (currentDocument && currentDocument.tableItems) {
+        if (currentDocument && currentDocument.docTableItems) {
             
-            let currentItem = {...currentDocument.tableItems[itemIndex]}
+            let currentItem = {...currentDocument.docTableItems[itemIndex]}
             let value = target.value
 
             if (currentItem && value != null && (nameControl=='count' || nameControl=='price' || nameControl=='total')) {
@@ -34,11 +35,11 @@ export const InputInTable = ({ className, nameControl, itemIndexInTable, ...prop
                 currentItem.comment = value
             }
 
-            let newItems = [...currentDocument.tableItems]
+            let newItems = [...currentDocument.docTableItems]
             newItems[itemIndex] = {...currentItem}
             let newObj = {
                 ...currentDocument,
-                tableItems: [...newItems]
+                docTableItems: [...newItems]
             }
             
             if ( setMainData ) {

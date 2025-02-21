@@ -1,14 +1,14 @@
-import { defaultDocumentFormItems } from '@/app/context/app.context.constants';
+import { defaultDocument } from '@/app/context/app.context.constants';
 import { Maindata } from '@/app/context/app.context.interfaces';
 import { DocumentType } from '@/app/interfaces/document.interface';
-import { UserRoles } from '@/app/interfaces/general.interface';
+import { UserRoles } from '@/app/interfaces/user.interface';
 
 export const saveUser = (setMainData: Function | undefined, mainData: Maindata): any => {
-  let {currentDocument} = mainData;
+  let {currentDocument} = mainData.document;
   let newObj = {
       ...currentDocument,
-      user: mainData.user?.name,
-      documentType: mainData.contentName
+      userId: mainData.users.user?.id,
+      documentType: mainData.window.contentName
   }
 
   if ( setMainData ) {
@@ -17,7 +17,9 @@ export const saveUser = (setMainData: Function | undefined, mainData: Maindata):
 }
 
 export const saveProvodka = (setMainData: Function | undefined, mainData: Maindata) => {
-  let { currentDocument ,isNewDocument, contentName } = mainData;
+  let { contentName } = mainData.window;
+  let { currentDocument } = mainData.document;
+  
   let value = true
   
   if (contentName == DocumentType.LeaveCash || contentName == DocumentType.MoveCash) {
@@ -35,12 +37,13 @@ export const saveProvodka = (setMainData: Function | undefined, mainData: Mainda
 }
 
 export const cancelSubmit = (setMainData: Function | undefined, mainData: Maindata) => {
+    const {user} = mainData.users
     if (setMainData) {
         setMainData('clearControlElements', true);
         setMainData('showDocumentWindow', false);
         setMainData('isNewDocument', false);
-        setMainData('currentDocument', {...defaultDocumentFormItems});
-        if (mainData.user?.role != UserRoles.HEADCOMPANY && mainData.user?.role != UserRoles.ADMIN) setMainData('mainPage', true)
+        setMainData('currentDocument', {...defaultDocument});
+        if (user?.role != UserRoles.HEADCOMPANY && user?.role != UserRoles.ADMIN) setMainData('mainPage', true)
     }
 }
 
@@ -50,7 +53,8 @@ export const secondsToDateString = (seconds: number): String => {
 
 export const saveDocumentType = (setMainData: Function | undefined, mainData: Maindata) => {
   
-  let {currentDocument, contentName} = mainData;
+  let { contentName } = mainData.window;
+  let { currentDocument } = mainData.document;
   let newObj = {
       ...currentDocument,
       documentType: contentName,

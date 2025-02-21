@@ -2,7 +2,7 @@ import axios from 'axios';
 import { showMessage } from '../common/showMessage';
 
 export const getUserById = (
-  id: string | undefined,
+  id: number | undefined,
   setMainData: Function | undefined,
   token: string | undefined
 ) => {

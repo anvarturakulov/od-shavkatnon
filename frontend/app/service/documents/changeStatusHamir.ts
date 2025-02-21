@@ -45,7 +45,7 @@ export const changeStatusHamir = (item: HamirModel, mainData: Maindata, setMainD
     }
   }
 
-  const uriPost = process.env.NEXT_PUBLIC_DOMAIN + '/api/hamir/'+item._id;
+  const uriPost = process.env.NEXT_PUBLIC_DOMAIN + '/api/hamir/'+item.id;
 
   axios.patch(uriPost, newDoc, config)
     .then(function (request) {

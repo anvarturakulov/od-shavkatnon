@@ -13,8 +13,8 @@ import { defaultDocumentTableItem } from '@/app/context/app.context.constants';
 import { DocTable } from '../docTable/docTable';
 import AddIco from './ico/add.svg'
 import { getPriceAndBalance } from '@/app/service/documents/getPriceBalance';
-import { UserRoles } from '@/app/interfaces/general.interface';
 import { isAdmins } from '@/app/service/common/users';
+import { UserRoles } from '@/app/interfaces/user.interface';
 
 export const DocValues = ({ className, ...props }: DocValuesProps): JSX.Element => {
     
@@ -23,7 +23,7 @@ export const DocValues = ({ className, ...props }: DocValuesProps): JSX.Element 
     const { currentDocument} = mainData.document;
     const { user } = mainData.users;
     const role = user?.role;
-    const storageIdFromUser = user?.storageId;
+    const storageIdFromUser = user?.sectionId;
     
     let options: OptionsForDocument = getOptionOfDocumentElements(contentName)
 
@@ -168,7 +168,7 @@ export const DocValues = ({ className, ...props }: DocValuesProps): JSX.Element 
                             visible={options.totalIsVisible}
                             disabled={options.totalIsDisabled}
                             />
-                        <InputInForm nameControl='comment' type='text' label='Изох' visible={visibilityCommentValueInDocument(contentName, mainData.user)}/>
+                        <InputInForm nameControl='comment' type='text' label='Изох' visible={visibilityCommentValueInDocument(contentName, mainData.users.user)}/>
 
                     </>
                 }
@@ -178,12 +178,11 @@ export const DocValues = ({ className, ...props }: DocValuesProps): JSX.Element 
                         <AddIco onClick={() => addItems(setMainData, mainData ,defaultNewItemForTable)}/>
                     </div>
                 }
-                {/* <InputInForm nameControl='cashFromPartner' type='number' label='Харидордан олинган пул' visible={visibilityCashFromPartnerValueInDocument(contentName, mainData.user)}/> */}
-            
+                
                 {options.tableIsVisible && 
                     <DocTable 
                         typeReference={TypeReference.TMZ}
-                        items={currentDocument.tableItems} 
+                        items={currentDocument.docTableItems} 
                 />}
 
             </div>

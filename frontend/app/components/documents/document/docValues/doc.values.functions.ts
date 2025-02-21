@@ -1,7 +1,7 @@
 import { Maindata } from '@/app/context/app.context.interfaces'
 import { DocTableItem, DocumentModel, DocumentType, OptionsForDocument } from '@/app/interfaces/document.interface'
-import { User, UserRoles } from '@/app/interfaces/general.interface'
 import { TypeReference } from '@/app/interfaces/reference.interface'
+import { User, UserRoles } from '@/app/interfaces/user.interface'
 
 export const getLabelForAnalitic = (currentDocument: DocumentModel, options: OptionsForDocument): string => {
   

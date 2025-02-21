@@ -6,7 +6,6 @@ import { SelectReference } from './components/selectReference/selectReference';
 import { TypeReference } from '@/app/interfaces/reference.interface';
 import { useAppContext } from '@/app/context/app.context';
 import { onChangeInputOptionsBox } from './helpers/optionsBox.functions';
-import { getEntrysJournal } from '@/app/service/reports/getEntrysJournal';
 import { Maindata } from '@/app/context/app.context.interfaces';
 import { showMessage } from '@/app/service/common/showMessage';
 import { ReportType } from '@/app/interfaces/report.interface';
@@ -18,18 +17,19 @@ import { getOborotka } from '@/app/service/reports/getOborotka';
 export default function OptionsBox({ className, ...props }: OptionsBoxProps): JSX.Element {
     
     const {mainData, setMainData} = useAppContext();
-    const {contentName, contentTitle, reportOption} = mainData;
+    const {contentName, contentTitle} = mainData.window;
+    const {reportOption} = mainData.report;
     const result = getOptionsByReportType(contentName, reportOption.schet);
 
     const showReport = ( setMainData: Function | undefined, mainData: Maindata ) => {
         console.log('show report - '+Date.now())
-        const { reportOption } = mainData;
+        const { reportOption } = mainData.report;
         const { startDate, endDate } = reportOption;
         if ( startDate != 0 && endDate != 0 ) {
             setMainData && setMainData('uploadingDashboard', true);
             if (contentName == ReportType.MatOborot) getMatOborot(setMainData, mainData)
             if (contentName == ReportType.Oborotka) getOborotka(setMainData, mainData) 
-            else getEntrysJournal(setMainData, mainData);
+            else return true;
         } else {
             showMessage('Санани тулдиринг', 'error', setMainData);
         }

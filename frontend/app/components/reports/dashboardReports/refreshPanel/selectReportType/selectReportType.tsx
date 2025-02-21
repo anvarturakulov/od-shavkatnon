@@ -8,7 +8,7 @@ import { DashboardReportItem } from '@/app/interfaces/report.interface';
 
 export const SelectReportType = ({ className, ...props }: SelectReportTypeProps): JSX.Element => {
     const {mainData, setMainData} = useAppContext();
-    const { user } = mainData;
+    const { user } = mainData.users;
     const data = [... DashboardReportData]
     
     const changeElements = (e: React.FormEvent<HTMLSelectElement>, setMainData: Function | undefined, mainData: Maindata) => {

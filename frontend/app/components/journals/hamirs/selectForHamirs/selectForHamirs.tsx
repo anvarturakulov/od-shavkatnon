@@ -3,7 +3,7 @@ import styles from './selectForHamirs.module.css';
 import { useAppContext } from '@/app/context/app.context';
 import useSWR from 'swr';
 import cn from 'classnames';
-import { ReferenceModel, TypeReference } from '@/app/interfaces/reference.interface';
+import { ReferenceModel, TypeReference, TypeSECTION } from '@/app/interfaces/reference.interface';
 import { Maindata } from '@/app/context/app.context.interfaces';
 import { getDataForSwr } from '@/app/service/common/getDataForSwr';
 import { sortByName } from '@/app/service/references/sortByName';
@@ -11,7 +11,8 @@ import { sortByName } from '@/app/service/references/sortByName';
 export const SelectForHamirs = ({ label , className, ...props }: SelectForHamirsProps): JSX.Element => {
     
     const {mainData, setMainData} = useAppContext();
-    const { user, contentName } = mainData;
+    const { contentName } = mainData.window;
+    const { user } = mainData.users;
     const token = user?.access_token;
     const url = process.env.NEXT_PUBLIC_DOMAIN+'/api/reference/byType/'+TypeReference.STORAGES;
     const { data , mutate } = useSWR(url, (url) => getDataForSwr(url, token));
@@ -45,18 +46,18 @@ export const SelectForHamirs = ({ label , className, ...props }: SelectForHamirs
                 {data && data.length>0  &&
                 data
                 .filter((item: ReferenceModel) => {
-                    return (item.filial == true) 
+                    return (item.refValues.typeSection == TypeSECTION.FILIAL) 
                 })
                 .sort(sortByName)
-                .filter(( item:ReferenceModel ) => !item.deleted )
+                .filter(( item:ReferenceModel ) => !item.refValues.markToDeleted )
                 .map(( item:ReferenceModel ) => (
                     <>
                         <option 
                             className={styles.option}
-                            key = {item._id}
+                            key = {item.id}
                             value={item.name}
                             data-type={item.typeReference} 
-                            data-id={item._id}
+                            data-id={item.id}
                             >
                                 {item.name}
                         </option>  

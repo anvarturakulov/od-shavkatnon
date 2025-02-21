@@ -12,14 +12,15 @@ import { getPriceAndBalance } from '@/app/service/documents/getPriceBalance';
 export const DocTable = ({ typeReference, items,  className, ...props }: DocTableProps): JSX.Element => {
     
     const {mainData, setMainData} = useAppContext();
-    const {contentName, currentDocument} = mainData;
+    const { contentName } = mainData.window;
+    const { currentDocument } = mainData.document;
 
     const deleteItem = (index: number, setMainData: Function | undefined, items: Array<DocTableItem>) => {
         if ( setMainData && items.length>1 ) {
             let newItems = [...items.slice(0, index),...items.slice(index+1)]
-            let newObj = {...mainData.currentDocument};
-            newObj.tableItems = [...newItems] 
-            setMainData('currentDocument', {...newObj})
+            let newObj = {...mainData.document.currentDocument};
+            newObj.docTableItems = [...newItems] 
+            setMainData('document.currentDocument', {...newObj})
         }
     }
 
@@ -78,8 +79,8 @@ export const DocTable = ({ typeReference, items,  className, ...props }: DocTabl
                             getPriceAndBalance(
                                 mainData,
                                 setMainData,
-                                currentDocument.senderId,
-                                currentDocument.tableItems[index].referenceId,
+                                currentDocument.docValue.senderId,
+                                currentDocument.docTableItems[index].referenceId,
                                 currentDocument.date,
                                 true,
                                 index,

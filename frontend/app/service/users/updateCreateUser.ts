@@ -23,8 +23,8 @@ export const updateCreateUser = (
   }
 
   console.log(body)
-  const id = body._id;
-  delete body._id;
+  const id = body.id;
+  delete body.id;
   const uriPost = process.env.NEXT_PUBLIC_DOMAIN + '/api/auth/register';
   const uriPatch = process.env.NEXT_PUBLIC_DOMAIN + '/api/auth/' + id;
   console.log('body', body, ' id - ', id, ' uriPath - ', uriPatch);

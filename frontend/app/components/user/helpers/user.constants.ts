@@ -1,4 +1,4 @@
-import { UserRoles } from '@/app/interfaces/general.interface'
+import { UserRoles } from "@/app/interfaces/user.interface"
 
 export const userRolesList = [
   { name: '', title: 'Фойдаланувчи турини танланг' },

@@ -5,21 +5,22 @@ import { useEffect, useState } from 'react';
 import { useAppContext } from '@/app/context/app.context';
 import useSWR from 'swr';
 import cn from 'classnames';
-import { secondsToDateString } from '../../documents/doc/helpers/doc.functions';
 import { getDataForSwr } from '@/app/service/common/getDataForSwr';
 import { getDescriptionDocument } from '@/app/service/documents/getDescriptionDocument';
-import { DocumentModel, DocumentType, Interval } from '@/app/interfaces/document.interface';
-import { UserRoles } from '@/app/interfaces/general.interface';
+import { DocSTATUS, DocumentModel, DocumentType, Interval } from '@/app/interfaces/document.interface';
 import { getNameReference } from '../helpers/journal.functions';
 import { setProvodkaByReciever } from './helpers/miniJournal.functions';
 import { dateNumberToString } from '@/app/service/common/converterForDates';
+import { secondsToDateString } from '../../documents/document/doc/helpers/doc.functions';
 
 
 export default function MiniJournal({ className, ...props}:MiniJournalProps):JSX.Element {
     
     const {mainData, setMainData} = useAppContext();
-    const { contentName, user } = mainData;
-    const {dateStart, dateEnd} = mainData.interval;
+    const { user } = mainData.users;
+    const { interval, showDocumentWindow } = mainData.window;
+    const { updateDataForDocumentJournal } = mainData.journal;
+    const {dateStart, dateEnd} = interval;
 
     let dateStartForUrl = dateStart
     let dateEndForUrl = dateEnd
@@ -43,7 +44,7 @@ export default function MiniJournal({ className, ...props}:MiniJournalProps):JSX
         mutate()
         mutateReferences()
         setMainData && setMainData('updateDataForDocumentJournal', false);
-    }, [mainData.showDocumentWindow, mainData.updateDataForDocumentJournal])
+    }, [showDocumentWindow, updateDataForDocumentJournal])
 
     // let currentVal: string, today: number
 
@@ -64,8 +65,8 @@ export default function MiniJournal({ className, ...props}:MiniJournalProps):JSX
                             .filter((item:DocumentModel, key: number) => (item.date >= dateStartForUrl && item.date <= dateEndForUrl))
                             .filter((item:DocumentModel, key: number) => {
                                 return (
-                                    item.user == user?.name || 
-                                    item.receiverId == user?.storageId 
+                                    item.userId == user?.id || 
+                                    item.docValue.receiverId == user?.sectionId 
                                 )
                             })
                             .sort((a:DocumentModel, b:DocumentModel) => a.date - b.date)
@@ -74,27 +75,27 @@ export default function MiniJournal({ className, ...props}:MiniJournalProps):JSX
                                     <tr 
                                         key={key} 
                                         className={cn(className, {
-                                                [styles.deleted]: item.deleted,
+                                                [styles.deleted]: item.docStatus == DocSTATUS.DELETED,
                                                 [styles.trRow]: 1,
                                                 
                                             })}>
                                         <td className={cn(styles.documentType, {
-                                            [styles.proveden]: item.proveden
+                                            [styles.proveden]: item.docStatus == DocSTATUS.PROVEDEN
                                         })}>
                                                 {getDescriptionDocument(item.documentType)}
                                         </td>
-                                        <td>{`${getNameReference(references,item.receiverId)}`}</td>
-                                        <td>{getNameReference(references,item.senderId)}</td>
+                                        <td>{`${getNameReference(references,item.docValue.receiverId)}`}</td>
+                                        <td>{getNameReference(references,item.docValue.senderId)}</td>
                                         <td className={styles.rowDate}>{secondsToDateString(item.date)}</td>
-                                        <td className={cn(styles.rowSumma, styles.tdSumma)}>{item.total ? item.total:item.comment}</td>
-                                        <td>{`${getNameReference(references,item.analiticId)? getNameReference(references,item.analiticId): ''} ${item.count ? `(${item.count})`: ''}`}</td>
+                                        <td className={cn(styles.rowSumma, styles.tdSumma)}>{item.docValue.total ? item.docValue.total:item.docValue.comment}</td>
+                                        <td>{`${getNameReference(references,item.docValue.analiticId)? getNameReference(references,item.docValue.analiticId): ''} ${item.docValue.count ? `(${item.docValue.count})`: ''}`}</td>
                                         {
-                                            !item.proveden &&
-                                            item.receiverId == user?.storageId &&
+                                            item.docStatus != DocSTATUS.PROVEDEN &&
+                                            item.docValue.receiverId == user?.sectionId &&
                                             item.documentType != DocumentType.LeaveCash &&
                                             <td><button 
                                                 className={cn(styles.receiveBtn)}
-                                                onClick={()=>setProvodkaByReciever(item._id, item.proveden,setMainData,mainData)}
+                                                onClick={()=>setProvodkaByReciever(item.id, item.docStatus == DocSTATUS.PROVEDEN , setMainData, mainData)}
                                                 >Кабул килиш</button></td>
                                         }
                                     </tr>

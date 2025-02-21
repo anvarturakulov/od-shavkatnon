@@ -8,7 +8,8 @@ export const getMatOborot = (
   mainData: Maindata
 ) => {
 
-  const { user, reportOption } = mainData;
+  const { user } = mainData.users;
+  const { reportOption } = mainData.report;
   const { startDate, endDate, firstReferenceId } = reportOption;
 
   const config = {

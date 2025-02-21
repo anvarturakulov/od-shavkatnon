@@ -10,21 +10,20 @@ import { redirect } from 'next/navigation';
 import Journal from '@/app/components/journals/journal/journal';
 import { IntervalWindow } from '@/app/components/common/intervalWindow/intervalWindow';
 import TopBox from '@/app/components/common/topBox/topBox';
-import { Information } from '@/app/components/information/information';
-import { Spinner } from '@/app/components/common/spinner/spinner';
 import { Inform } from '@/app/components/reports/dashboardReports/inform';
 import UserJournal from '@/app/components/journals/userJournal/userJournal';
 
 export default function Dashboard() {
 
   const {mainData} = useAppContext()
-  const {contentType, contentTitle} = mainData
+  const { contentType, mainPage } = mainData.window
+  const { user } = mainData.users
   
   useEffect(() => {
-    if (mainData.user == undefined) {
+    if (user == undefined) {
       redirect('/');
     }
-  }, [mainData.user]);
+  }, [user]);
 
   return (
     
@@ -34,10 +33,10 @@ export default function Dashboard() {
         <div className={styles.content}>
 
           {/* {mainData.mainPage && <Information/>} */}
-          {mainData.mainPage && <Inform/>}
+          {mainPage && <Inform/>}
           
           <div className={styles.journalBox}>
-            { !mainData.mainPage && contentType=='document' && <Journal/> }
+            { !mainPage && contentType=='document' && <Journal/> }
           </div>
 
           <div className={styles.journalBox}>

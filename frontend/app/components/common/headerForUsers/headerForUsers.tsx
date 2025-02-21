@@ -9,7 +9,7 @@ import { Maindata } from '@/app/context/app.context.interfaces';
 export default function HeaderForUser({ className, ...props }: HeaderForUsersProps): JSX.Element {
     
     const {mainData, setMainData} = useAppContext()
-    const {contentType, contentName, showUserWindow, isNewUser } = mainData 
+    const { showUserWindow, isNewUser } = mainData.window
     const strFirst = isNewUser ? 'янги фойдаланувчи очиш' : 'фойдаланувчиларни куриш';
 
     const addNewElement = (setMainData: Function | undefined, mainData: Maindata) => {

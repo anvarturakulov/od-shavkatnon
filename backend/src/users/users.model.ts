@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Column, DataType, Model, Table, HasMany, ForeignKey, BelongsTo, BelongsToMany } from "sequelize-typescript";
 import { Document } from "src/documents/document.model";
-import { EnumUserRoles } from "src/interfaces/user.interface";
+import { UserRoles } from "src/interfaces/user.interface";
 import { Reference } from "src/references/references.model";
 
 
@@ -48,8 +48,8 @@ export class User extends Model<User, UserCreationAttrs> {
     sectionId: number
 
     @ApiProperty({example:'CLIENTS', description: 'Тип партнера - ( CLIENTS || SUPPLIERS )'})
-    @Column({type: DataType.ENUM(...Object.values(EnumUserRoles))})
-    temp: EnumUserRoles
+    @Column({type: DataType.ENUM(...Object.values(UserRoles))})
+    role: UserRoles
 
     @BelongsTo(() => Reference) 
     referenceForSection: Reference;

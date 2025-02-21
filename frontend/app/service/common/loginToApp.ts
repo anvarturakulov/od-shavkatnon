@@ -1,6 +1,6 @@
-import { BodyForLogin } from '@/app/interfaces/general.interface';
 import axios from 'axios';
 import { showMessage } from './showMessage';
+import { BodyForLogin } from '@/app/interfaces/user.interface';
 
 export const loginToApp = (body: BodyForLogin, setMainData: Function | undefined) => {
   const uri = process.env.NEXT_PUBLIC_DOMAIN + '/api/auth/login';

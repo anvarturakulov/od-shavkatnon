@@ -9,18 +9,17 @@ import { dateNumberToString } from '@/app/service/common/converterForDates';
 import { getInformation } from '@/app/service/reports/getInformation';
 import axios from 'axios';
 import { SelectReportType } from './selectReportType/selectReportType';
-import { isAdmins } from '@/app/service/common/users';
 
 export const RefreshPanel = ({className, ...props }: RefreshPanelProps) :JSX.Element => {
     const {mainData, setMainData} = useAppContext();
-    const {dateStart, dateEnd} = mainData.interval;
-    const { user } = mainData
+    const {dateStart, dateEnd} = mainData.window.interval;
+    const { user } = mainData.users
 
     const refreshReport = async (mainData: Maindata, setMainData: Function | undefined) => {
         let firstPrice:string|null = ''
         let secondPrice:string|null = ''
 
-        if (mainData.dashboardCurrentReportType == 'Foyda') {
+        if (mainData.report.dashboardCurrentReportType == 'Foyda') {
             firstPrice = prompt('Катта нон учун нархни киритинг')
             secondPrice = prompt('Оддий нон учун нархни киритинг')
             
@@ -37,7 +36,7 @@ export const RefreshPanel = ({className, ...props }: RefreshPanelProps) :JSX.Ele
         '?startDate=' + 0 + '&endDate=' + 1;
 
         const config = {
-            headers: { Authorization: `Bearer ${mainData.user?.access_token}` }
+            headers: { Authorization: `Bearer ${user?.access_token}` }
         };
 
         let result = 0;

@@ -8,14 +8,16 @@ import { NameControl } from '@/app/interfaces/document.interface';
 export const InputInForm = ({visible, label, className, nameControl, isNewDocument, ...props }: InputInFormProps): JSX.Element => {
     
     const {mainData, setMainData} = useAppContext();
-    const { currentDocument, user, contentName } = mainData;
+    const { currentDocument } = mainData.document;
+    const { user } = mainData.users;
+    const { contentName } = mainData.window;
     
-    let currentVal = currentDocument[nameControl]
+    let currentVal = currentDocument.docValue[nameControl]
 
     const changeElements = (e: React.FormEvent<HTMLInputElement>, setMainData: Function | undefined, mainData: Maindata, nameControl: NameControl) => {
         let target = e.currentTarget;
         let value = target.value;
-        let {currentDocument} = mainData;
+        let {currentDocument} = mainData.document;
         let newValues = {
             ...currentDocument
         }
@@ -23,38 +25,52 @@ export const InputInForm = ({visible, label, className, nameControl, isNewDocume
         if ( nameControl=='count' && (+value>-1)) {
             newValues = {
                 ...currentDocument,
-                [`${nameControl}`]: Number(Number(value).toFixed(3)),
-                total : Number((Number(value) * currentDocument.price).toFixed(2))
+                docValue: {
+                    ...currentDocument.docValue,
+                    [`${nameControl}`]: Number(Number(value).toFixed(3)),
+                    total : Number((Number(value) * currentDocument.docValue.price).toFixed(2))
+                }
             }
         }
 
         if ( nameControl=='price') {
-            
             newValues = {
                 ...currentDocument,
-                [`${nameControl}`]: Number(value),
-                total : Number((Number(value)* currentDocument.count).toFixed(2))
+                docValue: {
+                    ...currentDocument.docValue,
+                    [`${nameControl}`]: Number(value),
+                    total : Number((Number(value)* currentDocument.docValue.count).toFixed(2))
+                }
             }
         }
 
         if ( nameControl=='total' ) {
             newValues = {
                 ...currentDocument,
-                total : Number(value)
+                docValue: {
+                    ...currentDocument.docValue,
+                    total : Number(value)
+                }
             }
         }
         
         if (nameControl=='comment') {
             newValues = {
                 ...currentDocument,
-                [nameControl]: value
+                docValue: {
+                    ...currentDocument.docValue,
+                    [nameControl]: value
+                }
             }
         }
 
         if (nameControl=='cashFromPartner') {
             newValues = {
                 ...currentDocument,
-                [nameControl]: Number(value)
+                docValue: {
+                    ...currentDocument.docValue,
+                    [nameControl]: Number(value)
+                }
             }
         }
                 

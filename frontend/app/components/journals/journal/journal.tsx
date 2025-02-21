@@ -8,17 +8,17 @@ import { useAppContext } from '@/app/context/app.context';
 import useSWR from 'swr';
 import cn from 'classnames';
 import Header from '../../common/header/header';
-import { Doc } from '../../documents/doc/doc';
-import { secondsToDateString } from '../../documents/doc/helpers/doc.functions';
 import { getDataForSwr } from '@/app/service/common/getDataForSwr';
 import { deleteItemDocument, getDocument, getNameReference, isDirector, isFounder, setProvodkaToDoc } from '../helpers/journal.functions';
 import { getDescriptionDocument } from '@/app/service/documents/getDescriptionDocument';
-import { DocumentModel, DocumentType, Interval } from '@/app/interfaces/document.interface';
-import { UserRoles, dashboardUsersList } from '@/app/interfaces/general.interface';
+import { DocSTATUS, DocumentModel, DocumentType, Interval } from '@/app/interfaces/document.interface';
 import { dateNumberToString } from '@/app/service/common/converterForDates'
 import Footer from '../../common/footer/footer'
 import { numberValue } from '@/app/service/common/converters'
 import { CheckBoxInFooter } from '../helpers/checkBoxInFooter/checkBoxInFooter'
+import { dashboardUsersList, UserRoles } from '@/app/interfaces/user.interface'
+import { Doc } from '../../documents/document/doc/doc'
+import { secondsToDateString } from '../../documents/document/doc/helpers/doc.functions'
 
 
 interface FilterForJournal {
@@ -41,20 +41,20 @@ const documentTotal = (item: DocumentModel) => {
     if (
         (item.documentType == DocumentType.LeaveMaterial ||
         item.documentType == DocumentType.ComeHalfstuff) &&
-        item.tableItems?.length 
-    ) return numberValue(item.tableItems.reduce((summa, item) => summa + item.total,0))
+        item.docTableItems?.length 
+    ) return numberValue(item.docTableItems.reduce((summa, item) => summa + item.total,0))
 
-    return numberValue(item.total)
+    return numberValue(item.docValue.total)
 }
 
 const totals = (item: DocumentModel) => {
-    let total = item.total;
-    let count = item.count;
+    let total = item.docValue.total;
+    let count = item.docValue.count;
 
     if (( item.documentType == DocumentType.LeaveMaterial ||  item.documentType == DocumentType.ComeHalfstuff) 
-        && item.tableItems?.length ) {
-        let t = item.tableItems.reduce((summa, item) => summa + item.total,0)
-        let c = item.tableItems.reduce((count, item) => count + item.count,0)
+        && item.docTableItems?.length ) {
+        let t = item.docTableItems.reduce((summa, item) => summa + item.total,0)
+        let c = item.docTableItems.reduce((count, item) => count + item.count,0)
         total = t;
         count = c;
     }
@@ -65,8 +65,8 @@ const totals = (item: DocumentModel) => {
 export default function Journal({ className, ...props}:JournalProps):JSX.Element {
     
     const {mainData, setMainData} = useAppContext();
-    const {dateStart, dateEnd} = mainData.interval;
-    const { journalChechboxs } = mainData;
+    const {dateStart, dateEnd} = mainData.window.interval;
+    const { journalChechboxs, updateDataForDocumentJournal } = mainData.journal;
 
     let dateStartForUrl = dateStart
     let dateEndForUrl = dateEnd
@@ -80,8 +80,9 @@ export default function Journal({ className, ...props}:JournalProps):JSX.Element
     
     const [filter, setFilter] = useState<FilterForJournal>(defaultFilter);
 
-    const { contentName, user, showDocumentWindow } = mainData;
-    const role = mainData.user?.role;
+    const { user } = mainData.users;
+    const { showDocumentWindow, contentName } = mainData.window;
+    const role = user?.role;
     const dashboardUsers = role && dashboardUsersList.includes(role);
 
     const token = user?.access_token;
@@ -101,7 +102,7 @@ export default function Journal({ className, ...props}:JournalProps):JSX.Element
         mutate()
         mutateReferences()
         setMainData && setMainData('updateDataForDocumentJournal', false);
-    }, [mainData.showDocumentWindow, mainData.updateDataForDocumentJournal])
+    }, [showDocumentWindow, updateDataForDocumentJournal])
 
     const changeFilter = (target: string) => {
         let title: string = '';
@@ -208,42 +209,42 @@ export default function Journal({ className, ...props}:JournalProps):JSX.Element
                             .sort((a:DocumentModel, b:DocumentModel) => a.date - b.date)
                             .filter((item:DocumentModel) => {
                                 if (journalChechboxs.charges ) {
-                                    if (!item.isWorker && !item.isPartner) return true
+                                    if (!item.docValue.isWorker && !item.docValue.isPartner) return true
                                 } else return true
                             })
                             .filter((item:DocumentModel) => {
                                 if (journalChechboxs.workers ) {
-                                    if (item.isWorker) return true
+                                    if (item.docValue.isWorker) return true
                                 } else return true
                             })
                             .filter((item:DocumentModel) => {
                                 if (journalChechboxs.partners ) {
-                                    if (item.isPartner) return true
+                                    if (item.docValue.isPartner) return true
                                 } else return true
                             })
                             .filter((item:DocumentModel) => {
                                 const {user} = filter
                                 if (user != 'Фойдаланувчи') {
-                                    if (item.user.toLowerCase().includes(user.toLocaleLowerCase())) return true
+                                    if (item.userId) return true
                                 } else return true
                             })
                             
                             .filter((item:DocumentModel) => {
                                 const {comment} = filter
                                 if (comment != 'Изох') {
-                                    if (item.comment && (item.comment+getNameReference(references,item.analiticId)).toLowerCase().includes(comment.toLocaleLowerCase())) return true
+                                    if (item.docValue.comment && (item.docValue.comment+getNameReference(references,item.docValue.analiticId)).toLowerCase().includes(comment.toLocaleLowerCase())) return true
                                 } else return true
                             })
                             .filter((item:DocumentModel) => {
                                 const {sender} = filter
-                                const itemSender = getNameReference(references,item.senderId)
+                                const itemSender = getNameReference(references,item.docValue.senderId)
                                 if (sender != 'Берувчи') {
                                     if (itemSender && itemSender.toLowerCase().includes(sender.toLocaleLowerCase())) return true
                                 } else return true
                             })
                             .filter((item:DocumentModel) => {
                                 const {receiver} = filter
-                                const itemReceiver = getNameReference(references,item.receiverId)
+                                const itemReceiver = getNameReference(references,item.docValue.receiverId)
                                 if (receiver != 'Олувчи') {
                                     if (itemReceiver && itemReceiver.toLowerCase().includes(receiver.toLocaleLowerCase())) return true
                                 } else return true
@@ -251,56 +252,54 @@ export default function Journal({ className, ...props}:JournalProps):JSX.Element
                             .filter((item:DocumentModel) => {
                                 const {summa} = filter
                                 if (summa != 'Сумма') {
-                                    if (item.total == +summa) return true
+                                    if (item.docValue.total == +summa) return true
                                 } else return true
                             })
                             .filter((item:DocumentModel) => {
                                 if (role != UserRoles.ADMIN && role != UserRoles.HEADCOMPANY) {
-                                    if (isDirector(references, item.senderId)) return false
-                                    if ( isFounder(references, item.senderId) ||
-                                         isFounder(references, item.receiverId)
+                                    if (isDirector(references, item.docValue.senderId)) return false
+                                    if ( isFounder(references, item.docValue.senderId) ||
+                                         isFounder(references, item.docValue.receiverId)
                                     ) return false
                                 }
                                 return true
                             })
-                            
-                            
                             .map((item:DocumentModel, key: number) => {
                                 let {t, c} = totals(item)
-                                total += !item.deleted ? t : 0;
-                                count += !item.deleted ? c : 0;
-                                docCount += !item.deleted ? 1 : 0;
+                                total += item.docStatus != DocSTATUS.DELETED ? t : 0;
+                                count += item.docStatus != DocSTATUS.DELETED ? c : 0;
+                                docCount += item.docStatus != DocSTATUS.DELETED ? 1 : 0;
 
                                 return (
                                 <>
                                     <tr 
                                         key={key} 
                                         className={cn(className, {
-                                                [styles.deleted]: item.deleted,
+                                                [styles.deleted]: item.docStatus == DocSTATUS.DELETED,
                                                 [styles.trRow]: 1,
                                             })}
-                                        onDoubleClick={() => {getDocument(item._id, setMainData, token)}}    
+                                        onDoubleClick={() => {getDocument(item.id, setMainData, token)}}    
                                     >
-                                        <td className={styles.rowId}>{item.docNumber}</td>
+                                        <td className={styles.rowId}>{item.id}</td>
                                         <td className={styles.rowDate}>{secondsToDateString(item.date)}</td>
                                         <td className={cn(styles.documentType, {
-                                                [styles.proveden]: item.proveden
+                                                [styles.proveden]: item.docStatus != DocSTATUS.PROVEDEN
                                             })}>
                                                 {getDescriptionDocument(item.documentType)}
                                         </td>
                                         <td className={cn(styles.rowSumma, styles.tdSumma)}>{documentTotal(item)}</td>
-                                        <td>{getNameReference(references,item.receiverId)}</td>
-                                        <td>{getNameReference(references,item.senderId)}</td>
-                                        <td>{`${getNameReference(references,item.analiticId)? getNameReference(references,item.analiticId): ''} ${item.comment ? `(${item.comment})`: ''} ${item.count ? `(${item.count})`: ''}`}</td>
-                                        <td>{item.user}</td>
+                                        <td>{getNameReference(references,item.docValue.receiverId)}</td>
+                                        <td>{getNameReference(references,item.docValue.senderId)}</td>
+                                        <td>{`${getNameReference(references,item.docValue.analiticId)? getNameReference(references,item.docValue.analiticId): ''} ${item.docValue.comment ? `(${item.docValue.comment})`: ''} ${item.docValue.count ? `(${item.docValue.count})`: ''}`}</td>
+                                        <td>{item.userId}</td>
                                         <td className={styles.rowAction}>
                                             <IcoTrash className={styles.icoTrash}
-                                            onClick = {() => deleteItemDocument(item._id, item.date, item.proveden, token, setMainData, mainData)}
+                                            onClick = {() => deleteItemDocument(item.id, item.date, token, setMainData, mainData)}
                                             />
                                         </td>
                                         <td className={styles.rowAction}>
                                             <IcoSave className={styles.icoSave}
-                                            onClick = {() => setProvodkaToDoc(item._id, token, item.proveden ,setMainData, mainData, item.receiverId)}
+                                            onClick = {() => setProvodkaToDoc(item.id, token ,item.docStatus == DocSTATUS.PROVEDEN ,setMainData, mainData, item.docValue.receiverId)}
                                             />
                                         </td>
                                     </tr>

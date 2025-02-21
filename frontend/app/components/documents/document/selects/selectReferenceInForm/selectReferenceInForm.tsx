@@ -3,54 +3,60 @@ import styles from './selectReferenceInForm.module.css';
 import { useAppContext } from '@/app/context/app.context';
 import useSWR from 'swr';
 import cn from 'classnames';
-import { ReferenceModel, TypePartners, TypeReference } from '@/app/interfaces/reference.interface';
+import { ReferenceModel, TypePartners, TypeReference, TypeSECTION } from '@/app/interfaces/reference.interface';
 import { Maindata } from '@/app/context/app.context.interfaces';
 import { getDataForSwr } from '@/app/service/common/getDataForSwr';
 import { sortByName } from '@/app/service/references/sortByName';
 import { getTypeDocumentForReference } from '@/app/service/documents/getTypeDocumentForReference';
-import { UserRoles } from '@/app/interfaces/general.interface';
 import { DocumentType } from '@/app/interfaces/document.interface';
 import { getPropertySubconto } from '@/app/service/reports/getPropertySubconto';
 import { definedTandirWorkers } from './helper';
 import { docsDependentToBalance, docsDependentToMiddlePrice } from '../../doc/helpers/documentTypes';
+import { UserRoles } from '@/app/interfaces/user.interface';
 
 
 export const SelectReferenceInForm = ({ label, typeReference, visibile=true , definedItemId ,currentItemId, type, className, ...props }: SelectReferenceInFormProps): JSX.Element => {
     const {mainData, setMainData} = useAppContext();
-    const { user, contentName, currentDocument } = mainData;
+    const { user } = mainData.users;
+    const { contentName } = mainData.window;
+    const {  currentDocument } = mainData.document;
     const token = user?.access_token;
     const url = process.env.NEXT_PUBLIC_DOMAIN+'/api/reference/byType/'+typeReference;
     const { data } = useSWR(url, (url) => getDataForSwr(url, token));
 
     const changeElements = (e: React.FormEvent<HTMLSelectElement>, setMainData: Function | undefined, mainData: Maindata, type: TypeForSelectInForm) => {
         
-        let {currentDocument, contentName, user } = mainData;
+        const { user } = mainData.users;
+        const { contentName } = mainData.window;
+        const {  currentDocument } = mainData.document;
         let role = user?.role;
         
         if (currentDocument) {
             let target = e.currentTarget;
             let currentItem = {...currentDocument};
-            let id = target[target.selectedIndex].getAttribute('data-id');
+            let idStr = target[target.selectedIndex].getAttribute('data-id');
+            let id:number = 0
+            if (idStr) id = +idStr
 
             if (type == 'sender' && id) {
-                currentItem.senderId = id
-                if (docsDependentToBalance.includes(contentName)) currentItem.balance = 0;
-                if (docsDependentToMiddlePrice.includes(contentName)) currentItem.price = 0;
+                currentItem.docValue.senderId = id
+                if (docsDependentToBalance.includes(contentName)) currentItem.docValue.balance = 0;
+                if (docsDependentToMiddlePrice.includes(contentName)) currentItem.docValue.price = 0;
             }
-            if (type == 'receiver' && id) currentItem.receiverId = id;
+            if (type == 'receiver' && id) currentItem.docValue.receiverId = id;
               
             if (type == 'analitic' && id) {
-                currentItem.analiticId = id
+                currentItem.docValue.analiticId = id
                 
-                if (docsDependentToBalance.includes(contentName)) currentItem.balance = 0;
-                if (docsDependentToMiddlePrice.includes(contentName)) currentItem.price = 0;
+                if (docsDependentToBalance.includes(contentName)) currentItem.docValue.balance = 0;
+                if (docsDependentToMiddlePrice.includes(contentName)) currentItem.docValue.price = 0;
 
                 if (user?.role == UserRoles.DELIVERY) {
                     let price = getPropertySubconto(data, id).firstPrice
                     
                     if (price) {
-                        currentItem.price = price
-                        currentItem.total = price * currentItem.count
+                        currentItem.docValue.price = price
+                        currentItem.docValue.total = price * currentItem.docValue.count
                     }
                 }
             }
@@ -65,15 +71,15 @@ export const SelectReferenceInForm = ({ label, typeReference, visibile=true , de
     if (visibile == false) return <></>
 
     let typeDocumentForReference = getTypeDocumentForReference(contentName);
-    let flagDisabled = Boolean(definedItemId?.length)
+    let flagDisabled = Boolean(definedItemId)
 
-    if ( mainData.user?.role == UserRoles.GLBUX && 
+    if ( user?.role == UserRoles.GLBUX && 
         currentDocument.documentType == DocumentType.ComeProduct
     ) {
         flagDisabled = false
     }
  
-    if (type == 'sender' && contentName == DocumentType.ServicesFromPartners) currentItemId = ''
+    if (type == 'sender' && contentName == DocumentType.ServicesFromPartners) currentItemId = -1
 
     return (
         <div className={styles.box}>
@@ -100,11 +106,11 @@ export const SelectReferenceInForm = ({ label, typeReference, visibile=true , de
                     if (typeReference == TypeReference.TMZ) {
                         switch (typeDocumentForReference) {
                             case 'MATERIAL':
-                                return item.typeTMZ == 'MATERIAL'
+                                return item.refValues.typeTMZ == 'MATERIAL'
                             case 'PRODUCT':
-                                return item.typeTMZ == 'PRODUCT'
+                                return item.refValues.typeTMZ == 'PRODUCT'
                             case 'HALFSTUFF':
-                                return item.typeTMZ == 'HALFSTUFF'
+                                return item.refValues.typeTMZ == 'HALFSTUFF'
                             case 'OTHER':
                                 return true
                         }
@@ -117,7 +123,11 @@ export const SelectReferenceInForm = ({ label, typeReference, visibile=true , de
                     if ((type == 'receiver' || type == 'sender') &&
                         ( contentName == DocumentType.MoveProd ))
                         {
-                            return ( item.filial  || item.delivery || item.sklad ) 
+                            return ( 
+                                item.refValues.typeSection == TypeSECTION.FILIAL  ||
+                                item.refValues.typeSection == TypeSECTION.DELIVERY || 
+                                item.refValues.typeSection == TypeSECTION.STORAGE 
+                            ) 
                         }
                     
                     if ((type == 'receiver' || type == 'sender') && 
@@ -126,63 +136,112 @@ export const SelectReferenceInForm = ({ label, typeReference, visibile=true , de
                            contentName == DocumentType.ComeHalfstuff ||
                            contentName == DocumentType.ComeProduct ))
                         {
-                            return (item.filial  || item.sklad) 
+                            return (
+                                item.refValues.typeSection == TypeSECTION.FILIAL  || 
+                                item.refValues.typeSection == TypeSECTION.STORAGE
+                            ) 
                         }
                     
                     if ((type == 'receiver') && 
                         contentName == DocumentType.LeaveCash) {
                         if ( user?.role == UserRoles.ADMIN || user?.role == UserRoles.HEADCOMPANY ) {
-                            return (item.filial || item.maxsud || item.shavkat || item.umumBulim || item.director) 
+                            return (
+                                item.refValues.typeSection == TypeSECTION.FILIAL || 
+                                item.refValues.typeSection == TypeSECTION.FOUNDER ||
+                                item.refValues.typeSection == TypeSECTION.COMMON || 
+                                item.refValues.typeSection == TypeSECTION.DIRECTOR
+                            ) 
                         } else if (user?.role == UserRoles.GLBUX || user?.role == UserRoles.ZAMGLBUX) {
-                            return (item.filial || item.umumBulim )
+                            return (
+                                item.refValues.typeSection == TypeSECTION.FILIAL ||
+                                item.refValues.typeSection == TypeSECTION.COMMON 
+                            )
                         } else {
-                            return (item.filial || item.sklad || item.delivery || item.buxgalter || item.umumBulim)
+                            return (
+                                item.refValues.typeSection == TypeSECTION.FILIAL || 
+                                item.refValues.typeSection == TypeSECTION.STORAGE || 
+                                item.refValues.typeSection == TypeSECTION.DELIVERY || 
+                                item.refValues.typeSection == TypeSECTION.ACCOUNTANT || 
+                                item.refValues.typeSection == TypeSECTION.COMMON
+                            )
                         }
                     }
 
                     if (type == 'receiver' && contentName == DocumentType.TakeProfit) {
-                        return (item.maxsud || item.shavkat)
+                        return (item.refValues.typeSection == TypeSECTION.FOUNDER)
                     }
 
                     if ((type == 'sender') && 
                         contentName == DocumentType.LeaveCash) {
                         if ( user?.role == UserRoles.ADMIN || user?.role == UserRoles.HEADCOMPANY ) {
-                          return (item.filial || item.buxgalter || item.maxsud || item.shavkat || item.director) 
+                          return (
+                            item.refValues.typeSection == TypeSECTION.FILIAL ||
+                            item.refValues.typeSection == TypeSECTION.ACCOUNTANT || 
+                            item.refValues.typeSection == TypeSECTION.FOUNDER ||
+                            item.refValues.typeSection == TypeSECTION.DIRECTOR
+                        ) 
                         } 
                     }
 
                     if ((type == 'sender' || type == 'receiver') && 
                         contentName == DocumentType.MoveCash) {
                         if ( user?.role == UserRoles.ADMIN || user?.role == UserRoles.HEADCOMPANY ) {
-                            return (item.filial || item.sklad || item.delivery || item.buxgalter  || item.maxsud || item.shavkat) 
+                            return (
+                                item.refValues.typeSection == TypeSECTION.FILIAL ||
+                                item.refValues.typeSection == TypeSECTION.STORAGE ||
+                                item.refValues.typeSection == TypeSECTION.DELIVERY ||
+                                item.refValues.typeSection == TypeSECTION.ACCOUNTANT  ||
+                                item.refValues.typeSection == TypeSECTION.FOUNDER
+                            ) 
                         } else if (user?.role == UserRoles.GLBUX) {
-                            return (item.filial || item.sklad || item.delivery || item.buxgalter || item.director)
+                            return (
+                                item.refValues.typeSection == TypeSECTION.FILIAL ||
+                                item.refValues.typeSection == TypeSECTION.STORAGE ||
+                                item.refValues.typeSection == TypeSECTION.DELIVERY ||
+                                item.refValues.typeSection == TypeSECTION.ACCOUNTANT ||
+                                item.refValues.typeSection == TypeSECTION.DIRECTOR
+                            )
                         } else {
-                            return (item.filial || item.sklad || item.delivery || item.buxgalter || item.director)
+                            return (
+                                item.refValues.typeSection == TypeSECTION.FILIAL ||
+                                item.refValues.typeSection == TypeSECTION.STORAGE ||
+                                item.refValues.typeSection == TypeSECTION.DELIVERY ||
+                                item.refValues.typeSection == TypeSECTION.ACCOUNTANT ||
+                                item.refValues.typeSection == TypeSECTION.DIRECTOR
+                            )
                         }
                     }
 
                     if (type == 'receiver' && contentName == DocumentType.ZpCalculate)
                         {
-                            return ( item.filial || item.umumBulim) 
+                            return (
+                                item.refValues.typeSection == TypeSECTION.FILIAL ||
+                                item.refValues.typeSection == TypeSECTION.COMMON
+                            ) 
                         }
                     
                     if (type == 'receiver' && contentName == DocumentType.ServicesFromPartners)
                         {
-                            return item.filial 
+                            return item.refValues.typeSection == TypeSECTION.FILIAL 
                         }
 
                     if (type == 'receiver' && contentName == DocumentType.ComeCashFromPartners)
                         {
                             if ( user?.role == UserRoles.ADMIN || user?.role == UserRoles.HEADCOMPANY ) {
-                              return (item.buxgalter || item.maxsud || item.shavkat) 
+                              return (
+                                item.refValues.typeSection == TypeSECTION.ACCOUNTANT ||
+                                item.refValues.typeSection == TypeSECTION.FOUNDER
+                            ) 
                             } 
-                            return ( item.buxgalter ) 
+                            return ( item.refValues.typeSection == TypeSECTION.ACCOUNTANT ) 
                         }
 
                     if (type == 'receiver' && contentName == DocumentType.ComeMaterial)
                         {
-                            return ( item.filial  || item.sklad) 
+                            return ( 
+                                item.refValues.typeSection == TypeSECTION.FILIAL ||
+                                item.refValues.typeSection == TypeSECTION.STORAGE
+                            ) 
                         }
                     
                     if (type == 'sender' && 
@@ -192,45 +251,51 @@ export const SelectReferenceInForm = ({ label, typeReference, visibile=true , de
                           contentName == DocumentType.SaleMaterial
                         ))
                         {
-                            return (item.filial || item.sklad) 
+                            return (
+                                item.refValues.typeSection == TypeSECTION.FILIAL ||
+                                item.refValues.typeSection == TypeSECTION.STORAGE
+                            ) 
                         }
                     
                     if ( type == 'sender' && contentName == DocumentType.SaleProd) 
                         {
-                            return (item.filial || item.delivery) 
+                            return (
+                                item.refValues.typeSection == TypeSECTION.FILIAL ||
+                                item.refValues.typeSection == TypeSECTION.DELIVERY
+                            ) 
                         }
 
                     if (type == 'sender' && ( contentName == DocumentType.ComeMaterial || contentName == DocumentType.ComeCashFromPartners || 
                         contentName == DocumentType.ComeProductImport )) {
-                        return ( item.typePartners == TypePartners.SUPPLIERS ) 
+                        return ( item.refValues.typePartners == TypePartners.SUPPLIERS ) 
                     }
 
                     if (type == 'receiver' && contentName == DocumentType.SaleHalfStuff ) {
-                        return ( item.typePartners == TypePartners.SUPPLIERS ) 
+                        return ( item.refValues.typePartners == TypePartners.SUPPLIERS ) 
                     }
 
                     if (type == 'sender' && typeReference == TypeReference.CHARGES &&
                         contentName == DocumentType.ServicesFromPartners
                     ) {
-                        return !item.longCharge
+                        return !item.refValues.longCharge
                     }
 
                     if (type == 'analitic' && typeReference == TypeReference.PARTNERS)
                         {
-                            return item.typePartners == TypePartners.SUPPLIERS 
+                            return item.refValues.typePartners == TypePartners.SUPPLIERS 
                         }
                     if (type == 'analitic' && typeReference == TypeReference.CHARGES) {
                         if (user?.role == UserRoles.HEADSECTION) {
-                            return !item.longCharge && !item.shavkat
+                            return !item.refValues.longCharge && !item.refValues.shavkatCharge
                         }
                         if (
-                            currentDocument.senderId == '6645f381d8cc46842f33e9e9' || 
-                            currentDocument.senderId == '6645f4e1d8cc46842f33ea2b' ||
-                            currentDocument.senderId == '664455bbadb82fe6d06df149'
+                            currentDocument.docValue.senderoldId == '6645f381d8cc46842f33e9e9' || 
+                            currentDocument.docValue.senderoldId == '6645f4e1d8cc46842f33ea2b' ||
+                            currentDocument.docValue.senderoldId == '664455bbadb82fe6d06df149'
 
                         )
-                            return item.shavkat
-                        else return !item.shavkat
+                            return item.refValues.shavkatCharge
+                        else return !item.refValues.shavkatCharge
 
                     }
 
@@ -240,26 +305,26 @@ export const SelectReferenceInForm = ({ label, typeReference, visibile=true , de
                             && user?.role != UserRoles.HEADCOMPANY
                             && user?.role != UserRoles.ADMIN
                         ) {
-                            return item.clientForDeliveryId == user?.storageId
+                            return item.refValues.clientForSectionId == user?.sectionId
                         }
 
                     return true
                 })
                 
                 .sort(sortByName)
-                .filter(( item:ReferenceModel ) => !item.deleted )
+                .filter(( item:ReferenceModel ) => !item.refValues.markToDeleted )
                 .map(( item:ReferenceModel ) => (
                     <>
                         <option 
                             className={styles.option}
-                            key = {item._id}
+                            key = {item.id}
                             value={item.name}
                             data-type={item.typeReference} 
-                            data-id={item._id}
+                            data-id={item.id}
                             selected={
-                                item._id == definedItemId || 
-                                item._id == currentItemId || 
-                                definedTandirWorkers(item._id, mainData, type) } 
+                                item.id == definedItemId || 
+                                item.id == currentItemId || 
+                                definedTandirWorkers(item.id, mainData, type) } 
                             >
                                 {item.name}
                         </option>  

@@ -2,18 +2,19 @@ import { Maindata } from '@/app/context/app.context.interfaces';
 import { HamirModel } from '@/app/interfaces/hamir.interface';
 import { showMessage } from '../common/showMessage';
 import axios from 'axios';
-import { UserRoles } from '@/app/interfaces/general.interface';
+import { DocSTATUS } from '@/app/interfaces/document.interface';
+import { UserRoles } from '@/app/interfaces/user.interface';
 
 export const createHamirsForDayByUser = (date: number, mainData: Maindata, setMainData: Function | undefined) => {
-  const { user, currentStorageIdInHamirsJournal, definedTandirWorkers } = mainData
+  const { user } = mainData.users
+  const { definedTandirWorkers } = mainData.document
   
   let body: HamirModel = {
     date,
-    sectionId: user?.storageId ? user.storageId : '',
-    analiticId: user?.productId ? user.productId : '',
-    proveden: false,
+    sectionId: user?.sectionId ? user.sectionId : -1,
+    analiticId: -1,
+    docStatus: DocSTATUS.OPEN,
     user : user?.name ? user.name : '',
-    fromHamirchi: user?.role == UserRoles.HAMIRCHI ? true : false,
     firstWorker: definedTandirWorkers.firstWorker,
   }
 
@@ -32,16 +33,11 @@ export const createHamirsForDayByUser = (date: number, mainData: Maindata, setMa
       return
     }
 
-  if ((user?.role == UserRoles.HAMIRCHI) && !body.firstWorker ) {
+  if (!body.firstWorker ) {
     showMessage(`Ходим танланмаган`, 'error', setMainData)
     return
   }
 
-  if (user?.productId == '' ) {
-    showMessage(`Ходимда productId йук`, 'error', setMainData)
-    return
-  }
-  console.log(user?.productId)
   const config = {
     headers: { Authorization: `Bearer ${user?.access_token}` }
   };

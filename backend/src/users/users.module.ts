@@ -6,17 +6,13 @@ import { User } from './users.model';
 import { AuthModule } from 'src/auth/auth.module';
 import { Reference } from 'src/references/references.model';
 import { Document } from 'src/documents/document.model';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { RolesModule } from 'src/roles/roles.module';
-import { UserRoles } from 'src/roles/user-roles.model';
-import { Role } from 'src/roles/roles.model';
+
 
 @Module({
   controllers: [UsersController],
   providers: [UsersService],
   imports: [
-    SequelizeModule.forFeature([User, Role, UserRoles, Reference, Document]),
-    RolesModule,
+    SequelizeModule.forFeature([User, Reference, Document]),
     forwardRef(() => AuthModule),
   ],
   exports: [UsersService]

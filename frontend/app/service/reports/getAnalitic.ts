@@ -10,7 +10,8 @@ export const getAnalitic = (
   dk: string,
 ) => {
 
-  const { user, reportOption } = mainData;
+  const { user } = mainData.users;
+  const { reportOption } = mainData.report;
   const { startDate, endDate, schet } = reportOption;
 
   const config = {

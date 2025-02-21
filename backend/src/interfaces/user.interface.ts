@@ -1,4 +1,4 @@
-export enum EnumUserRoles {
+export enum UserRoles {
     ADMIN = 'ADMIN',
     HEADCOMPANY = 'HEADCOMPANY',
     GLBUX = 'GLBUX',

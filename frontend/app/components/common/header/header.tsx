@@ -8,15 +8,16 @@ import cn from 'classnames';
 import { Maindata } from '@/app/context/app.context.interfaces';
 import { dateNumberToString } from '@/app/service/common/converterForDates'
 import { setNewDocumentParams } from '@/app/service/documents/setNewDocumentParams'
-import { UserRoles } from '@/app/interfaces/general.interface'
+import { UserRoles } from '@/app/interfaces/user.interface'
 
 export default function Header({ windowFor ,className, count, total, ...props }: HeaderProps): JSX.Element {
     
     const {mainData, setMainData} = useAppContext()
-    const {dateStart, dateEnd} = mainData.interval
-    const {user} = mainData
+    const {dateStart, dateEnd} = mainData.window.interval
+    const {user} = mainData.users
 
-    const {contentType, contentName, contentTitle, showReferenceWindow, isNewReference, showDocumentWindow, isNewDocument } = mainData 
+    const {contentType, contentTitle, showReferenceWindow, isNewReference, showDocumentWindow, isNewDocument } = mainData.window 
+    
     const strFirst =  
         contentType == 'document' ? 
             (isNewDocument) ?  'буйича янги хужжат тузиш':
@@ -33,12 +34,9 @@ export default function Header({ windowFor ,className, count, total, ...props }:
     const addNewElement = (setMainData: Function | undefined, mainData: Maindata) => {
         if (setMainData) {
             setMainData('clearControlElements', false);
-            // setMainData('clearControlElements', true);
             setNewDocumentParams(setMainData, mainData)
             setMainData(windowFor == 'reference' ? 'showReferenceWindow': 'showDocumentWindow' , true);
             setMainData(windowFor == 'reference' ? 'isNewReference' : 'isNewDocument', true);
-            // if (!mainData.clearControlElements) {
-            // }
         }
     }
 
