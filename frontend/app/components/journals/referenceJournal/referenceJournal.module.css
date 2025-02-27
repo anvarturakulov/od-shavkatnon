@@ -1,5 +1,4 @@
 .container {
-    /* max-width: 1200px; */
     width: 100%;
     margin: 0 auto;
     user-select: none;
@@ -16,7 +15,7 @@
 .table th {
     border-left: 1px solid #ddd;
     text-align: left;
-    padding: 10px 7px;
+    padding: 7px 7px;
 }
 
 .table tr:nth-child(even) {
@@ -24,14 +23,13 @@
 }
 
 .table tr {
-    margin: 5px 0;
+    margin: 2px 0;
     border: 0.5px solid #e5e5e5;
 }
 
 .table tr:hover {
-    margin: 5px 0;
     border: 1px solid green;
-    /* background-color: #f5f5f5; */
+    
 }
 
 .table th {

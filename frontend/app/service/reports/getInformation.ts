@@ -15,14 +15,13 @@ export const getInformation = (
   const { dashboardCurrentReportType } = mainData.report
   let reportType = dashboardCurrentReportType
   const config = {
-    headers: { Authorization: `Bearer ${user?.access_token}` }
+    headers: { Authorization: `Bearer ${user?.token}` }
   };
 
   setMainData && setMainData('uploadingDashboard', true)
 
   let url = process.env.NEXT_PUBLIC_DOMAIN + '/api/report/information'+'?startDate='+interval.dateStart+'&endDate='+interval.dateEnd
   +'&reportType='+reportType+'&firstPrice='+firstPrice+'&secondPrice='+secondPrice+'&user='+user?.name;
-  console.log('name'+user?.name)
 
   axios.get(url, config)
     .then(function (response) {

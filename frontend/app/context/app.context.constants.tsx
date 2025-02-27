@@ -1,6 +1,6 @@
 import { DocSTATUS, DocTableItem, DocumentModel, DocumentType, DocValue, Interval, JournalCheckboxs } from '../interfaces/document.interface'
-import { DefinedTandirWorkers } from '../interfaces/general.interface'
 import { ReportOptions, Schet } from '../interfaces/report.interface'
+import { DefinedTandirWorkers } from '../interfaces/user.interface'
 import { Maindata } from './app.context.interfaces'
 
 export const defaultDocumentTableItem: DocTableItem = {
@@ -54,8 +54,8 @@ export const defaultTandirWorkers: DefinedTandirWorkers = {
 export const defaultReportOptions: ReportOptions =  {
     startDate: 1708905600000,
     endDate: 1708905600000,
-    firstReferenceId: '',
-    secondReferenceId: '',
+    firstReferenceId: -1,
+    secondReferenceId: -1,
     showReport: false,
     startReport: false,
     schet: Schet.S20,
@@ -86,8 +86,8 @@ export const defaultMainData: Maindata = {
         informData: [],
         matOborot: [],
         oborotka: [],
-        currentDKInnerReportId: '',
-        currentDKInnerArrayId: '',
+        currentDKInnerReportId: -1,
+        currentDKInnerArrayId: -1,
         dashboardCurrentReportType: '',
         currentFinancialInnerReportType: 'outZP',
     },

@@ -161,12 +161,7 @@ export const MenuData:Array<MenuItem> = [
                 roles: 
                 [UserRoles.HEADCOMPANY, UserRoles.ADMIN, UserRoles.GUEST]
             },
-            { 
-                title: TypeReference.PRICES, description:'Нархлар',
-                type: 'reference', active: false,
-                roles: 
-                [UserRoles.HEADCOMPANY, UserRoles.ADMIN, UserRoles.GUEST]
-            },
+
         ]
     },
     {

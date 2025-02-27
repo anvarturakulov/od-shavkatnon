@@ -26,7 +26,6 @@ export const createHamirsForDayByUser = (date: number, mainData: Maindata, setMa
     } 
   }
 
-  // console.log(body);
   if ((user?.role == UserRoles.TANDIR) && (
     !body.firstWorker || !body.secondWorker || !body.thirdWorker )) {
       showMessage(`Ходимлар танланмаган`, 'error', setMainData)
@@ -39,7 +38,7 @@ export const createHamirsForDayByUser = (date: number, mainData: Maindata, setMa
   }
 
   const config = {
-    headers: { Authorization: `Bearer ${user?.access_token}` }
+    headers: { Authorization: `Bearer ${user?.token}` }
   };
 
   const actions = (mes: string) => {

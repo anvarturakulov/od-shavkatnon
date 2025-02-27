@@ -12,7 +12,6 @@ export const updateCreateUser = (
   const config = {
     headers: { Authorization: `Bearer ${token}` }
   };
-  console.log(config)
   const actionWithMainData = (mes: string) => {
     if (setMainData) {
       showMessage(`${body.name} - ${mes}`, 'success', setMainData)
@@ -22,12 +21,13 @@ export const updateCreateUser = (
     }
   }
 
-  console.log(body)
   const id = body.id;
+  
+  // if (body.sectionId == '') delete body.sectionId
   delete body.id;
-  const uriPost = process.env.NEXT_PUBLIC_DOMAIN + '/api/auth/register';
-  const uriPatch = process.env.NEXT_PUBLIC_DOMAIN + '/api/auth/' + id;
-  console.log('body', body, ' id - ', id, ' uriPath - ', uriPatch);
+
+  const uriPost = process.env.NEXT_PUBLIC_DOMAIN + '/api/auth/registration';
+  const uriPatch = process.env.NEXT_PUBLIC_DOMAIN + '/api/users/' + id;
 
   if (isNewReference) {
     axios.post(uriPost, body, config)

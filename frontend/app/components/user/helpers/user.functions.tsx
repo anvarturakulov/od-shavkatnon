@@ -21,8 +21,6 @@ export const onSubmitUser = (
         return
     }
 
-    console.log(body)
-    
     if (body.name.trim().length != 0) {
         updateCreateUser(body, isNewReference, setMainData, token);
     } else {

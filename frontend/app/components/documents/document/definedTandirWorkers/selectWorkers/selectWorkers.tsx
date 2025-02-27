@@ -13,7 +13,7 @@ export const SelectWorkers = ({ label, currentItemId, type, visible, className, 
     
     const {mainData, setMainData} = useAppContext();
     const { user } = mainData.users;
-    const token = user?.access_token;
+    const token = user?.token;
     const url = process.env.NEXT_PUBLIC_DOMAIN+'/api/reference/byType/WORKERS';
     const { data, mutate } = useSWR(url, (url) => getDataForSwr(url, token));
 

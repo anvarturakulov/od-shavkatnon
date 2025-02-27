@@ -29,7 +29,7 @@ export const setPriceAndBalance = (
     '&secondSubcontoId=' + secondSubcontoId;
 
   const config = {
-    headers: { Authorization: `Bearer ${user?.access_token}` }
+    headers: { Authorization: `Bearer ${user?.token}` }
   };
 
   axios.get(url, config)

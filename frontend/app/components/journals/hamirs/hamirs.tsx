@@ -28,7 +28,7 @@ export default function Hamirs({ className, ...props} : HamirsProps ):JSX.Elemen
     let dateNowPlussedInString = new Date(dateNowPlussedInNumber);
     let dateStr = dateNowPlussedInString.toISOString().split('T')[0]
 
-    const token = user?.access_token;
+    const token = user?.token;
     let url = process.env.NEXT_PUBLIC_DOMAIN+'/api/hamir/getForDate/'+dateStr;
     const { data : hamirs, mutate } = useSWR(url, (url) => getDataForSwr(url, token));
     

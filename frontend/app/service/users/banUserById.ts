@@ -1,22 +1,31 @@
 import axios from 'axios';
 import { showMessage } from '../common/showMessage';
+import { User } from '@/app/interfaces/user.interface';
 
-export const markToDeleteUser = (
+export const banUserById = (
   id: number | undefined,
-  name: string, setMainData: Function | undefined,
-  token: string | undefined
+  name: string | undefined,
+  reason: string | undefined,
+  setMainData: Function | undefined,
+  token: string | undefined,
 ) => {
   const config = {
     headers: { Authorization: `Bearer ${token}` }
   };
 
   if (id) {
-    const uri = process.env.NEXT_PUBLIC_DOMAIN + '/api/auth/markToDelete/' + id;
-    axios.delete(uri, config)
+    
+    const body =  {
+      id: id,
+      reason: reason
+    }
+
+    const uri = process.env.NEXT_PUBLIC_DOMAIN + '/api/users/ban/';
+    axios.patch(uri, body, config)
       .then(function () {
         if (setMainData) {
           showMessage(`${name} - холати узгартирилди`, 'success', setMainData);
-          setMainData('updateDataForRefenceJournal', true);
+          setMainData('updateDataForRefenceJournal', false);
         }
       })
       .catch(function (error) {

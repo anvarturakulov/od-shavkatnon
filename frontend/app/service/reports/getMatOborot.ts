@@ -13,7 +13,7 @@ export const getMatOborot = (
   const { startDate, endDate, firstReferenceId } = reportOption;
 
   const config = {
-    headers: { Authorization: `Bearer ${user?.access_token}` }
+    headers: { Authorization: `Bearer ${user?.token}` }
   };
 
   let url = process.env.NEXT_PUBLIC_DOMAIN + '/api/report/matOborot' + '?startDate=' + startDate + '&endDate=' + endDate + '&section=' + firstReferenceId;

@@ -1,5 +1,4 @@
 .container {
-    /* max-width: 1200px; */
     width: 100%;
     margin: 0 auto;
     user-select: none;
@@ -31,7 +30,6 @@
 .table tr:hover {
     margin: 5px 0;
     border: 1px solid green;
-    /* background-color: #f5f5f5; */
 }
 
 .table th {
@@ -67,24 +65,12 @@
     top: 0;
 }
 
-.rowId{
-    width: 300px;
-}
-
-.types{
-    width: 150px;
-}
-
-.name{
-    width: 40%;
+.id{
+    width: 50px;
 }
 
 .rowAction{
     width: 50px;
-}
-
-.trRow{
-    cursor: pointer;
 }
 
 .btns{
@@ -94,19 +80,9 @@
     gap: 5px;
 }
 
-.deleted{
-    color: red;
+.banned{
+    color: red!important;
     text-decoration: line-through;
-}
-
-.saved{
-    color: #000;
-    background-color: rgba(236, 236, 11, 0.3)!important;
-}
-
-.error{
-    color: #fff;
-    background-color: red!important;
 }
 
 .icoTrash{
@@ -125,22 +101,13 @@
     fill: red;
 }
 
-.icoTrash.deleted{
+.icoTrash.banned{
     fill: red;
-}
-
-.icoShow:hover{
-    fill: blue;
 }
 
 .title{
     font-size: 20px;
     line-height: 24px;
-}
-
-.header{
-    display: flex;
-    justify-content: space-between;
 }
 
 .newElement{

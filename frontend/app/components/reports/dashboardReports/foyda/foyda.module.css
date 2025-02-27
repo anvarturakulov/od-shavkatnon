@@ -6,13 +6,14 @@
 
 .title{
     margin: 20px 0px;
-    font-weight: 700;
-    background: green;
+    font-weight: 600;
+    background: #089CEF;
     color: #fff;
-    padding: 20px 20px;
+    padding: 15px 20px;
     border-radius: 5px;
-    box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.13);
-    
+    text-transform: uppercase;
+    font-size: 16px;
+    box-shadow: 8px 8px 8px 0px rgba(34, 60, 80, 0.13);
 }
 
 .table td,

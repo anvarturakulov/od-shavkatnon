@@ -8,7 +8,7 @@ import { defaultJournalCheckbox } from '@/app/context/app.context.constants';
 export const CheckBoxInFooter = ({ className, id, label, ...props }: CheckBoxInFooterProps): JSX.Element => {
     
     const {mainData, setMainData} = useAppContext();
-    const { journalChechboxs } = mainData;
+    const { journalChechboxs } = mainData.journal;
     
     const changeElements = (e: React.FormEvent<HTMLInputElement>, setMainData: Function | undefined, mainData: Maindata, id: ValuesToJournalCheckboxs) => {
         let target = e.currentTarget;

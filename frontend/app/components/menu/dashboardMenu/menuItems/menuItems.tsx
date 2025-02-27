@@ -44,7 +44,6 @@ export default function MenuItems({menuData, className, ...props}:MenuItemsProps
             setMainData('showDocumentWindow', false);
             setMainData('isNewDocument', false);
             setMainData('clearControlElements', true);
-            console.log('Bosildi'+contentType+contentName)
             if (contentType == 'document') {
                 setNewDocumentParams(setMainData, mainData)
             }
@@ -66,40 +65,44 @@ export default function MenuItems({menuData, className, ...props}:MenuItemsProps
     },[menuData])
 
     return (
-        <>
-            {menu.map((item, i) => (
-                <>
-                    <ul className={styles.ul}>
-                        <li
-                            className={cn(styles.item)}
-                            onClick={(e)=>onClickItem(e,item.title)}
-                            key={i}
-                            data-type = {'firstLevel'}
-                        >
-                            {item.title}
-                        </li>
-                        {item.subMenu.length && (
-                            item.subMenu.map((elem,k)=> (
-                                <>
-                                {  role && elem.roles.includes(role) &&
-                                    <li 
-                                        className={cn(styles.subItem, {
-                                            [styles.isOpened]: item.isOpened
-                                        })
-                                    }
-                                        onClick={() => onClickSubItem(elem.title, elem.description, elem.type)}
-                                        key={elem.title}
-                                    >
-                                        {elem.description? elem.description : elem.title}
-                                    </li>
-                                }
-                                </>
-                            ))
-                        )}
-                    </ul>
-                </>
-                
-            ))}
-        </>
+    <>
+        {menu.map((item, i) => {
+            return (
+                <ul 
+                    className={styles.ul}
+                    key = {i}
+                >
+                    <li
+                        className={cn(styles.item)}
+                        onClick={(e)=>onClickItem(e,item.title)}
+                        key={item.title+i}
+                        data-type = {'firstLevel'}
+                    >
+                        {item.title}
+                    </li>
+                    {
+                        item.subMenu.length && (
+                            item.subMenu.map((elem,k)=> {
+                                if (role && elem.roles.includes(role)) 
+                                    return (
+                                        <li 
+                                            className={cn(styles.subItem, {
+                                                [styles.isOpened]: item.isOpened
+                                            })}
+                                            onClick={() => onClickSubItem(elem.title, elem.description, elem.type)}
+                                            key={k}
+                                        >
+                                            {elem.description? elem.description : elem.title}
+                                        </li>
+                                    )
+                                })
+                        )
+                    }
+                </ul>
+                    
+            )
+        })
+        }
+    </>
     )
 }

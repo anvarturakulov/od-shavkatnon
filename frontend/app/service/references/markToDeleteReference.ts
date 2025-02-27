@@ -11,7 +11,7 @@ export const markToDeleteReference = (
   };
 
   if (id) {
-    const uri = process.env.NEXT_PUBLIC_DOMAIN + '/api/reference/markToDelete/' + id;
+    const uri = process.env.NEXT_PUBLIC_DOMAIN + '/api/references/markToDelete/' + id;
     axios.delete(uri, config)
       .then(function () {
         if (setMainData) {

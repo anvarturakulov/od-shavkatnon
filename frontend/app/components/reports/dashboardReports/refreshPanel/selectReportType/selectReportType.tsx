@@ -17,7 +17,6 @@ export const SelectReportType = ({ className, ...props }: SelectReportTypeProps)
 
         if ( setMainData ) {
             setMainData('dashboardCurrentReportType', dashboardCurrentReportType)
-            // setMainData && setMainData('uploadingDashboard', true)
         }
     }
  
@@ -27,16 +26,15 @@ export const SelectReportType = ({ className, ...props }: SelectReportTypeProps)
                 className={cn(styles.select)}
                 {...props}
                 onChange={(e) => changeElements(e, setMainData, mainData)}
+                defaultValue={'NotSelected'}
             >   
-                <>
-                    <option 
-                        value={'NotSelected'} 
-                        className={cn(styles.option, styles.chooseMe)}
-                        data-type='' 
-                        selected = {true}
-                        
-                        >{'Хисобот турини танланг'}</option>
-                </>
+                <option 
+                    value={'NotSelected'} 
+                    className={cn(styles.option, styles.chooseMe)}
+                    data-type='' 
+                    key = {'NotSelected'}>
+                        {'Хисобот турини танланг'}
+                </option>
                 {data && data.length>0  &&
                 data
                 .filter((item:DashboardReportItem) => {
@@ -45,16 +43,14 @@ export const SelectReportType = ({ className, ...props }: SelectReportTypeProps)
                 })
                 
                 .map(( item:DashboardReportItem ) => (
-                    <>
-                        <option 
-                            className={styles.option}
-                            key = {item.code}
-                            value={item.title}
-                            data-type={item.code}
-                            >
-                                {item.title}
-                        </option>  
-                    </>
+                    <option 
+                        className={styles.option}
+                        key = {item.code}
+                        value={item.title}
+                        data-type={item.code}
+                        >
+                            {item.title}
+                    </option>  
                 ))}
             </select>
         </div>

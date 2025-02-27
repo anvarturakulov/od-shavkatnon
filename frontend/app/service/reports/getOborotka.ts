@@ -15,11 +15,9 @@ export const getOborotka = (
   const { startDate, endDate, schet } = reportOption;
 
   const config = {
-    headers: { Authorization: `Bearer ${user?.access_token}` }
+    headers: { Authorization: `Bearer ${user?.token}` }
   };
-  console.log('start axios --', Date.now())
   let url = process.env.NEXT_PUBLIC_DOMAIN + '/api/report/oborotka' + '?startDate=' + startDate + '&endDate=' + endDate + '&schet=' + schet;
-  console.log(url)
   axios.get(url, config)
     .then(function (response) {
       if (setMainData) {

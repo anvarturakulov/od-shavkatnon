@@ -16,11 +16,11 @@ export enum UserRoles {
 export interface User {
     id?: number,
     email: string,
-    access_token: string;
+    token: string;
     name: string,
     banned?: boolean,
     banReason?: string,
-    sectionId: number, 
+    sectionId?: number, 
     role: UserRoles,
 }
 

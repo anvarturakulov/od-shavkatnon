@@ -32,7 +32,7 @@ export default function MiniJournal({ className, ...props}:MiniJournalProps):JSX
         dateEndForUrl = Date.parse(nowInstr) + 86399999
     }
 
-    const token = user?.access_token;
+    const token = user?.token;
     let url = process.env.NEXT_PUBLIC_DOMAIN+'/api/document/getAll/';
     // const url = process.env.NEXT_PUBLIC_DOMAIN+'/api/document/byTypeForDate'+'?documentType='+contentName+'&dateStart='+dateStartForUrl+'&dateEnd='+dateEndForUrl;
     const urlReferences = process.env.NEXT_PUBLIC_DOMAIN+'/api/reference/getAll/';

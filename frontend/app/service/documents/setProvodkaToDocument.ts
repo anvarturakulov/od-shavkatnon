@@ -10,7 +10,7 @@ export const setProvodkaToDocument = async (
 ) => {
   
   const { user } = mainData.users;
-  const token = user?.access_token;
+  const token = user?.token;
 
   const config = {
     headers: { Authorization: `Bearer ${token}` }

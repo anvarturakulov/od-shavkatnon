@@ -2,8 +2,8 @@ import axios from 'axios';
 import { showMessage } from '../common/showMessage';
 import { Maindata } from '@/app/context/app.context.interfaces';
 import { DocSTATUS, DocumentModel, DocumentType } from '@/app/interfaces/document.interface';
-import { workersUsersList } from '@/app/interfaces/general.interface';
 import { defaultDocument } from '@/app/context/app.context.constants';
+import { workersUsersList } from '@/app/interfaces/user.interface';
 
 export const updateCreateDocument = (mainData: Maindata, setMainData: Function | undefined) => {
   const { user } = mainData.users
@@ -25,7 +25,7 @@ export const updateCreateDocument = (mainData: Maindata, setMainData: Function |
   } 
 
   const config = {
-    headers: { Authorization: `Bearer ${user?.access_token}` }
+    headers: { Authorization: `Bearer ${user?.token}` }
   };
 
   const actionWithMainData = (mes: string) => {

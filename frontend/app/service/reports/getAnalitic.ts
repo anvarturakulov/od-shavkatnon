@@ -15,7 +15,7 @@ export const getAnalitic = (
   const { startDate, endDate, schet } = reportOption;
 
   const config = {
-    headers: { Authorization: `Bearer ${user?.access_token}` }
+    headers: { Authorization: `Bearer ${user?.token}` }
   };
   
   let url = process.env.NEXT_PUBLIC_DOMAIN + '/api/report/analitic' + '?startDate=' + startDate + '&endDate=' + endDate + '&schet=' + schet

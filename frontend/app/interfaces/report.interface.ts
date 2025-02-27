@@ -58,6 +58,7 @@ export enum OborotType {
 } 
 
 export interface DashboardReportItem {
+    id: number,
     title: string,
     code: string,
     roles: Array<UserRoles>

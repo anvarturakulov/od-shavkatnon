@@ -2,7 +2,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { Column, DataType, Model, Table, HasMany, ForeignKey, BelongsTo, BelongsToMany } from "sequelize-typescript";
 import { Document } from "src/documents/document.model";
 import { UserRoles } from "src/interfaces/user.interface";
-import { Reference } from "src/references/references.model";
+import { Reference } from "src/references/reference.model";
 
 
 interface UserCreationAttrs {
@@ -36,7 +36,7 @@ export class User extends Model<User, UserCreationAttrs> {
 
     @ApiProperty({example:'За хулиганство', description: 'Причина блокировки'})
     @Column({type: DataType.STRING})
-    banReason: string;
+    banReason?: string;
 
     @ApiProperty({example:'Анвар', description: 'Имя пользователя'})
     @Column({type: DataType.STRING})

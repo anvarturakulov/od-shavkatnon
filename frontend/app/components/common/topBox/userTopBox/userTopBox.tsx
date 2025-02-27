@@ -8,6 +8,7 @@ import UserIco from './ico/user.svg';
 export default function UserTopBox({className, ...props}:UserTopBoxProps):JSX.Element {
     
   const {mainData, setMainData} = useAppContext()
+  const { user } = mainData.users
   const exit = ( setMaindata: Function | undefined ) => {
     setMainData && setMainData('user', undefined);
     setMainData && setMainData('mainPage', true);
@@ -21,7 +22,7 @@ export default function UserTopBox({className, ...props}:UserTopBoxProps):JSX.El
         <UserIco/>
       </div>
       <div className={styles.title}>
-        {mainData.user?.name}
+        {user?.name}
       </div>
     </div> 
   )

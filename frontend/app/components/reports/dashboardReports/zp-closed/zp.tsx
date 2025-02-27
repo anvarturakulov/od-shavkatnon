@@ -26,7 +26,7 @@
 
 //     const { contentName, user, showDocumentWindow } = mainData;
 //     const role = mainData.user?.role;
-//     const token = user?.access_token;
+//     const token = user?.token;
 
 //     let url = process.env.NEXT_PUBLIC_DOMAIN+'/api/hamir/byTypeForDate'+'?documentType='+contentName+'&dateStart='+dateStartForUrl+'&dateEnd='+dateEndForUrl;
     

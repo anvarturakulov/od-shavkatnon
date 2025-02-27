@@ -59,9 +59,9 @@ export default function Header({ windowFor ,className, count, total, ...props }:
                             className={styles.ico}
                             onClick={() => {
                                 if (setMainData) {
-                                    setMainData('clearControlElements', true);
-                                    setMainData(windowFor == 'reference' ? 'showReferenceWindow':'showDocumentWindow', false);
-                                    setMainData(windowFor == 'reference' ? 'isNewReference': 'isNewDocument' , false);                                    
+                                    setMainData('window.clearControlElements', true);
+                                    setMainData(windowFor == 'reference' ? 'window.showReferenceWindow':'window.showDocumentWindow', false);
+                                    setMainData(windowFor == 'reference' ? 'window.isNewReference': 'window.isNewDocument' , false);                                    
                                     }
                                 }}
                                 
@@ -72,7 +72,7 @@ export default function Header({ windowFor ,className, count, total, ...props }:
                                     className={styles.ico}
                                     onClick={(mainData: Maindata) => {
                                         if (setMainData) {
-                                            setMainData('showIntervalWindow', true);
+                                            setMainData('window.showIntervalWindow', true);
                                             }
                                         }}
                                 />

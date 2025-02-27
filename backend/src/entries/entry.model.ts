@@ -3,7 +3,7 @@ import { BelongsTo, Column, DataType, Model, Table, ForeignKey } from "sequelize
 import { Document } from "src/documents/document.model";
 import { DocumentType } from "src/interfaces/document.interface";
 import { Schet } from "src/interfaces/report.interface";
-import { Reference } from "src/references/references.model";
+import { Reference } from "src/references/reference.model";
 
 interface EntryCreationAttrs {
     documentId: number

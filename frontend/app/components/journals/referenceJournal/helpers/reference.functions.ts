@@ -1,7 +1,7 @@
 import { getReferenceById } from '@/app/service/references/getReferenceById';
 import { markToDeleteReference } from '@/app/service/references/markToDeleteReference';
 
-export const deleteItemReference = (id: number | undefined, name: string, token: string | undefined, setMainData: Function | undefined) => {
+export const markToDelete = (id: number | undefined, name: string, token: string | undefined, setMainData: Function | undefined) => {
   markToDeleteReference(id, name, setMainData, token)
 }
 
@@ -12,6 +12,7 @@ export const getReference = async (
 ) => {
   if (id) {
     const reference = await getReferenceById(id, setMainData, token);
+    // console.log(reference)
   }
   setMainData && setMainData('window.isNewReference', false);
 }

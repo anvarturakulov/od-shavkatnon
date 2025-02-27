@@ -85,7 +85,7 @@ export default function Journal({ className, ...props}:JournalProps):JSX.Element
     const role = user?.role;
     const dashboardUsers = role && dashboardUsersList.includes(role);
 
-    const token = user?.access_token;
+    const token = user?.token;
     let url = process.env.NEXT_PUBLIC_DOMAIN+'/api/document/byTypeForDate'+'?documentType='+contentName+'&dateStart='+dateStartForUrl+'&dateEnd='+dateEndForUrl;
     
     if (!contentName) {

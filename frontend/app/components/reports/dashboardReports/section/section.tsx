@@ -11,10 +11,6 @@ export const Section = ({className, data, sectionType, currentSection, ...props 
     if (sectionType == 'buxgalter') title = 'БУХГАЛТЕРЛАР'
     if (sectionType == 'founder') title = 'ТАЪСИСЧИЛАР'
 
-    useEffect(()=> {
-        // console.log(data)
-    }, [data])
-    
     let datas = data ? data.filter((item: any) => item?.reportType == `SECTION-${sectionType.toLocaleUpperCase()}`)[0]?.values : []
 
     return (

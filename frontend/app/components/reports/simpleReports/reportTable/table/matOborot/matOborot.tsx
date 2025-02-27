@@ -8,7 +8,7 @@ import { useAppContext } from '@/app/context/app.context';
 
 export const MatOborot = ({className, ...props }: MatOborotProps) :JSX.Element => {
     const { setMainData, mainData } = useAppContext()
-    const { matOborot, reportOption } = mainData
+    const { matOborot, reportOption } = mainData.report
     const { firstReferenceId } = reportOption
 
     useEffect(()=> {

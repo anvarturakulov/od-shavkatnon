@@ -8,7 +8,7 @@ import { useAppContext } from '@/app/context/app.context';
 
 export const Oborotka = ({className, ...props }: OborotkaProps) :JSX.Element => {
     const { setMainData, mainData } = useAppContext()
-    const { oborotka, reportOption } = mainData
+    const { oborotka, reportOption } = mainData.report
     const { firstReferenceId } = reportOption
 
     useEffect(()=> {

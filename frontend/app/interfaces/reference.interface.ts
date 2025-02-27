@@ -30,8 +30,8 @@ export enum TypeSECTION {
 
 export interface RefValues {
     clientForSectionId?: number
-    typePartners?: TypePartners | undefined
-    typeTMZ?: TypeTMZ | undefined
+    typePartners?: TypePartners 
+    typeTMZ?: TypeTMZ
     typeSection?: TypeSECTION
     unit?: string
     comment?: string
@@ -44,7 +44,6 @@ export interface RefValues {
     secondPrice?: number
     thirdPrice?: number,
     telegramId?: string,
-    
 }
 
 export interface ReferenceModel {

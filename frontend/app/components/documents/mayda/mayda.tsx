@@ -23,7 +23,7 @@ export const Mayda = ({className, ...props }: MaydaProps) :JSX.Element => {
     const [count, setCount] = useState<number>(0)
     const {currentDocument} = mainData.document
     const { user } = mainData.users;
-    const token = user?.access_token;
+    const token = user?.token;
     const url = process.env.NEXT_PUBLIC_DOMAIN+'/api/reference/getAll/';
     const { data, mutate } = useSWR(url, (url) => getDataForSwr(url, token));
 
@@ -108,12 +108,11 @@ export const Mayda = ({className, ...props }: MaydaProps) :JSX.Element => {
             showMessage('Махсулот суммаси йук', 'error', setMainData)
             return
         }
-        // console.log(body)
         const { user } = mainData.users
         delete body.id;
   
         const config = {
-            headers: { Authorization: `Bearer ${user?.access_token}` }
+            headers: { Authorization: `Bearer ${user?.token}` }
         };
  
         const uriPost = process.env.NEXT_PUBLIC_DOMAIN + '/api/document/create';

@@ -10,7 +10,7 @@ export default function HeaderForUser({ className, ...props }: HeaderForUsersPro
     
     const {mainData, setMainData} = useAppContext()
     const { showUserWindow, isNewUser } = mainData.window
-    const strFirst = isNewUser ? 'янги фойдаланувчи очиш' : 'фойдаланувчиларни куриш';
+    const strFirst = isNewUser ? 'Янги фойдаланувчи очиш' : 'Фойдаланувчиларни куриш';
 
     const addNewElement = (setMainData: Function | undefined, mainData: Maindata) => {
         if (setMainData) {

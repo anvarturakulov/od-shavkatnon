@@ -52,7 +52,6 @@ export class RolesGuard implements CanActivate {
             return roles.some(role => requiredRoles.includes(role));
 
         } catch (e) {
-            console.log(e)
             throw new HttpException( 'Нет доступа', HttpStatus.FORBIDDEN)
         }
     }

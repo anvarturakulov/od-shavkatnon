@@ -1,7 +1,6 @@
 import { ReferenceModel, TypeReference } from '@/app/interfaces/reference.interface';
 import axios from 'axios';
 import { showMessage } from '../common/showMessage';
-import { getBodyForReferenceRequest } from './getBodyForReferenceRequest';
 
 export const updateCreateReference = (
   body: ReferenceModel,
@@ -24,12 +23,13 @@ export const updateCreateReference = (
 
   const id = body.id;
   delete body.id;
+  // console.log('body --', body)
 
-  const uriPost = process.env.NEXT_PUBLIC_DOMAIN + '/api/reference/create';
-  const uriPatch = process.env.NEXT_PUBLIC_DOMAIN + '/api/reference/' + id;
+  const uriPost = process.env.NEXT_PUBLIC_DOMAIN + '/api/references/create';
+  const uriPatch = process.env.NEXT_PUBLIC_DOMAIN + '/api/references/' + id;
 
   if (isNewReference) {
-    axios.post(uriPost, getBodyForReferenceRequest(body, typeReference), config)
+    axios.post(uriPost, body, config)
       .then(function () {
         actionWithMainData('янги элемент киритилди')
       })
@@ -40,7 +40,7 @@ export const updateCreateReference = (
       });
   } else {
     if (id) {
-      axios.patch(uriPatch, getBodyForReferenceRequest(body, typeReference), config)
+      axios.patch(uriPatch, body, config)
         .then(function () {
           actionWithMainData('элемент янгиланди')
         })

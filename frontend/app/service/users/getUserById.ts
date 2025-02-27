@@ -10,10 +10,9 @@ export const getUserById = (
     headers: { Authorization: `Bearer ${token}` }
   };
   if (id) {
-    const uri = process.env.NEXT_PUBLIC_DOMAIN + '/api/auth/' + id;
+    const uri = process.env.NEXT_PUBLIC_DOMAIN + '/api/users/' + id;
     axios.get(uri, config)
       .then(function (response) {
-        console.log(response.data)
         setMainData && setMainData('currentUser', response.data);
         setMainData && setMainData('showUserWindow', true);
       })

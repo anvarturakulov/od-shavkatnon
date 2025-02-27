@@ -2,7 +2,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { BelongsTo, Column, DataType, Model, Table, HasMany, ForeignKey } from "sequelize-typescript";
 import { Document } from "src/documents/document.model";
 import { TypePartners, TypeSECTION, TypeTMZ } from "src/interfaces/reference.interface";
-import { Reference } from "src/references/references.model";
+import { Reference } from "src/references/reference.model";
 
 interface DocTableItemCreationAttrs {
     docId: bigint

@@ -34,7 +34,7 @@ export const changeStatusHamir = (item: HamirModel, mainData: Maindata, setMainD
   let newDoc = {...defaultDocForProduct} 
 
   const config = {
-    headers: { Authorization: `Bearer ${user?.access_token}` }
+    headers: { Authorization: `Bearer ${user?.token}` }
   };
 
   const actions = (mes: string) => {

@@ -17,7 +17,7 @@ export default function TopBox({className, ...props}:TopBoxProps):JSX.Element {
     <div className={cn(styles.topBox, {[styles.topBoxMini] : !showMenu})}>
       {showMenu && <Menu/>}
       <div className={styles.logo}>
-       OSON DASTUR - (NEW VERSION) : <span>ишлаб чикаришни онлайн бошкаринг</span>
+       OSON DASTUR - (PostgreSQL) : <span>ишлаб чикаришни онлайн бошкаринг</span>
       </div>
       <User/>
     </div>

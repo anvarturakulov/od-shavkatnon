@@ -2,16 +2,16 @@ import { SelectReferenceProps } from './selectReference.props';
 import styles from './selectReference.module.css';
 import { useAppContext } from '@/app/context/app.context';
 import useSWR from 'swr';
-import { ReferenceModel, TypeReference } from '@/app/interfaces/reference.interface';
+import { ReferenceModel, TypeReference, TypeSECTION } from '@/app/interfaces/reference.interface';
 import { Maindata } from '@/app/context/app.context.interfaces';
 import { getDataForSwr } from '@/app/service/common/getDataForSwr';
 import { sortByName } from '@/app/service/references/sortByName';
-import { UserRoles } from '@/app/interfaces/general.interface';
+import { UserRoles } from '@/app/interfaces/user.interface';
 
 export const SelectReference = ({ label, visible, typeReference , className, ...props }: SelectReferenceProps): JSX.Element => {
     const {mainData, setMainData} = useAppContext();
-    const { user } = mainData;
-    const token = user?.access_token;
+    const { user } = mainData.users;
+    const token = user?.token;
     
     const url = process.env.NEXT_PUBLIC_DOMAIN+'/api/reference/byType/'+typeReference;
     
@@ -22,7 +22,7 @@ export const SelectReference = ({ label, visible, typeReference , className, ...
         let target = e.currentTarget;
         let id = target[target.selectedIndex].getAttribute('data-id')
         
-        let {reportOption} = mainData;
+        let {reportOption} = mainData.report;
         
         let newObj = {
             ...reportOption,
@@ -57,9 +57,14 @@ export const SelectReference = ({ label, visible, typeReference , className, ...
                     data && data.length>0 && data
                     .filter((item: ReferenceModel) => {
                         if (item.typeReference == TypeReference.STORAGES) {
-                            if ( user?.role == UserRoles.GLBUX && item.director) return false
-                            if ( item.deleted) return false
-                            if ( item.buxgalter || item.delivery || item.sklad || item.filial) return true
+                            if ( user?.role == UserRoles.GLBUX && item.refValues.typeSection == TypeSECTION.DIRECTOR) return false
+                            if ( item.refValues.markToDeleted) return false
+                            if ( 
+                                item.refValues.typeSection == TypeSECTION.ACCOUNTANT ||
+                                item.refValues.typeSection == TypeSECTION.DELIVERY ||
+                                item.refValues.typeSection == TypeSECTION.STORAGE ||
+                                item.refValues.typeSection == TypeSECTION.FILIAL
+                            ) return true
                             else return false
                         }
 
@@ -71,7 +76,7 @@ export const SelectReference = ({ label, visible, typeReference , className, ...
                         <option 
                             value={item.name}
                             data-type={item.typeReference} 
-                            data-id={item._id}    
+                            data-id={item.id}    
                             >
                                 {item.name}
                         </option>

@@ -22,32 +22,38 @@ export const User = ({ className, ...props }: UserProps) :JSX.Element => {
         password: '',
         name: '',
         sectionId: 0,
-        role: UserRoles.USER
+        role: UserRoles.USER,
+        banReason: '',
+        banned: false,
     }
 
     const [body, setBody] = useState<UserModel>(defaultBody) 
+    
     const changeElements = (e: React.FormEvent<HTMLInputElement>) => {
         let target = e.currentTarget
         setBody((state:UserModel) => {
             return {
                 ...state,
-                [target.id]: target.value
+                [target.id]: target.type == 'checkbox' ? target.checked : 
+                                                         target.id != 'sectionId' ? target.value : 
+                                                                                    +target.value
             }
         })
+        console.log(body.sectionId, target.id, target.value)
     }
 
     useEffect(()=> {
-        setBody(defaultBody);
+        setBody(body => (
+            { ...defaultBody}
+        ));
     }, [mainData.window.clearControlElements])
 
     useEffect(() => {
         const {currentUser} = mainData.users
         
         if (currentUser != undefined) {
-            const { email, password, name, sectionId } = currentUser
-
             let newBody: UserModel = {
-                ...currentUser,
+                ...currentUser
             }
             setBody(newBody)
         }
@@ -60,7 +66,7 @@ export const User = ({ className, ...props }: UserProps) :JSX.Element => {
             <div className={styles.box}>
                 <div className={styles.nameBox}>
                     <div>Email</div>
-                    <input value={body.email} type="text" id='login' className={styles.input} onChange={(e)=>changeElements(e)}/>
+                    <input value={body.email} type="text" id='email' className={styles.input} onChange={(e)=>changeElements(e)}/>
                 </div>
 
                 <div className={styles.nameBox}>
@@ -81,10 +87,19 @@ export const User = ({ className, ...props }: UserProps) :JSX.Element => {
             
                 <div className={styles.nameBox}>
                     <div>storageId</div>
-                    <input value={body.sectionId} type="number" id='storageId' className={styles.input} onChange={(e)=>changeElements(e)}/>
+                    <input value={body.sectionId} type="number" id='sectionId' className={styles.input} onChange={(e)=>changeElements(e)}/>
                 </div>
+            </div>
 
-                
+            <div className={styles.box}>
+                <div className={styles.nameBox}>
+                    <div>Чеклов куйилганлик белгиси</div>
+                    <input type='checkbox' id='banned' checked={body.banned} className={styles.input} onChange={(e)=>changeElements(e)}/>
+                </div>
+                <div className={styles.nameBox}>
+                    <div>Чеклов буйича изох</div>
+                    <input value={body.banReason} type="text" id='banReason' className={styles.input} onChange={(e)=>changeElements(e)}/>
+                </div>
             </div>
             
 
@@ -93,7 +108,7 @@ export const User = ({ className, ...props }: UserProps) :JSX.Element => {
                 onSubmitUser(body, 
                             isNewUser,
                             setMainData,
-                            user?.access_token)}
+                            user?.token)}
                 >Саклаш</Button>
             <Button appearance='ghost' onClick={() => cancelSubmitUser(setMainData)}>Бекор килиш</Button>
         </div> 

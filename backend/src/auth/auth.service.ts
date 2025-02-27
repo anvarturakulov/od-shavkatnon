@@ -18,10 +18,13 @@ export class AuthService {
         if (user) {
             const {email, role, name, sectionId} = user
             let {token} = await this.generateToken(user)
+            if (user.banned) {
+                throw new HttpException('Пользователь заблокирован', HttpStatus.FORBIDDEN)
+            } 
             return {
                 email,
                 role,
-                access_token: token,
+                token,
                 name,
                 sectionId
             }
@@ -30,13 +33,14 @@ export class AuthService {
     
     async registration(userDto : CreateUserDto) {
         const candidate = await this.userService.getUserByEmail(userDto.email)
-        if (candidate) {
-            throw new HttpException('Пользователь с таким email существует', HttpStatus.BAD_REQUEST)
+        if (!candidate) {
+            const hashPassword = await bcrypt.hash(userDto.password, 5);
+            const user = await this.userService.createUser({...userDto, password: hashPassword})
+            return true
         }
+        else throw new HttpException('Пользователь с таким email существует', HttpStatus.BAD_REQUEST)
 
-        const hashPassword = await bcrypt.hash(userDto.password, 5);
-        const user = await this.userService.createUser({...userDto, password: hashPassword})
-        return true
+        
 
     }
 

@@ -1,4 +1,4 @@
-import { ReferenceModel, TypePartners, TypeReference, TypeTMZ } from '@/app/interfaces/reference.interface';
+import { ReferenceModel, TypePartners, TypeReference, TypeSECTION, TypeTMZ } from '@/app/interfaces/reference.interface';
 import { showMessage } from '@/app/service/common/showMessage';
 import { updateCreateReference } from '@/app/service/references/updateCreateReference';
 
@@ -45,5 +45,18 @@ export const defineTypePartners = (typePartners: string): TypePartners => {
         case 'CLIENTS': return TypePartners.CLIENTS
         case 'SUPPLIERS': return TypePartners.SUPPLIERS
         default: return TypePartners.CLIENTS
+    } 
+}
+
+export const defineTypeSection = (typeSection: string): TypeSECTION => {
+    switch (typeSection) {
+        case 'ACCOUNTANT': return TypeSECTION.ACCOUNTANT
+        case 'COMMON': return TypeSECTION.COMMON
+        case 'DELIVERY': return TypeSECTION.DELIVERY
+        case 'DIRECTOR': return TypeSECTION.DIRECTOR
+        case 'FILIAL': return TypeSECTION.FILIAL
+        case 'FOUNDER': return TypeSECTION.FOUNDER
+        case 'STORAGE': return TypeSECTION.STORAGE
+        default: return TypeSECTION.DELIVERY
     } 
 }

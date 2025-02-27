@@ -13,7 +13,7 @@ export const SelectForHamirs = ({ label , className, ...props }: SelectForHamirs
     const {mainData, setMainData} = useAppContext();
     const { contentName } = mainData.window;
     const { user } = mainData.users;
-    const token = user?.access_token;
+    const token = user?.token;
     const url = process.env.NEXT_PUBLIC_DOMAIN+'/api/reference/byType/'+TypeReference.STORAGES;
     const { data , mutate } = useSWR(url, (url) => getDataForSwr(url, token));
 

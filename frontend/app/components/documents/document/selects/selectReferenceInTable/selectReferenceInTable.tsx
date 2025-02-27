@@ -13,7 +13,7 @@ export const SelectReferenceInTable = ({  selectForReciever , typeReference, ite
     const { contentName } = mainData.window;
     const { user } = mainData.users;
 
-    const token = user?.access_token;
+    const token = user?.token;
     const url = process.env.NEXT_PUBLIC_DOMAIN+'/api/reference/byType/'+typeReference;
     
     const { data, mutate } = useSWR(url, (url) => getDataForSwr(url, token));

@@ -12,7 +12,11 @@ export const  Select = (list: Array<DataForSelect>, body: ReferenceModel,label: 
   if (typeString == 'typePartners' && body.refValues.typePartners) {
     currentValue = body.refValues.typePartners
   }
-  
+
+  if (typeString == 'typeSection' && body.refValues.typeSection) {
+    currentValue = body.refValues.typeSection
+  }
+
   return (
     <div>
       <div className={styles.label}>{label}</div>
@@ -20,19 +24,18 @@ export const  Select = (list: Array<DataForSelect>, body: ReferenceModel,label: 
           className={styles.select}
           onChange={(e) => changeElement(e)}
           id={typeString}
+          value={list[list.findIndex(elem => elem.name == currentValue)].name}
       >
-          {list.map(elem => {
+          {list.map((elem, i) => {
             return (
-              <>
                 <option
                   value={elem.name}
-                  defaultValue={elem.name}
-                  selected = { elem.name == currentValue ? true : false}
-                  // selected={false}
+                  // defaultValue={elem.name}
+                  // selected = { elem.name == currentValue ? true : false}
+                  key = {i}
                 >
                   {elem.title}
                 </option>
-              </>
             );
           })}
       </select>

@@ -22,7 +22,6 @@ export default function OptionsBox({ className, ...props }: OptionsBoxProps): JS
     const result = getOptionsByReportType(contentName, reportOption.schet);
 
     const showReport = ( setMainData: Function | undefined, mainData: Maindata ) => {
-        console.log('show report - '+Date.now())
         const { reportOption } = mainData.report;
         const { startDate, endDate } = reportOption;
         if ( startDate != 0 && endDate != 0 ) {

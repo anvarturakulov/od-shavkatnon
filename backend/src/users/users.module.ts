@@ -4,7 +4,7 @@ import { UsersService } from './users.service';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { User } from './users.model';
 import { AuthModule } from 'src/auth/auth.module';
-import { Reference } from 'src/references/references.model';
+import { Reference } from 'src/references/reference.model';
 import { Document } from 'src/documents/document.model';
 
 

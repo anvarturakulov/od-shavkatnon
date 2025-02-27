@@ -28,11 +28,7 @@ export default function UserMenu({menuData, className, ...props}:UserMenuProps):
     const { user } = mainData.users;
     const { informData } = mainData.report;
     const { uploadingDashboard } = mainData.window;
-    
-    useEffect(()=>{
-        // console.log(mainData.informData)
-    },[informData])
-    
+
     const role = user?.role;
     let storageIdFromUser = user?.sectionId
 

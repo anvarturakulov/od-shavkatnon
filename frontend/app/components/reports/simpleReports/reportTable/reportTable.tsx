@@ -4,7 +4,7 @@ import { useRef } from 'react';
 import {useReactToPrint} from 'react-to-print';
 import PrintIco from './ico/print.svg';
 import { useAppContext } from '@/app/context/app.context';
-import { ReportType, Schet } from '@/app/interfaces/report.interface';
+import { ReportType } from '@/app/interfaces/report.interface';
 import useSWR from 'swr';
 import { getDataForSwr } from '@/app/service/common/getDataForSwr';
 import { getPropertySubconto } from '@/app/service/reports/getPropertySubconto';
@@ -20,7 +20,7 @@ export default function ReportTable({ className, ...props} : ReportTableProps):J
     const {startDate, startReport, endDate, firstReferenceId, schet} = reportOption;
 
     const { user } = mainData.users;
-    const token = user?.access_token;
+    const token = user?.token;
     const url = process.env.NEXT_PUBLIC_DOMAIN+'/api/reference/getAll/';
 
     const { data, mutate } = useSWR(url, (url) => getDataForSwr(url, token));

@@ -9,13 +9,13 @@ export enum TypeReference {
 
 export enum TypePartners {
     CLIENTS = 'CLIENTS',
-    SUPPLIERS = 'SUPPLIERS',
+    SUPPLIERS = 'SUPPLIERS'
 }
 
 export enum TypeTMZ {
-    MATERIAL = 'MATERIAL',
     PRODUCT = 'PRODUCT',
-    HALFSTUFF = 'HALFSTUFF'
+    HALFSTUFF = 'HALFSTUFF',
+    MATERIAL = 'MATERIAL',
 }
 
 export enum TypeSECTION {
@@ -25,29 +25,31 @@ export enum TypeSECTION {
     STORAGE = 'STORAGE',
     ACCOUNTANT = 'ACCOUNTANT',
     DIRECTOR = 'DIRECTOR',
-    FOUNDER = 'FOUNDER'
+    FOUNDER = 'FOUNDER',
 }
 
-export interface ReferenceModel {
-    _id?: string
-    name: string
-    typeReference: TypeReference
-    typePartners?: TypePartners | undefined
-    typeTMZ?: TypeTMZ | undefined
+export interface RefValues {
+    clientForSectionId?: number
+    typePartners?: TypePartners
+    typeTMZ?: TypeTMZ
+    typeSection?: TypeSECTION
     unit?: string
     comment?: string
-    deleted?: boolean
-    delivery?: boolean
-    filial?: boolean
-    umumBulim?: boolean
-    sklad?: boolean
-    buxgalter?: boolean
+    markToDeleted?: boolean;
+    norma?: number,
     un?: boolean
-    clientForDeliveryId?: string
+    longCharge?: boolean,
+    shavkatCharge?: boolean,
     firstPrice?: number,
     secondPrice?: number
     thirdPrice?: number,
     telegramId?: string,
-    norma?: number,
-    longCharge?: boolean,
+}
+
+export interface ReferenceModel {
+    id?: number,
+    oldId: string,
+    name: string
+    typeReference: TypeReference
+    refValues : RefValues
 }

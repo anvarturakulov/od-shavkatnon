@@ -36,7 +36,7 @@ export const RefreshPanel = ({className, ...props }: RefreshPanelProps) :JSX.Ele
         '?startDate=' + 0 + '&endDate=' + 1;
 
         const config = {
-            headers: { Authorization: `Bearer ${user?.access_token}` }
+            headers: { Authorization: `Bearer ${user?.token}` }
         };
 
         let result = 0;

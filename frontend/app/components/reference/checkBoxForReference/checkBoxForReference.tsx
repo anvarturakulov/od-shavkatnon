@@ -1,6 +1,7 @@
 import { checkBoxForReferenceProps } from './checkBoxForReference.props';
 import styles from './checkBoxForReference.module.css';
 import cn from 'classnames';
+import { useState } from 'react';
 
 export const CheckBoxForReference = ({ className, checked, setCheckbox, label, id, ...props }: checkBoxForReferenceProps): JSX.Element => {
     
@@ -9,6 +10,8 @@ export const CheckBoxForReference = ({ className, checked, setCheckbox, label, i
         setCheckbox(target.checked, id)
     }
 
+    const [value, setValue] = useState(checked || false);
+
     return (
         <div className={styles.box}>
             <input
@@ -16,7 +19,7 @@ export const CheckBoxForReference = ({ className, checked, setCheckbox, label, i
                 {...props}
                 onChange={(e) => changeElements(e, setCheckbox, id)}
                 type='checkbox'
-                checked={checked}
+                checked={value}
                 id={id}
                 />
             {label !='' && <label htmlFor={id} className={styles.label}>{label}</label>}

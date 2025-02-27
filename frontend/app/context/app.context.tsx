@@ -18,24 +18,31 @@ type Props = {
     children: ReactNode;
 };
 
+const keyWithParent = (key: string, obj: Maindata): string => {
+    const keys = ['document', 'journal',]
+    
+    if (key in obj.document) return `document.${key}`
+    if (key in obj.journal) return `journal.${key}`
+    if (key in obj.reference) return `reference.${key}`
+    if (key in obj.report) return `report.${key}`
+    if (key in obj.users) return `users.${key}`
+    if (key in obj.window) return `window.${key}`
+    return ''
+}
+
 export function AppProvider({ children }: Props) {
     
     const [data, setData] = useState<Maindata>(defaultMainData);
     const setMainData = (key: string, value: any ) => {
         let newObj = {...data}
         let newValue = typeof value != 'object' ? value : 
-                                                    Array.isArray(value) ? [...value]:
-                                                    {...value}
-        set(newObj, key, newValue)
-        // setData((data) => ({
-            //     ...data,
-            //     [key]: typeof value != 'object' ? value : 
-            //             Array.isArray(value) ? [...value]:
-            //             {...value}
-            // }));
+                        Array.isArray(value) ? [...value]:
+                        {...value}
+        let newKey = keyWithParent(key, data)
+        if (newKey) {
+            set(newObj, newKey, newValue)
             setData(newObj)
-            console.log('newObj', newObj)
-
+        }
     };
 
     const value = {

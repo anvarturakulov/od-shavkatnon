@@ -17,17 +17,16 @@ export const SelectForUser = (list: Array<DataForUserSelect>, body: UserModel,la
           onChange={(e) => changeElement(e)}
           id={'role'}
       >
-          {list.map(elem => {
+          {list.map((elem, i) => {
             return (
-              <>
-                <option
-                  value={elem.name}
-                  selected = { elem.name == currentValue ? true : false}
-                  // selected={false}
-                >
-                  {elem.title}
-                </option>
-              </>
+              <option
+                value={elem.name}
+                selected = { elem.name == currentValue ? true : false}
+                key = {i}
+                // selected={false}
+              >
+                {elem.title}
+              </option>
             );
           })}
       </select>
