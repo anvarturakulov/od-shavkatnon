@@ -10,7 +10,7 @@ export const getUserById = (
     headers: { Authorization: `Bearer ${token}` }
   };
   if (id) {
-    const uri = process.env.NEXT_PUBLIC_DOMAIN + '/api/users/' + id;
+    const uri = process.env.NEXT_PUBLIC_DOMAIN + '/api/users/getUserById/' + id;
     axios.get(uri, config)
       .then(function (response) {
         setMainData && setMainData('currentUser', response.data);

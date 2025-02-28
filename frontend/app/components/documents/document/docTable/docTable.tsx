@@ -79,7 +79,7 @@ export const DocTable = ({ typeReference, items,  className, ...props }: DocTabl
                             getPriceAndBalance(
                                 mainData,
                                 setMainData,
-                                currentDocument.docValue.senderId,
+                                currentDocument.docValues.senderId,
                                 currentDocument.docTableItems[index].referenceId,
                                 currentDocument.date,
                                 true,

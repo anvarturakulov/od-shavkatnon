@@ -2,7 +2,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import {IsEmail, IsString, Length, IsEnum, IsDate, IsNumber, IsInt} from 'class-validator';
 import { DocSTATUS, DocumentType } from "src/interfaces/document.interface";
 
-export class CreateDocumentDto {
+export class UpdateCreateDocumentDto {
     @ApiProperty({example:'12-01-2025', description: 'Дата документа'})
     @IsDate({message: 'date - должен быть датой'})
     date: Date;

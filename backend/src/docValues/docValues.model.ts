@@ -25,7 +25,7 @@ interface DocTableItemCreationAttrs {
 }
 
 @Table({tableName: 'docvalues'})
-export class DocValue extends Model<DocValue, DocTableItemCreationAttrs> {
+export class DocValues extends Model<DocValues, DocTableItemCreationAttrs> {
 
     @ApiProperty({example:'1', description: 'Уникальный иденфикатор'})
     @Column({type: DataType.BIGINT, unique: true, autoIncrement: true, primaryKey: true})

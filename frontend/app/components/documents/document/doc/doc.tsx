@@ -52,7 +52,7 @@ export const Doc = ({className, ...props }: DocProps) :JSX.Element => {
             </div>
 
             <DocValues/>
-            {currentDocument.docValue.firstWorkerId}
+            {currentDocument.docValues.firstWorkerId}
             <div className={styles.boxBtn}>
                 {
                     ( 

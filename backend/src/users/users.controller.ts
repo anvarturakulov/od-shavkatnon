@@ -26,7 +26,7 @@ export class UsersController {
     @ApiResponse({status: 200, type: [User]})
     @Roles('ADMIN')
     @UseGuards(RolesGuard)
-    @Get('/:id')
+    @Get('/getUserById/:id')
     getUser(@Param('id') id: number) {
         return this.usersService.getUserById(id)
     }
@@ -45,6 +45,16 @@ export class UsersController {
     @Patch(':id')
     saveUser(@Param('id') id: number,@Body() dto:UpdateUserDto) {
         return this.usersService.updateUserById(id, dto)
+    }
+
+
+    @ApiOperation({summary: 'Получение всех имен пользователей'})
+    @ApiResponse({status: 200, type: [User]})
+    @Roles('ALL')
+    @UseGuards(RolesGuard)
+    @Get('/names')
+    getNames() {
+        return this.usersService.getNames()
     }
 
 }

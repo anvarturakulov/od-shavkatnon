@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Column, DataType, Model, Table, HasOne } from "sequelize-typescript";
-import { DocValue } from "src/docValues/docValue.model";
+import { DocValues } from "src/docValues/docValues.model";
 import { Entry } from "src/entries/entry.model";
 import { TypeReference } from "src/interfaces/reference.interface";
 import { RefValues } from "src/refvalues/refValues.model";
@@ -41,8 +41,8 @@ export class Reference extends Model<Reference, ReferenceCreationAttrs> {
     @HasOne(() => Entry)
     entry: Entry;
 
-    @HasOne(() => DocValue)
-    docValue: DocValue;
+    @HasOne(() => DocValues)
+    docValue: DocValues;
 
 
 }

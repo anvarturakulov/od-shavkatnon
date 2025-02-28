@@ -23,6 +23,15 @@ export class UsersService {
         return users
     }
 
+    async getNames() {
+        const users = await this.userRepository.findAll()
+        if (users && users.length > 0) {
+         let names = users.map(item => ({'id': item.id, 'name':item.name}))
+         return names   
+        }
+        return []
+    }
+
     async getUserByEmail(email: string) {
         const user = await this.userRepository.findOne({where: {email}})
         return user

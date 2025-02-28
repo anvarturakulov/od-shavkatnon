@@ -24,7 +24,7 @@ export const getDocumentById = (
     axios.get(uri, config)
       .then(function (response) {
         setMainData && setMainData('document.currentDocument', response.data);
-        setMainData && showDocument && setMainData('window.showDocumentWindow', true);
+        setMainData && showDocument && setMainData('showDocumentWindow', true);
       })
       .catch(function (error) {
         if (setMainData) {

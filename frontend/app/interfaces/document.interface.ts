@@ -45,7 +45,7 @@ export interface DocTableItem {
     comment: string,
 }
 
-export interface DocValue {
+export interface DocValues {
     senderId: number,
     senderoldId?: string;
     receiverId: number,
@@ -74,7 +74,7 @@ export interface DocumentModel {
     userOldId?: string,
     documentType: string,
     docStatus: DocSTATUS,
-    docValue: DocValue
+    docValues: DocValues
     docTableItems: Array<DocTableItem>,
 };
 

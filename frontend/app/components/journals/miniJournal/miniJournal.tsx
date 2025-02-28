@@ -66,7 +66,7 @@ export default function MiniJournal({ className, ...props}:MiniJournalProps):JSX
                             .filter((item:DocumentModel, key: number) => {
                                 return (
                                     item.userId == user?.id || 
-                                    item.docValue.receiverId == user?.sectionId 
+                                    item.docValues.receiverId == user?.sectionId 
                                 )
                             })
                             .sort((a:DocumentModel, b:DocumentModel) => a.date - b.date)
@@ -84,14 +84,14 @@ export default function MiniJournal({ className, ...props}:MiniJournalProps):JSX
                                         })}>
                                                 {getDescriptionDocument(item.documentType)}
                                         </td>
-                                        <td>{`${getNameReference(references,item.docValue.receiverId)}`}</td>
-                                        <td>{getNameReference(references,item.docValue.senderId)}</td>
+                                        <td>{`${getNameReference(references,item.docValues.receiverId)}`}</td>
+                                        <td>{getNameReference(references,item.docValues.senderId)}</td>
                                         <td className={styles.rowDate}>{secondsToDateString(item.date)}</td>
-                                        <td className={cn(styles.rowSumma, styles.tdSumma)}>{item.docValue.total ? item.docValue.total:item.docValue.comment}</td>
-                                        <td>{`${getNameReference(references,item.docValue.analiticId)? getNameReference(references,item.docValue.analiticId): ''} ${item.docValue.count ? `(${item.docValue.count})`: ''}`}</td>
+                                        <td className={cn(styles.rowSumma, styles.tdSumma)}>{item.docValues.total ? item.docValues.total:item.docValues.comment}</td>
+                                        <td>{`${getNameReference(references,item.docValues.analiticId)? getNameReference(references,item.docValues.analiticId): ''} ${item.docValues.count ? `(${item.docValues.count})`: ''}`}</td>
                                         {
                                             item.docStatus != DocSTATUS.PROVEDEN &&
-                                            item.docValue.receiverId == user?.sectionId &&
+                                            item.docValues.receiverId == user?.sectionId &&
                                             item.documentType != DocumentType.LeaveCash &&
                                             <td><button 
                                                 className={cn(styles.receiveBtn)}

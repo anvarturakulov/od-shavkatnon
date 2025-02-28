@@ -14,7 +14,7 @@ interface DocTableItemCreationAttrs {
 }
 
 @Table({tableName: 'doctableitems'})
-export class DocTableItem extends Model<DocTableItem, DocTableItemCreationAttrs> {
+export class DocTableItems extends Model<DocTableItems, DocTableItemCreationAttrs> {
 
     @ApiProperty({example:'1', description: 'Уникальный иденфикатор'})
     @Column({type: DataType.BIGINT, unique: true, autoIncrement: true, primaryKey: true})
@@ -27,6 +27,10 @@ export class DocTableItem extends Model<DocTableItem, DocTableItemCreationAttrs>
 
     @BelongsTo(() => Document) 
     document: Document;
+
+    @ApiProperty({example:'1', description: 'Номер индекса в таблице'})
+    @Column({type: DataType.INTEGER})
+    rowIndex: number
 
     @ForeignKey(() => Reference)
     @ApiProperty({example:'12222897', description: 'Id - аналитики'})

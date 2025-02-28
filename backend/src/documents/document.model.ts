@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { BelongsTo, Column, DataType, Model, Table, HasMany, HasOne, ForeignKey } from "sequelize-typescript";
-import { DocTableItem } from "src/docTableItems/docTableItem.model";
-import { DocValue } from "src/docValues/docValue.model";
+import { DocTableItems } from "src/docTableItems/docTableItems.model";
+import { DocValues } from "src/docValues/docValues.model";
 import { Entry } from "src/entries/entry.model";
 import { DocSTATUS, DocumentType } from "src/interfaces/document.interface";
 import { User } from "src/users/users.model";
@@ -22,9 +22,9 @@ export class Document extends Model<Document, DocumentCreationAttrs> {
     @Column({type: DataType.BIGINT, unique: true, autoIncrement: true, primaryKey: true})
     id: bigint;
 
-    @ApiProperty({example:'12-01-2025', description: 'Дата документа'})
-    @Column({type: DataType.DATE, })
-    date: Date;
+    @ApiProperty({example:'1738368000000', description: 'Дата документа в миллисекундах'})
+    @Column({type: DataType.BIGINT, })
+    date: bigint;
 
     @ForeignKey(() => User)
     @ApiProperty({example:'12222', description: 'Идентификатор пользователя'})
@@ -46,11 +46,11 @@ export class Document extends Model<Document, DocumentCreationAttrs> {
     @BelongsTo(() => User) 
     user!: User;
 
-    @HasOne(() => DocValue)
-    docValue!: DocValue;
+    @HasOne(() => DocValues)
+    docValues!: DocValues;
 
-    @HasMany(() => DocValue)
-    docTableItems!: DocTableItem[];
+    @HasMany(() => DocTableItems)
+    docTableItems!: DocTableItems[];
 
     @HasMany(() => Entry)
     entries!: Entry[];

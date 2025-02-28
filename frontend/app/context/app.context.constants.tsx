@@ -1,4 +1,4 @@
-import { DocSTATUS, DocTableItem, DocumentModel, DocumentType, DocValue, Interval, JournalCheckboxs } from '../interfaces/document.interface'
+import { DocSTATUS, DocTableItem, DocumentModel, DocumentType, DocValues, Interval, JournalCheckboxs } from '../interfaces/document.interface'
 import { ReportOptions, Schet } from '../interfaces/report.interface'
 import { DefinedTandirWorkers } from '../interfaces/user.interface'
 import { Maindata } from './app.context.interfaces'
@@ -12,7 +12,7 @@ export const defaultDocumentTableItem: DocTableItem = {
     comment: ''
 }
 
-export const defaultDocValue: DocValue = {
+export const defaultDocValue: DocValues = {
     senderId: 0,
     senderoldId: '',
     receiverId: 0,
@@ -41,7 +41,7 @@ export const defaultDocument:DocumentModel = {
     userId: 0,
     userOldId: '',
     docStatus: DocSTATUS.OPEN,
-    docValue: defaultDocValue,
+    docValues: defaultDocValue,
     docTableItems: [defaultDocumentTableItem],
 }
 
@@ -123,6 +123,7 @@ export const defaultMainData: Maindata = {
     users: {
         user: undefined,
         currentUser: undefined,
+        usersName: undefined
     }
     
   }

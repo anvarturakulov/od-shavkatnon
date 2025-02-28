@@ -14,5 +14,5 @@ export const getReference = async (
     const reference = await getReferenceById(id, setMainData, token);
     // console.log(reference)
   }
-  setMainData && setMainData('window.isNewReference', false);
+  setMainData && setMainData('isNewReference', false);
 }

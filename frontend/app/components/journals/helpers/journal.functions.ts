@@ -20,13 +20,21 @@ export const getDocument = async (
   if (id) {
     const reference = await getDocumentById(id, setMainData, token, true);
   }
-
 }
 
-export const getNameReference = (references: any, id: number | undefined | null): String => {
+export const getNameReference = (references: any, id: number | undefined | null): string => {
   if (references && references.length > 0) {
     return references.filter((item: ReferenceModel) => item.id == id)[0]?.name
   }
+  return 'Аникланмади'
+}
+
+export const getUserName = (id: number, mainData: Maindata): string => {
+  const { usersName } = mainData.users
+  if (usersName && usersName.length > 0) {
+    return usersName.filter((item) => item?.id == id)[0]?.name
+  }
+  
   return 'Аникланмади'
 }
 
@@ -40,7 +48,6 @@ export const deleteItemDocument = (id: number | undefined, docDate: number| unde
   const remainTime = now % oneDay
   const oneDayAgo = ( now - remainTime ) - oneDay - 1
   
-
   if (
     user?.role == UserRoles.ADMIN || 
     user?.role == UserRoles.HEADCOMPANY || 
@@ -49,7 +56,6 @@ export const deleteItemDocument = (id: number | undefined, docDate: number| unde
       contentName == DocumentType.ZpCalculate &&
       dateToStr(Date.now()) == dateToStr(docDate) 
     )
-
   ) {
     markToDeleteDocument(id, setMainData, token)
   } else {
@@ -77,8 +83,7 @@ export const setProvodkaToDoc = (id: number | undefined, token: string | undefin
 }
 
 export const getTotalValueForDocument = (document: DocumentModel): number => {
-  
-  return document.docValue.total;
+  return document.docValues.total;
 }
 
 export const isFounder = (references: any, id: number | undefined | null): boolean => {

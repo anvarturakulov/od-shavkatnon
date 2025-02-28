@@ -9,7 +9,7 @@ import useSWR from 'swr';
 import cn from 'classnames';
 import Header from '../../common/header/header';
 import { getDataForSwr } from '@/app/service/common/getDataForSwr';
-import { deleteItemDocument, getDocument, getNameReference, isDirector, isFounder, setProvodkaToDoc } from '../helpers/journal.functions';
+import { deleteItemDocument, getDocument, getNameReference, getUserName, isDirector, isFounder, setProvodkaToDoc } from '../helpers/journal.functions';
 import { getDescriptionDocument } from '@/app/service/documents/getDescriptionDocument';
 import { DocSTATUS, DocumentModel, DocumentType, Interval } from '@/app/interfaces/document.interface';
 import { dateNumberToString } from '@/app/service/common/converterForDates'
@@ -44,12 +44,12 @@ const documentTotal = (item: DocumentModel) => {
         item.docTableItems?.length 
     ) return numberValue(item.docTableItems.reduce((summa, item) => summa + item.total,0))
 
-    return numberValue(item.docValue.total)
+    return numberValue(item.docValues.total)
 }
 
 const totals = (item: DocumentModel) => {
-    let total = item.docValue.total;
-    let count = item.docValue.count;
+    let total = item.docValues.total;
+    let count = item.docValues.count;
 
     if (( item.documentType == DocumentType.LeaveMaterial ||  item.documentType == DocumentType.ComeHalfstuff) 
         && item.docTableItems?.length ) {
@@ -86,13 +86,13 @@ export default function Journal({ className, ...props}:JournalProps):JSX.Element
     const dashboardUsers = role && dashboardUsersList.includes(role);
 
     const token = user?.token;
-    let url = process.env.NEXT_PUBLIC_DOMAIN+'/api/document/byTypeForDate'+'?documentType='+contentName+'&dateStart='+dateStartForUrl+'&dateEnd='+dateEndForUrl;
+    let url = process.env.NEXT_PUBLIC_DOMAIN+'/api/documents/byTypeForDate'+'?documentType='+contentName+'&dateStart='+dateStartForUrl+'&dateEnd='+dateEndForUrl;
     
     if (!contentName) {
-        let url = process.env.NEXT_PUBLIC_DOMAIN+'/api/document/getAll/';
+        let url = process.env.NEXT_PUBLIC_DOMAIN+'/api/documents/all/';
     }
 
-    const urlReferences = process.env.NEXT_PUBLIC_DOMAIN+'/api/reference/getAll/';
+    const urlReferences = process.env.NEXT_PUBLIC_DOMAIN+'/api/references/all/';
 
     const { data : documents, mutate } = useSWR(url, (url) => getDataForSwr(url, token));
     const { data : references, mutate: mutateReferences } = useSWR(urlReferences, (urlReferences) => getDataForSwr(urlReferences, token));
@@ -150,7 +150,6 @@ export default function Journal({ className, ...props}:JournalProps):JSX.Element
         <>
             {dashboardUsers && <Header windowFor='document' total={total} count={count}/>}  
             <>
-                {/* <div>{`comment${filter.comment}:receiver${filter.receiver}:sender${filter.sender}:summa${filter.summa}:user${filter.user}`}</div> */}
                 <div className={styles.newElement}>
                     {showDocumentWindow && <Doc/>}
                 </div>
@@ -209,17 +208,17 @@ export default function Journal({ className, ...props}:JournalProps):JSX.Element
                             .sort((a:DocumentModel, b:DocumentModel) => a.date - b.date)
                             .filter((item:DocumentModel) => {
                                 if (journalChechboxs.charges ) {
-                                    if (!item.docValue.isWorker && !item.docValue.isPartner) return true
+                                    if (!item.docValues.isWorker && !item.docValues.isPartner) return true
                                 } else return true
                             })
                             .filter((item:DocumentModel) => {
                                 if (journalChechboxs.workers ) {
-                                    if (item.docValue.isWorker) return true
+                                    if (item.docValues.isWorker) return true
                                 } else return true
                             })
                             .filter((item:DocumentModel) => {
                                 if (journalChechboxs.partners ) {
-                                    if (item.docValue.isPartner) return true
+                                    if (item.docValues.isPartner) return true
                                 } else return true
                             })
                             .filter((item:DocumentModel) => {
@@ -232,19 +231,19 @@ export default function Journal({ className, ...props}:JournalProps):JSX.Element
                             .filter((item:DocumentModel) => {
                                 const {comment} = filter
                                 if (comment != 'Изох') {
-                                    if (item.docValue.comment && (item.docValue.comment+getNameReference(references,item.docValue.analiticId)).toLowerCase().includes(comment.toLocaleLowerCase())) return true
+                                    if (item.docValues.comment && (item.docValues.comment+getNameReference(references,item.docValues.analiticId)).toLowerCase().includes(comment.toLocaleLowerCase())) return true
                                 } else return true
                             })
                             .filter((item:DocumentModel) => {
                                 const {sender} = filter
-                                const itemSender = getNameReference(references,item.docValue.senderId)
+                                const itemSender = getNameReference(references,item.docValues.senderId)
                                 if (sender != 'Берувчи') {
                                     if (itemSender && itemSender.toLowerCase().includes(sender.toLocaleLowerCase())) return true
                                 } else return true
                             })
                             .filter((item:DocumentModel) => {
                                 const {receiver} = filter
-                                const itemReceiver = getNameReference(references,item.docValue.receiverId)
+                                const itemReceiver = getNameReference(references,item.docValues.receiverId)
                                 if (receiver != 'Олувчи') {
                                     if (itemReceiver && itemReceiver.toLowerCase().includes(receiver.toLocaleLowerCase())) return true
                                 } else return true
@@ -252,14 +251,14 @@ export default function Journal({ className, ...props}:JournalProps):JSX.Element
                             .filter((item:DocumentModel) => {
                                 const {summa} = filter
                                 if (summa != 'Сумма') {
-                                    if (item.docValue.total == +summa) return true
+                                    if (item.docValues.total == +summa) return true
                                 } else return true
                             })
                             .filter((item:DocumentModel) => {
                                 if (role != UserRoles.ADMIN && role != UserRoles.HEADCOMPANY) {
-                                    if (isDirector(references, item.docValue.senderId)) return false
-                                    if ( isFounder(references, item.docValue.senderId) ||
-                                         isFounder(references, item.docValue.receiverId)
+                                    if (isDirector(references, item.docValues.senderId)) return false
+                                    if ( isFounder(references, item.docValues.senderId) ||
+                                         isFounder(references, item.docValues.receiverId)
                                     ) return false
                                 }
                                 return true
@@ -269,7 +268,7 @@ export default function Journal({ className, ...props}:JournalProps):JSX.Element
                                 total += item.docStatus != DocSTATUS.DELETED ? t : 0;
                                 count += item.docStatus != DocSTATUS.DELETED ? c : 0;
                                 docCount += item.docStatus != DocSTATUS.DELETED ? 1 : 0;
-
+                                console.log(item)
                                 return (
                                 <>
                                     <tr 
@@ -288,10 +287,10 @@ export default function Journal({ className, ...props}:JournalProps):JSX.Element
                                                 {getDescriptionDocument(item.documentType)}
                                         </td>
                                         <td className={cn(styles.rowSumma, styles.tdSumma)}>{documentTotal(item)}</td>
-                                        <td>{getNameReference(references,item.docValue.receiverId)}</td>
-                                        <td>{getNameReference(references,item.docValue.senderId)}</td>
-                                        <td>{`${getNameReference(references,item.docValue.analiticId)? getNameReference(references,item.docValue.analiticId): ''} ${item.docValue.comment ? `(${item.docValue.comment})`: ''} ${item.docValue.count ? `(${item.docValue.count})`: ''}`}</td>
-                                        <td>{item.userId}</td>
+                                        <td>{getNameReference(references,item.docValues.receiverId)}</td>
+                                        <td>{getNameReference(references,item.docValues.senderId)}</td>
+                                        <td>{`${getNameReference(references,item.docValues.analiticId)? getNameReference(references,item.docValues.analiticId): ''} ${item.docValues.comment ? `(${item.docValues.comment})`: ''} ${item.docValues.count ? `(${item.docValues.count})`: ''}`}</td>
+                                        <td>{getUserName(item.userId, mainData)}</td>
                                         <td className={styles.rowAction}>
                                             <IcoTrash className={styles.icoTrash}
                                             onClick = {() => deleteItemDocument(item.id, item.date, token, setMainData, mainData)}
@@ -299,7 +298,7 @@ export default function Journal({ className, ...props}:JournalProps):JSX.Element
                                         </td>
                                         <td className={styles.rowAction}>
                                             <IcoSave className={styles.icoSave}
-                                            onClick = {() => setProvodkaToDoc(item.id, token ,item.docStatus == DocSTATUS.PROVEDEN ,setMainData, mainData, item.docValue.receiverId)}
+                                            onClick = {() => setProvodkaToDoc(item.id, token ,item.docStatus == DocSTATUS.PROVEDEN ,setMainData, mainData, item.docValues.receiverId)}
                                             />
                                         </td>
                                     </tr>

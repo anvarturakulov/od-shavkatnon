@@ -48,7 +48,7 @@ export const DocValues = ({ className, ...props }: DocValuesProps): JSX.Element 
                     label={options.receiverLabel} 
                     typeReference={options.receiverType}
                     visibile={options.recieverIsVisible}
-                    currentItemId={currentDocument?.docValue.receiverId}
+                    currentItemId={currentDocument?.docValues.receiverId}
                     type='receiver'
                     definedItemId= {definedItemIdForReceiver}
                 />
@@ -56,7 +56,7 @@ export const DocValues = ({ className, ...props }: DocValuesProps): JSX.Element 
                     label={options.senderLabel} 
                     typeReference={options.senderType}
                     visibile={options.senderIsVisible}
-                    currentItemId={currentDocument?.docValue.senderId}
+                    currentItemId={currentDocument?.docValues.senderId}
                     type='sender'
                     definedItemId= {definedItemIdForSender}
                 />
@@ -86,7 +86,7 @@ export const DocValues = ({ className, ...props }: DocValuesProps): JSX.Element 
                     label={getLabelForAnalitic(currentDocument, options)} 
                     typeReference= {getTypeReferenceForAnalitic(currentDocument, options)}
                     visibile={options.analiticIsVisible}
-                    currentItemId={currentDocument?.docValue.analiticId}
+                    currentItemId={currentDocument?.docValues.analiticId}
                     type='analitic'
                 />
 
@@ -97,21 +97,21 @@ export const DocValues = ({ className, ...props }: DocValuesProps): JSX.Element 
                             label={'Ёпувчи исми'} 
                             typeReference= {TypeReference.WORKERS}
                             visibile={true}
-                            currentItemId={currentDocument?.docValue.firstWorkerId}
+                            currentItemId={currentDocument?.docValues.firstWorkerId}
                             type='firstWorker'
                         />
                         <SelectReferenceInForm 
                             label={'Биринчи зувалачи исми'} 
                             typeReference= {TypeReference.WORKERS}
                             visibile={options.analiticIsVisible}
-                            currentItemId={currentDocument?.docValue.secondWorkerId}
+                            currentItemId={currentDocument?.docValues.secondWorkerId}
                             type='secondWorker'
                         />
                         <SelectReferenceInForm 
                             label={'Иккинчи зувалачи исми'} 
                             typeReference= {TypeReference.WORKERS}
                             visibile={options.analiticIsVisible}
-                            currentItemId={currentDocument?.docValue.thirdWorkerId}
+                            currentItemId={currentDocument?.docValues.thirdWorkerId}
                             type='thirdWorker'
                         />
                     </>
@@ -125,8 +125,8 @@ export const DocValues = ({ className, ...props }: DocValuesProps): JSX.Element 
                             getPriceAndBalance(
                                 mainData,
                                 setMainData,
-                                currentDocument.docValue.senderId,
-                                currentDocument.docValue.analiticId,
+                                currentDocument.docValues.senderId,
+                                currentDocument.docValues.analiticId,
                                 currentDocument.date,
                                 false,
                                 0

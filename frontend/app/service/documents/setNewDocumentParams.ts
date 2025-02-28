@@ -14,11 +14,11 @@ export const setNewDocumentParams = ( setMainData: Function | undefined, mainDat
   defValue.documentType = contentName
   let definedItemIdForReceiver = getDefinedItemIdForReceiver(user?.role, user?.sectionId, contentName)
   let definedItemIdForSender = getDefinedItemIdForSender(user?.role, user?.sectionId, contentName)
-  defValue.docValue.receiverId = definedItemIdForReceiver ? definedItemIdForReceiver : 0
-  defValue.docValue.senderId = definedItemIdForSender ? definedItemIdForSender : 0
+  defValue.docValues.receiverId = definedItemIdForReceiver ? definedItemIdForReceiver : 0
+  defValue.docValues.senderId = definedItemIdForSender ? definedItemIdForSender : 0
 
   if (contentName == DocumentType.SaleProd && user?.role == UserRoles.DELIVERY) {
-    defValue.docValue.price = 3500;
+    defValue.docValues.price = 3500;
   }
 
   setMainData && setMainData('currentDocument', { ...defValue });

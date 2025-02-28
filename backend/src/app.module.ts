@@ -17,9 +17,9 @@ import { RefValesModule } from './refvalues/refValues.module';
 import { DocValuesModule } from './docValues/docValues.module';
 import { EntriesModule } from './entries/entries.module';
 import { Entry } from './entries/entry.model';
-import { DocValue } from './docValues/docValue.model';
-import { DocTableItem } from './docTableItems/docTableItem.model';
+import { DocValues } from './docValues/docValues.model';
 import { Document } from './documents/document.model';
+import { DocTableItems } from './docTableItems/docTableItems.model';
 
 
 
@@ -37,7 +37,7 @@ import { Document } from './documents/document.model';
             username: process.env.POSTGRES_USER,
             password: process.env.POSTGRES_PASSWORD,
             database: process.env.POSTGRES_DB,
-            models: [User, Reference, RefValues, Entry, DocValue, DocTableItem, Document],
+            models: [User, Reference, RefValues, Entry, DocValues, DocTableItems, Document],
             autoLoadModels: true,
           }),
         UsersModule,

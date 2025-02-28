@@ -36,9 +36,9 @@ export const setPriceAndBalance = (
     .then(function (request) {
       let result = {...request.data};
       if (!forTable) {
-        currentItem.docValue.balance = +result?.balance;
+        currentItem.docValues.balance = +result?.balance;
         if (docsDependentToMiddlePrice.includes(contentName)) {
-          currentItem.docValue.price = result?.price
+          currentItem.docValues.price = result?.price
         }
       } else {
         if (docTableItems && docTableItems?.length > 0) {

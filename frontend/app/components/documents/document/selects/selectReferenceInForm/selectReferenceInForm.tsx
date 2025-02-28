@@ -21,7 +21,7 @@ export const SelectReferenceInForm = ({ label, typeReference, visibile=true , de
     const { contentName } = mainData.window;
     const {  currentDocument } = mainData.document;
     const token = user?.token;
-    const url = process.env.NEXT_PUBLIC_DOMAIN+'/api/reference/byType/'+typeReference;
+    const url = process.env.NEXT_PUBLIC_DOMAIN+'/api/references/byType/'+typeReference;
     const { data } = useSWR(url, (url) => getDataForSwr(url, token));
 
     const changeElements = (e: React.FormEvent<HTMLSelectElement>, setMainData: Function | undefined, mainData: Maindata, type: TypeForSelectInForm) => {
@@ -39,24 +39,24 @@ export const SelectReferenceInForm = ({ label, typeReference, visibile=true , de
             if (idStr) id = +idStr
 
             if (type == 'sender' && id) {
-                currentItem.docValue.senderId = id
-                if (docsDependentToBalance.includes(contentName)) currentItem.docValue.balance = 0;
-                if (docsDependentToMiddlePrice.includes(contentName)) currentItem.docValue.price = 0;
+                currentItem.docValues.senderId = id
+                if (docsDependentToBalance.includes(contentName)) currentItem.docValues.balance = 0;
+                if (docsDependentToMiddlePrice.includes(contentName)) currentItem.docValues.price = 0;
             }
-            if (type == 'receiver' && id) currentItem.docValue.receiverId = id;
+            if (type == 'receiver' && id) currentItem.docValues.receiverId = id;
               
             if (type == 'analitic' && id) {
-                currentItem.docValue.analiticId = id
+                currentItem.docValues.analiticId = id
                 
-                if (docsDependentToBalance.includes(contentName)) currentItem.docValue.balance = 0;
-                if (docsDependentToMiddlePrice.includes(contentName)) currentItem.docValue.price = 0;
+                if (docsDependentToBalance.includes(contentName)) currentItem.docValues.balance = 0;
+                if (docsDependentToMiddlePrice.includes(contentName)) currentItem.docValues.price = 0;
 
                 if (user?.role == UserRoles.DELIVERY) {
                     let price = getPropertySubconto(data, id).firstPrice
                     
                     if (price) {
-                        currentItem.docValue.price = price
-                        currentItem.docValue.total = price * currentItem.docValue.count
+                        currentItem.docValues.price = price
+                        currentItem.docValues.total = price * currentItem.docValues.count
                     }
                 }
             }
@@ -90,16 +90,15 @@ export const SelectReferenceInForm = ({ label, typeReference, visibile=true , de
                 onChange={(e) => changeElements(e, setMainData, mainData, type)}
                 disabled = { flagDisabled }
             >   
-                <>
                     <option 
                         value={'NotSelected'} 
                         data-type={null} 
                         data-id={null}
                         className={styles.chooseMe}
                         selected = {true}
-                        
-                        >{'=>'}</option>
-                </>
+                        key= {-1}
+                        >{'=>'}
+                    </option>
                 {data && data.length>0  &&
                 data
                 .filter((item:ReferenceModel) => {
@@ -289,9 +288,9 @@ export const SelectReferenceInForm = ({ label, typeReference, visibile=true , de
                             return !item.refValues.longCharge && !item.refValues.shavkatCharge
                         }
                         if (
-                            currentDocument.docValue.senderoldId == '6645f381d8cc46842f33e9e9' || 
-                            currentDocument.docValue.senderoldId == '6645f4e1d8cc46842f33ea2b' ||
-                            currentDocument.docValue.senderoldId == '664455bbadb82fe6d06df149'
+                            currentDocument.docValues.senderoldId == '6645f381d8cc46842f33e9e9' || 
+                            currentDocument.docValues.senderoldId == '6645f4e1d8cc46842f33ea2b' ||
+                            currentDocument.docValues.senderoldId == '664455bbadb82fe6d06df149'
 
                         )
                             return item.refValues.shavkatCharge
@@ -314,21 +313,19 @@ export const SelectReferenceInForm = ({ label, typeReference, visibile=true , de
                 .sort(sortByName)
                 .filter(( item:ReferenceModel ) => !item.refValues.markToDeleted )
                 .map(( item:ReferenceModel ) => (
-                    <>
-                        <option 
-                            className={styles.option}
-                            key = {item.id}
-                            value={item.name}
-                            data-type={item.typeReference} 
-                            data-id={item.id}
-                            selected={
-                                item.id == definedItemId || 
-                                item.id == currentItemId || 
-                                definedTandirWorkers(item.id, mainData, type) } 
-                            >
-                                {item.name}
-                        </option>  
-                    </>
+                    <option 
+                        className={styles.option}
+                        key = {item.id}
+                        value={item.name}
+                        data-type={item.typeReference} 
+                        data-id={item.id}
+                        selected={
+                            item.id == definedItemId || 
+                            item.id == currentItemId || 
+                            definedTandirWorkers(item.id, mainData, type) } 
+                        >
+                            {item.name}
+                    </option>  
                 ))}
             </select>
         </div>

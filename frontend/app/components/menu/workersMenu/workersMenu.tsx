@@ -64,12 +64,12 @@ export default function UserMenu({menuData, className, ...props}:UserMenuProps):
 
                 let definedItemIdForReceiver = getDefinedItemIdForReceiver(role, storageIdFromUser, contentName)
                 let definedItemIdForSender = getDefinedItemIdForSender(role, storageIdFromUser, contentName)
-                defValue.docValue.receiverId = definedItemIdForReceiver ? definedItemIdForReceiver : 0
-                defValue.docValue.senderId = definedItemIdForSender ? definedItemIdForSender : 0
+                defValue.docValues.receiverId = definedItemIdForReceiver ? definedItemIdForReceiver : 0
+                defValue.docValues.senderId = definedItemIdForSender ? definedItemIdForSender : 0
 
-                defValue.docValue.firstWorkerId = mainData.document.definedTandirWorkers.firstWorker
-                defValue.docValue.secondWorkerId = mainData.document.definedTandirWorkers.secondWorker
-                defValue.docValue.thirdWorkerId = mainData.document.definedTandirWorkers.thirdWorker
+                defValue.docValues.firstWorkerId = mainData.document.definedTandirWorkers.firstWorker
+                defValue.docValues.secondWorkerId = mainData.document.definedTandirWorkers.secondWorker
+                defValue.docValues.thirdWorkerId = mainData.document.definedTandirWorkers.thirdWorker
 
                 setMainData('currentDocument', {...defValue});
             }

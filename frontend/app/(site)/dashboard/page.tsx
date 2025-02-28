@@ -12,18 +12,31 @@ import { IntervalWindow } from '@/app/components/common/intervalWindow/intervalW
 import TopBox from '@/app/components/common/topBox/topBox';
 import { Inform } from '@/app/components/reports/dashboardReports/inform';
 import UserJournal from '@/app/components/journals/userJournal/userJournal';
+import useSWR from 'swr';
+import { getDataForSwr } from '@/app/service/common/getDataForSwr';
 
 export default function Dashboard() {
 
-  const {mainData} = useAppContext()
+  const {mainData, setMainData} = useAppContext()
   const { contentType, mainPage } = mainData.window
   const { user } = mainData.users
+
+  const token = user?.token;
+  let url = process.env.NEXT_PUBLIC_DOMAIN+'/api/users/names/';
+  const { data : usersName, mutate } = useSWR(url, (url) => getDataForSwr(url, token));
   
   useEffect(() => {
     if (user == undefined) {
       redirect('/');
     }
   }, [user]);
+
+  useEffect(() => {
+    if (usersName && usersName.length>0) {
+      setMainData && setMainData('usersName', usersName)
+    }
+    console.log('usersName',mainData.users.usersName)
+  }, [usersName]);
 
   return (
     
@@ -32,7 +45,6 @@ export default function Dashboard() {
         <TopBox/>
         <div className={styles.content}>
 
-          {/* {mainData.mainPage && <Information/>} */}
           {mainPage && <Inform/>}
           
           <div className={styles.journalBox}>

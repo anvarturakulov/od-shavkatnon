@@ -12,17 +12,17 @@ export const CheckBoxInTable = ({ className, id, label, ...props }: checkBoxInFo
     if (currentDocument) {
         
         if (id == 'partner') {
-            currentVal = currentDocument.docValue['isPartner']
+            currentVal = currentDocument.docValues['isPartner']
         } 
         if (id == 'worker') {
-            currentVal = currentDocument.docValue['isWorker']
+            currentVal = currentDocument.docValues['isWorker']
         }
         if (id == 'founder') {
-            currentVal = currentDocument.docValue['isFounder']
+            currentVal = currentDocument.docValues['isFounder']
         }
 
         if (id == 'cash') {
-            currentVal = currentDocument.docValue['isCash']
+            currentVal = currentDocument.docValues['isCash']
         }
 
         // if (id == 'proveden') {
@@ -35,30 +35,30 @@ export const CheckBoxInTable = ({ className, id, label, ...props }: checkBoxInFo
         let currentValues = {...currentDocument}
         if (currentDocument) {
             if (id == 'partner') {
-                currentValues.docValue.isPartner = target.checked
+                currentValues.docValues.isPartner = target.checked
                 if (target.checked) {
-                    currentValues.docValue.isWorker = false
-                    currentValues.docValue.isFounder = false
+                    currentValues.docValues.isWorker = false
+                    currentValues.docValues.isFounder = false
                 }
             } 
             if (id == 'worker') {
-                currentValues.docValue.isWorker = target.checked
+                currentValues.docValues.isWorker = target.checked
                 if (target.checked) {
-                    currentValues.docValue.isPartner = false
-                    currentValues.docValue.isFounder = false
+                    currentValues.docValues.isPartner = false
+                    currentValues.docValues.isFounder = false
                 }
             }
 
             if (id == 'founder') {
-                currentValues.docValue.isFounder = target.checked
+                currentValues.docValues.isFounder = target.checked
                 if (target.checked) {
-                    currentValues.docValue.isPartner = false
-                    currentValues.docValue.isWorker = false
+                    currentValues.docValues.isPartner = false
+                    currentValues.docValues.isWorker = false
                 }
             }
 
             if (id == 'cash') {
-                currentValues.docValue.isCash = target.checked
+                currentValues.docValues.isCash = target.checked
             }
 
             // if (id == 'proveden') {

@@ -12,7 +12,7 @@ export const InputInForm = ({visible, label, className, nameControl, isNewDocume
     const { user } = mainData.users;
     const { contentName } = mainData.window;
     
-    let currentVal = currentDocument.docValue[nameControl]
+    let currentVal = currentDocument.docValues[nameControl]
 
     const changeElements = (e: React.FormEvent<HTMLInputElement>, setMainData: Function | undefined, mainData: Maindata, nameControl: NameControl) => {
         let target = e.currentTarget;
@@ -25,10 +25,10 @@ export const InputInForm = ({visible, label, className, nameControl, isNewDocume
         if ( nameControl=='count' && (+value>-1)) {
             newValues = {
                 ...currentDocument,
-                docValue: {
-                    ...currentDocument.docValue,
+                docValues: {
+                    ...currentDocument.docValues,
                     [`${nameControl}`]: Number(Number(value).toFixed(3)),
-                    total : Number((Number(value) * currentDocument.docValue.price).toFixed(2))
+                    total : Number((Number(value) * currentDocument.docValues.price).toFixed(2))
                 }
             }
         }
@@ -36,10 +36,10 @@ export const InputInForm = ({visible, label, className, nameControl, isNewDocume
         if ( nameControl=='price') {
             newValues = {
                 ...currentDocument,
-                docValue: {
-                    ...currentDocument.docValue,
+                docValues: {
+                    ...currentDocument.docValues,
                     [`${nameControl}`]: Number(value),
-                    total : Number((Number(value)* currentDocument.docValue.count).toFixed(2))
+                    total : Number((Number(value)* currentDocument.docValues.count).toFixed(2))
                 }
             }
         }
@@ -47,8 +47,8 @@ export const InputInForm = ({visible, label, className, nameControl, isNewDocume
         if ( nameControl=='total' ) {
             newValues = {
                 ...currentDocument,
-                docValue: {
-                    ...currentDocument.docValue,
+                docValues: {
+                    ...currentDocument.docValues,
                     total : Number(value)
                 }
             }
@@ -57,8 +57,8 @@ export const InputInForm = ({visible, label, className, nameControl, isNewDocume
         if (nameControl=='comment') {
             newValues = {
                 ...currentDocument,
-                docValue: {
-                    ...currentDocument.docValue,
+                docValues: {
+                    ...currentDocument.docValues,
                     [nameControl]: value
                 }
             }
@@ -67,8 +67,8 @@ export const InputInForm = ({visible, label, className, nameControl, isNewDocume
         if (nameControl=='cashFromPartner') {
             newValues = {
                 ...currentDocument,
-                docValue: {
-                    ...currentDocument.docValue,
+                docValues: {
+                    ...currentDocument.docValues,
                     [nameControl]: Number(value)
                 }
             }

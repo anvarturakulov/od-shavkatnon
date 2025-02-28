@@ -22,15 +22,9 @@ export const Message = ({className, ...props}: MessageProps): JSX.Element => {
                      })}
                      onClick={() => setMainData && setMainData('showMessageWindow', false)}
                      >
-                    {/* {   
-                        messageType != 'success' ? 
-                            <ErrorIcon className={styles.icon}/>
-                            :
-                            <SmileIcon className={styles.icon}/>
-                    } */}
                     
                     <div>
-                        <div className={styles.label}>{label}</div>
+                        {/* <div className={styles.label}>{label}</div> */}
                         {
                             typeof message == 'string' &&
                             <div className={styles.content}>{message}</div>

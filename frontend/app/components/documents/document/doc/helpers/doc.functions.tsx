@@ -48,7 +48,8 @@ export const cancelSubmit = (setMainData: Function | undefined, mainData: Mainda
 }
 
 export const secondsToDateString = (seconds: number): String => {
-    return new Date(seconds).toLocaleDateString('ru-RU')
+    
+    return new Date(+seconds).toLocaleString()
 }
 
 export const saveDocumentType = (setMainData: Function | undefined, mainData: Maindata) => {

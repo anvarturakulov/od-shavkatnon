@@ -2,7 +2,7 @@ import { DocumentModel, Interval, JournalCheckboxs } from '../interfaces/documen
 import { ContentType, MessageType } from '../interfaces/general.interface';
 import { ReferenceModel } from '../interfaces/reference.interface';
 import { EntryItem, ReportOptions } from '../interfaces/report.interface';
-import { DefinedTandirWorkers, User, UserModel } from '../interfaces/user.interface';
+import { DefinedTandirWorkers, User, UserModel, UserName } from '../interfaces/user.interface';
 
 export interface Maindata {
   document: {
@@ -55,6 +55,7 @@ export interface Maindata {
   users: {
     currentUser: UserModel | undefined,
     user: User | undefined,
+    usersName: [UserName] | undefined
   }
   
 }

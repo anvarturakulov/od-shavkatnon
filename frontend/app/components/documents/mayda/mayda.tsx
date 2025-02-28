@@ -43,7 +43,7 @@ export const Mayda = ({className, ...props }: MaydaProps) :JSX.Element => {
         documentType: DocumentType.SaleProd,
         docStatus: DocSTATUS.PROVEDEN,
         userId: user?.id ? user.id : 0,
-        docValue : {
+        docValues : {
             senderId: senderId,
             receiverId: receiverId,
             isWorker: false,
@@ -77,34 +77,34 @@ export const Mayda = ({className, ...props }: MaydaProps) :JSX.Element => {
 
     const onSubmit = (newDocument: DocumentModel, count: number, mainData: Maindata, setMainData: Function | undefined) => {
         const {currentDocument} = mainData.document
-        let price = getPropertySubconto(data, currentDocument.docValue.analiticId).thirdPrice
+        let price = getPropertySubconto(data, currentDocument.docValues.analiticId).thirdPrice
         let total = price ? price * count : 0
 
         let body:DocumentModel = {
             ...newDocument,
-            docValue : {
-                ...newDocument.docValue,
-                analiticId: currentDocument.docValue.analiticId,
+            docValues : {
+                ...newDocument.docValues,
+                analiticId: currentDocument.docValues.analiticId,
                 count,
                 total,
             }
         }
 
-        if (currentDocument.docValue.isWorker) {
-            if (!currentDocument.docValue.receiverId) {
+        if (currentDocument.docValues.isWorker) {
+            if (!currentDocument.docValues.receiverId) {
                 showMessage('Ходимни танланг', 'error', setMainData)
                 return
             } else {
-                body.docValue.receiverId = currentDocument.docValue.receiverId
+                body.docValues.receiverId = currentDocument.docValues.receiverId
             }
         } 
             
-        if ( !body.docValue.analiticId ) {
+        if ( !body.docValues.analiticId ) {
             showMessage('Махсулотни танланг', 'error', setMainData)
             return
         }
 
-        if ( !body.docValue.total ) {
+        if ( !body.docValues.total ) {
             showMessage('Махсулот суммаси йук', 'error', setMainData)
             return
         }
@@ -140,7 +140,7 @@ export const Mayda = ({className, ...props }: MaydaProps) :JSX.Element => {
                     label={'Махсулот'} 
                     typeReference= {TypeReference.TMZ}
                     visibile={true}
-                    currentItemId={currentDocument?.docValue.analiticId}
+                    currentItemId={currentDocument?.docValues.analiticId}
                     type='analitic'
                 />
                 <div className={styles.workersBox}>
@@ -148,8 +148,8 @@ export const Mayda = ({className, ...props }: MaydaProps) :JSX.Element => {
                     <SelectReferenceInForm 
                         label={''} 
                         typeReference= {TypeReference.WORKERS}
-                        visibile={currentDocument.docValue.isWorker}
-                        currentItemId={currentDocument?.docValue.receiverId}
+                        visibile={currentDocument.docValues.isWorker}
+                        currentItemId={currentDocument?.docValues.receiverId}
                         type='receiver'
                     />
                 </div>
