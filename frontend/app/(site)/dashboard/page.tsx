@@ -35,7 +35,6 @@ export default function Dashboard() {
     if (usersName && usersName.length>0) {
       setMainData && setMainData('usersName', usersName)
     }
-    console.log('usersName',mainData.users.usersName)
   }, [usersName]);
 
   return (

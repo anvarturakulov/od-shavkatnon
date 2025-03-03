@@ -7,7 +7,7 @@ import { Reference } from "src/references/reference.model";
 interface DocTableItemCreationAttrs {
     docId: bigint
     analiticId: number
-    analiticOldId?: number
+    analiticOldId: string
     count: number
     price: number
     total: number
@@ -27,10 +27,6 @@ export class DocTableItems extends Model<DocTableItems, DocTableItemCreationAttr
 
     @BelongsTo(() => Document) 
     document: Document;
-
-    @ApiProperty({example:'1', description: 'Номер индекса в таблице'})
-    @Column({type: DataType.INTEGER})
-    rowIndex: number
 
     @ForeignKey(() => Reference)
     @ApiProperty({example:'12222897', description: 'Id - аналитики'})

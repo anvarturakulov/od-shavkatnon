@@ -36,8 +36,6 @@
 }
 
 .table th {
-    /* background-color: #337ab7;
-    color: #fff; */
     font-weight: bold;
 }
 
@@ -102,13 +100,14 @@
     gap: 5px;
 }
 
-.deleted{
-    color: red;
-    text-decoration: line-through;
+.documentType {
+    background: yellow;
 }
 
-.documentType{
-    background: yellow;
+.deleted{
+    color: white;
+    background: red;
+    text-decoration: line-through;
 }
 
 .proveden {

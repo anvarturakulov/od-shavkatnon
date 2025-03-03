@@ -4,7 +4,7 @@ import { DefinedTandirWorkers } from '../interfaces/user.interface'
 import { Maindata } from './app.context.interfaces'
 
 export const defaultDocumentTableItem: DocTableItem = {
-    referenceId: 0,
+    analiticId: -1,
     balance: 0,
     count: 0,
     price: 0,
@@ -14,10 +14,9 @@ export const defaultDocumentTableItem: DocTableItem = {
 
 export const defaultDocValue: DocValues = {
     senderId: 0,
-    senderoldId: '',
     receiverId: 0,
+    senderoldId: '',
     receiverOldId: '',
-    analiticId: 0,
     analiticOldId: '',
     isWorker: false,
     isPartner: false,
@@ -29,9 +28,6 @@ export const defaultDocValue: DocValues = {
     total: 0,
     cashFromPartner: 0,
     comment: '',
-    firstWorkerId: 0,
-    secondWorkerId: 0,
-    thirdWorkerId: 0,
 }
 
 export const defaultDocument:DocumentModel = {

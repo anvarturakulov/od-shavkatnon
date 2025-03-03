@@ -6,6 +6,7 @@ import { ReferenceModel, TypeReference } from '@/app/interfaces/reference.interf
 import { getDataForSwr } from '@/app/service/common/getDataForSwr';
 import { Maindata } from '@/app/context/app.context.interfaces';
 import { sortByName } from '@/app/service/references/sortByName';
+import { useEffect, useState } from 'react';
 
 export const SelectReferenceInTable = ({  selectForReciever , typeReference, itemIndexInTable, currentItemId, className, ...props }: SelectReferenceInTableProps): JSX.Element => {
 
@@ -14,11 +15,22 @@ export const SelectReferenceInTable = ({  selectForReciever , typeReference, ite
     const { user } = mainData.users;
 
     const token = user?.token;
-    const url = process.env.NEXT_PUBLIC_DOMAIN+'/api/reference/byType/'+typeReference;
-    
+    const url = process.env.NEXT_PUBLIC_DOMAIN+'/api/references/byType/'+typeReference;
     const { data, mutate } = useSWR(url, (url) => getDataForSwr(url, token));
+
+    const [selected, setSelected] = useState('');
+            
+    useEffect(()=> {
+        if (data && data.length>0) {
+            const initialValue = data[data.findIndex(
+                (elem: ReferenceModel) => (elem?.id == currentItemId )
+            )]?.name
+            
+            setSelected(initialValue)
+        }
+    }, [data])
     
-    const changeElements = (e: React.FormEvent<HTMLSelectElement>, itemIndex: number, setMainData: Function | undefined, mainData: Maindata) => {
+    const changeElements = (e: React.FormEvent<HTMLSelectElement>, itemIndex: number, setMainData: Function | undefined, mainData: Maindata, setSelected: Function | undefined) => {
         let target = e.currentTarget;
         let {currentDocument } = mainData.document;
         let {contentName} = mainData.window;
@@ -32,9 +44,10 @@ export const SelectReferenceInTable = ({  selectForReciever , typeReference, ite
             let value = target.value;
 
             if (id != null) {
-                currentItem.referenceId = id
+                currentItem.analiticId = id
+                setSelected && setSelected(value)
             } else {
-                currentItem.referenceId = 0                
+                currentItem.analiticId = 0                
             }
 
             let newItems = [...currentDocument.docTableItems]
@@ -54,14 +67,21 @@ export const SelectReferenceInTable = ({  selectForReciever , typeReference, ite
         <div className={styles.box}>
             <select
                 className={styles.select}
-                onChange={(e) => changeElements(e, itemIndexInTable, setMainData, mainData)}
+                onChange={(e) => changeElements(
+                    e, 
+                    itemIndexInTable, 
+                    setMainData, 
+                    mainData,
+                    setSelected
+                )}
                 {...props}
+                value={selected}
             >
                 <option 
                     value={'NotSelected'}
                     data-type={null}
                     data-id={null}
-                    selected={true}
+                    // selected={true}
                     className={styles.chooseMe}
                 >
                     {'Тангланг =>>>>'}
@@ -72,18 +92,17 @@ export const SelectReferenceInTable = ({  selectForReciever , typeReference, ite
                     return item.refValues.typeTMZ == 'MATERIAL'
                 })
                 .sort(sortByName)
-                .filter((item:ReferenceModel) => !item.refValues.markToDeleted)
+                .filter((item:ReferenceModel) => !item.refValues?.markToDeleted)
                 .map((item:ReferenceModel, key:number) => (
-                    <>
-                        <option 
-                            value={item.name}
-                            data-type={item.typeReference}
-                            data-id={item.id}
-                            selected={item.id == currentItemId}
-                            >
-                                {item.name}
-                        </option>
-                    </>
+                    <option 
+                        value={item.name}
+                        data-type={item.typeReference}
+                        data-id={item.id}
+                        key={key}
+                        // selected={item.id == currentItemId}
+                        >
+                            {item.name}
+                    </option>
                 ))}
             </select>
         </div>

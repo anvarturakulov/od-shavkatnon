@@ -4,6 +4,7 @@ import cn from 'classnames';
 import { useAppContext } from '@/app/context/app.context';
 import { Maindata } from '@/app/context/app.context.interfaces';
 import { adminAndHeadCompany, UserRoles } from '@/app/interfaces/user.interface';
+import { secondsToDateString } from '../../doc/helpers/doc.functions';
 
 export const InputForData = ({label, className, ...props }: InputForDataProps): JSX.Element => {
     
@@ -13,11 +14,9 @@ export const InputForData = ({label, className, ...props }: InputForDataProps): 
     const role = user?.role;
     const isAdminOrHeadCompany = role && adminAndHeadCompany.includes(role)
     
-    let dateDoc = currentDocument.date>0 ? 
-        new Date(currentDocument.date) : 
-        new Date();
-
-    let currentVal = dateDoc.toISOString().split('T')[0]
+    let dateDoc = currentDocument.date > 0 ? +currentDocument.date : Date.now() 
+    
+    let currentVal = (new Date(dateDoc)).toISOString().split("T")[0]
 
     const changeElements = (e: React.FormEvent<HTMLInputElement>, setMainData: Function | undefined, mainData: Maindata) => {
         let {currentDocument} = mainData.document;

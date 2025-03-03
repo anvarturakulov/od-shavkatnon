@@ -1,5 +1,5 @@
 import { Maindata } from '@/app/context/app.context.interfaces';
-import { DocumentModel, DocumentType } from '@/app/interfaces/document.interface';
+import { DocSTATUS, DocumentModel, DocumentType } from '@/app/interfaces/document.interface';
 import { ReferenceModel, TypeSECTION } from '@/app/interfaces/reference.interface';
 import { UserRoles } from '@/app/interfaces/user.interface';
 import { getDocumentById } from '@/app/service/documents/getDocumentById';
@@ -63,9 +63,8 @@ export const deleteItemDocument = (id: number | undefined, docDate: number| unde
   }
 }
 
-export const setProvodkaToDoc = (id: number | undefined, token: string | undefined, proveden: boolean | undefined, setMainData: Function | undefined, mainData: Maindata, receiverId: number | undefined) => {
-  if (proveden != undefined && proveden == false) {
-
+export const setProvodkaToDoc = (id: number | undefined, token: string | undefined, docStatus: DocSTATUS, setMainData: Function | undefined, mainData: Maindata, receiverId: number | undefined) => {
+  if (docStatus == DocSTATUS.OPEN) {
     let yes = confirm('Хужжатга провдка берамизми')
     const { user } = mainData.users
     const { contentName } = mainData.window
@@ -79,6 +78,8 @@ export const setProvodkaToDoc = (id: number | undefined, token: string | undefin
     } else {
       alert('Узр. Сиз ушбу хужжатга проводка бера олмайсиз')
     }
+  } else {
+    alert('Аввал, хужжат холатини узгартиринг')
   }
 }
 

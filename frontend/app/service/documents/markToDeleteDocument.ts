@@ -11,7 +11,7 @@ export const markToDeleteDocument = (
   };
 
   if (id) {
-    const uri = process.env.NEXT_PUBLIC_DOMAIN + '/api/document/markToDelete/' + id;
+    const uri = process.env.NEXT_PUBLIC_DOMAIN + '/api/documents/markToDelete/' + id;
     axios.delete(uri, config)
       .then(function () {
         if (setMainData) {

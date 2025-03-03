@@ -66,3 +66,4 @@ export const saveDocumentType = (setMainData: Function | undefined, mainData: Ma
   }
 }
 
+

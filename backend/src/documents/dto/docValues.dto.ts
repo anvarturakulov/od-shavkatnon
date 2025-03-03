@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {IsString, IsNumber, IsBoolean, IsInt} from 'class-validator';
 
-export class CreateDocValueValueDto {
+export class DocValuesDto {
 
     @ApiProperty({example:'12222897', description: 'Идентификатор документа'})
     @IsInt( {message: 'docId - должен быть натуральным числом'})
@@ -13,7 +13,7 @@ export class CreateDocValueValueDto {
 
     @ApiProperty({example:'654654', description: 'Старый id отправителя'})
     @IsString({message: 'senderoldId - должен быть строкой'})
-    senderoldId?: string;
+    senderoldId: string;
 
     @ApiProperty({example:'12222897', description: 'Id - получателя'})
     @IsInt({message: 'receiverId - должен быть натуральным числом'})
@@ -21,59 +21,59 @@ export class CreateDocValueValueDto {
 
     @ApiProperty({example:'654654', description: 'Старый id получателя'})
     @IsString({message: 'senderoldId - должен быть строкой'})
-    receiverOldId?: string;
+    receiverOldId: string;
 
     @ApiProperty({example:'12222897', description: 'Id - аналитики'})
     @IsInt({message: 'analiticId - должен быть натуральным числом'})
-    analiticId?: number
+    analiticId: number
 
     @ApiProperty({example:'654654', description: 'Старый id аналитики'})
     @IsString({message: 'analiticOldId - аналитики должен быть строкой'})
-    analiticOldId?: string;
+    analiticOldId: string;
 
     @ApiProperty({example:'12222897', description: 'Id - первого рабочего'})
     @IsInt({message: 'firstWorkerId - рабочего должен быть натуральным числом'})
-    firstWorkerId?: number
+    firstWorkerId: number
 
     @ApiProperty({example:'12222897', description: 'Id - второго рабочего'})
     @IsInt({message: 'secondWorkerId - рабочего должен быть натуральным числом'})
-    secondWorkerId?: number
+    secondWorkerId: number
 
     @ApiProperty({example:'12222897', description: 'Id - третьего рабочего'})
     @IsInt({message: 'thirdWorkerId - рабочего должен быть натуральным числом'})
-    thirdWorkerId?: number
+    thirdWorkerId: number
 
     @ApiProperty({example:'true', description: 'isWorker?'})
     @IsBoolean({message: 'isWorker Значание должно быть TRUE или FALSE'})
-    isWorker?: boolean;
+    isWorker: boolean;
 
     @ApiProperty({example:'true', description: 'isPartner?'})
     @IsBoolean({message: 'isPartner Значание должно быть TRUE или FALSE'})
-    isPartner?: boolean;
+    isPartner: boolean;
 
     @ApiProperty({example:'true', description: 'isFounder?'})
     @IsBoolean({message: 'isFounder Значание должно быть TRUE или FALSE'})
-    isFounder?: boolean;
+    isFounder: boolean;
 
     @ApiProperty({example:'true', description: 'isCash?'})
     @IsBoolean({message: 'isCash Значание должно быть TRUE или FALSE'})
-    isCash?: boolean;
+    isCash: boolean;
 
     @ApiProperty({example:'10', description: 'Количество'})
     @IsNumber({}, {message: 'count - должно быть номером'})
-    count?: number;
+    count: number;
 
     @ApiProperty({example:'15000', description: 'Цена'})
     @IsNumber({}, {message: 'price - должно быть номером'})
-    price?: number;
+    price: number;
 
     @ApiProperty({example:'150000', description: 'Всего'})
     @IsNumber({}, {message: 'total - должно быть номером'})
-    total?: number;
+    total: number;
 
     @ApiProperty({example:'150000', description: 'Полученные деньги с партнера'})
     @IsNumber({}, {message: 'cashFromPartner - должно быть номером'})
-    cashFromPartner?: number;
+    cashFromPartner: number;
 
     @ApiProperty({example:'....', description: 'Комментарий к документу'})
     @IsString({message: 'comment - должен быть строкой'})

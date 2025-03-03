@@ -8,7 +8,7 @@ export const getPriceAndBalance = (
   mainData: Maindata,
   setMainData: Function | undefined,
   firstSubcontoId: number,
-  secondSubcontoId: number,
+  secondSubcontoId: number| undefined,
   endDate: number,
   forTable: boolean,
   indexTableItem: number,

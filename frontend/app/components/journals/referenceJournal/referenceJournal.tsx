@@ -75,7 +75,7 @@ export default function ReferenceJournal({className, ...props}:ReferenceJournalP
                                 key={item.id} 
                                 onDoubleClick={() => {getReference(item.id, setMainData, token)}} 
                                 className={cn(className, {
-                                        [styles.deleted]: item.refValues.markToDeleted,
+                                        [styles.deleted]: item.refValues?.markToDeleted,
                                         [styles.trRow]: 1,
                                     })}   
                             >
@@ -98,11 +98,11 @@ export default function ReferenceJournal({className, ...props}:ReferenceJournalP
                                             <td className={styles.types}>{getNameReference(references,item.refValues.clientForSectionId)}</td>
                                     </>
                                 }
-                                <td className={styles.comment}>{item.refValues.comment}</td>
+                                <td className={styles.comment}>{item.refValues?.comment}</td>
                                 <td className={styles.rowAction}>
                                     <IcoTrash 
                                         className={cn(className,styles.icoTrash, {
-                                            [styles.deleted]: item.refValues.markToDeleted,
+                                            [styles.deleted]: item.refValues?.markToDeleted,
                                         })}  
                                         onClick = {() => markToDelete(item.id, item.name, token, setMainData)}
                                         />

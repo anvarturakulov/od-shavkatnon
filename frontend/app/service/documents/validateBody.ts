@@ -3,7 +3,7 @@ import { DocumentModel, DocumentType } from "../../interfaces/document.interface
 export const validateBody = (body: DocumentModel): Boolean => {
 
   const { date, id, documentType, docTableItems } = body
-  const { analiticId, senderId, receiverId, total, count } = body.docValue
+  const { analiticId, senderId, receiverId, total, count } = body.docValues
 
   if (!date || !id || !documentType) return false
 
@@ -38,11 +38,11 @@ export const validateBody = (body: DocumentModel): Boolean => {
     let countOverBalance = true
     
     docTableItems.forEach(item => {
-      if (item.balance <= 0) balanceNotEmpty = false
+      // if (item.balance <= 0) balanceNotEmpty = false
       if (item.count <= 0) countNotEmpty = false
       if (item.price <= 0) priceNotEmpty = false
       if (item.total <= 0) totalNotEmpty = false
-      if (item.count > item.balance) countOverBalance = false
+      // if (item.count > item.balance) countOverBalance = false
     })
 
     if (

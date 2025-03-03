@@ -6,22 +6,22 @@ import { Reference } from "src/references/reference.model";
 interface DocTableItemCreationAttrs {
     docId: bigint
     senderId: number
-    senderoldId?: string
+    senderoldId: string
     receiverId: number
-    receiverOldId?: string
+    receiverOldId: string
     analiticId: number
-    analiticOldId?: string
-    firstWorkerId?: number
-    secondWorkerId?: number
-    thirdWorkerId?: number
-    isWorker?: boolean
-    isPartner?: boolean
-    isFounder?: boolean
-    isCash?: boolean
-    count?: number
-    price?: number
-    total?: number
-    cashFromPartner?: number
+    analiticOldId: string
+    firstWorkerId: number
+    secondWorkerId: number
+    thirdWorkerId: number
+    isWorker: boolean
+    isPartner: boolean
+    isFounder: boolean
+    isCash: boolean
+    count: number
+    price: number
+    total: number
+    cashFromPartner: number
 }
 
 @Table({tableName: 'docvalues'})

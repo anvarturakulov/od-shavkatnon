@@ -57,8 +57,8 @@ export class DocumentsController {
     @ApiResponse({status: 200, type: Document})
     @Roles('ALL')
     @UseGuards(RolesGuard)
-    @Patch(':id')
-    updateReference(@Param('id') id: number,@Body() dto:UpdateCreateDocumentDto) {
+    @Patch('update/:id')
+    updateDocument(@Param('id') id: number,@Body() dto:UpdateCreateDocumentDto) {
         return this.documentsService.updateDocumentById(id, dto)
     }
 
@@ -67,7 +67,7 @@ export class DocumentsController {
     @Roles('ALL')
     @UseGuards(RolesGuard)
     @Post('/create')
-    createReference(@Body() dto:UpdateCreateDocumentDto) {
+    createDocument(@Body() dto:UpdateCreateDocumentDto) {
         return this.documentsService.createDocument(dto)
     }
 
@@ -78,6 +78,15 @@ export class DocumentsController {
     @Delete('markToDelete/:id')
     markToDelete(@Param('id') id: number) {
         return this.documentsService.markToDeleteById(id)
+    }
+
+    @ApiOperation({summary: 'Пометить на удаление справочника'})
+    @ApiResponse({status: 200, type: Document})
+    @Roles('ALL')
+    @UseGuards(RolesGuard)
+    @Patch('setProvodka/:id')
+    setProvodka(@Param('id') id: number) {
+        return this.documentsService.setProvodka(id)
     }
     
 }

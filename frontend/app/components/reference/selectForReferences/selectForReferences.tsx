@@ -32,6 +32,7 @@ export const SelectForReferences = ({ label, typeReference ,currentItemId, setCl
             setSelected(initialValue)
         }
     }, [data])
+    
     return (
         <div className={styles.box}>
             {label !='' && <div className={styles.label}>{label}</div>}

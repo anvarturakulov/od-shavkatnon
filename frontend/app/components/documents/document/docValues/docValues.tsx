@@ -32,8 +32,7 @@ export const DocValues = ({ className, ...props }: DocValuesProps): JSX.Element 
     let hasFounder = contentName == DocumentType.LeaveCash;
     let hasCash = (
         (contentName == DocumentType.MoveCash) ||
-        (contentName == DocumentType.LeaveCash && role == UserRoles.GLBUX) ||
-        isAdmins(user)
+        (contentName == DocumentType.LeaveCash && (role == UserRoles.GLBUX || role == UserRoles.HEADCOMPANY))
     );
     
     let defaultNewItemForTable = {...defaultDocumentTableItem}

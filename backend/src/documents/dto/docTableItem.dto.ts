@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsString, IsNumber, IsInt} from 'class-validator';
 
-export class CreateReferenceValueValueDto {
+export class DocTableItemDto {
 
     @ApiProperty({example:'12222897', description: 'Идентификатор документа'})
     @IsInt({message: 'docId - должен быть натуральным числом'})
@@ -13,7 +13,7 @@ export class CreateReferenceValueValueDto {
 
     @ApiProperty({example:'654654', description: 'Старый id аналитики'})
     @IsString({message: 'analiticOldId - должен быть строкой'})
-    analiticOldId?: string;
+    analiticOldId: string;
 
     @ApiProperty({example:'10', description: 'Количество'})
     @IsNumber({}, {message: 'count - должен быть числом'})

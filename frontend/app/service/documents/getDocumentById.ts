@@ -20,10 +20,10 @@ export const getDocumentById = (
       setMainData('currentDocument', { ...defaultDocument });
     }
     
-    const uri = process.env.NEXT_PUBLIC_DOMAIN + '/api/document/' + id;
+    const uri = process.env.NEXT_PUBLIC_DOMAIN + '/api/documents/' + id;
     axios.get(uri, config)
       .then(function (response) {
-        setMainData && setMainData('document.currentDocument', response.data);
+        setMainData && setMainData('currentDocument', response.data);
         setMainData && showDocument && setMainData('showDocumentWindow', true);
       })
       .catch(function (error) {

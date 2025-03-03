@@ -16,12 +16,13 @@ export class AuthService {
         const user = await this.validateUser(userDto)
 
         if (user) {
-            const {email, role, name, sectionId} = user
+            const {email, role, name, sectionId, id} = user
             let {token} = await this.generateToken(user)
             if (user.banned) {
                 throw new HttpException('Пользователь заблокирован', HttpStatus.FORBIDDEN)
             } 
             return {
+                id,
                 email,
                 role,
                 token,

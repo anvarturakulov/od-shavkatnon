@@ -37,7 +37,7 @@ export enum DocumentType {
 }
 
 export interface DocTableItem {
-    referenceId: number,
+    analiticId: number,
     balance: number,
     count: number,
     price: number,
@@ -50,7 +50,7 @@ export interface DocValues {
     senderoldId?: string;
     receiverId: number,
     receiverOldId?: string;
-    analiticId: number,
+    analiticId?: number,
     analiticOldId?: string;
     firstWorkerId?: number | null,
     secondWorkerId?: number | null,

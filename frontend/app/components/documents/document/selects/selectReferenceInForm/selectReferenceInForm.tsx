@@ -13,6 +13,7 @@ import { getPropertySubconto } from '@/app/service/reports/getPropertySubconto';
 import { definedTandirWorkers } from './helper';
 import { docsDependentToBalance, docsDependentToMiddlePrice } from '../../doc/helpers/documentTypes';
 import { UserRoles } from '@/app/interfaces/user.interface';
+import { useEffect, useState } from 'react';
 
 
 export const SelectReferenceInForm = ({ label, typeReference, visibile=true , definedItemId ,currentItemId, type, className, ...props }: SelectReferenceInFormProps): JSX.Element => {
@@ -23,6 +24,20 @@ export const SelectReferenceInForm = ({ label, typeReference, visibile=true , de
     const token = user?.token;
     const url = process.env.NEXT_PUBLIC_DOMAIN+'/api/references/byType/'+typeReference;
     const { data } = useSWR(url, (url) => getDataForSwr(url, token));
+
+    const [selected, setSelected] = useState('');
+        
+    useEffect(()=> {
+        if (data && data.length>0) {
+            const initialValue = data[data.findIndex((elem: ReferenceModel) => 
+                (
+                    elem?.id == definedItemId || 
+                    elem?.id == currentItemId ||
+                    definedTandirWorkers(elem?.id, mainData, type)
+                ))]?.name
+            setSelected(initialValue)
+        }
+    }, [data])
 
     const changeElements = (e: React.FormEvent<HTMLSelectElement>, setMainData: Function | undefined, mainData: Maindata, type: TypeForSelectInForm) => {
         
@@ -79,7 +94,7 @@ export const SelectReferenceInForm = ({ label, typeReference, visibile=true , de
         flagDisabled = false
     }
  
-    if (type == 'sender' && contentName == DocumentType.ServicesFromPartners) currentItemId = -1
+    if (type == 'sender' && contentName == DocumentType.ServicesFromPartners) currentItemId = 0
 
     return (
         <div className={styles.box}>
@@ -89,13 +104,14 @@ export const SelectReferenceInForm = ({ label, typeReference, visibile=true , de
                 {...props}
                 onChange={(e) => changeElements(e, setMainData, mainData, type)}
                 disabled = { flagDisabled }
+                value={selected}
             >   
                     <option 
                         value={'NotSelected'} 
                         data-type={null} 
                         data-id={null}
                         className={styles.chooseMe}
-                        selected = {true}
+                        // selected = {true}
                         key= {-1}
                         >{'=>'}
                     </option>
@@ -311,7 +327,7 @@ export const SelectReferenceInForm = ({ label, typeReference, visibile=true , de
                 })
                 
                 .sort(sortByName)
-                .filter(( item:ReferenceModel ) => !item.refValues.markToDeleted )
+                .filter(( item:ReferenceModel ) => !item.refValues?.markToDeleted )
                 .map(( item:ReferenceModel ) => (
                     <option 
                         className={styles.option}
@@ -319,10 +335,10 @@ export const SelectReferenceInForm = ({ label, typeReference, visibile=true , de
                         value={item.name}
                         data-type={item.typeReference} 
                         data-id={item.id}
-                        selected={
-                            item.id == definedItemId || 
-                            item.id == currentItemId || 
-                            definedTandirWorkers(item.id, mainData, type) } 
+                        // selected={
+                        //     item.id == definedItemId || 
+                        //     item.id == currentItemId || 
+                        //     definedTandirWorkers(item.id, mainData, type) } 
                         >
                             {item.name}
                     </option>  

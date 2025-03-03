@@ -3,7 +3,7 @@ import { showMessage } from '../common/showMessage';
 import { getDocumentById } from './getDocumentById';
 import { Maindata } from '@/app/context/app.context.interfaces';
 
-export const setProvodkaToDocument = async (
+export const  setProvodkaToDocument = async (
   id: number | undefined,
   setMainData: Function | undefined,
   mainData: Maindata
@@ -19,7 +19,7 @@ export const setProvodkaToDocument = async (
   let temp = {}
   
   if (id) {
-    const uri = process.env.NEXT_PUBLIC_DOMAIN + '/api/document/setProvodka/' + id;
+    const uri = process.env.NEXT_PUBLIC_DOMAIN + '/api/documents/setProvodka/' + id;
     axios.patch(uri, temp, config)
       .then(function () {
         if (setMainData) {

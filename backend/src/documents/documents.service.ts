@@ -3,8 +3,9 @@ import { Document } from './document.model';
 import { InjectModel } from '@nestjs/sequelize';
 import { DocValues } from 'src/docValues/docValues.model';
 import { DocTableItems } from 'src/docTableItems/docTableItems.model';
-import { DocumentType } from 'src/interfaces/document.interface';
+import { DocSTATUS, DocumentType } from 'src/interfaces/document.interface';
 import { UpdateCreateDocumentDto } from './dto/updateCreateDocument.dto';
+import { Sequelize } from 'sequelize-typescript';
 const { Op } = require('sequelize');
 
 @Injectable()
@@ -12,6 +13,7 @@ export class DocumentsService {
 
 
     constructor(
+        private readonly sequelize: Sequelize,
         @InjectModel(Document) private documentRepository: typeof Document,
         @InjectModel(DocValues) private docValuesRepository: typeof DocValues,
         @InjectModel(DocTableItems) private docTableItemsRepository: typeof DocTableItems
@@ -44,12 +46,12 @@ export class DocumentsService {
     }
 
     async getDocumentById(id: number) {
-        const reference = await this.documentRepository.findOne({where: {id}, include: [DocValues, DocTableItems]})
-        return reference
+        const document = await this.documentRepository.findOne({where: {id}, include: [DocValues, DocTableItems]})
+        return document
     }
 
     async updateDocumentById(id: number, dto:UpdateCreateDocumentDto) {
-            const reference = await this.documentRepository.findOne({where: {id}, include: [DocValues, DocTableItems]})
+            const document = await this.documentRepository.findOne({where: {id}, include: [DocValues, DocTableItems]})
             // const { name, typeReference } = dto
 
             // if (reference) {
@@ -69,28 +71,70 @@ export class DocumentsService {
         }
     
     async createDocument(dto:UpdateCreateDocumentDto) {
+        
+        const transaction = await this.sequelize.transaction();
+        try {
+            const document = await this.documentRepository.create({
+                date:dto.date, 
+                documentType: dto.documentType, 
+                docStatus: DocSTATUS.OPEN,
+                userId: dto.userId
+            })
 
-        // const reference = await this.documentRepository.create(
-        //     {name:dto.name, typeReference:dto.typeReference}
-        // )
+            const docValues = await this.docValuesRepository.create({
+                ...dto.docValues,
+                docId: document.id
+            })
 
-        // if (reference) {
-        //     reference.refValues = await this.refValuesRepository.create({referenceId: reference.id})
-        //     await reference.refValues.update({...dto.refValues})
-        //     return reference
-        // }
-        throw new HttpException('Пользователь не нашлась', HttpStatus.NOT_FOUND)
+            const items = [...dto.docTableItems]
+
+            if (items && items.length > 0 && items[0].analiticId != -1 ) {
+                for (const item of items) {
+                    const docTableItem = await this.docTableItemsRepository.create({
+                        ...item,
+                        docId: document.id
+                    })
+                }
+            }
+
+            await transaction.commit();
+            return document
+
+        } catch (error) {
+            await transaction.rollback();
+            throw error;
+        }
+
     }
 
     async markToDeleteById(id: number) {
-        // const reference = await this.documentRepository.findOne({where: {id}, include: [DocValues, DocTableItems]})
+        const document = await this.documentRepository.findOne({where: {id}, include: []})
+        let newStatus: DocSTATUS = DocSTATUS.DELETED
+        if (document) {
+            if (document.docStatus == DocSTATUS.DELETED) newStatus = DocSTATUS.OPEN
+            if (document.docStatus == DocSTATUS.OPEN) newStatus = DocSTATUS.DELETED
+            if (document.docStatus == DocSTATUS.PROVEDEN) newStatus = DocSTATUS.DELETED
+                            
+            // Anvar Bu erda Entrys ni uchirish kodini ham yozish kerak
+            document.docStatus = newStatus
+            await document.save()
+            return document
+        }
+        throw new HttpException('Документ не найден', HttpStatus.NOT_FOUND)
+    }
 
-        // if (reference) {
-        //     reference.refValues.markToDeleted = ! reference.refValues.markToDeleted
-        //     await reference.refValues.save()
-        //     return reference
-        // }
-        throw new HttpException('Пользователь не нашлась', HttpStatus.NOT_FOUND)
+    async setProvodka(id: number) {
+        
+        const document = await this.documentRepository.findOne({where: {id}, include: []})
+        let newStatus: DocSTATUS = DocSTATUS.DELETED
+        if (document && document.docStatus == DocSTATUS.OPEN) {
+                            
+            // Anvar Bu erda yangi provodkalar tuzish kodi kerak
+            document.docStatus = DocSTATUS.PROVEDEN
+            await document.save()
+            return document
+        }
+        throw new HttpException('Документ не найден', HttpStatus.NOT_FOUND)
     }
 
 }

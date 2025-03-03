@@ -20,7 +20,7 @@ export const DocTable = ({ typeReference, items,  className, ...props }: DocTabl
             let newItems = [...items.slice(0, index),...items.slice(index+1)]
             let newObj = {...mainData.document.currentDocument};
             newObj.docTableItems = [...newItems] 
-            setMainData('document.currentDocument', {...newObj})
+            setMainData('currentDocument', {...newObj})
         }
     }
 
@@ -66,13 +66,12 @@ export const DocTable = ({ typeReference, items,  className, ...props }: DocTabl
                     [styles.boxWithBalance]: showBalance,
                     [styles.boxWithWorkers]: hasWorkers,
                     [styles.boxWithReciever]: documentIsSaleType,
-
                 })}>
-                    
+
                     <SelectReferenceInTable 
                         itemIndexInTable={index}
                         typeReference={typeReference}
-                        currentItemId={item.referenceId}
+                        currentItemId={item.analiticId}
                     />
                     <button className={styles.btnBalance}
                         onClick={() => {
@@ -80,7 +79,7 @@ export const DocTable = ({ typeReference, items,  className, ...props }: DocTabl
                                 mainData,
                                 setMainData,
                                 currentDocument.docValues.senderId,
-                                currentDocument.docTableItems[index].referenceId,
+                                currentDocument.docTableItems[index].analiticId,
                                 currentDocument.date,
                                 true,
                                 index,
