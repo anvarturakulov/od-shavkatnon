@@ -57,13 +57,13 @@ export const SelectReference = ({ label, visible, typeReference , className, ...
                     data && data.length>0 && data
                     .filter((item: ReferenceModel) => {
                         if (item.typeReference == TypeReference.STORAGES) {
-                            if ( user?.role == UserRoles.GLBUX && item.refValues.typeSection == TypeSECTION.DIRECTOR) return false
-                            if ( item.refValues.markToDeleted) return false
+                            if ( user?.role == UserRoles.GLBUX && item.refValues?.typeSection == TypeSECTION.DIRECTOR) return false
+                            if ( item.refValues?.markToDeleted) return false
                             if ( 
-                                item.refValues.typeSection == TypeSECTION.ACCOUNTANT ||
-                                item.refValues.typeSection == TypeSECTION.DELIVERY ||
-                                item.refValues.typeSection == TypeSECTION.STORAGE ||
-                                item.refValues.typeSection == TypeSECTION.FILIAL
+                                item.refValues?.typeSection == TypeSECTION.ACCOUNTANT ||
+                                item.refValues?.typeSection == TypeSECTION.DELIVERY ||
+                                item.refValues?.typeSection == TypeSECTION.STORAGE ||
+                                item.refValues?.typeSection == TypeSECTION.FILIAL
                             ) return true
                             else return false
                         }

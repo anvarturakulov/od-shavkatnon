@@ -23,7 +23,9 @@ export const getDocumentById = (
     const uri = process.env.NEXT_PUBLIC_DOMAIN + '/api/documents/' + id;
     axios.get(uri, config)
       .then(function (response) {
-        setMainData && setMainData('currentDocument', response.data);
+        const data = {...response.data, date: +response.data.date }
+        console.log(data)
+        setMainData && setMainData('currentDocument', data);
         setMainData && showDocument && setMainData('showDocumentWindow', true);
       })
       .catch(function (error) {

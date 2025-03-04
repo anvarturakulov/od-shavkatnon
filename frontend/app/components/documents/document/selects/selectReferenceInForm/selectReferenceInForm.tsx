@@ -121,11 +121,11 @@ export const SelectReferenceInForm = ({ label, typeReference, visibile=true , de
                     if (typeReference == TypeReference.TMZ) {
                         switch (typeDocumentForReference) {
                             case 'MATERIAL':
-                                return item.refValues.typeTMZ == 'MATERIAL'
+                                return item.refValues?.typeTMZ == 'MATERIAL'
                             case 'PRODUCT':
-                                return item.refValues.typeTMZ == 'PRODUCT'
+                                return item.refValues?.typeTMZ == 'PRODUCT'
                             case 'HALFSTUFF':
-                                return item.refValues.typeTMZ == 'HALFSTUFF'
+                                return item.refValues?.typeTMZ == 'HALFSTUFF'
                             case 'OTHER':
                                 return true
                         }
@@ -139,9 +139,9 @@ export const SelectReferenceInForm = ({ label, typeReference, visibile=true , de
                         ( contentName == DocumentType.MoveProd ))
                         {
                             return ( 
-                                item.refValues.typeSection == TypeSECTION.FILIAL  ||
-                                item.refValues.typeSection == TypeSECTION.DELIVERY || 
-                                item.refValues.typeSection == TypeSECTION.STORAGE 
+                                item.refValues?.typeSection == TypeSECTION.FILIAL  ||
+                                item.refValues?.typeSection == TypeSECTION.DELIVERY || 
+                                item.refValues?.typeSection == TypeSECTION.STORAGE 
                             ) 
                         }
                     
@@ -152,8 +152,8 @@ export const SelectReferenceInForm = ({ label, typeReference, visibile=true , de
                            contentName == DocumentType.ComeProduct ))
                         {
                             return (
-                                item.refValues.typeSection == TypeSECTION.FILIAL  || 
-                                item.refValues.typeSection == TypeSECTION.STORAGE
+                                item.refValues?.typeSection == TypeSECTION.FILIAL  || 
+                                item.refValues?.typeSection == TypeSECTION.STORAGE
                             ) 
                         }
                     
@@ -161,39 +161,39 @@ export const SelectReferenceInForm = ({ label, typeReference, visibile=true , de
                         contentName == DocumentType.LeaveCash) {
                         if ( user?.role == UserRoles.ADMIN || user?.role == UserRoles.HEADCOMPANY ) {
                             return (
-                                item.refValues.typeSection == TypeSECTION.FILIAL || 
-                                item.refValues.typeSection == TypeSECTION.FOUNDER ||
-                                item.refValues.typeSection == TypeSECTION.COMMON || 
-                                item.refValues.typeSection == TypeSECTION.DIRECTOR
+                                item.refValues?.typeSection == TypeSECTION.FILIAL || 
+                                item.refValues?.typeSection == TypeSECTION.FOUNDER ||
+                                item.refValues?.typeSection == TypeSECTION.COMMON || 
+                                item.refValues?.typeSection == TypeSECTION.DIRECTOR
                             ) 
                         } else if (user?.role == UserRoles.GLBUX || user?.role == UserRoles.ZAMGLBUX) {
                             return (
-                                item.refValues.typeSection == TypeSECTION.FILIAL ||
-                                item.refValues.typeSection == TypeSECTION.COMMON 
+                                item.refValues?.typeSection == TypeSECTION.FILIAL ||
+                                item.refValues?.typeSection == TypeSECTION.COMMON 
                             )
                         } else {
                             return (
-                                item.refValues.typeSection == TypeSECTION.FILIAL || 
-                                item.refValues.typeSection == TypeSECTION.STORAGE || 
-                                item.refValues.typeSection == TypeSECTION.DELIVERY || 
-                                item.refValues.typeSection == TypeSECTION.ACCOUNTANT || 
-                                item.refValues.typeSection == TypeSECTION.COMMON
+                                item.refValues?.typeSection == TypeSECTION.FILIAL || 
+                                item.refValues?.typeSection == TypeSECTION.STORAGE || 
+                                item.refValues?.typeSection == TypeSECTION.DELIVERY || 
+                                item.refValues?.typeSection == TypeSECTION.ACCOUNTANT || 
+                                item.refValues?.typeSection == TypeSECTION.COMMON
                             )
                         }
                     }
 
                     if (type == 'receiver' && contentName == DocumentType.TakeProfit) {
-                        return (item.refValues.typeSection == TypeSECTION.FOUNDER)
+                        return (item.refValues?.typeSection == TypeSECTION.FOUNDER)
                     }
 
                     if ((type == 'sender') && 
                         contentName == DocumentType.LeaveCash) {
                         if ( user?.role == UserRoles.ADMIN || user?.role == UserRoles.HEADCOMPANY ) {
                           return (
-                            item.refValues.typeSection == TypeSECTION.FILIAL ||
-                            item.refValues.typeSection == TypeSECTION.ACCOUNTANT || 
-                            item.refValues.typeSection == TypeSECTION.FOUNDER ||
-                            item.refValues.typeSection == TypeSECTION.DIRECTOR
+                            item.refValues?.typeSection == TypeSECTION.FILIAL ||
+                            item.refValues?.typeSection == TypeSECTION.ACCOUNTANT || 
+                            item.refValues?.typeSection == TypeSECTION.FOUNDER ||
+                            item.refValues?.typeSection == TypeSECTION.DIRECTOR
                         ) 
                         } 
                     }
@@ -202,27 +202,27 @@ export const SelectReferenceInForm = ({ label, typeReference, visibile=true , de
                         contentName == DocumentType.MoveCash) {
                         if ( user?.role == UserRoles.ADMIN || user?.role == UserRoles.HEADCOMPANY ) {
                             return (
-                                item.refValues.typeSection == TypeSECTION.FILIAL ||
-                                item.refValues.typeSection == TypeSECTION.STORAGE ||
-                                item.refValues.typeSection == TypeSECTION.DELIVERY ||
-                                item.refValues.typeSection == TypeSECTION.ACCOUNTANT  ||
-                                item.refValues.typeSection == TypeSECTION.FOUNDER
+                                item.refValues?.typeSection == TypeSECTION.FILIAL ||
+                                item.refValues?.typeSection == TypeSECTION.STORAGE ||
+                                item.refValues?.typeSection == TypeSECTION.DELIVERY ||
+                                item.refValues?.typeSection == TypeSECTION.ACCOUNTANT  ||
+                                item.refValues?.typeSection == TypeSECTION.FOUNDER
                             ) 
                         } else if (user?.role == UserRoles.GLBUX) {
                             return (
-                                item.refValues.typeSection == TypeSECTION.FILIAL ||
-                                item.refValues.typeSection == TypeSECTION.STORAGE ||
-                                item.refValues.typeSection == TypeSECTION.DELIVERY ||
-                                item.refValues.typeSection == TypeSECTION.ACCOUNTANT ||
-                                item.refValues.typeSection == TypeSECTION.DIRECTOR
+                                item.refValues?.typeSection == TypeSECTION.FILIAL ||
+                                item.refValues?.typeSection == TypeSECTION.STORAGE ||
+                                item.refValues?.typeSection == TypeSECTION.DELIVERY ||
+                                item.refValues?.typeSection == TypeSECTION.ACCOUNTANT ||
+                                item.refValues?.typeSection == TypeSECTION.DIRECTOR
                             )
                         } else {
                             return (
-                                item.refValues.typeSection == TypeSECTION.FILIAL ||
-                                item.refValues.typeSection == TypeSECTION.STORAGE ||
-                                item.refValues.typeSection == TypeSECTION.DELIVERY ||
-                                item.refValues.typeSection == TypeSECTION.ACCOUNTANT ||
-                                item.refValues.typeSection == TypeSECTION.DIRECTOR
+                                item.refValues?.typeSection == TypeSECTION.FILIAL ||
+                                item.refValues?.typeSection == TypeSECTION.STORAGE ||
+                                item.refValues?.typeSection == TypeSECTION.DELIVERY ||
+                                item.refValues?.typeSection == TypeSECTION.ACCOUNTANT ||
+                                item.refValues?.typeSection == TypeSECTION.DIRECTOR
                             )
                         }
                     }
@@ -230,32 +230,32 @@ export const SelectReferenceInForm = ({ label, typeReference, visibile=true , de
                     if (type == 'receiver' && contentName == DocumentType.ZpCalculate)
                         {
                             return (
-                                item.refValues.typeSection == TypeSECTION.FILIAL ||
-                                item.refValues.typeSection == TypeSECTION.COMMON
+                                item.refValues?.typeSection == TypeSECTION.FILIAL ||
+                                item.refValues?.typeSection == TypeSECTION.COMMON
                             ) 
                         }
                     
                     if (type == 'receiver' && contentName == DocumentType.ServicesFromPartners)
                         {
-                            return item.refValues.typeSection == TypeSECTION.FILIAL 
+                            return item.refValues?.typeSection == TypeSECTION.FILIAL 
                         }
 
                     if (type == 'receiver' && contentName == DocumentType.ComeCashFromPartners)
                         {
                             if ( user?.role == UserRoles.ADMIN || user?.role == UserRoles.HEADCOMPANY ) {
                               return (
-                                item.refValues.typeSection == TypeSECTION.ACCOUNTANT ||
-                                item.refValues.typeSection == TypeSECTION.FOUNDER
+                                item.refValues?.typeSection == TypeSECTION.ACCOUNTANT ||
+                                item.refValues?.typeSection == TypeSECTION.FOUNDER
                             ) 
                             } 
-                            return ( item.refValues.typeSection == TypeSECTION.ACCOUNTANT ) 
+                            return ( item.refValues?.typeSection == TypeSECTION.ACCOUNTANT ) 
                         }
 
                     if (type == 'receiver' && contentName == DocumentType.ComeMaterial)
                         {
                             return ( 
-                                item.refValues.typeSection == TypeSECTION.FILIAL ||
-                                item.refValues.typeSection == TypeSECTION.STORAGE
+                                item.refValues?.typeSection == TypeSECTION.FILIAL ||
+                                item.refValues?.typeSection == TypeSECTION.STORAGE
                             ) 
                         }
                     
@@ -267,41 +267,41 @@ export const SelectReferenceInForm = ({ label, typeReference, visibile=true , de
                         ))
                         {
                             return (
-                                item.refValues.typeSection == TypeSECTION.FILIAL ||
-                                item.refValues.typeSection == TypeSECTION.STORAGE
+                                item.refValues?.typeSection == TypeSECTION.FILIAL ||
+                                item.refValues?.typeSection == TypeSECTION.STORAGE
                             ) 
                         }
                     
                     if ( type == 'sender' && contentName == DocumentType.SaleProd) 
                         {
                             return (
-                                item.refValues.typeSection == TypeSECTION.FILIAL ||
-                                item.refValues.typeSection == TypeSECTION.DELIVERY
+                                item.refValues?.typeSection == TypeSECTION.FILIAL ||
+                                item.refValues?.typeSection == TypeSECTION.DELIVERY
                             ) 
                         }
 
                     if (type == 'sender' && ( contentName == DocumentType.ComeMaterial || contentName == DocumentType.ComeCashFromPartners || 
                         contentName == DocumentType.ComeProductImport )) {
-                        return ( item.refValues.typePartners == TypePartners.SUPPLIERS ) 
+                        return ( item.refValues?.typePartners == TypePartners.SUPPLIERS ) 
                     }
 
                     if (type == 'receiver' && contentName == DocumentType.SaleHalfStuff ) {
-                        return ( item.refValues.typePartners == TypePartners.SUPPLIERS ) 
+                        return ( item.refValues?.typePartners == TypePartners.SUPPLIERS ) 
                     }
 
                     if (type == 'sender' && typeReference == TypeReference.CHARGES &&
                         contentName == DocumentType.ServicesFromPartners
                     ) {
-                        return !item.refValues.longCharge
+                        return !item.refValues?.longCharge
                     }
 
                     if (type == 'analitic' && typeReference == TypeReference.PARTNERS)
                         {
-                            return item.refValues.typePartners == TypePartners.SUPPLIERS 
+                            return item.refValues?.typePartners == TypePartners.SUPPLIERS 
                         }
                     if (type == 'analitic' && typeReference == TypeReference.CHARGES) {
                         if (user?.role == UserRoles.HEADSECTION) {
-                            return !item.refValues.longCharge && !item.refValues.shavkatCharge
+                            return !item.refValues?.longCharge && !item.refValues?.shavkatCharge
                         }
                         if (
                             currentDocument.docValues.senderoldId == '6645f381d8cc46842f33e9e9' || 
@@ -309,8 +309,8 @@ export const SelectReferenceInForm = ({ label, typeReference, visibile=true , de
                             currentDocument.docValues.senderoldId == '664455bbadb82fe6d06df149'
 
                         )
-                            return item.refValues.shavkatCharge
-                        else return !item.refValues.shavkatCharge
+                            return item.refValues?.shavkatCharge
+                        else return !item.refValues?.shavkatCharge
 
                     }
 
@@ -320,7 +320,7 @@ export const SelectReferenceInForm = ({ label, typeReference, visibile=true , de
                             && user?.role != UserRoles.HEADCOMPANY
                             && user?.role != UserRoles.ADMIN
                         ) {
-                            return item.refValues.clientForSectionId == user?.sectionId
+                            return item.refValues?.clientForSectionId == user?.sectionId
                         }
 
                     return true

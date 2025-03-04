@@ -119,7 +119,7 @@ export const Reference = ({ className, ...props }: ReferenceProps) :JSX.Element 
                     {
                         Select(typeTMZList, body, 'ТМБ тури', 'typeTMZ', changeElements)
                     }
-                    <Input label={'Улчов бирлиги'} value={body.refValues.unit} type="text" id='unit' className={styles.input} onChange={(e)=>changeElements(e)}/>
+                    <Input label={'Улчов бирлиги'} value={body.refValues?.unit} type="text" id='unit' className={styles.input} onChange={(e)=>changeElements(e)}/>
                 </div>
             }
 
@@ -137,19 +137,19 @@ export const Reference = ({ className, ...props }: ReferenceProps) :JSX.Element 
                 {
                     ( user?.role == UserRoles.ADMIN || user?.role == UserRoles.HEADCOMPANY )  && 
                     body.typeReference == TypeReference.TMZ &&
-                    <CheckBoxForReference label='Ун' setCheckbox={setCheckbox} checked={body.refValues.un} id={'un'}/>
+                    <CheckBoxForReference label='Ун' setCheckbox={setCheckbox} checked={body.refValues?.un} id={'un'}/>
                 }
 
                 {
                     user?.role == UserRoles.ADMIN && 
                     body.typeReference == TypeReference.CHARGES &&
-                    <CheckBoxForReference label='Ойлик харажат' setCheckbox={setCheckbox} checked={body.refValues.longCharge} id={'longCharge'}/>
+                    <CheckBoxForReference label='Ойлик харажат' setCheckbox={setCheckbox} checked={body.refValues?.longCharge} id={'longCharge'}/>
                 }
 
 {
                     user?.role == UserRoles.ADMIN && 
                     body.typeReference == TypeReference.CHARGES &&
-                    <CheckBoxForReference label='Шавкат харажати' setCheckbox={setCheckbox} checked={body.refValues.shavkatCharge} id={'shavkatCharge'}/>
+                    <CheckBoxForReference label='Шавкат харажати' setCheckbox={setCheckbox} checked={body.refValues?.shavkatCharge} id={'shavkatCharge'}/>
                 }
                 
             </div>
@@ -160,33 +160,33 @@ export const Reference = ({ className, ...props }: ReferenceProps) :JSX.Element 
                     user?.role == UserRoles.HEADCOMPANY 
                 ) &&
                 body.typeReference == TypeReference.TMZ &&
-                body.refValues.typeTMZ == TypeTMZ.PRODUCT &&
+                body.refValues?.typeTMZ == TypeTMZ.PRODUCT &&
 
                 <div className={styles.priceBox}>
-                    <Input label={'Биринчи нарх'} value={body.refValues.firstPrice} type="number" id='firstPrice' className={styles.input} onChange={(e)=>changeElements(e)}/>
-                    <Input label={'Иккинчи нарх'} value={body.refValues.secondPrice} type="number" id='secondPrice' className={styles.input} onChange={(e)=>changeElements(e)}/>
-                    <Input label={'Учинчи нарх'} value={body.refValues.thirdPrice} type="number" id='thirdPrice' className={styles.input} onChange={(e)=>changeElements(e)}/>
+                    <Input label={'Биринчи нарх'} value={body.refValues?.firstPrice} type="number" id='firstPrice' className={styles.input} onChange={(e)=>changeElements(e)}/>
+                    <Input label={'Иккинчи нарх'} value={body.refValues?.secondPrice} type="number" id='secondPrice' className={styles.input} onChange={(e)=>changeElements(e)}/>
+                    <Input label={'Учинчи нарх'} value={body.refValues?.thirdPrice} type="number" id='thirdPrice' className={styles.input} onChange={(e)=>changeElements(e)}/>
                 </div>
             }
             
             {
                 ( user?.role == UserRoles.ADMIN || user?.role == UserRoles.HEADCOMPANY )  && 
-                (body.refValues.typePartners == TypePartners.CLIENTS) &&
-                <SelectForReferences label='Клиент сохиби' typeReference={TypeReference.STORAGES} currentItemId={body.refValues.clientForSectionId} setClientForSectionId={setClientForSectionId}/>
+                (body.refValues?.typePartners == TypePartners.CLIENTS) &&
+                <SelectForReferences label='Клиент сохиби' typeReference={TypeReference.STORAGES} currentItemId={body.refValues?.clientForSectionId} setClientForSectionId={setClientForSectionId}/>
             }
 
             {
                 ( user?.role == UserRoles.ADMIN || user?.role == UserRoles.HEADCOMPANY )  && 
-                (body.typeReference == TypeReference.TMZ) && (body.refValues.typeTMZ == TypeTMZ.MATERIAL) &&
-                <Input label={'Норма'} value={body.refValues.norma} type="number" id='norma' className={styles.input} onChange={(e)=>changeElements(e)}/>
+                (body.typeReference == TypeReference.TMZ) && (body.refValues?.typeTMZ == TypeTMZ.MATERIAL) &&
+                <Input label={'Норма'} value={body.refValues?.norma} type="number" id='norma' className={styles.input} onChange={(e)=>changeElements(e)}/>
             }
 
             {
                 body.typeReference == TypeReference.WORKERS &&
-                <Input label={'Телеграм ID'} value={body.refValues.telegramId} type="text" id='telegramId' className={styles.input} onChange={(e)=>changeElements(e)}/>
+                <Input label={'Телеграм ID'} value={body.refValues?.telegramId} type="text" id='telegramId' className={styles.input} onChange={(e)=>changeElements(e)}/>
             }
 
-            <Input label={'Изох'} value={body.refValues.comment} type="text" id='comment' className={styles.input} onChange={(e)=>changeElements(e)}/>
+            <Input label={'Изох'} value={body.refValues?.comment} type="text" id='comment' className={styles.input} onChange={(e)=>changeElements(e)}/>
             
         <div className={styles.boxBtn}>
             <Button appearance='primary' onClick={() => 

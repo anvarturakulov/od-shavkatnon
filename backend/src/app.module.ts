@@ -20,6 +20,7 @@ import { Entry } from './entries/entry.model';
 import { DocValues } from './docValues/docValues.model';
 import { Document } from './documents/document.model';
 import { DocTableItems } from './docTableItems/docTableItems.model';
+import { ReportsModule } from './reports/reports.module';
 
 
 
@@ -49,6 +50,7 @@ import { DocTableItems } from './docTableItems/docTableItems.model';
         DocValuesModule,
         DocTableItemsModule,
         EntriesModule,
+        ReportsModule,
     ]
 })
 

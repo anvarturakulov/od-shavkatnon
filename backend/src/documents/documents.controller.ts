@@ -13,7 +13,7 @@ export class DocumentsController {
 
     constructor(private documentsService: DocumentsService) {}
 
-    @ApiOperation({summary: 'Получение всех справочников'})
+    @ApiOperation({summary: 'Получение всех документов'})
     @ApiResponse({status: 200, type: [Document]})
     @Roles('ALL')
     @UseGuards(RolesGuard)
@@ -31,7 +31,7 @@ export class DocumentsController {
         return this.documentsService.getAllDocumentsByType(typeDocument)
     }
 
-    @ApiOperation({summary: 'Получение справочников по типу'})
+    @ApiOperation({summary: 'Получение документов по типу и по дате'})
     @ApiResponse({status: 200, type: [Document]})
     @Roles('ALL')
     @UseGuards(RolesGuard)
@@ -44,7 +44,7 @@ export class DocumentsController {
         return this.documentsService.getAllDocumentsByTypeForDate(documentType, dateStart, dateEnd)
     }
 
-    @ApiOperation({summary: 'Получение справочника по id'})
+    @ApiOperation({summary: 'Получение документа по id'})
     @ApiResponse({status: 200, type: Document})
     @Roles('ALL')
     @UseGuards(RolesGuard)
@@ -53,7 +53,7 @@ export class DocumentsController {
         return this.documentsService.getDocumentById(id)
     }
 
-    @ApiOperation({summary: 'Обновить справочник'})
+    @ApiOperation({summary: 'Обновить документ'})
     @ApiResponse({status: 200, type: Document})
     @Roles('ALL')
     @UseGuards(RolesGuard)
@@ -62,7 +62,7 @@ export class DocumentsController {
         return this.documentsService.updateDocumentById(id, dto)
     }
 
-    @ApiOperation({summary: 'Открыть нового справочники'})
+    @ApiOperation({summary: 'Открыть новый документ'})
     @ApiResponse({status: 200, type: Document})
     @Roles('ALL')
     @UseGuards(RolesGuard)
@@ -71,7 +71,7 @@ export class DocumentsController {
         return this.documentsService.createDocument(dto)
     }
 
-    @ApiOperation({summary: 'Пометить на удаление справочника'})
+    @ApiOperation({summary: 'Пометить на удаление документа'})
     @ApiResponse({status: 200, type: Document})
     @Roles('ALL')
     @UseGuards(RolesGuard)
@@ -80,7 +80,7 @@ export class DocumentsController {
         return this.documentsService.markToDeleteById(id)
     }
 
-    @ApiOperation({summary: 'Пометить на удаление справочника'})
+    @ApiOperation({summary: 'Дать проводку на документ'})
     @ApiResponse({status: 200, type: Document})
     @Roles('ALL')
     @UseGuards(RolesGuard)

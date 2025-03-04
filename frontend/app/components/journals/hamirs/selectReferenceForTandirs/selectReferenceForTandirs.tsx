@@ -25,10 +25,10 @@ export const SelectReferenceForTandirs = ({ idForSelect, currentItemId, disabled
             >
                 {data && data.length>0 && 
                 data?.filter((item:ReferenceModel) => {
-                    return item.refValues.typeTMZ == 'PRODUCT'
+                    return item.refValues?.typeTMZ == 'PRODUCT'
                 })
                 .sort(sortByName)
-                .filter((item:ReferenceModel) => !item.refValues.markToDeleted)
+                .filter((item:ReferenceModel) => !item.refValues?.markToDeleted)
                 .map((item:ReferenceModel, key:number) => (
                     <>
                         <option 

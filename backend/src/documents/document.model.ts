@@ -7,7 +7,7 @@ import { DocSTATUS, DocumentType } from "src/interfaces/document.interface";
 import { User } from "src/users/users.model";
 
 interface DocumentCreationAttrs {
-    date: number;
+    date: bigint;
     userId: number
     documentType: DocumentType
     docStatus: DocSTATUS
@@ -22,8 +22,8 @@ export class Document extends Model<Document, DocumentCreationAttrs> {
     id: bigint;
 
     @ApiProperty({example:'1738368000000', description: 'Дата документа в миллисекундах'})
-    @Column({type: DataType.INTEGER, })
-    date: number;
+    @Column({type: DataType.BIGINT})
+    date: bigint;
 
     @ForeignKey(() => User)
     @ApiProperty({example:'12222', description: 'Идентификатор пользователя'})

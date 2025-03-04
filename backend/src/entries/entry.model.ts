@@ -5,18 +5,18 @@ import { DocumentType } from "src/interfaces/document.interface";
 import { Schet } from "src/interfaces/report.interface";
 import { Reference } from "src/references/reference.model";
 
-interface EntryCreationAttrs {
-    documentId: number
-    date: Date
+export interface EntryCreationAttrs {
+    date: bigint
     documentType: DocumentType
+    docId: bigint
     debet: Schet
-    debetFirstSubcontoId: number
-    debetSecondSubcontoId: number
-    debetThirdSubcontoId?: number
+    debetFirstSubcontoId: number | null
+    debetSecondSubcontoId: number | null
+    debetThirdSubcontoId?: number | null
     kredit: Schet
-    kreditFirstSubcontoId: number
-    kreditSecondSubcontoId: number
-    kreditThirdSubcontoId?: number
+    kreditFirstSubcontoId: number | null
+    kreditSecondSubcontoId: number | null
+    kreditThirdSubcontoId?: number | null
     count: number
     total: number
     description?: string
@@ -32,15 +32,15 @@ export class Entry extends Model<Entry, EntryCreationAttrs> {
 
     @ForeignKey(() => Document)
     @ApiProperty({example:'12222', description: 'Идентификатор документа'})
-    @Column({type: DataType.INTEGER})
-    documentId: number
+    @Column({type: DataType.BIGINT})
+    docId: bigint
 
     @BelongsTo(() => Document) 
     document: Document;
     
-    @ApiProperty({example:'12-01-2025', description: 'Дата проводки'})
-    @Column({type: DataType.DATE, })
-    date: Date;
+    @ApiProperty({example:'1735896554455', description: 'Дата проводки в миллисекундах'})
+    @Column({type: DataType.BIGINT, })
+    date: bigint;
 
     @ApiProperty({example:'ComeMaterial', description: 'Тип документа - ( из списка документов )'})
     @Column({type: DataType.ENUM(...Object.values(DocumentType))})
@@ -110,7 +110,7 @@ export class Entry extends Model<Entry, EntryCreationAttrs> {
     @Column({type: DataType.FLOAT})
     total: number;
 
-    @ApiProperty({example:'Поступление материалов', description: 'Описание проводки'})
+    @ApiProperty({example:'Поступление материалов от ....', description: 'Описание проводки'})
     @Column({type: DataType.STRING})
     description: string;
     

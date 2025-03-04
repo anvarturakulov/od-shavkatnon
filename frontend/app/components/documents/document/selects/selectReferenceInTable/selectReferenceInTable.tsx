@@ -89,7 +89,7 @@ export const SelectReferenceInTable = ({  selectForReciever , typeReference, ite
 
                 {data && data.length>0 && 
                 data?.filter((item:ReferenceModel) => {
-                    return item.refValues.typeTMZ == 'MATERIAL'
+                    return item.refValues?.typeTMZ == 'MATERIAL'
                 })
                 .sort(sortByName)
                 .filter((item:ReferenceModel) => !item.refValues?.markToDeleted)

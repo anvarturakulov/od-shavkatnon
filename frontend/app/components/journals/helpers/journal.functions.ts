@@ -90,7 +90,7 @@ export const getTotalValueForDocument = (document: DocumentModel): number => {
 export const isFounder = (references: any, id: number | undefined | null): boolean => {
   if (references && references.length > 0) {
     let item =  references.filter((item: ReferenceModel) => item.id == id)[0]
-    return item?.refValues.typeSection == TypeSECTION.FOUNDER
+    return item?.refValues?.typeSection == TypeSECTION.FOUNDER
   }
   return false
 }
@@ -98,7 +98,7 @@ export const isFounder = (references: any, id: number | undefined | null): boole
 export const isDirector = (references: any, id: number | undefined | null): boolean => {
   if (references && references.length > 0) {
     let item = references.filter((item: ReferenceModel) => item.id == id)[0]
-    return item?.refValues.typeSection == TypeSECTION.DIRECTOR
+    return item?.refValues?.typeSection == TypeSECTION.DIRECTOR
   }
   return false
 }

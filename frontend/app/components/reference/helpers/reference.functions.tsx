@@ -18,7 +18,7 @@ export const onSubmit = (
     token: string | undefined) => {
 
 
-    if (typeReference == TypeReference.TMZ && body.refValues.typeTMZ == undefined) {
+    if (typeReference == TypeReference.TMZ && body.refValues?.typeTMZ == undefined) {
         showMessage('ТМБ турини танланг', 'error', setMainData);
         return
     }

@@ -87,15 +87,15 @@ export default function ReferenceJournal({className, ...props}:ReferenceJournalP
                                 {
                                     referenceType == 'TMZ' &&
                                     <>
-                                        <td className={styles.types}>{item.refValues.unit}</td>
-                                        <td className={styles.types}>{item.refValues.typeTMZ}</td>
+                                        <td className={styles.types}>{item.refValues?.unit}</td>
+                                        <td className={styles.types}>{item.refValues?.typeTMZ}</td>
                                     </>
                                 }
                                 {
                                     referenceType == 'PARTNERS' &&
                                     <>
-                                        <td className={styles.types}>{item.refValues.typePartners}</td>
-                                            <td className={styles.types}>{getNameReference(references,item.refValues.clientForSectionId)}</td>
+                                        <td className={styles.types}>{item.refValues?.typePartners}</td>
+                                            <td className={styles.types}>{getNameReference(references,item.refValues?.clientForSectionId)}</td>
                                     </>
                                 }
                                 <td className={styles.comment}>{item.refValues?.comment}</td>

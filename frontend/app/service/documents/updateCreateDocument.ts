@@ -42,7 +42,7 @@ export const updateCreateDocument = (mainData: Maindata, setMainData: Function |
   }
 
   const uriPost = process.env.NEXT_PUBLIC_DOMAIN + '/api/documents/create';
-  const uriPatch = process.env.NEXT_PUBLIC_DOMAIN + '/api/documents/' + currentDocument.id;
+  const uriPatch = process.env.NEXT_PUBLIC_DOMAIN + '/api/documents/update/' + currentDocument.id;
 
   if (isNewDocument) {
     axios.post(uriPost, body, config)

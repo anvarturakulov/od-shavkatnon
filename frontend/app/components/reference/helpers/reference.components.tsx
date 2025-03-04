@@ -5,16 +5,16 @@ import styles from '../reference.module.css';
 export const  Select = (list: Array<DataForSelect>, body: ReferenceModel,label: string, typeString: string, changeElement: Function) => {
     
   let currentValue = ''
-  if (typeString == 'typeTMZ' && body.refValues.typeTMZ) {
-    currentValue = body.refValues.typeTMZ
+  if (typeString == 'typeTMZ' && body.refValues?.typeTMZ) {
+    currentValue = body.refValues?.typeTMZ
   }
 
-  if (typeString == 'typePartners' && body.refValues.typePartners) {
-    currentValue = body.refValues.typePartners
+  if (typeString == 'typePartners' && body.refValues?.typePartners) {
+    currentValue = body.refValues?.typePartners
   }
 
-  if (typeString == 'typeSection' && body.refValues.typeSection) {
-    currentValue = body.refValues.typeSection
+  if (typeString == 'typeSection' && body.refValues?.typeSection) {
+    currentValue = body.refValues?.typeSection
   }
 
   return (

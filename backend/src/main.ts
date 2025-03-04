@@ -1,7 +1,6 @@
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
-import { JwtAuthGuard } from "./auth/jwt-auth.guard";
 import { ValidationPipe } from "@nestjs/common";
 
 async function start() {
@@ -24,6 +23,7 @@ async function start() {
     
     const document = SwaggerModule.createDocument(app, config)
     SwaggerModule.setup('api/docs', app, document)
+    
 
     // app.useGlobalGuards(JwtAuthGuard)
     app.useGlobalPipes(new ValidationPipe)

@@ -59,7 +59,7 @@ export const SelectWorkers = ({ label, currentItemId, type, visible, className, 
                 {data && data.length>0  &&
                 data
                 .sort(sortByName)
-                .filter(( item:ReferenceModel ) => !item.refValues.markToDeleted )
+                .filter(( item:ReferenceModel ) => !item.refValues?.markToDeleted )
                 .map(( item:ReferenceModel ) => (
                     <>
                         <option 

@@ -46,10 +46,10 @@ export const SelectForHamirs = ({ label , className, ...props }: SelectForHamirs
                 {data && data.length>0  &&
                 data
                 .filter((item: ReferenceModel) => {
-                    return (item.refValues.typeSection == TypeSECTION.FILIAL) 
+                    return (item.refValues?.typeSection == TypeSECTION.FILIAL) 
                 })
                 .sort(sortByName)
-                .filter(( item:ReferenceModel ) => !item.refValues.markToDeleted )
+                .filter(( item:ReferenceModel ) => !item.refValues?.markToDeleted )
                 .map(( item:ReferenceModel ) => (
                     <>
                         <option 

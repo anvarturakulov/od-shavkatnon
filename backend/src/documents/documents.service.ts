@@ -51,25 +51,40 @@ export class DocumentsService {
     }
 
     async updateDocumentById(id: number, dto:UpdateCreateDocumentDto) {
-            const document = await this.documentRepository.findOne({where: {id}, include: [DocValues, DocTableItems]})
-            // const { name, typeReference } = dto
-
-            // if (reference) {
-            //     reference.name = name
-            //     reference.typeReference = typeReference
-            //     if (!reference.refValues) {
-            //         reference.refValues = await this.refValuesRepository.create({referenceId: reference.id})
-            //     } else {
-            //         // // reference.refValues.comment = dto.refValues?.comment || ''
-            //         await reference.refValues.update({...dto.refValues})
-            //     }
-                
-            //     await reference.save()
-            //     return reference
-            // }
-            throw new HttpException('Документ не нашелься', HttpStatus.NOT_FOUND)
-        }
+        const document = await this.documentRepository.findOne({where: {id}, include: [DocValues, DocTableItems]})
     
+        const transaction = await this.sequelize.transaction();
+        try {
+            if (document) {
+                document.date = dto.date
+                if (document.docValues) {
+                    await document.docValues.update({...dto.docValues})
+                }
+                await document.save()
+                await this.docTableItemsRepository.destroy({where: {docId:document.id}})
+
+                const items = [...dto.docTableItems]
+
+                if (items && items.length > 0 && items[0].analiticId != -1 ) {
+                    for (const item of items) {
+                        const docTableItem = await this.docTableItemsRepository.create({
+                            ...item,
+                            docId: document.id
+                        })
+                    }
+                }
+
+            }
+
+            await transaction.commit();
+            return document
+
+        } catch (error) {
+            await transaction.rollback();
+            throw error;
+        }
+    }
+
     async createDocument(dto:UpdateCreateDocumentDto) {
         
         const transaction = await this.sequelize.transaction();
