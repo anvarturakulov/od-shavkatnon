@@ -24,21 +24,21 @@ export enum Schet{
     S68 = 'S68', // КОШЕЛЕК УЧРИДИТЕЛЕЙ
 }
 
-export interface EntryItem {
-    date: number,
-    docNumber: number,
-    docId: string,
-    documentType: DocumentType,
-    debet: Schet,
-    debetFirstSubcontoId: string,
-    debetSecondSubcontoId: string,
-    kredit: Schet,
-    kreditFirstSubcontoId: string,
-    kreditSecondSubcontoId: string,
-    count: number,
-    summa: number,
-    comment: string,
-}
+// export interface EntryItem {
+//     date: number,
+//     docNumber: number,
+//     docId: string,
+//     documentType: DocumentType,
+//     debet: Schet,
+//     debetFirstSubcontoId: string,
+//     debetSecondSubcontoId: string,
+//     kredit: Schet,
+//     kreditFirstSubcontoId: string,
+//     kreditSecondSubcontoId: string,
+//     count: number,
+//     summa: number,
+//     comment: string,
+// }
 
 export enum DEBETKREDIT {
     DEBET = 'DEBET',
@@ -67,51 +67,21 @@ export enum TypeQuery {
     OS = 'OS'
 }
 
-export interface QueryObject {
+export interface QuerySimple {
+    reportType?: string,
     typeQuery?: string, 
-    schet: string,
+    sectionId?: number,
+    schet?: string,
+    dk?: string,
+    workerId?: number,
+    name?: string
     startDate?: number, 
-    endDate: number, 
-    firstSubcontoId: string | undefined, 
-    secondSubcontoId: string | undefined,
-}
-
-export interface QueryInformation {
-    startDate: number,
-    endDate: number,
-    reportType: string,
-    foydaPrice: FoydaPrice, 
-}
-
-export interface QueryMatOtchet {
-    startDate: number,
-    endDate: number,
-    section: string,
-}
-
-export interface QueryOborotka {
-    startDate: number,
-    endDate: number,
-    schet: string,
-}
-
-export interface QueryAnalitic {
-    startDate: number,
-    endDate: number,
-    schet: string,
-    firstSubcontoId: string,
-    secondSubcontoId: string,
-    dk: string,
-}
-
-export interface QueryWorker {
-    startDate: number,
-    endDate: number,
-    workerId: string,
-    name: string
-}
-
-export interface FoydaPrice {
-    first: number,
-    second: number
+    endDate?: number, 
+    firstSubcontoId?: number | null, 
+    secondSubcontoId?: number | null,
+    thirdSubcontoId?: number | null
+    foydaPrice?: {
+        first: number,
+        second: number
+    }, 
 }

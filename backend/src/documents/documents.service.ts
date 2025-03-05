@@ -6,6 +6,8 @@ import { DocTableItems } from 'src/docTableItems/docTableItems.model';
 import { DocSTATUS, DocumentType } from 'src/interfaces/document.interface';
 import { UpdateCreateDocumentDto } from './dto/updateCreateDocument.dto';
 import { Sequelize } from 'sequelize-typescript';
+import { Entry } from 'src/entries/entry.model';
+import { prepareEntrysList } from './helper/entry/prepareEntrysList';
 const { Op } = require('sequelize');
 
 @Injectable()
@@ -16,7 +18,8 @@ export class DocumentsService {
         private readonly sequelize: Sequelize,
         @InjectModel(Document) private documentRepository: typeof Document,
         @InjectModel(DocValues) private docValuesRepository: typeof DocValues,
-        @InjectModel(DocTableItems) private docTableItemsRepository: typeof DocTableItems
+        @InjectModel(DocTableItems) private docTableItemsRepository: typeof DocTableItems,
+        @InjectModel(Entry) private entryRepository: typeof Entry
     ) {}
 
     async getAllDocuments() {
@@ -112,6 +115,23 @@ export class DocumentsService {
                 }
             }
 
+            if (dto.docStatus == DocSTATUS.PROVEDEN) {
+                const doc = await this.documentRepository.findOne({where: {id: document.id}, include: [DocValues, DocTableItems]})
+                if (doc) {
+                    const entrysList = [...prepareEntrysList(doc)]
+                    if (entrysList.length > 0 ) {
+                        for (const item of entrysList) {
+                            const entry = await this.entryRepository.create({
+                                ...item,
+                            })
+                        }
+                    }
+                    doc.docStatus = DocSTATUS.PROVEDEN
+                    await doc.save()
+                }
+                
+            }
+
             await transaction.commit();
             return document
 
@@ -123,33 +143,54 @@ export class DocumentsService {
     }
 
     async markToDeleteById(id: number) {
-        const document = await this.documentRepository.findOne({where: {id}, include: []})
-        let newStatus: DocSTATUS = DocSTATUS.DELETED
-        if (document) {
-            if (document.docStatus == DocSTATUS.DELETED) newStatus = DocSTATUS.OPEN
-            if (document.docStatus == DocSTATUS.OPEN) newStatus = DocSTATUS.DELETED
-            if (document.docStatus == DocSTATUS.PROVEDEN) newStatus = DocSTATUS.DELETED
-                            
-            // Anvar Bu erda Entrys ni uchirish kodini ham yozish kerak
-            document.docStatus = newStatus
-            await document.save()
-            return document
+        const document = await this.documentRepository.findOne({where: {id}, include: [Entry]})
+        const transaction = await this.sequelize.transaction();
+        try {
+            let newStatus: DocSTATUS = DocSTATUS.DELETED
+            if (document) {
+                if (document.docStatus == DocSTATUS.DELETED) newStatus = DocSTATUS.OPEN
+                if (document.docStatus == DocSTATUS.OPEN) newStatus = DocSTATUS.DELETED
+                if (document.docStatus == DocSTATUS.PROVEDEN) newStatus = DocSTATUS.DELETED
+                                
+                await this.entryRepository.destroy({where: {docId:document.id}})
+                // Anvar Bu erda Entrys ni uchirish kodini ham yozish kerak
+                document.docStatus = newStatus
+                await document.save()
+            }
+                await transaction.commit();
+                return document
+
+        } catch (error) {
+            await transaction.rollback();
+            throw error;
         }
-        throw new HttpException('Документ не найден', HttpStatus.NOT_FOUND)
+
     }
 
     async setProvodka(id: number) {
-        
-        const document = await this.documentRepository.findOne({where: {id}, include: []})
-        let newStatus: DocSTATUS = DocSTATUS.DELETED
-        if (document && document.docStatus == DocSTATUS.OPEN) {
-                            
-            // Anvar Bu erda yangi provodkalar tuzish kodi kerak
-            document.docStatus = DocSTATUS.PROVEDEN
-            await document.save()
+        const document = await this.documentRepository.findOne({where: {id}, include: [{ all: true }]})
+        const transaction = await this.sequelize.transaction();
+        try {
+            if (document && document.docStatus != DocSTATUS.PROVEDEN) {
+                const entrysList = [...prepareEntrysList(document)]
+                if (entrysList.length > 0 ) {
+                    for (const item of entrysList) {
+                        const entry = await this.entryRepository.create({
+                            ...item,
+                        })
+                    }
+                }
+                document.docStatus = DocSTATUS.PROVEDEN
+                await document.save()
+            }
+
+            await transaction.commit();
             return document
+
+        } catch (error) {
+            await transaction.rollback();
+            throw error;
         }
-        throw new HttpException('Документ не найден', HttpStatus.NOT_FOUND)
     }
 
 }

@@ -1,8 +1,7 @@
 import { Schet } from 'src/interfaces/report.interface';
-import { FounderObject } from './prepareEntrysList';
 import { Document } from 'src/documents/document.model';
 import { DocTableItems } from 'src/docTableItems/docTableItems.model';
-import { DocSTATUS, DocumentType } from "src/interfaces/document.interface";
+import { DocumentType } from "src/interfaces/document.interface";
 
 export interface ResultgetValuesForEntry {
   debet: Schet
@@ -18,20 +17,11 @@ export interface ResultgetValuesForEntry {
   description?: string
 }
 
-export const getValuesForEntry = (doc: Document, newEntry: boolean, hasTable: boolean, tableItem: DocTableItems | undefined, isCash: boolean, founders: Array<FounderObject>): ResultgetValuesForEntry => {
+export const getValuesForEntry = (doc: Document, newEntry: boolean, hasTable: boolean, tableItem: DocTableItems | undefined, recieverIsFounder: boolean, senderIsFounder:boolean): ResultgetValuesForEntry => {
   if (doc) {
     let documentType = doc.documentType;
-    let { receiverId, senderId, analiticId, count, total, cashFromPartner, isPartner, isWorker, isFounder } = doc.docValues
+    let { receiverId, senderId, analiticId, count, total, isPartner, isWorker } = doc.docValues
     
-    const leaveComeTMZObj = {
-      debetFirstSubcontoId: receiverId,
-      debetSecondSubcontoId: analiticId,
-      kreditFirstSubcontoId: senderId,
-      kreditSecondSubcontoId: analiticId,
-      count,
-      total,
-    }
-
     let leaveMaterialWithTable = {
         debetFirstSubcontoId: senderId,
         debetSecondSubcontoId: receiverId,
@@ -41,148 +31,28 @@ export const getValuesForEntry = (doc: Document, newEntry: boolean, hasTable: bo
         total: (hasTable && doc.docTableItems?.length && !newEntry && tableItem?.total) ? tableItem.total : 0,
       }
     
-    const ZpCalculateObj = {
-      debetFirstSubcontoId: receiverId,
-      debetSecondSubcontoId: analiticId,
-      kreditFirstSubcontoId: analiticId,
-      kreditSecondSubcontoId: receiverId,
-      count,
-      total,
-    }
-
-    const TakeProfitObj = {
-      debetFirstSubcontoId: null,
-      debetSecondSubcontoId: null,
-      kreditFirstSubcontoId: receiverId,
-      kreditSecondSubcontoId: null,
-      count,
-      total,
-    }
-  
-    const ServicesFromPartnersObj = {
-      debetFirstSubcontoId: receiverId,
-      debetSecondSubcontoId: senderId,
-      kreditFirstSubcontoId: analiticId,
-      kreditSecondSubcontoId: receiverId,
-      count,
-      total,
-    }
-
-    const saleTMZObj = {
-      debetFirstSubcontoId: receiverId,
-      debetSecondSubcontoId: analiticId,
-      kreditFirstSubcontoId: senderId,
-      kreditSecondSubcontoId: analiticId,
-      count,
-      total,
-    }
-
-    const saleTMZ4028 = {
-      debetFirstSubcontoId: senderId,
-      debetSecondSubcontoId: receiverId,
-      kreditFirstSubcontoId: senderId,
-      kreditSecondSubcontoId: analiticId,
-      count,
-      total,
-    }
-
-    const salePaymentObj = {
-      debetFirstSubcontoId: senderId,
-      debetSecondSubcontoId: analiticId,
-      kreditFirstSubcontoId: receiverId,
-      kreditSecondSubcontoId: analiticId,
-      count,
-      total,
-    }
-
-    const salePayment4050 = {
-      debetFirstSubcontoId: senderId,
-      debetSecondSubcontoId: analiticId,
-      kreditFirstSubcontoId: senderId,
-      kreditSecondSubcontoId: receiverId,
-      count,
-      total,
-    }
-
-    const leaveTMZ = {
-      debetFirstSubcontoId: senderId,
-      debetSecondSubcontoId: receiverId,
-      kreditFirstSubcontoId: senderId,
-      kreditSecondSubcontoId: analiticId,
-      count,
-      total,
-    }
-
-    const comeHalfstuff = {
-      debetFirstSubcontoId: receiverId,
-      debetSecondSubcontoId: analiticId,
-      kreditFirstSubcontoId: senderId,
-      kreditSecondSubcontoId: analiticId,
-      count,
-      total,
-    }
-
-    let leaveCashZp6750 = {
-      debetFirstSubcontoId: analiticId,
-      debetSecondSubcontoId: senderId,
-      kreditFirstSubcontoId: senderId,
-      kreditSecondSubcontoId: analiticId,
-      count: 0,
-      total,
-    }
-
-    let leaveCashObj6050 = {
-      debetFirstSubcontoId: analiticId,
-      debetSecondSubcontoId: receiverId,
-      kreditFirstSubcontoId: senderId,
-      kreditSecondSubcontoId: analiticId,
-      count: 0,
-      total,
-    }
-
-    let leaveCashOther = {
-      debetFirstSubcontoId: receiverId,
-      debetSecondSubcontoId: analiticId,
-      kreditFirstSubcontoId: senderId,
-      kreditSecondSubcontoId: analiticId,
-      count: 0,
-      total,
-    }
-
-    let leaveCashFromFounder = {
-      debetFirstSubcontoId: senderId,
-      debetSecondSubcontoId: analiticId,
-      kreditFirstSubcontoId: senderId,
-      kreditSecondSubcontoId: analiticId,
-      count: 0,
-      total,
-    }
-
-    let MoveCashObj = {
-      debetFirstSubcontoId: receiverId,
-      debetSecondSubcontoId: senderId,
-      kreditFirstSubcontoId: senderId,
-      kreditSecondSubcontoId: receiverId,
-      count: 0,
-      total,
-    }
-
     let remaindDate = 1735671599000;
  
     switch (documentType) {
       case DocumentType.ComeCashFromPartners:
-        if ( founders && founders.length && 
-          founders.filter((item:FounderObject) => item.id == receiverId).length > 0) 
+        let objects = {
+          debetFirstSubcontoId: receiverId,
+          debetSecondSubcontoId: senderId,
+          kreditFirstSubcontoId: senderId,
+          kreditSecondSubcontoId: receiverId,
+          count: 0,
+          total,
+        }
+        if (recieverIsFounder) {
           return {
             debet: Schet.S66,
             kredit: Schet.S00,
-            ...MoveCashObj,
-        };
-      
-        return {
+            ...objects
+          };
+        } else return {
           debet: doc.date > remaindDate ? Schet.S50 : Schet.S00,
           kredit: Schet.S60,
-          ...MoveCashObj
+          ...objects
         };
 
       case DocumentType.ComeHalfstuff:
@@ -196,7 +66,12 @@ export const getValuesForEntry = (doc: Document, newEntry: boolean, hasTable: bo
           return {
             debet: Schet.S21,
             kredit: Schet.S23,
-            ...comeHalfstuff
+            debetFirstSubcontoId: receiverId,
+            debetSecondSubcontoId: analiticId,
+            kreditFirstSubcontoId: senderId,
+            kreditSecondSubcontoId: analiticId,
+            count,
+            total,
           };
         }
         
@@ -204,7 +79,12 @@ export const getValuesForEntry = (doc: Document, newEntry: boolean, hasTable: bo
         return {
           debet: Schet.S10,
           kredit: doc.date > remaindDate ? Schet.S60 : Schet.S00,
-          ...leaveComeTMZObj
+          debetFirstSubcontoId: receiverId,
+          debetSecondSubcontoId: analiticId,
+          kreditFirstSubcontoId: senderId,
+          kreditSecondSubcontoId: analiticId,
+          count,
+          total,
         };
 
       case DocumentType.SaleHalfStuff:
@@ -212,13 +92,23 @@ export const getValuesForEntry = (doc: Document, newEntry: boolean, hasTable: bo
           return {
             debet: Schet.S60,
             kredit: Schet.S21,
-            ...leaveComeTMZObj
+            debetFirstSubcontoId: receiverId,
+            debetSecondSubcontoId: analiticId,
+            kreditFirstSubcontoId: senderId,
+            kreditSecondSubcontoId: analiticId,
+            count,
+            total,
           };
         } else if (newEntry) {
           return {
             debet: Schet.S50,
             kredit: Schet.S60,
-            ...salePaymentObj
+            debetFirstSubcontoId: senderId,
+            debetSecondSubcontoId: analiticId,
+            kreditFirstSubcontoId: receiverId,
+            kreditSecondSubcontoId: analiticId,
+            count,
+            total,
           };
         }
       
@@ -226,14 +116,24 @@ export const getValuesForEntry = (doc: Document, newEntry: boolean, hasTable: bo
         return {
           debet: Schet.S28,
           kredit: doc.date > remaindDate ? Schet.S60 : Schet.S00,
-          ...leaveComeTMZObj
+          debetFirstSubcontoId: receiverId,
+          debetSecondSubcontoId: analiticId,
+          kreditFirstSubcontoId: senderId,
+          kreditSecondSubcontoId: analiticId,
+          count,
+          total,
         };
 
       case DocumentType.ComeProduct:
         return {
           debet: Schet.S28,
           kredit: doc.date > remaindDate ? Schet.S20 : Schet.S00,
-          ...leaveComeTMZObj,
+          debetFirstSubcontoId: receiverId,
+          debetSecondSubcontoId: analiticId,
+          kreditFirstSubcontoId: senderId,
+          kreditSecondSubcontoId: analiticId,
+          count,
+          total,
         };
 
       case DocumentType.LeaveCash:
@@ -241,41 +141,59 @@ export const getValuesForEntry = (doc: Document, newEntry: boolean, hasTable: bo
           return {
             debet: Schet.S60,
             kredit: Schet.S50,
-            ...leaveCashObj6050,
-            count: isCash ? -1 : 0,
+            debetFirstSubcontoId: analiticId,
+            debetSecondSubcontoId: receiverId,
+            kreditFirstSubcontoId: senderId,
+            kreditSecondSubcontoId: analiticId,
+            count: 0,
+            total,
           };
         }
         if (isWorker) {
           return {
             debet: Schet.S67,
             kredit: Schet.S50,
-            ...leaveCashZp6750,
-            count: isCash ? -1 : 0
+            debetFirstSubcontoId: analiticId,
+            debetSecondSubcontoId: senderId,
+            kreditFirstSubcontoId: senderId,
+            kreditSecondSubcontoId: analiticId,
+            count: 0,
+            total,
           };
         }
-
-        if (
-          founders && founders.length && 
-          founders.filter((item:FounderObject) => item.id == senderId).length > 0
-        ) 
+        if ( senderIsFounder ) 
           return {
             debet: Schet.S00,
             kredit: Schet.S68,
-            ...leaveCashFromFounder,
+            debetFirstSubcontoId: senderId,
+            debetSecondSubcontoId: analiticId,
+            kreditFirstSubcontoId: senderId,
+            kreditSecondSubcontoId: analiticId,
+            count: 0,
+            total,
         };
 
         return {
           debet: Schet.S20,
           kredit: Schet.S50,
-          ...leaveCashOther,
-          count: isCash ? -1 : 0,
+          debetFirstSubcontoId: receiverId,
+          debetSecondSubcontoId: analiticId,
+          kreditFirstSubcontoId: senderId,
+          kreditSecondSubcontoId: analiticId,
+          count: 0,
+          total,
         };
 
       case DocumentType.LeaveHalfstuff:
         return {
           debet: Schet.S20,
           kredit: Schet.S21,
-          ...leaveTMZ,
+          debetFirstSubcontoId: senderId,
+          debetSecondSubcontoId: receiverId,
+          kreditFirstSubcontoId: senderId,
+          kreditSecondSubcontoId: analiticId,
+          count,
+          total,
         };
 
       case DocumentType.LeaveMaterial:
@@ -289,7 +207,12 @@ export const getValuesForEntry = (doc: Document, newEntry: boolean, hasTable: bo
         return {
           debet: Schet.S20,
           kredit: Schet.S28,
-          ...leaveTMZ,
+          debetFirstSubcontoId: senderId,
+          debetSecondSubcontoId: receiverId,
+          kreditFirstSubcontoId: senderId,
+          kreditSecondSubcontoId: analiticId,
+          count,
+          total,
         };
 
       case DocumentType.MoveCash:
@@ -297,45 +220,71 @@ export const getValuesForEntry = (doc: Document, newEntry: boolean, hasTable: bo
           return {
             debet: Schet.S68,
             kredit: Schet.S00,
-            ...MoveCashObj,
-            count: isCash ? -1 : 0,
+            debetFirstSubcontoId: receiverId,
+            debetSecondSubcontoId: senderId,
+            kreditFirstSubcontoId: senderId,
+            kreditSecondSubcontoId: receiverId,
+            count: 0,
+            total
           }
         } else {
-          if (founders && founders.length && founders.filter((item:FounderObject) => item.id == receiverId).length > 0) 
-             return {
-                debet: Schet.S66,
-                kredit: Schet.S50,
-                ...MoveCashObj,
-                count: isCash ? -1 : 0,
-              }
-          else return {
+          if (recieverIsFounder) {
+            return {
+              debet: Schet.S66,
+              kredit: Schet.S50,
+              debetFirstSubcontoId: receiverId,
+              debetSecondSubcontoId: senderId,
+              kreditFirstSubcontoId: senderId,
+              kreditSecondSubcontoId: receiverId,
+              count: 0,
+              total
+            }
+          } else return {
             debet: Schet.S50,
             kredit: doc.date > remaindDate ? Schet.S50 : Schet.S00,
-            ...MoveCashObj,
-            count: isCash ? -1 : 0,
+            debetFirstSubcontoId: receiverId,
+            debetSecondSubcontoId: senderId,
+            kreditFirstSubcontoId: senderId,
+            kreditSecondSubcontoId: receiverId,
+            count: 0,
+            total,
           };        
-          
         }
 
       case DocumentType.MoveHalfstuff:
         return {
           debet: Schet.S21,
           kredit: doc.date > remaindDate ? Schet.S21 : Schet.S00,
-          ...leaveComeTMZObj,
+          debetFirstSubcontoId: receiverId,
+          debetSecondSubcontoId: analiticId,
+          kreditFirstSubcontoId: senderId,
+          kreditSecondSubcontoId: analiticId,
+          count,
+          total,
         };
 
       case DocumentType.MoveMaterial:
         return {
           debet: Schet.S10,
           kredit: Schet.S10,
-          ...leaveComeTMZObj
+          debetFirstSubcontoId: receiverId,
+          debetSecondSubcontoId: analiticId,
+          kreditFirstSubcontoId: senderId,
+          kreditSecondSubcontoId: analiticId,
+          count,
+          total,
         };
 
       case DocumentType.MoveProd:
         return {
           debet: Schet.S28,
           kredit: Schet.S28,
-          ...leaveComeTMZObj
+          debetFirstSubcontoId: receiverId,
+          debetSecondSubcontoId: analiticId,
+          kreditFirstSubcontoId: senderId,
+          kreditSecondSubcontoId: analiticId,
+          count,
+          total,
         };
 
       case DocumentType.SaleMaterial:
@@ -343,13 +292,23 @@ export const getValuesForEntry = (doc: Document, newEntry: boolean, hasTable: bo
           return {
             debet: Schet.S60,
             kredit: Schet.S10,
-            ...saleTMZObj
+            debetFirstSubcontoId: receiverId,
+            debetSecondSubcontoId: analiticId,
+            kreditFirstSubcontoId: senderId,
+            kreditSecondSubcontoId: analiticId,
+            count,
+            total,
           };
         } else if (newEntry) {
           return {
             debet: Schet.S50,
             kredit: Schet.S60,
-            ...salePaymentObj
+            debetFirstSubcontoId: senderId,
+            debetSecondSubcontoId: analiticId,
+            kreditFirstSubcontoId: receiverId,
+            kreditSecondSubcontoId: analiticId,
+            count,
+            total,
           };
         }
 
@@ -358,13 +317,23 @@ export const getValuesForEntry = (doc: Document, newEntry: boolean, hasTable: bo
           return {
             debet: Schet.S40,
             kredit: Schet.S28,
-            ...saleTMZ4028
+            debetFirstSubcontoId: senderId,
+            debetSecondSubcontoId: receiverId,
+            kreditFirstSubcontoId: senderId,
+            kreditSecondSubcontoId: analiticId,
+            count,
+            total,
           };
         } else if (newEntry) {
           return {
             debet: Schet.S50,
             kredit: Schet.S40,
-            ...salePayment4050
+            debetFirstSubcontoId: senderId,
+            debetSecondSubcontoId: analiticId,
+            kreditFirstSubcontoId: senderId,
+            kreditSecondSubcontoId: receiverId,
+            count,
+            total,
           };
         }
 
@@ -373,7 +342,12 @@ export const getValuesForEntry = (doc: Document, newEntry: boolean, hasTable: bo
         return {
           debet: Schet.S20,
           kredit: Schet.S67,
-          ...ZpCalculateObj
+          debetFirstSubcontoId: receiverId,
+          debetSecondSubcontoId: analiticId,
+          kreditFirstSubcontoId: analiticId,
+          kreditSecondSubcontoId: receiverId,
+          count,
+          total,
         };
 
       case DocumentType.TakeProfit:
@@ -381,15 +355,24 @@ export const getValuesForEntry = (doc: Document, newEntry: boolean, hasTable: bo
         return {
           debet: Schet.S00,
           kredit: Schet.S66,
-          ...TakeProfitObj
+          debetFirstSubcontoId: null,
+          debetSecondSubcontoId: null,
+          kreditFirstSubcontoId: receiverId,
+          kreditSecondSubcontoId: null,
+          count,
+          total,
         };
       
       case DocumentType.ServicesFromPartners:
-        console.log('-*-')
         return {
           debet: Schet.S20,
           kredit: Schet.S60,
-          ...ServicesFromPartnersObj
+          debetFirstSubcontoId: receiverId,
+          debetSecondSubcontoId: senderId,
+          kreditFirstSubcontoId: analiticId,
+          kreditSecondSubcontoId: receiverId,
+          count,
+          total,
         };
     }
   }
