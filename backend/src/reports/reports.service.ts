@@ -5,6 +5,7 @@ import { DocTableItems } from 'src/docTableItems/docTableItems.model';
 import { Sequelize } from 'sequelize-typescript';
 import { Entry } from 'src/entries/entry.model';
 import { QuerySimple } from 'src/interfaces/report.interface';
+import { query } from './querys/query';
 
 @Injectable()
 export class ReportsService {
@@ -18,9 +19,8 @@ export class ReportsService {
     ) {}
 
 
-    async getQueryValue(queryReport: QuerySimple) {
-        const { typeQuery, schet, startDate, endDate, firstSubcontoId, secondSubcontoId} = queryReport;
-        return query(schet, typeQuery, startDate, endDate, firstSubcontoId, secondSubcontoId, this.documentService.globalEntrys)
+    async getQueryValue(req: QuerySimple) {
+        return query(req, this.sequelize)
     }
     
     async getPriceAndBalance(queryReport: QuerySimple) {

@@ -1,24 +1,28 @@
-import { Request } from 'express';
 import { QuerySimple } from 'src/interfaces/report.interface';
+import { GetEntriesQueryDto } from '../dto/entry-query.dto';
 
-export const requestTransform = (request: Request): QuerySimple => {
+export const requestTransform = (query: GetEntriesQueryDto): QuerySimple => {
     return {
-        reportType: `${request.query?.reportType}`,
-        typeQuery: `${request.query?.typeQuery}`,
-        sectionId: request.query?.sectionId ? +request.query?.sectionId : 0,
-        schet: `${request.query?.schet}`,
-        dk: `${request.query?.schet}`,
-        workerId: request.query?.workerId ? +request.query?.workerId : 0,
-        name: `${request.query?.name}`,
-        startDate: request.query?.startDate ? +request.query?.startDate : 0,
-        endDate: request.query?.endDate ? +request.query?.endDate : 0,
-        firstSubcontoId: request.query?.firstSubcontoId ? +request.query?.firstSubcontoId : null,
-        secondSubcontoId: request.query?.secondSubcontoId ? +request.query?.secondSubcontoId: null,
-        thirdSubcontoId: request.query?.thirdSubcontoId ? +request.query?.thirdSubcontoId: null,
-        foydaPrice: {
-            first: request.query?.first ? +request.query?.first : 0,
-            second: request.query?.second ? +request.query?.second : 0
-        },
+        reportType: query.reportType || null,
+        typeQuery: query.typeQuery || null,
+        sectionId: query.sectionId || null,
+        schet: query.schet || null,
+        dk: query.dk || null,
+        workerId: query.workerId || null ,
+        name: query.name || null,
+        startDate: query.startDate || null,
+        endDate: query.endDate || null,
+        firstSubcontoId: query.firstSubcontoId || null,
+        secondSubcontoId: query.secondSubcontoId || null,
+        thirdSubcontoId: query.thirdSubcontoId || null,
+        firstPrice: query.firstPrice || null,
+        secondPrice: query.secondPrice || null,
+        debetFirstSubcontoId: query.debetFirstSubcontoId || null,
+        debetSecondSubcontoId: query.debetSecondSubcontoId || null,
+        debetThirdSubcontoId: query.debetThirdSubcontoId || null,
+        kreditFirstSubcontoId: query.kreditFirstSubcontoId || null,
+        kreditSecondSubcontoId: query.kreditSecondSubcontoId || null,
+        kreditThirdSubcontoId: query.kreditThirdSubcontoId || null,
     }
     
 }

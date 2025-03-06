@@ -68,20 +68,24 @@ export enum TypeQuery {
 }
 
 export interface QuerySimple {
-    reportType?: string,
-    typeQuery?: string, 
-    sectionId?: number,
-    schet?: string,
-    dk?: string,
-    workerId?: number,
-    name?: string
-    startDate?: number, 
-    endDate?: number, 
-    firstSubcontoId?: number | null, 
-    secondSubcontoId?: number | null,
-    thirdSubcontoId?: number | null
-    foydaPrice?: {
-        first: number,
-        second: number
-    }, 
+    reportType: string | null,
+    typeQuery: string | null, 
+    sectionId: number | null,
+    schet: string | null,
+    dk: string | null,
+    workerId: number | null,
+    name: string | null
+    startDate: number | null, 
+    endDate: number | null, 
+    firstSubcontoId: number | null, 
+    secondSubcontoId: number | null,
+    thirdSubcontoId: number | null
+    firstPrice: number | null,
+    secondPrice: number | null,
+    debetFirstSubcontoId: number | null, 
+    debetSecondSubcontoId: number | null,
+    debetThirdSubcontoId: number | null, 
+    kreditFirstSubcontoId: number | null, 
+    kreditSecondSubcontoId: number | null,
+    kreditThirdSubcontoId: number | null, 
 }

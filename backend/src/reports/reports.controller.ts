@@ -1,4 +1,4 @@
-import { Controller, Get, NotFoundException, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, NotFoundException, Query, Req, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ReportsService } from './reports.service';
 import { Roles } from 'src/auth/roles-auth.decorator';
 import { RolesGuard } from 'src/auth/roles.guard';
@@ -6,6 +6,7 @@ import { QuerySimple } from 'src/interfaces/report.interface';
 import { Request } from 'express';
 import { requestTransform } from './querys/requestTransform';
 import { REPORT_NOT_PREPARE } from './report.constants';
+import { GetEntriesQueryDto } from './dto/entry-query.dto';
 
 @Controller('reports')
 export class ReportsController {
@@ -17,9 +18,9 @@ export class ReportsController {
   @Roles('ALL')
   @UseGuards(RolesGuard)
   @Get('/query')
-  async getQuery(@Req() request: Request) {
-
-    const req: QuerySimple = {...requestTransform(request)}
+  @UsePipes(new ValidationPipe({ transform: true }))
+  async getQuery(@Query() query: GetEntriesQueryDto) {
+    const req: QuerySimple = {...requestTransform(query)}
     const report = await this.reportsService.getQueryValue(req);
     return report;
 
@@ -28,9 +29,10 @@ export class ReportsController {
   @Roles('ALL')
   @UseGuards(RolesGuard)
   @Get('/priceAndBalance')
-  async getPriceAndBalance(@Req() request: Request) {
+  @UsePipes(new ValidationPipe({ transform: true }))
+  async getPriceAndBalance(@Query() query: GetEntriesQueryDto) {
 
-    const req: QuerySimple = {...requestTransform(request)}
+    const req: QuerySimple = {...requestTransform(query)}
     const report = await this.reportsService.getPriceAndBalance(req);
     return report;
 
@@ -40,9 +42,10 @@ export class ReportsController {
   @Roles('ALL')
   @UseGuards(RolesGuard)
   @Get('/information')
-  async getInformation(@Req() request: Request) {
+  @UsePipes(new ValidationPipe({ transform: true }))
+  async getInformation(@Query() query: GetEntriesQueryDto) {
 
-    const req: QuerySimple = {...requestTransform(request)}
+    const req: QuerySimple = {...requestTransform(query)}
     const report = await this.reportsService.getInformation(req);
 
     if (!report) {
@@ -54,9 +57,10 @@ export class ReportsController {
   @Roles('ALL')
   @UseGuards(RolesGuard)
   @Get('/matOborot')
-  async getMatOtchet(@Req() request: Request) {
+  @UsePipes(new ValidationPipe({ transform: true }))
+  async getMatOtchet(@Query() query: GetEntriesQueryDto) {
 
-    const req: QuerySimple = {...requestTransform(request)}
+    const req: QuerySimple = {...requestTransform(query)}
     const report = await this.reportsService.getMatOtchet(req);
 
     if (!report) {
@@ -68,9 +72,10 @@ export class ReportsController {
   @Roles('ALL')
   @UseGuards(RolesGuard)
   @Get('/oborotka')
-  async getOborotka(@Req() request: Request) {
+  @UsePipes(new ValidationPipe({ transform: true }))
+  async getOborotka(@Query() query: GetEntriesQueryDto) {
 
-    const req: QuerySimple = {...requestTransform(request)}
+    const req: QuerySimple = {...requestTransform(query)}
     const startTime = Date.now()
     const report = await this.reportsService.getOborotka(req);
     const endTime = Date.now()
@@ -86,9 +91,10 @@ export class ReportsController {
   @Roles('ALL')
   @UseGuards(RolesGuard)
   @Get('/analitic')
-  async getAnalitic(@Req() request: Request) {
+  @UsePipes(new ValidationPipe({ transform: true }))
+  async getAnalitic(@Query() query: GetEntriesQueryDto) {
 
-    const req: QuerySimple = {...requestTransform(request)}
+    const req: QuerySimple = {...requestTransform(query)}
     const report = await this.reportsService.getAnalitic(req);
 
     if (!report) {
