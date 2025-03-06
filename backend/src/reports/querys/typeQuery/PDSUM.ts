@@ -35,5 +35,6 @@ export const PDSUM = (req: QuerySimple) => {
         replacements.thirdSubcontoId = thirdSubcontoId;
     }
 
-    return {query, replacements}
+    let stopQuery = (!schet || !startDate) ? true : false
+    return {query, replacements, stopQuery}
 }

@@ -1,6 +1,6 @@
 import { QuerySimple } from "src/interfaces/report.interface";
 
-export const PDKOL = (req: QuerySimple) => {
+export const PKKOL = (req: QuerySimple) => {
     const { reportType, typeQuery, sectionId, schet, dk, workerId, name,
         startDate, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId, firstPrice, secondPrice} = req;
 
@@ -11,7 +11,7 @@ export const PDKOL = (req: QuerySimple) => {
                   WHERE `
             
     if (schet !== null && schet !== undefined) {
-        query += ` debet = :schet`;
+        query += ` kredit = :schet`;
         replacements.schet = schet;
     }
 
@@ -21,21 +21,20 @@ export const PDKOL = (req: QuerySimple) => {
     }            
 
     if (firstSubcontoId !== null && firstSubcontoId !== undefined) {
-        query += ` AND debetFirstSubcontoId = :firstSubcontoId`;
+        query += ` AND kreditFirstSubcontoId = :firstSubcontoId`;
         replacements.firstSubcontoId = firstSubcontoId;
     }
 
     if (secondSubcontoId !== null && secondSubcontoId !== undefined) {
-        query += ` AND debetSecondSubcontoId = :secondSubcontoId`;
+        query += ` AND kreditSecondSubcontoId = :secondSubcontoId`;
         replacements.secondSubcontoId = secondSubcontoId;
     }
 
     if (thirdSubcontoId !== null && thirdSubcontoId !== undefined) {
-        query += ` AND debetThirdSubcontoId = :thirdSubcontoId`;
+        query += ` AND kreditThirdSubcontoId = :thirdSubcontoId`;
         replacements.thirdSubcontoId = thirdSubcontoId;
     }
 
     let stopQuery = (!schet || !startDate) ? true : false
-    
     return {query, replacements, stopQuery}
 }
