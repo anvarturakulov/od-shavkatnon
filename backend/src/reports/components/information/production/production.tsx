@@ -1,33 +1,34 @@
-import { ReferenceModel, TypeReference } from 'src/interfaces/reference.interface';
-import { EntryItem } from 'src/interfaces/report.interface';
+import { ReferenceModel, TypeReference, TypeSECTION } from 'src/interfaces/reference.interface';
 import { productionItem } from './productionItem';
-import { HamirService } from 'src/hamir/hamir.service';
-import { Hamir } from 'src/hamir/models/hamir.model';
+import { Sequelize } from 'sequelize-typescript';
+import { Reference } from 'src/references/reference.model';
 
 export const production = (
     data: any,
     startDate: number,
     endDate: number,
-    globalEntrys: Array<EntryItem> | undefined,
-    hamirs: Hamir[] ) => {
+    sequelize: Sequelize,
+    hamirs: [] ) => {
     
-    let result = [];
+        // Anvar hamir bilan hato bor chog'i
+    let result:any[] = [];
+    let filteredData:Reference[] = []
 
-    data && 
-    data.length > 0 &&
-    data
-    .filter((item: any) => item?.typeReference == TypeReference.STORAGES)
-    .filter((item: any) => {
-        if ( item.filial ) return true
-        return false
-    })
-    .forEach((item: ReferenceModel) => {
-        let element = productionItem(startDate, endDate, item._id, item.name, globalEntrys, hamirs)
+    if (data && data.length) {
+        filteredData  = data.filter((item: Reference) => item?.typeReference == TypeReference.STORAGES)
+                            .filter((item: Reference) => {
+                                if ( item.refValues.typeSection == TypeSECTION.FILIAL ) return true
+                                return false
+                            })
+    }   
+
+    for (const item of filteredData) {
+        let element = productionItem(startDate, endDate, item?.id, item.name, sequelize, hamirs)
 
         if (Object.keys(element).length) {
             result.push(element)
         }
-    })
+    }
     
     return {
         reportType: 'PRODUCTION',

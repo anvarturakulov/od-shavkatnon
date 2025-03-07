@@ -71,9 +71,9 @@ export enum TypeQuery {
 
 export interface QuerySimple {
     reportType: string | null,
-    typeQuery: string | null, 
+    typeQuery: TypeQuery | null, 
     sectionId: number | null,
-    schet: string | null,
+    schet: Schet | null,
     dk: string | null,
     workerId: number | null,
     name: string | null

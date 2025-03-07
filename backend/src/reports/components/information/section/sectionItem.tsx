@@ -1,7 +1,4 @@
 import { EntryItem, Schet, TypeQuery } from 'src/interfaces/report.interface';
-import { queryKor } from 'src/report/helpers/querys/queryKor';
-import { query } from 'src/report/helpers/querys/query';
-import { Document } from 'src/document/models/document.model';
 import { DocumentType } from 'src/interfaces/document.interface';
 
 export const sectionItem = ( 

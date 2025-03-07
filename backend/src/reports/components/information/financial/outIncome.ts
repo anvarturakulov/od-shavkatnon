@@ -1,33 +1,36 @@
-import { ReferenceModel, TypeReference } from 'src/interfaces/reference.interface';
-import { EntryItem, Schet, TypeQuery } from 'src/interfaces/report.interface';
-import { queryKor } from 'src/report/helpers/querys/queryKor';
+import { Sequelize } from 'sequelize-typescript';
+import { TypeReference } from 'src/interfaces/reference.interface';
+import { Schet, TypeQuery } from 'src/interfaces/report.interface';
+import { Reference } from 'src/references/reference.model';
+import { queryKor } from 'src/reports/querys/queryKor';
 
-export const outIncome = (
+export const outIncome = async (
     data: any,
     startDate: number,
     endDate: number,
     debetSchet: Schet,
     kreditSchet: Schet,
-    reference: TypeReference,
+    typeReference: TypeReference,
     reportId: string,
     typeReport: 'income' | 'out',
     bySecondSubconto: boolean,
-    globalEntrys: Array<EntryItem> | undefined ) => {
+    sequelize: Sequelize
+) => {
     
-    let result = [];
+    let result: {name: string, value: number}[] = [];
     let total = typeReport == 'out' ?
-                queryKor(debetSchet, kreditSchet, TypeQuery.OKS, startDate, endDate, '', '', globalEntrys)
-              : queryKor(debetSchet, kreditSchet, TypeQuery.ODS, startDate, endDate, '', '', globalEntrys);
-    
+                await queryKor(debetSchet, kreditSchet, TypeQuery.OKS, startDate, endDate, null, null, null, sequelize)
+              : await queryKor(debetSchet, kreditSchet, TypeQuery.ODS, startDate, endDate, null, null, null, sequelize);
+    let filteredData:Reference[] = []
                 
-    data && 
-    data.length > 0 &&
-    data
-    .filter((item: any) => item?.typeReference == reference)
-    .forEach((item: ReferenceModel) => {
-        let value = typeReport == 'out' ?
-                    queryKor(debetSchet, kreditSchet, TypeQuery.ODS, startDate, endDate, bySecondSubconto ? '' : String(item._id), bySecondSubconto ? String(item._id) : '', globalEntrys)
-                  : queryKor(debetSchet, kreditSchet, TypeQuery.OKS, startDate, endDate, bySecondSubconto ? '' : String(item._id), bySecondSubconto ? String(item._id) : '', globalEntrys);
+    if (data && data.length > 0) {
+        filteredData =  data.filter((item: Reference) => item?.typeReference == typeReference)
+    }
+
+    for (const item of filteredData) {
+        let value: number = typeReport == 'out' ?
+                    await queryKor(debetSchet, kreditSchet, TypeQuery.ODS, startDate, endDate, bySecondSubconto ? null : item.id, bySecondSubconto ? item.id : null, null, sequelize)
+                  : await queryKor(debetSchet, kreditSchet, TypeQuery.OKS, startDate, endDate, bySecondSubconto ? null : item.id, bySecondSubconto ? item.id : null, null, sequelize);
                   
         let element = {
             name: item.name,
@@ -37,7 +40,8 @@ export const outIncome = (
         if (value) {
             result.push(element)
         }
-    })
+    }
+    
     
     return {
         innerReportType: reportId,

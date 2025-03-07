@@ -1,24 +1,25 @@
 
-import { EntryItem, Schet, TypeQuery } from 'src/interfaces/report.interface';
-import { queryKor } from 'src/report/helpers/querys/queryKor';
+import { Sequelize } from 'sequelize-typescript';
+import { Schet, TypeQuery } from 'src/interfaces/report.interface';
+import { queryKor } from 'src/reports/querys/queryKor';
 
-export const materialItem = ( 
+export const materialItem = async ( 
   data: any,
   startDate: number,
   endDate: number,
   title: string, 
-  materialId: string, 
+  materialId: number, 
   un: boolean,
-  globalEntrys: Array<EntryItem> | undefined ) => {    
+  sequelize: Sequelize ) => {    
 
-  const idZagatovka27 = '659ce9a8523a48fdeb6ad92f';
-  const countComeHS = queryKor(Schet.S21, Schet.S23, TypeQuery.OKK, startDate, endDate, '', '', globalEntrys);
-  const countLeaveHS = queryKor(Schet.S20, Schet.S21, TypeQuery.OKK, startDate, endDate, '', '', globalEntrys);
+  const idZagatovka27 = -1;
+  const countComeHS = await queryKor(Schet.S21, Schet.S23, TypeQuery.OKK, startDate, endDate, null, null, null, sequelize);
+  const countLeaveHS = await queryKor(Schet.S20, Schet.S21, TypeQuery.OKK, startDate, endDate, null, null, null, sequelize);
 
-  let count = queryKor(Schet.S20, Schet.S10, TypeQuery.OKK, startDate, endDate, '', String(materialId), globalEntrys) +
-              queryKor(Schet.S23, Schet.S10, TypeQuery.OKK, startDate, endDate, '', String(materialId), globalEntrys);
-  let summa = queryKor(Schet.S20, Schet.S10, TypeQuery.OKS, startDate, endDate, '', String(materialId), globalEntrys) +
-              queryKor(Schet.S23, Schet.S10, TypeQuery.OKS, startDate, endDate, '', String(materialId), globalEntrys);
+  let count = await queryKor(Schet.S20, Schet.S10, TypeQuery.OKK, startDate, endDate, null, materialId, null, sequelize) +
+              await queryKor(Schet.S23, Schet.S10, TypeQuery.OKK, startDate, endDate, null, materialId, null, sequelize);
+  let summa = await queryKor(Schet.S20, Schet.S10, TypeQuery.OKS, startDate, endDate, null, materialId, null, sequelize) +
+              await queryKor(Schet.S23, Schet.S10, TypeQuery.OKS, startDate, endDate, null, materialId, null, sequelize);
   
   if (un && countComeHS>0) {
     let koef = countLeaveHS/countComeHS
@@ -28,7 +29,6 @@ export const materialItem = (
       summa = Math.round((summa * koef) * 100) / 100;
     }
   }
-  // console.log(title,count,summa )
 
   if (count == 0 && summa == 0) return {}
 
@@ -38,7 +38,6 @@ export const materialItem = (
     summa
   }
     
-  // console.log('Materialga kirayapri')
   return element
     
 } 

@@ -1,38 +1,39 @@
 'use client'
-import { EntryItem, Schet } from 'src/interfaces/report.interface';
+import { Schet } from 'src/interfaces/report.interface';
 import { debitorKreditorInners } from './debitorKreditorInners';
 import { TypeReference } from 'src/interfaces/reference.interface';
+import { Sequelize } from 'sequelize-typescript';
 
-export const debitorKreditor = (
+export const debitorKreditor = async (
     data: any,
     startDate: number,
     endDate: number,
-    globalEntrys: Array<EntryItem> | undefined,
+    sequelize: Sequelize,
     ) => {
-    let result = []
+    let result:any[] = []
 
-    let material = debitorKreditorInners(data, startDate, endDate, Schet.S10, TypeReference.TMZ, 'MATERIAL', globalEntrys)
+    let material = await debitorKreditorInners(data, startDate, endDate, Schet.S10, TypeReference.TMZ, 'MATERIAL', sequelize)
     result.push(material);
 
-    let zagatovka = debitorKreditorInners(data, startDate, endDate, Schet.S21, TypeReference.TMZ, 'ZAGATOVKA', globalEntrys)
+    let zagatovka = await debitorKreditorInners(data, startDate, endDate, Schet.S21, TypeReference.TMZ, 'ZAGATOVKA', sequelize)
     result.push(zagatovka);
     
-    let filial = debitorKreditorInners(data, startDate, endDate, Schet.S50, TypeReference.STORAGES, 'FILIAL', globalEntrys)
+    let filial = await debitorKreditorInners(data, startDate, endDate, Schet.S50, TypeReference.STORAGES, 'FILIAL', sequelize)
     result.push(filial);
 
-    let buxgalter = debitorKreditorInners(data, startDate, endDate, Schet.S50, TypeReference.STORAGES, 'BUXGALTER', globalEntrys)
+    let buxgalter = await debitorKreditorInners(data, startDate, endDate, Schet.S50, TypeReference.STORAGES, 'BUXGALTER', sequelize)
     result.push(buxgalter);
 
-    let delivery = debitorKreditorInners(data, startDate, endDate, Schet.S50, TypeReference.STORAGES, 'DELIVERY', globalEntrys)
+    let delivery = await debitorKreditorInners(data, startDate, endDate, Schet.S50, TypeReference.STORAGES, 'DELIVERY', sequelize)
     result.push(delivery);
 
-    let partners = debitorKreditorInners(data, startDate, endDate, Schet.S60, TypeReference.PARTNERS, 'PARTNERS', globalEntrys)
+    let partners = await debitorKreditorInners(data, startDate, endDate, Schet.S60, TypeReference.PARTNERS, 'PARTNERS', sequelize)
     result.push(partners);
 
-    let founders = debitorKreditorInners(data, startDate, endDate, Schet.S66, TypeReference.STORAGES, 'FOUNDERS', globalEntrys)
+    let founders = await debitorKreditorInners(data, startDate, endDate, Schet.S66, TypeReference.STORAGES, 'FOUNDERS', sequelize)
     result.push(founders);
 
-    let workers = debitorKreditorInners(data, startDate, endDate, Schet.S67, TypeReference.WORKERS, 'WORKERS', globalEntrys)
+    let workers = await debitorKreditorInners(data, startDate, endDate, Schet.S67, TypeReference.WORKERS, 'WORKERS', sequelize)
     result.push(workers);
     
     return result

@@ -1,28 +1,30 @@
-import { EntryItem, Schet, TypeQuery } from 'src/interfaces/report.interface';
-import { queryKor } from 'src/report/helpers/querys/queryKor';
-import { query } from 'src/report/helpers/querys/query';
+import { Schet, TypeQuery } from 'src/interfaces/report.interface';
 
-export const cashItem = ( 
+import { Sequelize } from 'sequelize-typescript';
+import { query } from 'src/reports/querys/query';
+import { queryKor } from 'src/reports/querys/queryKor';
+
+export const cashItem = async ( 
   startDate: number,
   endDate: number,
-  currentSectionId: string, 
+  currentSectionId: number | undefined, 
   title: string, 
-  globalEntrys: Array<EntryItem> | undefined ) => {
+  sequelize: Sequelize ) => {
 
   
-  const PDSUM = query( Schet.S50, TypeQuery.PDSUM, startDate, endDate, currentSectionId, '', globalEntrys);
-  const PKSUM = query( Schet.S50, TypeQuery.PKSUM, startDate, endDate, currentSectionId, '', globalEntrys);
-  const TRADEINCOME = queryKor(Schet.S50, Schet.S40, TypeQuery.ODS, startDate, endDate, String(currentSectionId), '', globalEntrys);
-  const MOVEINCOME = queryKor(Schet.S50, Schet.S50, TypeQuery.ODS, startDate, endDate, String(currentSectionId), '', globalEntrys);
-  const MOVEOUT = queryKor(Schet.S50, Schet.S50, TypeQuery.OKS, startDate, endDate, String(currentSectionId), '', globalEntrys);
+  const PDSUM = await query( Schet.S50, TypeQuery.PDSUM, startDate, endDate, currentSectionId, null, null, sequelize);
+  const PKSUM = await query( Schet.S50, TypeQuery.PKSUM, startDate, endDate, currentSectionId, null, null, sequelize);
+  const TRADEINCOME = await queryKor(Schet.S50, Schet.S40, TypeQuery.ODS, startDate, endDate, currentSectionId, null, null, sequelize);
+  const MOVEINCOME = await queryKor(Schet.S50, Schet.S50, TypeQuery.ODS, startDate, endDate, currentSectionId, null, null, sequelize);
+  const MOVEOUT = await queryKor(Schet.S50, Schet.S50, TypeQuery.OKS, startDate, endDate, currentSectionId, null, null, sequelize);
   const CHARGES = 
-    queryKor(Schet.S20, Schet.S50, TypeQuery.OKS, startDate, endDate, String(currentSectionId), '', globalEntrys) + 
-    queryKor(Schet.S67, Schet.S50, TypeQuery.OKS, startDate, endDate, String(currentSectionId), '', globalEntrys);
+  await queryKor(Schet.S20, Schet.S50, TypeQuery.OKS, startDate, endDate, currentSectionId, null, null, sequelize) + 
+  await queryKor(Schet.S67, Schet.S50, TypeQuery.OKS, startDate, endDate, currentSectionId, null, null, sequelize);
   
-  const FORPARTNERS = queryKor(Schet.S60, Schet.S50, TypeQuery.OKS, startDate, endDate, String(currentSectionId), '', globalEntrys);
-  const FORFOUNDER = queryKor(Schet.S66, Schet.S50, TypeQuery.OKS, startDate, endDate, String(currentSectionId), '', globalEntrys);
-  const TDSUM = query( Schet.S50, TypeQuery.TDSUM,  startDate, endDate, currentSectionId, '', globalEntrys);
-  const TKSUM = query( Schet.S50, TypeQuery.TKSUM, startDate, endDate, currentSectionId, '', globalEntrys);
+  const FORPARTNERS = await queryKor(Schet.S60, Schet.S50, TypeQuery.OKS, startDate, endDate, currentSectionId, null, null, sequelize);
+  const FORFOUNDER = await queryKor(Schet.S66, Schet.S50, TypeQuery.OKS, startDate, endDate, currentSectionId, null, null, sequelize);
+  const TDSUM = await query( Schet.S50, TypeQuery.TDSUM,  startDate, endDate, currentSectionId, null, null, sequelize);
+  const TKSUM = await query( Schet.S50, TypeQuery.TKSUM, startDate, endDate, currentSectionId, null, null, sequelize);
 
   if ( !(PDSUM-PKSUM) && !(TRADEINCOME+MOVEINCOME) && !(CHARGES+FORPARTNERS+MOVEOUT+FORFOUNDER) 
       && !(PDSUM-PKSUM+TDSUM-TKSUM)) return {}

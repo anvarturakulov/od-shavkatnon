@@ -1,29 +1,22 @@
-import { ReferenceModel, TypeReference } from 'src/interfaces/reference.interface';
-import { EntryItem } from 'src/interfaces/report.interface';
+import { Sequelize } from 'sequelize-typescript';
 import { givingItem } from './givingItem';
 
-export const giving = (
+export const giving = async (
     data: any,
     startDate: number,
     endDate: number,
-    globalEntrys: Array<EntryItem> | undefined ) => {
+    sequelize: Sequelize ) => {
     
-    let result = [];
+    let result:any[] = [];
 
-    data && 
-    data.length > 0 &&
-    data
-    // .filter((item: any) => item?.typeReference == TypeReference.STORAGES)
-    // .filter((item: any) => {
-    //     if ( item.buxgalter) return true
-    //     return false
-    // })
-    .forEach((item: ReferenceModel) => {
-        let element = givingItem(startDate, endDate, item._id, item.name, globalEntrys)
-        if (Object.keys(element).length) {
-            result.push(element)
+    if (data && data.length) {
+        for (const item of data) {
+            let element = await givingItem(startDate, endDate, item?.id, item.name, sequelize)
+            if (Object.keys(element).length) {
+                result.push(element)
+            }
         }
-    })
+    }    
     
     return {
         reportType: 'GIVING',

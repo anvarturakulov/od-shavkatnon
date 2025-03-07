@@ -1,20 +1,23 @@
-import { ReferenceModel, TypeReference } from 'src/interfaces/reference.interface';
-import { EntryItem, Schet, TypeQuery } from 'src/interfaces/report.interface';
-import { query } from 'src/report/helpers/querys/query';
+import { Sequelize } from 'sequelize-typescript';
+import { TypeReference, TypeSECTION } from 'src/interfaces/reference.interface';
+import { Schet, TypeQuery } from 'src/interfaces/report.interface';
+import { Reference } from 'src/references/reference.model';
+import { query } from 'src/reports/querys/query';
 
-const valueDK = (
+const valueDK = async (
     type: 'start' | 'end',
     schet: Schet,
     startDate: number,
     endDate: number,
-    firstSubconto: string,
-    secondSubconto: string,
-    globalEntrys: Array<EntryItem> | undefined ) => {
+    firstSubcontoId: number,
+    secondSubcontoId: number,
+    thirdSubcontoId: number,
+    sequelize: Sequelize ) => {
     
-    const PDSUM = query(schet, TypeQuery.PDSUM, startDate, endDate, firstSubconto, secondSubconto, globalEntrys)
-    const PKSUM = query(schet, TypeQuery.PKSUM, startDate, endDate, firstSubconto, secondSubconto, globalEntrys)
-    const TDSUM = query(schet, TypeQuery.TDSUM, startDate, endDate, firstSubconto, secondSubconto, globalEntrys)
-    const TKSUM = query(schet, TypeQuery.TKSUM, startDate, endDate, firstSubconto, secondSubconto, globalEntrys)
+    const PDSUM = await query(schet, TypeQuery.PDSUM, startDate, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId, sequelize)
+    const PKSUM = await query(schet, TypeQuery.PKSUM, startDate, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId, sequelize)
+    const TDSUM = await query(schet, TypeQuery.TDSUM, startDate, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId, sequelize)
+    const TKSUM = await query(schet, TypeQuery.TKSUM, startDate, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId, sequelize)
       
     const valueStart = PDSUM - PKSUM 
     const valueEnd = PDSUM - PKSUM + TDSUM - TKSUM
@@ -23,43 +26,52 @@ const valueDK = (
     
 }
 
-export const debitorKreditorInners = (
+export const debitorKreditorInners = async (
     data: any,
     startDate: number,
     endDate: number,
     schet: Schet,
-    reference: TypeReference,
+    typeReference: TypeReference,
     reportId: string,
-    globalEntrys: Array<EntryItem> | undefined ) => {
+    sequelize: Sequelize ) => {
     
-    let innersDebitStart = [];
-    let innersKreditStart = [];
-    let innersDebitEnd = [];
-    let innersKreditEnd = [];
-    
+    let innersDebitStart:any[] = [];
+    let innersKreditStart:any[] = [];
+    let innersDebitEnd:any[] = [];
+    let innersKreditEnd:any[] = [];
+    let filteredData:Reference[] = []
     data && 
     data.length > 0 &&
     data
-    .filter((item: any) => item?.typeReference == reference)
-    .filter((item: any) => {
-        if (reportId == 'DELIVERY') return item?.delivery
-        if (reportId == 'FILIAL') return item?.filial
-        if (reportId == 'BUXGALTER') return (item?.buxgalter || item?.director)
-        // if (reportId == 'FOUNDERS') return item?.
-        return true
-    })
-    .forEach((item: ReferenceModel) => {
-        let firstSubconto, secondSubconto;
-        if (reference == TypeReference.TMZ) {
-            firstSubconto = ''
-            secondSubconto = item._id
+
+    if (data && data.length > 0) {
+        filteredData =  data.filter((item: Reference) => item?.typeReference == typeReference)
+                            .filter((item: Reference) => {
+                                if (reportId == 'DELIVERY') return item?.refValues.typeSection == TypeSECTION.DELIVERY
+                                if (reportId == 'FILIAL') return item?.refValues.typeSection == TypeSECTION.FILIAL
+                                if (reportId == 'BUXGALTER') return (
+                                    item?.refValues.typeSection == TypeSECTION.ACCOUNTANT ||
+                                    item?.refValues.typeSection == TypeSECTION.DIRECTOR
+                                )
+                                return true
+                            })
+    }
+
+    for (const item of filteredData) {
+        
+        let firstSubcontoId, secondSubcontoId, thirdSubcontoId;
+        if (typeReference == TypeReference.TMZ) {
+            firstSubcontoId = null
+            secondSubcontoId = item.id
+            thirdSubcontoId = null
         } else {
-            firstSubconto = item._id
-            secondSubconto = ''
+            firstSubcontoId = item.id
+            secondSubcontoId = null
+            thirdSubcontoId = null
         }
 
-        let valueStart = valueDK('start',schet, startDate, endDate, firstSubconto, secondSubconto, globalEntrys)                 
-        let valueEnd = valueDK('end', schet, startDate, endDate, firstSubconto, secondSubconto, globalEntrys)                 
+        let valueStart = await valueDK('start',schet, startDate, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId, sequelize)                 
+        let valueEnd = await valueDK('end', schet, startDate, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId, sequelize)                 
         
         let elementStart = {
             name: item.name,
@@ -88,7 +100,7 @@ export const debitorKreditorInners = (
             elementEnd.value = elementEnd.value * (-1)
             innersKreditEnd.push(elementEnd)
         }
-    })
+    }
     
     return {
         innerReportType: reportId,

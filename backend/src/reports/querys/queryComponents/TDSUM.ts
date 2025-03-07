@@ -1,12 +1,18 @@
-import { QuerySimple } from "src/interfaces/report.interface";
+import { Schet, TypeQuery } from "src/interfaces/report.interface";
 
-export const TDKOL = (req: QuerySimple) => {
-    const { reportType, typeQuery, sectionId, schet, dk, workerId, name,
-        startDate, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId, firstPrice, secondPrice} = req;
+export const TDSUM = (
+    schet: Schet | null, 
+    typeQuery: TypeQuery | null, 
+    startDate: number | null, 
+    endDate: number | null,  
+    firstSubcontoId: number | undefined | null, 
+    secondSubcontoId: number | undefined | null,
+    thirdSubcontoId: number | undefined | null
+) => {
 
     const replacements: { [key: string]: any } = {};
     
-    let query = ` SELECT SUM(count) as total
+    let query = ` SELECT SUM(total) as total
                   FROM entries
                   WHERE `
             

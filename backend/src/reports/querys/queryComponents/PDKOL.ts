@@ -1,9 +1,15 @@
-import { QuerySimple } from "src/interfaces/report.interface";
+import { QuerySimple, Schet, TypeQuery } from "src/interfaces/report.interface";
 
-export const PKKOL = (req: QuerySimple) => {
-    const { reportType, typeQuery, sectionId, schet, dk, workerId, name,
-        startDate, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId, firstPrice, secondPrice} = req;
-
+export const PDKOL = (
+    schet: Schet | null,  
+    typeQuery: TypeQuery | null, 
+    startDate: number | null, 
+    endDate: number | null, 
+    firstSubcontoId: number | undefined | null, 
+    secondSubcontoId: number | undefined | null,
+    thirdSubcontoId: number | undefined | null
+) => {
+    
     const replacements: { [key: string]: any } = {};
     
     let query = ` SELECT SUM(count) as total
@@ -11,7 +17,7 @@ export const PKKOL = (req: QuerySimple) => {
                   WHERE `
             
     if (schet !== null && schet !== undefined) {
-        query += ` kredit = :schet`;
+        query += ` debet = :schet`;
         replacements.schet = schet;
     }
 
@@ -21,20 +27,21 @@ export const PKKOL = (req: QuerySimple) => {
     }            
 
     if (firstSubcontoId !== null && firstSubcontoId !== undefined) {
-        query += ` AND kreditFirstSubcontoId = :firstSubcontoId`;
+        query += ` AND debetFirstSubcontoId = :firstSubcontoId`;
         replacements.firstSubcontoId = firstSubcontoId;
     }
 
     if (secondSubcontoId !== null && secondSubcontoId !== undefined) {
-        query += ` AND kreditSecondSubcontoId = :secondSubcontoId`;
+        query += ` AND debetSecondSubcontoId = :secondSubcontoId`;
         replacements.secondSubcontoId = secondSubcontoId;
     }
 
     if (thirdSubcontoId !== null && thirdSubcontoId !== undefined) {
-        query += ` AND kreditThirdSubcontoId = :thirdSubcontoId`;
+        query += ` AND debetThirdSubcontoId = :thirdSubcontoId`;
         replacements.thirdSubcontoId = thirdSubcontoId;
     }
 
     let stopQuery = (!schet || !startDate) ? true : false
+    
     return {query, replacements, stopQuery}
 }

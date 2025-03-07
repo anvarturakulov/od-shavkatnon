@@ -1,35 +1,33 @@
 'use client'
-import { EntryItem, FoydaPrice } from 'src/interfaces/report.interface';
-// import { Section } from './section/section';
-import { cash } from './cash/cash';
-import { taking } from './taking/taking';
-import { section } from './section/section';
-import { sklad } from './sklad/sklad';
-import { foyda } from './foyda/foyda';
-import { norma } from './norma/norma';
-import { Document } from 'src/document/models/document.model';
-import { ReferenceDocument } from 'src/reference/models/referense.model';
-import { material } from './material/material';
-import { financial } from './financial/financial';
-import { giving } from './giving/giving';
-import { debitorKreditor } from './debitorKreditor/debitorKreditor';
 
+import { Sequelize } from "sequelize-typescript";
+import { cash } from "./cash/cash";
+import { debitorKreditor } from "./debitorKreditor/debitorKreditor";
+import { financial } from "./financial/financial";
+import { foyda } from "./foyda/foyda";
+import { giving } from "./giving/giving";
+import { material } from "./material/material";
+import { norma } from "./norma/norma";
+import { section } from "./section/section";
+import { sklad } from "./sklad/sklad";
+import { taking } from "./taking/taking";
 
-export const information = (
+export const information = async (
     data: any,
     startDate: number,
     endDate: number,
     reportType: string,
-    foydaPrice: FoydaPrice,
-    globalEntrys: Array<EntryItem> | undefined,
+    firstPrice: number | null,
+    secondPrice: number | null,
     docs: Document[],
-    deliverys: ReferenceDocument[]
+    deliverys: ReferenceDocument[],
+    sequelize: Sequelize
     ) => {
     
-    let result = [];
+    let result:any[] = [];
     
     if (reportType == 'Financial' || reportType == 'All') {
-        let financialResult = financial(data, startDate, endDate, globalEntrys)
+        let financialResult = financial(data, startDate, endDate, sequelize)
         result.push({'reportType': 'FINANCIAL', 'values': financialResult});
     }
     if (reportType == 'Foyda' || reportType == 'All') {
@@ -37,7 +35,7 @@ export const information = (
         result.push(foydaResult);
     }
     if (reportType == 'Cash' || reportType == 'All') {
-        let cashResult = cash(data, startDate, endDate, globalEntrys)
+        let cashResult = await cash(data, startDate, endDate, sequelize)
         result.push(cashResult);
     }
     if (reportType == 'Taking' || reportType == 'All') {
@@ -78,9 +76,11 @@ export const information = (
     }
 
     if (reportType == 'DebitorKreditor' || reportType == 'All') {
-        let debitorKreditorResult = debitorKreditor(data, startDate, endDate, globalEntrys)
+        let debitorKreditorResult = await debitorKreditor(data, startDate, endDate, sequelize)
         result.push({'reportType': 'DEBITORKREDITOR', 'values': debitorKreditorResult});
     }
+
+
     // let productionResult = production(data, startDate, endDate, globalEntrys, hamirs)
     // result.push(productionResult);
     

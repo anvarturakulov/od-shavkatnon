@@ -1,40 +1,38 @@
 
-import { ReferenceModel, TypeReference, TypeTMZ } from 'src/interfaces/reference.interface';
-import { EntryItem, Schet, TypeQuery } from 'src/interfaces/report.interface';
-import { query } from 'src/report/helpers/querys/query';
-import { queryKor } from 'src/report/helpers/querys/queryKor';
+import { Sequelize } from 'sequelize-typescript';
+import { TypeTMZ } from 'src/interfaces/reference.interface';
+import { Schet, TypeQuery } from 'src/interfaces/report.interface';
+import { Reference } from 'src/references/reference.model';
+import { queryKor } from 'src/reports/querys/queryKor';
 
-export const normaItem = ( 
+export const normaItem = async ( 
   data: any,
   startDate: number,
   endDate: number,
-  currentSectionId: string, 
+  currentSectionId: number, 
   title: string, 
-  globalEntrys: Array<EntryItem> | undefined ) => {    
+  sequelize: Sequelize ) => {    
 
-    let result = []
+    let result:any[] = []
+    let filteredData:Reference[] = []
 
-    const idBuxankaSection = '6604086a3e7f32e728cd6a9d';
-    const idZagatovka27 = '659ce9a8523a48fdeb6ad92f';
-    const idZagatovka26 = '659cf66e523a48fdeb6ada1a';
+    const idBuxankaSection = -1;
+    const idZagatovka27 = -1;
+    const idZagatovka26 = -1;
     const idZagatovka = currentSectionId == idBuxankaSection ? idZagatovka26 : idZagatovka27;
-    const countHamirs = queryKor(Schet.S20, Schet.S21, TypeQuery.OKK, startDate, endDate, currentSectionId, idZagatovka, globalEntrys);
+    const countHamirs = await queryKor(Schet.S20, Schet.S21, TypeQuery.OKK, startDate, endDate, currentSectionId, idZagatovka, null, sequelize);
     
     
-    data && 
-    data.length > 0 &&
-    data
-    .filter((item: any) => item?.typeTMZ == TypeTMZ.MATERIAL)
-    .forEach((item: ReferenceModel) => {
-
-      const rasxod = queryKor(Schet.S20, Schet.S10, TypeQuery.OKK, startDate, endDate, String(currentSectionId), String(item._id), globalEntrys);
-      const referenceNorma = item.norma;
+    if (data && data.length) {
+      filteredData = data.filter((item: any) => item?.typeTMZ == TypeTMZ.MATERIAL)
+    }
+    
+    for (const item of filteredData) {
+     
+      const rasxod = await queryKor(Schet.S20, Schet.S10, TypeQuery.OKK, startDate, endDate, currentSectionId, item.id, null, sequelize);
+      const referenceNorma = item.refValues.norma;
       const norma = referenceNorma ? referenceNorma * countHamirs: 0;
       const farq = norma - rasxod;  
-      // if (item.norma) {
-      //   console.log(String(currentSectionId), String(item._id), startDate, endDate)
-      //   console.log(rasxod, referenceNorma, norma, farq)
-      // }
                     
       if (rasxod == 0) return {}
 
@@ -48,7 +46,7 @@ export const normaItem = (
       if (Object.keys(element).length) {
           result.push(element)
       }
-    })
+    }
     
     return ( 
         {

@@ -1,17 +1,17 @@
-import { EntryItem, Schet, TypeQuery } from 'src/interfaces/report.interface';
-import { queryKor } from 'src/report/helpers/querys/queryKor';
+import { Sequelize } from 'sequelize-typescript';
+import { Schet, TypeQuery } from 'src/interfaces/report.interface';
+import { queryKor } from 'src/reports/querys/queryKor';
 
 
-export const zpItemToFoyda = ( 
+export const zpItemToFoyda = async ( 
   startDate: number,
   endDate: number,
-  currentSectionId: string, 
-  globalEntrys: Array<EntryItem> | undefined,
+  currentSectionId: number, 
+  sequelize: Sequelize,
   ) => {
   
   let zp = 0;
-  zp = queryKor(Schet.S20, Schet.S67, TypeQuery.ODS, startDate, endDate, String(currentSectionId), '', globalEntrys);
+  zp = await queryKor(Schet.S20, Schet.S67, TypeQuery.ODS, startDate, endDate, currentSectionId, null, null, sequelize);
   
   return zp
-      
 } 

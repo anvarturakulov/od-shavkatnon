@@ -1,30 +1,34 @@
-import { ReferenceModel, TypeReference } from 'src/interfaces/reference.interface';
-import { EntryItem } from 'src/interfaces/report.interface';
+import { ReferenceModel, TypeReference, TypeSECTION } from 'src/interfaces/reference.interface';
 import { cashItem } from './cashItem';
+import { Sequelize } from 'sequelize-typescript';
+import { Reference } from 'src/references/reference.model';
 
-export const cash = (
+export const cash = async (
     data: any,
     startDate: number,
     endDate: number,
-    globalEntrys: Array<EntryItem> | undefined ) => {
+    sequelize: Sequelize
+ ) => {
     
-    let result = [];
-
-    data && 
-    data.length > 0 &&
-    data
-    .filter((item: any) => item?.typeReference == TypeReference.STORAGES && !item.deleted)
-    .filter((item: any) => {
-        if ( item.buxgalter || item.filial || item.delivery ) return true
-        return false
-    })
-    .forEach((item: ReferenceModel) => {
-        let element = cashItem(startDate, endDate, item._id, item.name, globalEntrys)
-        // console.log(element)
+    let result:any[] = [];
+    let filteredData:any[] = []
+    
+    if (data && data.length > 0 ) {
+        filteredData = data.filter((item: Reference) => item?.typeReference == TypeReference.STORAGES && !item.refValues.markToDeleted)
+                           .filter((item: Reference) => {
+                                if ( item.refValues.typeSection == TypeSECTION.ACCOUNTANT || 
+                                    item.refValues.typeSection == TypeSECTION.FILIAL ||
+                                    item.refValues.typeSection == TypeSECTION.DELIVERY ) return true
+                                return false
+                           })
+    }
+    
+    for (const item of filteredData) {
+        let element = await cashItem(startDate, endDate, item.id, item.name, sequelize)
         if (Object.keys(element).length) {
             result.push(element)
         }
-    })
+    }
     
     return {
         reportType: 'CASH',

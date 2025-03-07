@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { Document } from './document.model';
 import { InjectModel } from '@nestjs/sequelize';
 import { DocValues } from 'src/docValues/docValues.model';
@@ -15,7 +15,7 @@ export class DocumentsService {
 
 
     constructor(
-        private readonly sequelize: Sequelize,
+        @Inject('SEQUELIZE') private readonly sequelize: Sequelize,
         @InjectModel(Document) private documentRepository: typeof Document,
         @InjectModel(DocValues) private docValuesRepository: typeof DocValues,
         @InjectModel(DocTableItems) private docTableItemsRepository: typeof DocTableItems,
@@ -60,21 +60,36 @@ export class DocumentsService {
         try {
             if (document) {
                 document.date = dto.date
+                
                 if (document.docValues) {
-                    await document.docValues.update({...dto.docValues})
+                    await document.docValues.update({ ...dto.docValues });
+                } else {
+                    await this.docValuesRepository.create({ ...dto.docValues, docId: document.id });
                 }
+
                 await document.save()
                 await this.docTableItemsRepository.destroy({where: {docId:document.id}})
 
                 const items = [...dto.docTableItems]
 
-                if (items && items.length > 0 && items[0].analiticId != -1 ) {
-                    for (const item of items) {
-                        const docTableItem = await this.docTableItemsRepository.create({
-                            ...item,
-                            docId: document.id
-                        })
-                    }
+                // if (items && items.length > 0 && items[0].analiticId != -1 ) {
+                //     for (const item of items) {
+                //         const docTableItem = await this.docTableItemsRepository.create({
+                //             ...item,
+                //             docId: document.id
+                //         })
+                //     }
+                // }
+
+                if (items && items.length > 0 && items[0].analiticId != -1) {
+                    await Promise.all(
+                        items.map(item =>
+                            this.docTableItemsRepository.create({
+                                ...item,
+                                docId: document.id,
+                            })
+                        )
+                    );
                 }
 
             }

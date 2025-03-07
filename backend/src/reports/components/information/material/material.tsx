@@ -1,25 +1,26 @@
 import { ReferenceModel, TypeReference } from 'src/interfaces/reference.interface';
-import { EntryItem } from 'src/interfaces/report.interface';
 import { materialItem } from './materialItem';
+import { Sequelize } from 'sequelize-typescript';
+import { Reference } from 'src/references/reference.model';
 
-export const material = (
+export const material = async (
     data: any,
     startDate: number,
     endDate: number,
-    globalEntrys: Array<EntryItem> | undefined ) => {
+    sequelize: Sequelize ) => {
     
-    let result = [];
+    let result:any[] = [];
+    let filteredData:Reference[] = []
+    if (data && data.length) {
+        filteredData = data.filter((item: Reference) => item?.typeReference == TypeReference.TMZ)
+    }
 
-    data && 
-    data.length > 0 &&
-    data
-    .filter((item: any) => item?.typeReference == TypeReference.TMZ)
-    .forEach((item: ReferenceModel) => {
-        let element = materialItem(data, startDate, endDate, item.name, item._id, item.un, globalEntrys)
+    for (const item of filteredData) {
+        let element = await materialItem(data, startDate, endDate, item?.name, item?.id, item.refValues?.un, sequelize)
         if (Object.keys(element).length) {
             result.push(element)
         }
-    })
+    }
     
     return {
         reportType: 'MATERIAL',

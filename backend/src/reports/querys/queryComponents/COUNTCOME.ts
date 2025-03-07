@@ -1,12 +1,18 @@
-import { QuerySimple } from "src/interfaces/report.interface";
+import { Schet, TypeQuery } from "src/interfaces/report.interface";
 
-export const PDSUM = (req: QuerySimple) => {
-    const { reportType, typeQuery, sectionId, schet, dk, workerId, name,
-        startDate, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId, firstPrice, secondPrice} = req;
+export const COUNTCOME = (
+    schet: Schet | null, 
+    typeQuery: TypeQuery | null, 
+    startDate: number | null, 
+    endDate: number | null, 
+    firstSubcontoId: number | undefined | null, 
+    secondSubcontoId: number | undefined | null,
+    thirdSubcontoId: number | undefined | null
+) => {
 
     const replacements: { [key: string]: any } = {};
-
-    let query = ` SELECT SUM(total) as total
+    
+    let query = ` SELECT SUM(count) as total
                   FROM entries
                   WHERE `
             
@@ -15,9 +21,9 @@ export const PDSUM = (req: QuerySimple) => {
         replacements.schet = schet;
     }
 
-    if (startDate !== null && startDate !== undefined) {
-        query += ` AND date < :startDate`;
-        replacements.startDate = startDate;
+    if (endDate !== null && endDate !== undefined) {
+        query += ` AND date < :endDate`;
+        replacements.endDate = endDate;
     }            
 
     if (firstSubcontoId !== null && firstSubcontoId !== undefined) {
@@ -35,6 +41,7 @@ export const PDSUM = (req: QuerySimple) => {
         replacements.thirdSubcontoId = thirdSubcontoId;
     }
 
-    let stopQuery = (!schet || !startDate) ? true : false
+    let stopQuery = (!schet || !endDate) ? true : false
+
     return {query, replacements, stopQuery}
 }
