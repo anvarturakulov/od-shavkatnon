@@ -1,7 +1,8 @@
 
+import { Sequelize } from 'sequelize-typescript';
 import { ReferenceModel, TypeReference } from 'src/interfaces/reference.interface';
-import { EntryItem, Schet, TypeQuery } from 'src/interfaces/report.interface';
-import { query } from 'src/report/helpers/querys/query';
+import { Schet, TypeQuery } from 'src/interfaces/report.interface';
+import { Reference } from 'src/references/reference.model';
 
 export const skladItem = ( 
   data: any,
@@ -9,14 +10,15 @@ export const skladItem = (
   endDate: number,
   currentSectionId: string, 
   title: string, 
-  globalEntrys: Array<EntryItem> | undefined ) => {    
+  sequelize: Sequelize ) => {    
 
-    let result = []
+    let result:any[] = []
+    let filteredData:Reference[] = []
+
+    if (data && data.length) {
+      filteredData = data.filter((item: any) => item?.typeReference == TypeReference.TMZ)
+    }
     
-    data && 
-    data.length > 0 &&
-    data
-    .filter((item: any) => item?.typeReference == TypeReference.TMZ)
     .forEach((item: ReferenceModel) => {
 
       const PDKOL = query(Schet.S10, TypeQuery.PDKOL, startDate, endDate, currentSectionId, item._id, globalEntrys)+

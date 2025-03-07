@@ -1,30 +1,33 @@
-import { ReferenceModel, TypeReference } from 'src/interfaces/reference.interface';
-import { EntryItem } from 'src/interfaces/report.interface';
+import { ReferenceModel, TypeReference, TypeSECTION } from 'src/interfaces/reference.interface';
 import { skladItem } from './skladItem';
+import { Sequelize } from 'sequelize-typescript';
+import { Reference } from 'src/references/reference.model';
 
 export const sklad = (
     data: any,
     startDate: number,
     endDate: number,
-    globalEntrys: Array<EntryItem> | undefined ) => {
+    sequelize: Sequelize ) => {
     
-    let result = [];
+    let result:any[] = [];
+    let filteredData:Reference[] = []
 
-    data && 
-    data.length > 0 &&
-    data
-    .filter((item: any) => item?.typeReference == TypeReference.STORAGES)
-    .filter((item: any) => !item?.deleted)
-    .filter((item: any) => {
-        if ( item.sklad ) return true
-        return false
-    })
-    .forEach((item: ReferenceModel) => {
-        let element = skladItem(data, startDate, endDate, item._id, item.name, globalEntrys)
+    if (data && data.length) {
+        filteredData  = data.filter((item: Reference) => item?.typeReference == TypeReference.STORAGES)
+                            .filter((item: Reference) => !item?.refValues.markToDeleted)
+                            .filter((item: Reference) => {
+                                if ( item.refValues.typeSection == TypeSECTION.STORAGE ) return true
+                                return false
+                            })
+    }
+
+    for (const item of filteredData) {
+        let element = skladItem(data, startDate, endDate, item.id, item.name, sequelize)
         if (Object.keys(element).length) {
             result.push(element)
         }
-    })
+    }
+    
     
     return {
         reportType: 'SKLAD',

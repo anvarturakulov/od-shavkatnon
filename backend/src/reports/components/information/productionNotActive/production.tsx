@@ -3,7 +3,7 @@ import { productionItem } from './productionItem';
 import { Sequelize } from 'sequelize-typescript';
 import { Reference } from 'src/references/reference.model';
 
-export const production = (
+export const production = async (
     data: any,
     startDate: number,
     endDate: number,
@@ -23,7 +23,7 @@ export const production = (
     }   
 
     for (const item of filteredData) {
-        let element = productionItem(startDate, endDate, item?.id, item.name, sequelize, hamirs)
+        let element = await productionItem(startDate, endDate, item?.id, item.name, sequelize, hamirs)
 
         if (Object.keys(element).length) {
             result.push(element)

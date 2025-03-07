@@ -1,35 +1,38 @@
-import { ReferenceModel, TypeReference } from 'src/interfaces/reference.interface';
-import { EntryItem } from 'src/interfaces/report.interface';
+import { ReferenceModel, TypeReference, TypeSECTION } from 'src/interfaces/reference.interface';
 import { sectionItem } from './sectionItem';
-import { Document } from 'src/document/models/document.model';
+import { Document } from 'src/documents/document.model';
+import { Sequelize } from 'sequelize-typescript';
+import { Reference } from 'src/references/reference.model';
 
-export const section = (
+export const section = async (
     sectionType: 'DELIVERY' | 'FILIAL' | 'BUXGALTER' | 'FOUNDER',
     data: any,
     startDate: number,
     endDate: number,
     docs: Document[],
-    globalEntrys: Array<EntryItem> | undefined ) => {
+    sequelize: Sequelize ) => {
     
-    let result = [];
+    let result:any[] = [];
+    let filteredData:Reference[] = []
 
-    data && 
-    data.length > 0 &&
-    data
-    .filter((item: any) => item?.typeReference == TypeReference.STORAGES && !item.deleted)
-    .filter((item: any) => {
-        if (sectionType == 'DELIVERY') return item?.delivery
-        if (sectionType == 'FILIAL') return item?.filial
-        if (sectionType == 'BUXGALTER') return (item?.buxgalter || item?.director)
-        if (sectionType == 'FOUNDER') return ( item?.shavkat || item?.maxsud)
-        return false
-    })
-    .forEach((item: ReferenceModel) => {
-        let element = sectionItem(startDate, endDate, item._id, item.name, docs, sectionType ,globalEntrys)
+    if (data && data.length) {
+        filteredData  = data.filter((item: Reference) => item?.typeReference == TypeReference.STORAGES && !item.refValues.markToDeleted)
+                            .filter((item: Reference) => {
+                                if (sectionType == 'DELIVERY') return item.refValues.typeSection == TypeSECTION.DELIVERY
+                                if (sectionType == 'FILIAL') return item.refValues.typeSection == TypeSECTION.FILIAL
+                                if (sectionType == 'BUXGALTER') return (item.refValues.typeSection == TypeSECTION.ACCOUNTANT 
+                                                                    || item.refValues.typeSection == TypeSECTION.DIRECTOR)
+                                if (sectionType == 'FOUNDER') return item.refValues.typeSection == TypeSECTION.FOUNDER
+                                return false
+                            })
+    }
+
+    for (const item of filteredData) {
+        let element = await sectionItem(startDate, endDate, item.id, item.name, docs, sectionType, sequelize)
         if (Object.keys(element).length) {
             result.push(element)
         }
-    })
+    }
     
     return {
         reportType: `SECTION-${sectionType}`,

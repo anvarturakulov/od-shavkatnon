@@ -11,6 +11,8 @@ import { norma } from "./norma/norma";
 import { section } from "./section/section";
 import { sklad } from "./sklad/sklad";
 import { taking } from "./taking/taking";
+import { Document } from "src/documents/document.model";
+import { Reference } from "src/references/reference.model";
 
 export const information = async (
     data: any,
@@ -20,7 +22,7 @@ export const information = async (
     firstPrice: number | null,
     secondPrice: number | null,
     docs: Document[],
-    deliverys: ReferenceDocument[],
+    deliverys: Reference[],
     sequelize: Sequelize
     ) => {
     
@@ -31,7 +33,7 @@ export const information = async (
         result.push({'reportType': 'FINANCIAL', 'values': financialResult});
     }
     if (reportType == 'Foyda' || reportType == 'All') {
-        let foydaResult = foyda(data, startDate, endDate, foydaPrice, globalEntrys, docs, deliverys)
+        let foydaResult = foyda(data, startDate, endDate, firstPrice, secondPrice, sequelize, docs, deliverys)
         result.push(foydaResult);
     }
     if (reportType == 'Cash' || reportType == 'All') {
@@ -39,39 +41,39 @@ export const information = async (
         result.push(cashResult);
     }
     if (reportType == 'Taking' || reportType == 'All') {
-        let takingResult = taking(data, startDate, endDate, globalEntrys)
+        let takingResult = taking(data, startDate, endDate, sequelize)
         result.push(takingResult);
     }
     if (reportType == 'Giving' || reportType == 'All') {
-        let givingResult = giving(data, startDate, endDate, globalEntrys)
+        let givingResult = giving(data, startDate, endDate, sequelize)
         result.push(givingResult);
     }
     if (reportType == 'Section-buxgalter' || reportType == 'All') {
-        let sectionBuxResult = section('BUXGALTER', data, startDate, endDate, docs,  globalEntrys )
+        let sectionBuxResult = section('BUXGALTER', data, startDate, endDate, docs,  sequelize )
         result.push(sectionBuxResult);
     }
     if (reportType == 'Section-filial' || reportType == 'All') {
-        let sectionFilResult = section('FILIAL', data, startDate, endDate, docs, globalEntrys)
+        let sectionFilResult = section('FILIAL', data, startDate, endDate, docs, sequelize)
         result.push(sectionFilResult);
     }
     if (reportType == 'Section-delivery' || reportType == 'All') {
-        let sectionDelResult = section('DELIVERY', data, startDate, endDate, docs, globalEntrys)
+        let sectionDelResult = section('DELIVERY', data, startDate, endDate, docs, sequelize)
         result.push(sectionDelResult);
     }
     if (reportType == 'Sklad' || reportType == 'All') {
-        let skladResult = sklad(data, startDate, endDate, globalEntrys)
+        let skladResult = sklad(data, startDate, endDate, sequelize)
         result.push(skladResult);
     }
     if (reportType == 'Norma' || reportType == 'All') {
-        let normaResult = norma(data, startDate, endDate, globalEntrys)
+        let normaResult = norma(data, startDate, endDate, sequelize)
         result.push(normaResult);
     }
     if (reportType == 'Material' || reportType == 'All') {
-        let materialResult = material(data, startDate, endDate, globalEntrys)
+        let materialResult = material(data, startDate, endDate, sequelize)
         result.push(materialResult); 
     }
     if (reportType == 'Section-founder' || reportType == 'All') {
-        let sectionFounderResult = section('FOUNDER', data, startDate, endDate, docs, globalEntrys)
+        let sectionFounderResult = section('FOUNDER', data, startDate, endDate, docs, sequelize)
         result.push(sectionFounderResult);
     }
 

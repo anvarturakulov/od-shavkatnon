@@ -1,19 +1,25 @@
-import { EntryItem, Schet, TypeQuery } from 'src/interfaces/report.interface';
+import { Schet, TypeQuery } from 'src/interfaces/report.interface';
 import { DocumentType } from 'src/interfaces/document.interface';
+import { Sequelize } from 'sequelize-typescript';
+import { Document } from 'src/documents/document.model';
+import { queryKor } from 'src/reports/querys/queryKor';
+import { query } from 'src/reports/querys/query';
 
-export const sectionItem = ( 
+export const sectionItem = async ( 
   startDate: number,
   endDate: number,
-  currentSectionId: string, 
+  currentSectionId: number, 
   title: string,
   docs: Document[],
   sectionType: 'DELIVERY' | 'FILIAL' | 'BUXGALTER' | 'FOUNDER',
-  globalEntrys: Array<EntryItem> | undefined ) => {
+  sequelize: Sequelize ) => {
 
   let maydaSavdoCountAll = 0;
   let maydaSavdoCountBux = 0;
-  const maydaSavdoReceiverId = '659d292d630ca82ec3dcae1c';
-  let idForBuxanka = '678dc6a8d32db54479bf5d79';
+  const maydaSavdoReceiverId = -1;
+  let idForBuxanka = -1;
+
+  // Shu erda hato bor
   
   if (docs && docs.length > 0) {
     maydaSavdoCountAll = docs.filter((item: Document) => {
@@ -21,10 +27,10 @@ export const sectionItem = (
         item.date>= startDate && 
         item.date <= endDate && 
         item.documentType == DocumentType.SaleProd &&
-        String(item.senderId) == String(currentSectionId)  &&
-        String(item.receiverId) == maydaSavdoReceiverId
+        item.docValues.senderId == currentSectionId  &&
+        item.docValues.receiverId == maydaSavdoReceiverId
       )
-    }).reduce((total, item:Document) => total + item.count, 0)
+    }).reduce((total, item:Document) => total + item.docValues.count, 0)
   }
 
   if (docs && docs.length > 0) {
@@ -33,53 +39,53 @@ export const sectionItem = (
         item.date>= startDate && 
         item.date <= endDate && 
         item.documentType == DocumentType.SaleProd &&
-        String(item.senderId) == String(currentSectionId)  &&
-        String(item.analiticId) == idForBuxanka &&
-        String(item.receiverId) == maydaSavdoReceiverId
+        item.docValues.senderId == currentSectionId  &&
+        item.docValues.analiticId == idForBuxanka &&
+        item.docValues.receiverId == maydaSavdoReceiverId
       )
-    }).reduce((total, item:Document) => total + item.count, 0)
+    }).reduce((total, item:Document) => total + item.docValues.count, 0)
   }
   let maydaSavdoCount = maydaSavdoCountAll - maydaSavdoCountBux
 
   let schetCash = sectionType == 'FOUNDER' ? Schet.S68 : Schet.S50
 
-  const PDKOL = query(Schet.S28, TypeQuery.PDKOL, startDate, endDate, currentSectionId, '', globalEntrys);
-  const PDKOLbux = query(Schet.S28, TypeQuery.PDKOL, startDate, endDate, currentSectionId, idForBuxanka, globalEntrys);
+  const PDKOL = await query(Schet.S28, TypeQuery.PDKOL, startDate, endDate, currentSectionId, null, null, sequelize);
+  const PDKOLbux = await query(Schet.S28, TypeQuery.PDKOL, startDate, endDate, currentSectionId, idForBuxanka, null, sequelize);
   
-  const PKKOL = query(Schet.S28, TypeQuery.PKKOL, startDate, endDate, currentSectionId, '', globalEntrys);
-  const PKKOLbux = query(Schet.S28, TypeQuery.PKKOL, startDate, endDate, currentSectionId, idForBuxanka, globalEntrys);
+  const PKKOL = await query(Schet.S28, TypeQuery.PKKOL, startDate, endDate, currentSectionId, null, null, sequelize);
+  const PKKOLbux = await query(Schet.S28, TypeQuery.PKKOL, startDate, endDate, currentSectionId, idForBuxanka, null, sequelize);
 
-  const OBKOLD2828 = queryKor(Schet.S28, Schet.S28, TypeQuery.ODK, startDate, endDate, String(currentSectionId), '', globalEntrys);
-  const OBKOLD2828bux = queryKor(Schet.S28, Schet.S28, TypeQuery.ODK, startDate, endDate, String(currentSectionId), idForBuxanka, globalEntrys);
+  const OBKOLD2828 = await queryKor(Schet.S28, Schet.S28, TypeQuery.ODK, startDate, endDate, currentSectionId, null, null, sequelize);
+  const OBKOLD2828bux = await queryKor(Schet.S28, Schet.S28, TypeQuery.ODK, startDate, endDate, currentSectionId, idForBuxanka, null, sequelize);
   
-  const OBKOLD2820 = queryKor(Schet.S28, Schet.S20, TypeQuery.ODK, startDate, endDate, String(currentSectionId), '', globalEntrys);
-  const OBKOLD2820bux = queryKor(Schet.S28, Schet.S20, TypeQuery.ODK, startDate, endDate, String(currentSectionId), idForBuxanka, globalEntrys);;
+  const OBKOLD2820 = await queryKor(Schet.S28, Schet.S20, TypeQuery.ODK, startDate, endDate, currentSectionId, null, null, sequelize);
+  const OBKOLD2820bux = await queryKor(Schet.S28, Schet.S20, TypeQuery.ODK, startDate, endDate, currentSectionId, idForBuxanka, null, sequelize);;
   
-  const OBKOLK2828 = queryKor(Schet.S28, Schet.S28, TypeQuery.OKK, startDate, endDate, String(currentSectionId), '', globalEntrys);
-  const OBKOLK2828bux = queryKor(Schet.S28, Schet.S28, TypeQuery.OKK, startDate, endDate, String(currentSectionId), idForBuxanka, globalEntrys);
+  const OBKOLK2828 = await queryKor(Schet.S28, Schet.S28, TypeQuery.OKK, startDate, endDate, currentSectionId, null, null, sequelize);
+  const OBKOLK2828bux = await queryKor(Schet.S28, Schet.S28, TypeQuery.OKK, startDate, endDate, currentSectionId, idForBuxanka, null, sequelize);
   
-  const productionImportCol = queryKor(Schet.S28, Schet.S60, TypeQuery.ODK, startDate, endDate, String(currentSectionId), '', globalEntrys);
+  const productionImportCol = await queryKor(Schet.S28, Schet.S60, TypeQuery.ODK, startDate, endDate, currentSectionId, null, null, sequelize);
 
-  const OBKOLK2028 = queryKor(Schet.S20, Schet.S28, TypeQuery.OKK, startDate, endDate, String(currentSectionId), '', globalEntrys);;
-  const OBKOLK2028bux = queryKor(Schet.S20, Schet.S28, TypeQuery.OKK, startDate, endDate, String(currentSectionId), idForBuxanka, globalEntrys);
+  const OBKOLK2028 = await queryKor(Schet.S20, Schet.S28, TypeQuery.OKK, startDate, endDate, currentSectionId, null, null, sequelize);
+  const OBKOLK2028bux = await queryKor(Schet.S20, Schet.S28, TypeQuery.OKK, startDate, endDate, currentSectionId, idForBuxanka, null, sequelize);
 
-  const OBKOLK4028 = queryKor(Schet.S40, Schet.S28, TypeQuery.OKK, startDate, endDate, String(currentSectionId), '', globalEntrys);
-  const OBKOLK4028bux = queryKor(Schet.S40, Schet.S28, TypeQuery.OKK, startDate, endDate, String(currentSectionId), idForBuxanka, globalEntrys);
+  const OBKOLK4028 = await queryKor(Schet.S40, Schet.S28, TypeQuery.OKK, startDate, endDate, currentSectionId, null, null, sequelize);
+  const OBKOLK4028bux = await queryKor(Schet.S40, Schet.S28, TypeQuery.OKK, startDate, endDate, currentSectionId, idForBuxanka, null, sequelize);
   
-  const TDKOL = query(Schet.S28, TypeQuery.TDKOL, startDate, endDate, currentSectionId, '', globalEntrys);
-  const TDKOLbux = query(Schet.S28, TypeQuery.TDKOL, startDate, endDate, currentSectionId, idForBuxanka, globalEntrys);
+  const TDKOL = await query(Schet.S28, TypeQuery.TDKOL, startDate, endDate, currentSectionId, null, null, sequelize);
+  const TDKOLbux = await query(Schet.S28, TypeQuery.TDKOL, startDate, endDate, currentSectionId, idForBuxanka, null, sequelize);
   
-  const TKKOL = query(Schet.S28, TypeQuery.TKKOL, startDate, endDate, currentSectionId, '', globalEntrys);
-  const TKKOLbux = query(Schet.S28, TypeQuery.TKKOL, startDate, endDate, currentSectionId, idForBuxanka, globalEntrys);
+  const TKKOL = await query(Schet.S28, TypeQuery.TKKOL, startDate, endDate, currentSectionId, null, null, sequelize);
+  const TKKOLbux = await query(Schet.S28, TypeQuery.TKKOL, startDate, endDate, currentSectionId, idForBuxanka, null, sequelize);
 
-  const PDSUM = query(schetCash, TypeQuery.PDSUM, startDate, endDate, currentSectionId, '', globalEntrys);
-  const PKSUM = query(schetCash, TypeQuery.PKSUM, startDate, endDate, currentSectionId, '', globalEntrys);
+  const PDSUM = await query(schetCash, TypeQuery.PDSUM, startDate, endDate, currentSectionId, null, null, sequelize);
+  const PKSUM = await query(schetCash, TypeQuery.PKSUM, startDate, endDate, currentSectionId, null, null, sequelize);
 
-  const TDSUM = query(schetCash, TypeQuery.TDSUM, startDate, endDate, currentSectionId, '', globalEntrys);
-  const TKSUM = query(schetCash, TypeQuery.TKSUM, startDate, endDate, currentSectionId, '', globalEntrys);
+  const TDSUM = await query(schetCash, TypeQuery.TDSUM, startDate, endDate, currentSectionId, null, null, sequelize);
+  const TKSUM = await query(schetCash, TypeQuery.TKSUM, startDate, endDate, currentSectionId, null, null, sequelize);
 
-  const MOVEINN = queryKor(schetCash, schetCash, TypeQuery.ODS, startDate, endDate, String(currentSectionId), '', globalEntrys);
-  const MOVEOUT = queryKor(schetCash, schetCash, TypeQuery.OKS, startDate, endDate, String(currentSectionId), '', globalEntrys);
+  const MOVEINN = await queryKor(schetCash, schetCash, TypeQuery.ODS, startDate, endDate, currentSectionId, null, null, sequelize);
+  const MOVEOUT = await queryKor(schetCash, schetCash, TypeQuery.OKS, startDate, endDate, currentSectionId, null, null, sequelize);
 
   
   return (

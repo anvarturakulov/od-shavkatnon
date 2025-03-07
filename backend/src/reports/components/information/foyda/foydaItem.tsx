@@ -21,8 +21,8 @@ export const foydaItem = async (
   endDate: number,
   currentSectionId: number, 
   title: string,
-  firstPrice: number,
-  secondPrice: number,
+  firstPrice: number | null,
+  secondPrice: number | null,
   sequelize: Sequelize,
   docs: Document[],
   deliverys: Reference[],
@@ -169,8 +169,8 @@ export const foydaItem = async (
   let sale = (saleAll - saleBux) > 0 ? (saleAll - saleBux) : 0
 
 
-  let valueForSale = firstPrice
-  let valueForSaleBux = secondPrice
+  let valueForSale = firstPrice ? firstPrice : 0
+  let valueForSaleBux = secondPrice ? secondPrice : 0
   const saleWithMove = sale + (d - i + o) * valueForSale;
   const saleWithMoveBux = saleBux + (dBux - iBux + oBux) * valueForSaleBux;
   const saleWithMoveAll = saleWithMove + saleWithMoveBux

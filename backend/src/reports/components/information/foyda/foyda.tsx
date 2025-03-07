@@ -11,8 +11,8 @@ export const foyda = async (
     data: any,
     startDate: number,
     endDate: number,
-    firstPrice: number,
-    secondPrice: number,
+    firstPrice: number | null,
+    secondPrice: number | null,
     sequelize: Sequelize,
     docs: Document[],
     deliverys: Reference[] ) => {
@@ -27,7 +27,7 @@ export const foyda = async (
         let idUmumBulim = arrUmumBulim[0]._id;
         let filteredData:Reference[] = []
 
-        zpUmumBulim = zpItemToFoyda(startDate, endDate, idUmumBulim, sequelize)
+        zpUmumBulim = await zpItemToFoyda(startDate, endDate, idUmumBulim, sequelize)
         //***
         filteredData = data.filter((item: Reference)=> {
             return item.typeReference == TypeReference.CHARGES && item.refValues.longCharge
