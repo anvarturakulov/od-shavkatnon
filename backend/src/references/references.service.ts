@@ -17,6 +17,16 @@ export class ReferencesService {
         return references
     }
 
+    async getDeliverys() {
+        const references = await this.referenceRepository.findAll({include: [RefValues]})
+        
+        if (references) {
+            
+        }
+        return references
+    }
+    
+
     async getReferenceByType(typeReference: TypeReference) {
         const references = await this.referenceRepository.findAll({where: {typeReference}, include: [RefValues]})
         return references

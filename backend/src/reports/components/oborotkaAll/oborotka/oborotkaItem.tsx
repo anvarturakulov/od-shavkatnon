@@ -1,71 +1,70 @@
-import { ReferenceModel, TypeReference, TypeTMZ } from 'src/interfaces/reference.interface';
-import { EntryItem, Schet, TypeQuery } from 'src/interfaces/report.interface';
-import { queryForOborotka } from './queryForOborotka';
+import { Schet, TypeQuery } from 'src/interfaces/report.interface';
+import { Sequelize } from 'sequelize-typescript';
+import { query } from 'src/reports/querys/query';
+import { Reference } from 'src/references/reference.model';
 
-const getName = (data: any, id:string): string => {
-  if (id == '') return 'ТАНЛАНМАГАН КАТОР';
+const getName = (data: any, id:number | null): string => {
+  if (id == null) return 'ТАНЛАНМАГАН КАТОР';
   if (data && data.length) {
-    return data.filter((item: ReferenceModel) => String(item?._id) == id)[0]?.name;
+    return data.filter((item: Reference) => item.id == id)[0]?.name;
   }
   return 'ТАНЛАНМАГАН КАТОР';
   
 }
 
-export const oborotkaItem = ( 
+export const oborotkaItem = async( 
   data: any,
-  startDate: number,
-  endDate: number,
-  firstSubcontoId: string,
+  startDate: number | null,
+  endDate: number | null,
+  firstSubcontoId: number | null,
   secondList: any,
-  schet: string,
-  globalEntrys: Array<EntryItem> | undefined ) => {    
+  schet: Schet | null,
+  sequelize:Sequelize ) => {    
 
-    const PDSUM = queryForOborotka(schet, TypeQuery.PDSUM, startDate, endDate, firstSubcontoId, 'none', globalEntrys);
-    const PDKOL = queryForOborotka(schet, TypeQuery.PDKOL, startDate, endDate, firstSubcontoId, 'none', globalEntrys);
-    const PKSUM = queryForOborotka(schet, TypeQuery.PKSUM, startDate, endDate, firstSubcontoId, 'none', globalEntrys);
-    const PKKOL = queryForOborotka(schet, TypeQuery.PKKOL, startDate, endDate, firstSubcontoId, 'none', globalEntrys);
-    const TDSUM = queryForOborotka(schet, TypeQuery.TDSUM, startDate, endDate, firstSubcontoId, 'none', globalEntrys);
-    const TDKOL = queryForOborotka(schet, TypeQuery.TDKOL, startDate, endDate, firstSubcontoId, 'none', globalEntrys);
-    const TKSUM = queryForOborotka(schet, TypeQuery.TKSUM, startDate, endDate, firstSubcontoId, 'none', globalEntrys);
-    const TKKOL = queryForOborotka(schet, TypeQuery.TKKOL, startDate, endDate, firstSubcontoId, 'none', globalEntrys);
+    const PDSUM = await query(schet, TypeQuery.PDSUM, startDate, endDate, firstSubcontoId, null, null, sequelize);
+    const PDKOL = await query(schet, TypeQuery.PDKOL, startDate, endDate, firstSubcontoId, null, null, sequelize);
+    const PKSUM = await query(schet, TypeQuery.PKSUM, startDate, endDate, firstSubcontoId, null, null, sequelize);
+    const PKKOL = await query(schet, TypeQuery.PKKOL, startDate, endDate, firstSubcontoId, null, null, sequelize);
+    const TDSUM = await query(schet, TypeQuery.TDSUM, startDate, endDate, firstSubcontoId, null, null, sequelize);
+    const TDKOL = await query(schet, TypeQuery.TDKOL, startDate, endDate, firstSubcontoId, null, null, sequelize);
+    const TKSUM = await query(schet, TypeQuery.TKSUM, startDate, endDate, firstSubcontoId, null, null, sequelize);
+    const TKKOL = await query(schet, TypeQuery.TKKOL, startDate, endDate, firstSubcontoId, null, null, sequelize);
     
     if ( !PDSUM && !PKSUM && !TDSUM && !TKSUM) return {}
     
-    let subResults = []
+    let subResults:any[] = []
     
-    secondList &&
-    secondList.length > 0 &&
-    secondList
-    .forEach((secondSubcontoId: string) => {
-      const subPDSUM = queryForOborotka(schet, TypeQuery.PDSUM, startDate, endDate, firstSubcontoId, secondSubcontoId, globalEntrys);
-      const subPDKOL = queryForOborotka(schet, TypeQuery.PDKOL, startDate, endDate, firstSubcontoId, secondSubcontoId, globalEntrys);
-      
-      const subPKSUM = queryForOborotka(schet, TypeQuery.PKSUM, startDate, endDate, firstSubcontoId, secondSubcontoId, globalEntrys);
-      const subPKKOL = queryForOborotka(schet, TypeQuery.PKKOL, startDate, endDate, firstSubcontoId, secondSubcontoId, globalEntrys);
-      
-      const subTDSUM = queryForOborotka(schet, TypeQuery.TDSUM, startDate, endDate, firstSubcontoId, secondSubcontoId, globalEntrys);
-      const subTDKOL = queryForOborotka(schet, TypeQuery.TDKOL, startDate, endDate, firstSubcontoId, secondSubcontoId, globalEntrys);
-      
-      const subTKSUM = queryForOborotka(schet, TypeQuery.TKSUM, startDate, endDate, firstSubcontoId, secondSubcontoId, globalEntrys);
-      const subTKKOL = queryForOborotka(schet, TypeQuery.TKKOL, startDate, endDate, firstSubcontoId, secondSubcontoId, globalEntrys);
-            
-      if (subPDSUM || subPKSUM || subTDSUM || subTKSUM || subPDKOL || subPKKOL || subTDKOL || subTKKOL) {
-        let subElement = {
-          name: getName(data, secondSubcontoId),
-          sectionId: secondSubcontoId,
-          subPDSUM,
-          subPDKOL,
-          subPKSUM,
-          subPKKOL,
-          subTDSUM,
-          subTDKOL,
-          subTKSUM,
-          subTKKOL,
-        }
-        subResults.push(subElement) 
-      } 
-
-    })
+    if (secondList && secondList.length) {
+      for (const secondSubcontoId of secondList) {
+        const subPDSUM = await query(schet, TypeQuery.PDSUM, startDate, endDate, firstSubcontoId, secondSubcontoId, null, sequelize);
+        const subPDKOL = await query(schet, TypeQuery.PDKOL, startDate, endDate, firstSubcontoId, secondSubcontoId, null, sequelize);
+        
+        const subPKSUM = await query(schet, TypeQuery.PKSUM, startDate, endDate, firstSubcontoId, secondSubcontoId, null, sequelize);
+        const subPKKOL = await query(schet, TypeQuery.PKKOL, startDate, endDate, firstSubcontoId, secondSubcontoId, null, sequelize);
+        
+        const subTDSUM = await query(schet, TypeQuery.TDSUM, startDate, endDate, firstSubcontoId, secondSubcontoId, null, sequelize);
+        const subTDKOL = await query(schet, TypeQuery.TDKOL, startDate, endDate, firstSubcontoId, secondSubcontoId, null, sequelize);
+        
+        const subTKSUM = await query(schet, TypeQuery.TKSUM, startDate, endDate, firstSubcontoId, secondSubcontoId, null, sequelize);
+        const subTKKOL = await query(schet, TypeQuery.TKKOL, startDate, endDate, firstSubcontoId, secondSubcontoId, null, sequelize);
+              
+        if (subPDSUM || subPKSUM || subTDSUM || subTKSUM || subPDKOL || subPKKOL || subTDKOL || subTKKOL) {
+          let subElement = {
+            name: getName(data, secondSubcontoId),
+            sectionId: secondSubcontoId,
+            subPDSUM,
+            subPDKOL,
+            subPKSUM,
+            subPKKOL,
+            subTDSUM,
+            subTDKOL,
+            subTKSUM,
+            subTKKOL,
+          }
+          subResults.push(subElement) 
+        } 
+      }
+    }
 
     let element = {
       name: getName(data, firstSubcontoId),

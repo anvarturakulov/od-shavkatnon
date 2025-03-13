@@ -5,8 +5,8 @@ import { queryKor } from 'src/reports/querys/queryKor';
 
 export const materialItem = async ( 
   data: any,
-  startDate: number,
-  endDate: number,
+  startDate: number | null,
+  endDate: number | null,
   title: string, 
   materialId: number, 
   un: boolean,

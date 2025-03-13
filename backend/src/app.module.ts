@@ -25,8 +25,8 @@ import { ReportsModule } from './reports/reports.module';
 
 
 @Module({
-    controllers: [DocValuesController],
-    providers: [FilesService, DocValuesService],
+    controllers: [],
+    providers: [FilesService],
     imports: [
         ConfigModule.forRoot({
             envFilePath: `.${process.env.NODE_ENV}.env`
@@ -51,7 +51,7 @@ import { ReportsModule } from './reports/reports.module';
         DocTableItemsModule,
         EntriesModule,
         ReportsModule,
-    ]
+    ],
 })
 
 export class AppModule {}

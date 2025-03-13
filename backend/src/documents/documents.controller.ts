@@ -40,7 +40,6 @@ export class DocumentsController {
         let documentType = request.query?.documentType ? request.query?.documentType : '' 
         let dateStart = request.query?.dateStart ? +request.query?.dateStart : 0
         let dateEnd = request.query?.dateEnd ? +request.query?.dateEnd : 0
-        console.log('datas', dateStart, '  dateEnd', dateEnd)
         return this.documentsService.getAllDocumentsByTypeForDate(documentType, dateStart, dateEnd)
     }
 

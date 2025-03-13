@@ -7,8 +7,8 @@ import { query } from 'src/reports/querys/query';
 const valueDK = async (
     type: 'start' | 'end',
     schet: Schet,
-    startDate: number,
-    endDate: number,
+    startDate: number | null,
+    endDate: number | null,
     firstSubcontoId: number,
     secondSubcontoId: number,
     thirdSubcontoId: number,
@@ -28,8 +28,8 @@ const valueDK = async (
 
 export const debitorKreditorInners = async (
     data: any,
-    startDate: number,
-    endDate: number,
+    startDate: number | null,
+    endDate: number | null,
     schet: Schet,
     typeReference: TypeReference,
     reportId: string,

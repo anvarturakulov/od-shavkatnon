@@ -3,8 +3,8 @@
 // export const queryOld = (
 //   schet: string, 
 //   typeQuery: string, 
-//   startDate: number, 
-//   endDate: number, 
+//   startDate: number | null, 
+//   endDate: number | null, 
 //   firstSubcontoId: string | undefined, 
 //   secondSubcontoId: string | undefined, 
 //   globalEntrys: Array<EntryItem> | undefined) => {

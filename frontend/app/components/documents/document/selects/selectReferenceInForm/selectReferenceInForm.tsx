@@ -62,7 +62,7 @@ export const SelectReferenceInForm = ({ label, typeReference, visibile=true , de
               
             if (type == 'analitic' && id) {
                 currentItem.docValues.analiticId = id
-                
+                console.log(currentItem.docValues.analiticId)
                 if (docsDependentToBalance.includes(contentName)) currentItem.docValues.balance = 0;
                 if (docsDependentToMiddlePrice.includes(contentName)) currentItem.docValues.price = 0;
 

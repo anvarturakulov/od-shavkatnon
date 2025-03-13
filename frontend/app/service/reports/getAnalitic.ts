@@ -1,13 +1,14 @@
 import { showMessage } from '../common/showMessage';
 import axios from 'axios';
 import { Maindata } from '@/app/context/app.context.interfaces';
+import { DEBETKREDIT } from '@/app/interfaces/report.interface';
 
 export const getAnalitic = (
   setMainData: Function | undefined,
   mainData: Maindata,
   firstSubcontoId: string,
   secondSubcontoId: string,
-  dk: string,
+  dk: DEBETKREDIT,
 ) => {
 
   const { user } = mainData.users;
@@ -18,7 +19,7 @@ export const getAnalitic = (
     headers: { Authorization: `Bearer ${user?.token}` }
   };
   
-  let url = process.env.NEXT_PUBLIC_DOMAIN + '/api/report/analitic' + '?startDate=' + startDate + '&endDate=' + endDate + '&schet=' + schet
+  let url = process.env.NEXT_PUBLIC_DOMAIN + '/api/reports/analitic' + '?startDate=' + startDate + '&endDate=' + endDate + '&schet=' + schet
   + '&firstSubcontoId=' + firstSubcontoId + '&secondSubcontoId=' + secondSubcontoId + '&dk=' + dk
   ;
   showMessage('Маълумот юкланмокда. Кутуб туринг', 'warm', setMainData)
@@ -26,6 +27,7 @@ export const getAnalitic = (
     .then(function (response) {
       if (setMainData) {
         // setMainData('analitic', [...response.data]);
+        // console.log('analitic---',response.data)
         showMessage([...response.data], 'success', setMainData)
       }
 

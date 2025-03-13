@@ -3,10 +3,10 @@ import { skladItem } from './skladItem';
 import { Sequelize } from 'sequelize-typescript';
 import { Reference } from 'src/references/reference.model';
 
-export const sklad = (
+export const sklad = async (
     data: any,
-    startDate: number,
-    endDate: number,
+    startDate: number | null,
+    endDate: number | null,
     sequelize: Sequelize ) => {
     
     let result:any[] = [];
@@ -22,12 +22,11 @@ export const sklad = (
     }
 
     for (const item of filteredData) {
-        let element = skladItem(data, startDate, endDate, item.id, item.name, sequelize)
+        let element = await skladItem(data, startDate, endDate, item.id, item.name, sequelize)
         if (Object.keys(element).length) {
             result.push(element)
         }
     }
-    
     
     return {
         reportType: 'SKLAD',

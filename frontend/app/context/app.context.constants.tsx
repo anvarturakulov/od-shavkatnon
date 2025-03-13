@@ -15,6 +15,7 @@ export const defaultDocumentTableItem: DocTableItem = {
 export const defaultDocValue: DocValues = {
     senderId: 0,
     receiverId: 0,
+    // analiticId: 0,
     senderoldId: '',
     receiverOldId: '',
     analiticOldId: '',
@@ -37,7 +38,7 @@ export const defaultDocument:DocumentModel = {
     userId: 0,
     userOldId: '',
     docStatus: DocSTATUS.OPEN,
-    docValues: defaultDocValue,
+    docValues: {...defaultDocValue},
     docTableItems: [defaultDocumentTableItem],
 }
 
@@ -50,8 +51,6 @@ export const defaultTandirWorkers: DefinedTandirWorkers = {
 export const defaultReportOptions: ReportOptions =  {
     startDate: 1708905600000,
     endDate: 1708905600000,
-    firstReferenceId: -1,
-    secondReferenceId: -1,
     showReport: false,
     startReport: false,
     schet: Schet.S20,

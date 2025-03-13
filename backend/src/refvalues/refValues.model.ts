@@ -6,6 +6,7 @@ import { Reference } from "src/references/reference.model";
 interface RefValuesCreationAttrs {
     referenceId: number
     clientForSectionId?: number
+    clientForSectionOldId?: string
     typePartners?: TypePartners
     typeTMZ?: TypeTMZ
     typeSection?: TypeSECTION
@@ -35,6 +36,10 @@ export class RefValues extends Model<RefValues, RefValuesCreationAttrs> {
     @ApiProperty({example:'12222', description: 'Кому относится клиент - идентификатор подразделения'})
     @Column({type: DataType.INTEGER})
     clientForSectionId: number
+
+    @ApiProperty({example:'asfasfas', description: 'Старый ид - Кому относится клиент - идентификатор подразделения'})
+    @Column({type: DataType.STRING})
+    clientForSectionOldId: string
 
     @ApiProperty({example:'CLIENTS', description: 'Тип партнера - ( CLIENTS || SUPPLIERS )'})
     @Column({type: DataType.ENUM(...Object.values(TypePartners))})

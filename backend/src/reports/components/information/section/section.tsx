@@ -7,8 +7,8 @@ import { Reference } from 'src/references/reference.model';
 export const section = async (
     sectionType: 'DELIVERY' | 'FILIAL' | 'BUXGALTER' | 'FOUNDER',
     data: any,
-    startDate: number,
-    endDate: number,
+    startDate: number | null,
+    endDate: number | null,
     docs: Document[],
     sequelize: Sequelize ) => {
     
@@ -33,7 +33,7 @@ export const section = async (
             result.push(element)
         }
     }
-    
+    console.log('RESULT ---', result)
     return {
         reportType: `SECTION-${sectionType}`,
         values : [...result]

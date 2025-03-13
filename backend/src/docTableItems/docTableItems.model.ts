@@ -4,7 +4,7 @@ import { Document } from "src/documents/document.model";
 import { TypePartners, TypeSECTION, TypeTMZ } from "src/interfaces/reference.interface";
 import { Reference } from "src/references/reference.model";
 
-interface DocTableItemCreationAttrs {
+export interface DocTableItemCreationAttrs {
     docId: bigint
     analiticId: number
     analiticOldId: string

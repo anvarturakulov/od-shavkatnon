@@ -4,8 +4,8 @@ import { Schet, TypeQuery } from 'src/interfaces/report.interface';
 import { queryKorFull } from 'src/reports/querys/queryKorFull';
 
 export const givingItem = async ( 
-  startDate: number,
-  endDate: number,
+  startDate: number | null,
+  endDate: number | null,
   currentSectionId: number, 
   title: string, 
   sequelize: Sequelize ) => {    

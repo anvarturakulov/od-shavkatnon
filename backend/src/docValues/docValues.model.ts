@@ -3,7 +3,7 @@ import { BelongsTo, Column, DataType, Model, Table, HasMany, ForeignKey } from "
 import { Document } from "src/documents/document.model";
 import { Reference } from "src/references/reference.model";
 
-interface DocTableItemCreationAttrs {
+export interface DocValuesCreationAttrs {
     docId: bigint
     senderId: number
     senderoldId: string
@@ -25,7 +25,7 @@ interface DocTableItemCreationAttrs {
 }
 
 @Table({tableName: 'docvalues'})
-export class DocValues extends Model<DocValues, DocTableItemCreationAttrs> {
+export class DocValues extends Model<DocValues, DocValuesCreationAttrs> {
 
     @ApiProperty({example:'1', description: 'Уникальный иденфикатор'})
     @Column({type: DataType.BIGINT, unique: true, autoIncrement: true, primaryKey: true})

@@ -5,8 +5,8 @@
 
 // export const zp = (
 //     data: any,
-//     startDate: number,
-//     endDate: number,
+//     startDate: number | null,
+//     endDate: number | null,
 //     globalEntrys: Array<EntryItem> | undefined,
 //     hamirs: Hamir[] ) => {
     

@@ -53,14 +53,13 @@ export const SelectOborot = ({ label, visible , className, ...props }: SelectObo
                 onChange={(e) => changeElements(e, setMainData, mainData)}
             >   
                 {oborotTypeData.map((item, key:number) => (
-                    <>
-                        <option 
-                            value={item.title}
-                            data-schet={item.schet}   
-                            >
-                                {item.title}
-                        </option>
-                    </>
+                    <option 
+                        value={item.title}
+                        data-schet={item.schet}
+                        key = {key}  
+                        >
+                            {item.title}
+                    </option>
                 ))}
             </select>
         </div>

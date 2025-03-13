@@ -27,7 +27,8 @@ export default function OptionsBox({ className, ...props }: OptionsBoxProps): JS
         if ( startDate != 0 && endDate != 0 ) {
             setMainData && setMainData('uploadingDashboard', true);
             if (contentName == ReportType.MatOborot) getMatOborot(setMainData, mainData)
-            if (contentName == ReportType.Oborotka) getOborotka(setMainData, mainData) 
+            if (contentName == ReportType.Oborotka) getOborotka(setMainData, mainData)
+            if (contentName == ReportType.Personal) getOborotka(setMainData, mainData)
             else return true;
         } else {
             showMessage('Санани тулдиринг', 'error', setMainData);
@@ -38,7 +39,7 @@ export default function OptionsBox({ className, ...props }: OptionsBoxProps): JS
 
         <div className={styles.box}>
             
-            <div className={styles.title}>{`${contentTitle} буйича хисобот88`}</div>
+            <div className={styles.title}>{`${contentTitle} буйича хисобот`}</div>
             <div className={styles.dataBox}>
                 <Input label='Бошлангич сана' type='date' id='startDate' onChange={(e)=> onChangeInputOptionsBox(e, setMainData, mainData)}/>
                 <Input label='Охирги сана' type='date' id='endDate' onChange={(e) => onChangeInputOptionsBox(e, setMainData, mainData)} />

@@ -16,7 +16,7 @@ export const getMatOborot = (
     headers: { Authorization: `Bearer ${user?.token}` }
   };
 
-  let url = process.env.NEXT_PUBLIC_DOMAIN + '/api/report/matOborot' + '?startDate=' + startDate + '&endDate=' + endDate + '&section=' + firstReferenceId;
+  let url = process.env.NEXT_PUBLIC_DOMAIN + '/api/reports/matOborot' + '?startDate=' + startDate + '&endDate=' + endDate + '&section=' + firstReferenceId;
 
   axios.get(url, config)
     .then(function (response) {

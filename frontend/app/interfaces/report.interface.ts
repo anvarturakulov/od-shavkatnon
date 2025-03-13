@@ -7,9 +7,9 @@ export enum ReportType {
 }
 
 export interface ReportOptions {
-    startDate: number,
-    endDate: number,
-    firstReferenceId: number,
+    startDate: number | null,
+    endDate: number | null,
+    firstReferenceId?: number,
     secondReferenceId?: number,
     showReport: boolean,
     startReport: boolean,
@@ -45,7 +45,7 @@ export interface EntryItem {
     kreditFirstSubcontoId: string,
     kreditSecondSubcontoId: string,
     count: number,
-    summa: number,
+    total: number,
     comment: string,
 }
 
@@ -62,4 +62,9 @@ export interface DashboardReportItem {
     title: string,
     code: string,
     roles: Array<UserRoles>
+}
+
+export enum DEBETKREDIT {
+    DEBET = 'DEBET',
+    KREDIT = 'KREDIT'
 }

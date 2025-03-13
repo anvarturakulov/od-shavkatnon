@@ -17,8 +17,8 @@ const isDelivery = (deliverys:Reference[], id:number) => {
 
 export const foydaItem = async ( 
   data: any,
-  startDate: number,
-  endDate: number,
+  startDate: number | null,
+  endDate: number | null,
   currentSectionId: number, 
   title: string,
   firstPrice: number | null,
@@ -53,7 +53,7 @@ export const foydaItem = async (
   // Shu erni uzgartirish kerak 
   let idForBuxanka = -1
 
-  if (docs && docs.length > 0) {
+  if (docs && docs.length > 0 && startDate != null && endDate != null) {
     productionAllDocsCountByCompany = docs.filter((item: Document) => {
       return (item.date>= startDate && item.date <= endDate && item.documentType == DocumentType.ComeProduct)
     }).length

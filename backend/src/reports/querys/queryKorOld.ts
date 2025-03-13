@@ -4,8 +4,8 @@
 //   debet: string,
 //   kredit: string,
 //   typeQuery: string,
-//   startDate: number,
-//   endDate: number,
+//   startDate: number | null,
+//   endDate: number | null,
 //   firstSubcontoId: string,
 //   secondSubcontoId: string,
 //   globalEntrys: Array<EntryItem> | undefined) => {

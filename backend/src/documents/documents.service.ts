@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { Document } from './document.model';
-import { InjectModel } from '@nestjs/sequelize';
+import { InjectConnection, InjectModel } from '@nestjs/sequelize';
 import { DocValues } from 'src/docValues/docValues.model';
 import { DocTableItems } from 'src/docTableItems/docTableItems.model';
 import { DocSTATUS, DocumentType } from 'src/interfaces/document.interface';
@@ -8,6 +8,7 @@ import { UpdateCreateDocumentDto } from './dto/updateCreateDocument.dto';
 import { Sequelize } from 'sequelize-typescript';
 import { Entry } from 'src/entries/entry.model';
 import { prepareEntrysList } from './helper/entry/prepareEntrysList';
+import { console } from 'inspector';
 const { Op } = require('sequelize');
 
 @Injectable()
@@ -15,7 +16,7 @@ export class DocumentsService {
 
 
     constructor(
-        @Inject('SEQUELIZE') private readonly sequelize: Sequelize,
+        @InjectConnection() private readonly sequelize: Sequelize,
         @InjectModel(Document) private documentRepository: typeof Document,
         @InjectModel(DocValues) private docValuesRepository: typeof DocValues,
         @InjectModel(DocTableItems) private docTableItemsRepository: typeof DocTableItems,
@@ -106,6 +107,7 @@ export class DocumentsService {
     async createDocument(dto:UpdateCreateDocumentDto) {
         
         const transaction = await this.sequelize.transaction();
+        console.log('DTOOOO', dto)
         try {
             const document = await this.documentRepository.create({
                 date:dto.date, 

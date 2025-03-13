@@ -5,8 +5,8 @@ import { Reference } from 'src/references/reference.model';
 
 export const cash = async (
     data: any,
-    startDate: number,
-    endDate: number,
+    startDate: number | null,
+    endDate: number | null,
     sequelize: Sequelize
  ) => {
     

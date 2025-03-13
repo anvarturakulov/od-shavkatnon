@@ -5,8 +5,8 @@ import { Reference } from 'src/references/reference.model';
 
 export const production = async (
     data: any,
-    startDate: number,
-    endDate: number,
+    startDate: number | null,
+    endDate: number | null,
     sequelize: Sequelize,
     hamirs: [] ) => {
     

@@ -6,8 +6,8 @@ import { query } from 'src/reports/querys/query';
 import { queryKor } from 'src/reports/querys/queryKor';
 
 export const productionItem = async ( 
-  startDate: number,
-  endDate: number,
+  startDate: number | null,
+  endDate: number | null,
   currentSectionId: number, 
   title: string, 
   sequelize: Sequelize,

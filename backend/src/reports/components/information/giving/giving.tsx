@@ -3,8 +3,8 @@ import { givingItem } from './givingItem';
 
 export const giving = async (
     data: any,
-    startDate: number,
-    endDate: number,
+    startDate: number | null,
+    endDate: number | null,
     sequelize: Sequelize ) => {
     
     let result:any[] = [];

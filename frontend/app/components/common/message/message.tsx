@@ -3,6 +3,7 @@ import styles from './message.module.css';
 import cn from 'classnames';
 import { useAppContext } from '@/app/context/app.context';
 import { EntryItem } from '@/app/interfaces/report.interface';
+import { secondsToDateString } from "../../documents/document/doc/helpers/doc.functions";
 
 export const Message = ({className, ...props}: MessageProps): JSX.Element => {
     const {mainData, setMainData} = useAppContext()
@@ -42,16 +43,16 @@ export const Message = ({className, ...props}: MessageProps): JSX.Element => {
                      onClick={() => setMainData && setMainData('showMessageWindow', false)}
                      >
                     <div>
-                        {/* {
+                        {
                             message &&
                             message.length>0 && 
                             message.map((item: EntryItem, index: number)=> {
                                 return (
-                                        item.summa > 0 &&
-                                        <div>{`${index+1}. сана: ${secondsToDateString(item.date)} ${item.comment ? `изох ${item.comment}`:''} ${item.count>0 ? `сон: ${item.count}`: ''} сумма: ${item.summa} (${item.documentType})`}</div>
+                                        item.total > 0 &&
+                                        <div key={index}>{`${index+1}. сана: ${secondsToDateString(item.date)} ${item.comment ? `изох ${item.comment}`:''} ${item.count>0 ? `сон: ${item.count}`: ''} сумма: ${item.total} (${item.documentType})`}</div>
                                 )
                             })
-                        } */}
+                        }
                     </div>
                 </div>
             }

@@ -9,8 +9,8 @@ export const queryKorFull = async (
     debet: Schet,
     kredit: Schet,
     typeQuery: TypeQuery,
-    startDate: number,
-    endDate: number,
+    startDate: number | null,
+    endDate: number | null,
     debetFirstSubcontoId: number | undefined | null, 
     debetSecondSubcontoId: number | undefined | null,
     debetThirdSubcontoId: number | undefined | null,
@@ -52,8 +52,9 @@ export const queryKorFull = async (
                 type: 'SELECT',
             });
     
-            const result = results[0] as { total: string | null };
-            return result.total ? parseFloat(result.total) : 0;
+            const parsedObj = JSON.parse(JSON.stringify(results));
+            const total = parsedObj?.total;
+            return total != null ? Number(total) : 0;
 
         } else 
             return 0

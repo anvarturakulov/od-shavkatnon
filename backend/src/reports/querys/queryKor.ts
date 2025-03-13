@@ -6,12 +6,16 @@ import { ODK } from './queryKorComponents/ODK';
 import { OKS } from './queryKorComponents/OKS';
 import { OKK } from './queryKorComponents/OKK';
 
+function hasKey(obj, key) {
+    return obj !== null && typeof obj === 'object' && key in obj;
+}
+
 export const queryKor = async (
     debet: Schet,
     kredit: Schet,
     typeQuery: TypeQuery,
-    startDate: number,
-    endDate: number,
+    startDate: number | null,
+    endDate: number | null,
     firstSubcontoId: number | undefined | null, 
     secondSubcontoId: number | undefined | null,
     thirdSubcontoId: number | undefined | null,
@@ -23,7 +27,7 @@ export const queryKor = async (
         let stopQuery: boolean = false
         let middle: {[key: string]: any} = {query, replacements}
         
-        middle = (() => {
+        const middleStart = ((typeQuery: TypeQuery) => {
             switch (typeQuery) {
                 case TypeQuery.ODS: return {...ODS(debet, kredit, typeQuery, startDate, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId)}
                 case TypeQuery.ODK: return {...ODK(debet, kredit, typeQuery, startDate, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId)}
@@ -31,6 +35,8 @@ export const queryKor = async (
                 case TypeQuery.OKK: return {...OKK(debet, kredit, typeQuery, startDate, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId)}    
                 }
         })
+
+        middle = {...middleStart(typeQuery)}
 
         query = middle.query
         replacements = {...middle.replacements}
@@ -42,10 +48,11 @@ export const queryKor = async (
                 replacements,
                 type: 'SELECT',
             });
-    
-            const result = results[0] as { total: string | null };
-            return result.total ? parseFloat(result.total) : 0;
 
+            const parsedObj = JSON.parse(JSON.stringify(results));
+            const total = parsedObj?.total;
+            return total != null ? Number(total) : 0;
+            
         } else 
             return 0
 

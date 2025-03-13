@@ -17,5 +17,6 @@ import { UsersModule } from 'src/users/users.module';
     forwardRef(() => AuthModule),
     UsersModule
   ],
+  exports: [ReferencesService]
 })
 export class ReferencesModule {}

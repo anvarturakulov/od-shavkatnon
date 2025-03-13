@@ -1,29 +1,28 @@
-import { ReferenceModel, TypeReference } from 'src/interfaces/reference.interface';
-import { EntryItem } from 'src/interfaces/report.interface';
+import { TypeReference } from 'src/interfaces/reference.interface';
 import { skladItem } from './skladItem';
+import { Sequelize } from 'sequelize-typescript';
+import { Reference } from 'src/references/reference.model';
 
-export const sklad = (
+export const sklad = async(
     data: any,
-    startDate: number,
-    endDate: number,
-    section: string,
-    globalEntrys: Array<EntryItem> | undefined ) => {
+    startDate: number | null,
+    endDate: number | null,
+    section: number | null,
+    sequelize: Sequelize ) => {
     
-    let result = [];
+    let result:any[] = [];
+    let filteredData:Reference[] = []
 
-    data && 
-    data.length > 0 &&
-    data
-    .filter((item: any) => item?.typeReference == TypeReference.STORAGES)
-    // .filter((item: any) => {
-    //     if (section) return String(item._id) == section
-    // })
-    .forEach((item: ReferenceModel) => {
-        let element = skladItem(data, startDate, endDate, item._id, item.name, globalEntrys)
+    if (data && data.length) {
+        filteredData = data.filter((item: any) => item?.typeReference == TypeReference.STORAGES)
+    }
+   
+    for (const item of filteredData) {
+        let element = await skladItem(data, startDate, endDate, item.id, item.name, sequelize)
         if (Object.keys(element).length) {
             result.push(element)
         }
-    })
+    }
     
     return {
         reportType: 'SKLAD',

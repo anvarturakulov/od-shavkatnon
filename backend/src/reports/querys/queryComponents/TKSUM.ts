@@ -32,17 +32,17 @@ export const TKSUM = (
     }
 
     if (firstSubcontoId !== null && firstSubcontoId !== undefined) {
-        query += ` AND kreditFirstSubcontoId = :firstSubcontoId`;
+        query += ` AND "kreditFirstSubcontoId" = :firstSubcontoId`;
         replacements.firstSubcontoId = firstSubcontoId;
     }
 
     if (secondSubcontoId !== null && secondSubcontoId !== undefined) {
-        query += ` AND kreditSecondSubcontoId = :secondSubcontoId`;
+        query += ` AND "kreditSecondSubcontoId" = :secondSubcontoId`;
         replacements.secondSubcontoId = secondSubcontoId;
     }
 
     if (thirdSubcontoId !== null && thirdSubcontoId !== undefined) {
-        query += ` AND kreditThirdSubcontoId = :thirdSubcontoId`;
+        query += ` AND "kreditThirdSubcontoId" = :thirdSubcontoId`;
         replacements.thirdSubcontoId = thirdSubcontoId;
     }
 

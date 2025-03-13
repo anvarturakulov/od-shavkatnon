@@ -7,8 +7,8 @@ import { queryKor } from 'src/reports/querys/queryKor';
 
 export const normaItem = async ( 
   data: any,
-  startDate: number,
-  endDate: number,
+  startDate: number | null,
+  endDate: number | null,
   currentSectionId: number, 
   title: string, 
   sequelize: Sequelize ) => {    
@@ -34,18 +34,19 @@ export const normaItem = async (
       const norma = referenceNorma ? referenceNorma * countHamirs: 0;
       const farq = norma - rasxod;  
                     
-      if (rasxod == 0) return {}
-
-      let element = {
-        name: item.name,
-        rasxod,
-        norma,
-        farq
+      if (rasxod != 0) {
+        let element = {
+          name: item.name,
+          rasxod,
+          norma,
+          farq
+        }
+        
+        if (Object.keys(element).length) {
+            result.push(element)
+        }
       }
       
-      if (Object.keys(element).length) {
-          result.push(element)
-      }
     }
     
     return ( 

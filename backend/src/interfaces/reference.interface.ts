@@ -30,6 +30,7 @@ export enum TypeSECTION {
 
 export interface RefValues {
     clientForSectionId?: number
+    clientForSectionOldId: string,
     typePartners?: TypePartners
     typeTMZ?: TypeTMZ
     typeSection?: TypeSECTION

@@ -6,7 +6,7 @@ import { Entry } from "src/entries/entry.model";
 import { DocSTATUS, DocumentType } from "src/interfaces/document.interface";
 import { User } from "src/users/users.model";
 
-interface DocumentCreationAttrs {
+export interface DocumentCreationAttrs {
     date: bigint;
     userId: number
     documentType: DocumentType

@@ -29,7 +29,6 @@ export const Reference = ({ className, ...props }: ReferenceProps) :JSX.Element 
         oldId: '',
         typeReference, 
         refValues : {
-            comment: '',
         }
     }
 
@@ -62,10 +61,12 @@ export const Reference = ({ className, ...props }: ReferenceProps) :JSX.Element 
 
     const setCheckbox = (checked: boolean, id: string) => {
         setBody((state:ReferenceModel) => {
+            
             return {
                 ...state,
                 refValues: {
-                    [`${id}`]: checked
+                    ...state.refValues,
+                    [id]: checked
                 }
             }
         })
@@ -89,7 +90,7 @@ export const Reference = ({ className, ...props }: ReferenceProps) :JSX.Element 
 
     useEffect(() => {
         const {currentReference} = mainData.reference
-        if (currentReference != undefined) {
+        if (currentReference != undefined || currentReference != null) {
             const { typePartners, typeTMZ, unit, comment, typeSection } = currentReference.refValues
             let newBody: ReferenceModel = {
                 ...currentReference,
@@ -143,13 +144,13 @@ export const Reference = ({ className, ...props }: ReferenceProps) :JSX.Element 
                 {
                     user?.role == UserRoles.ADMIN && 
                     body.typeReference == TypeReference.CHARGES &&
-                    <CheckBoxForReference label='Ойлик харажат' setCheckbox={setCheckbox} checked={body.refValues?.longCharge} id={'longCharge'}/>
+                    <CheckBoxForReference label='Ойлик харажат' setCheckbox={setCheckbox} checked={body.refValues.longCharge} id={'longCharge'}/>
                 }
 
-{
+                {
                     user?.role == UserRoles.ADMIN && 
                     body.typeReference == TypeReference.CHARGES &&
-                    <CheckBoxForReference label='Шавкат харажати' setCheckbox={setCheckbox} checked={body.refValues?.shavkatCharge} id={'shavkatCharge'}/>
+                    <CheckBoxForReference label='Шавкат харажати' setCheckbox={setCheckbox} checked={body.refValues.shavkatCharge} id={'shavkatCharge'}/>
                 }
                 
             </div>

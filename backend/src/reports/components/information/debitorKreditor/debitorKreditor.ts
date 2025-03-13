@@ -6,8 +6,8 @@ import { Sequelize } from 'sequelize-typescript';
 
 export const debitorKreditor = async (
     data: any,
-    startDate: number,
-    endDate: number,
+    startDate: number | null,
+    endDate: number | null,
     sequelize: Sequelize,
     ) => {
     let result:any[] = []

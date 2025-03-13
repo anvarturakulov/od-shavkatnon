@@ -9,7 +9,7 @@ export const setPriceAndBalance = (
   schet: Schet,
   firstSubcontoId: number,
   secondSubcontoId: number | undefined,
-  endDate: number,
+  endDate: number | null,
   forTable: boolean,
   indexTableItem: number
 ) => {

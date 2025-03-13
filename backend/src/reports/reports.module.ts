@@ -5,17 +5,21 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { User } from 'src/users/users.model';
 import { Reference } from 'src/references/reference.model';
 import { AuthModule } from 'src/auth/auth.module';
-import { DocTableItems } from 'src/docTableItems/docTableItems.model';
-import { DocValues } from 'src/docValues/docValues.model';
 import { Entry } from 'src/entries/entry.model';
 import { UsersModule } from 'src/users/users.module';
+import { ReferencesModule } from 'src/references/references.module';
+import { DocumentsModule } from 'src/documents/documents.module';
+import { EntriesModule } from 'src/entries/entries.module';
 
 @Module({
   controllers: [ReportsController],
   imports: [
-        SequelizeModule.forFeature([User, Reference, Document, DocTableItems, DocValues, Entry]),
+        SequelizeModule.forFeature([User, Reference,Entry]),
         forwardRef(() => AuthModule),
-        UsersModule
+        UsersModule,
+        ReferencesModule,
+        DocumentsModule,
+        EntriesModule
       ],
   providers: [ReportsService]
 })

@@ -1,18 +1,18 @@
 'use client'
-import { EntryItem } from 'src/interfaces/report.interface';
+import { Sequelize } from 'sequelize-typescript';
 import { sklad } from './sklad/sklad';
 
-export const matOborot = (
+export const matOborot = async (
     data: any,
-    startDate: number,
-    endDate: number,
-    section: string,
-    globalEntrys: Array<EntryItem> | undefined
+    startDate: number | null,
+    endDate: number | null,
+    section: number | null,
+    sequelize: Sequelize
     ) => {
     
-    let result = [];
+    let result:any[] = [];
 
-    let skladResult = sklad(data, startDate, endDate, section, globalEntrys)
+    let skladResult = await sklad(data, startDate, endDate, section, sequelize)
     result.push(skladResult);
 
     return result

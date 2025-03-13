@@ -20,9 +20,8 @@ export const getInformation = (
 
   setMainData && setMainData('uploadingDashboard', true)
 
-  let url = process.env.NEXT_PUBLIC_DOMAIN + '/api/report/information'+'?startDate='+interval.dateStart+'&endDate='+interval.dateEnd
+  let url = process.env.NEXT_PUBLIC_DOMAIN + '/api/reports/information'+'?startDate='+interval.dateStart+'&endDate='+interval.dateEnd
   +'&reportType='+reportType+'&firstPrice='+firstPrice+'&secondPrice='+secondPrice+'&user='+user?.name;
-
   axios.get(url, config)
     .then(function (response) {
       if (setMainData && !response.data?.user) {

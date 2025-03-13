@@ -1,38 +1,36 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/sequelize';
-import { DocValues } from 'src/docValues/docValues.model';
-import { DocTableItems } from 'src/docTableItems/docTableItems.model';
+import { InjectConnection, InjectModel } from '@nestjs/sequelize';
 import { Sequelize } from 'sequelize-typescript';
 import { Entry } from 'src/entries/entry.model';
-import { QuerySimple, TypeQuery } from 'src/interfaces/report.interface';
+import { DEBETKREDIT, QuerySimple, TypeQuery } from 'src/interfaces/report.interface';
 import { query } from './querys/query';
 import { information } from './components/information/information';
+import { matOborot } from './components/matOborot/matOborot';
+import { ReferencesService } from 'src/references/references.service';
+import { DocumentsService } from 'src/documents/documents.service';
+import { oborotkaAll } from './components/oborotkaAll/oborotkaAll';
+import { EntriesService } from 'src/entries/entries.service';
+import { personalAll } from './components/personalAll/personalAll';
 
 @Injectable()
 export class ReportsService {
 
     constructor(
-        @Inject('SEQUELIZE') private readonly sequelize: Sequelize,
-        @InjectModel(Document) private documentRepository: typeof Document,
-        @InjectModel(DocValues) private docValuesRepository: typeof DocValues,
-        @InjectModel(DocTableItems) private docTableItemsRepository: typeof DocTableItems,
-        @InjectModel(Entry) private entryRepository: typeof Entry
+        @InjectModel(Entry) private entryRepository: typeof Entry,
+        @InjectConnection() private readonly sequelize: Sequelize,
+        private documentsService: DocumentsService,
+        private referencesService: ReferencesService,
+        private entriesService: EntriesService,
     ) {}
 
 
     async getQueryValue(req: QuerySimple) {
         const { typeQuery, schet, startDate, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId} = req;
-
         return await query(schet, typeQuery, startDate, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId, this.sequelize)
-  
     }
     
     async getPriceAndBalance(queryReport: QuerySimple) {
         const { schet, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId } = queryReport;
-        let result = {
-            price: 0,
-            balance: 0
-        }
 
         let countCome = await query(schet, TypeQuery.COUNTCOME, 0, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId, this.sequelize)
         let countLeave = await query(schet, TypeQuery.COUNTLEAVE, 0, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId, this.sequelize)
@@ -42,49 +40,76 @@ export class ReportsService {
         let totalCount = countCome - countLeave;
         let totalSumma = totalCome - totalLeave;
  
-        return totalCount ? +(totalSumma / totalCount).toFixed(5) : 0;
+        return {
+            price: totalCount ? +(totalSumma / totalCount).toFixed(5) : 0,
+            balance: countCome - countLeave
+        }
         
     }
 
     async getInformation(queryInformation: QuerySimple) {
-        let data = await this.getAllReferences();
-        let productions = await this.documentService.getAllDocuments(true);
+        let references = await this.referencesService.getAllReferences();
+        let productions = await this.documentsService.getAllDocuments();
+        let deliverys = await this.referencesService.getDeliverys()
         let {startDate, endDate, reportType, firstPrice, secondPrice} = queryInformation;
-        // let allEntrys = await this.documentService.prepareEntrys()
-        let inform = information(data, startDate, endDate, reportType, foydaPrice, this.documentService.globalEntrys, productions, this.documentService.deliverys )
+        let inform = information(references, startDate, endDate, reportType, firstPrice, secondPrice, productions, deliverys, this.sequelize )
         return inform
     }
 
-    // async getMatOtchet(queryMatOtchet: QuerySimple) {
-    //     let data = await this.referenceService.getAllReferences();
-    //     let { startDate, endDate, section } = queryMatOtchet;
-    //     let result = matOborot(data, startDate, endDate, section, this.documentService.globalEntrys)
-    //     return result
-    // }
+    async getMatOtchet(queryMatOtchet: QuerySimple) {
+        let references = await this.referencesService.getAllReferences();
+        let { startDate, endDate, sectionId } = queryMatOtchet;
+        let result = matOborot(references, startDate, endDate, sectionId, this.sequelize)
+        return result
+    }
+    
+    async getPersonal(queryOborotka: QuerySimple) {
+        let references = await this.referencesService.getAllReferences();
+        let entrys = await this.entriesService.getAllEntries()
+        let { startDate, endDate } = queryOborotka;
+        let result = personalAll(references, entrys, startDate, endDate, this.sequelize)
+        return result
+    }
 
-    // async getOborotka(queryOborotka: QuerySimple) {
-    //     let data = await this.referencesService.getAllReferences();
-    //     let { startDate, endDate, schet } = queryOborotka;
-    //     let result = oborotkaAll(data, startDate, endDate, schet, this.documentService.globalEntrys)
-    //     return result
-    // }
+    async getOborotka(queryOborotka: QuerySimple) {
+        let references = await this.referencesService.getAllReferences();
+        let entrys = await this.entriesService.getAllEntries();
+        let { startDate, endDate, schet } = queryOborotka;
+        let result = oborotkaAll(references, entrys, startDate, endDate, schet, this.sequelize)
+        return result
+    }
 
-    // async getAnalitic(queryAnalitic: QuerySimple) {
-    //     let { startDate, endDate, schet, firstSubcontoId, secondSubcontoId, dk } = queryAnalitic;
-    //     let globalEntrys = [...this.documentService.globalEntrys]
-
-    //     let result = 
-    //         globalEntrys
-    //         .filter((entry: EntryItem) => {
-    //         return (entry.date >= startDate && entry.date <= endDate)
-    //         })
-    //         .filter((entry: EntryItem) => {
-    //         if (dk == 'debet') {
-    //             return (entry.debet >= schet && entry.debetFirstSubcontoId == firstSubcontoId && entry.debetSecondSubcontoId == secondSubcontoId)
-    //         }
-    //         else return (entry.kredit >= schet && entry.kreditFirstSubcontoId == firstSubcontoId && entry.kreditSecondSubcontoId == secondSubcontoId)
-    //     })
-    //     return result
-    // }
+    async getAnalitic(queryAnalitic: QuerySimple) {
+        let { startDate, endDate, schet, firstSubcontoId, secondSubcontoId, thirdSubcontoId, dk } = queryAnalitic;
+        let entrys = await this.entriesService.getAllEntries();
+        if (startDate && endDate && schet) {
+            const result = entrys
+                    .filter((entry: Entry) => {
+                        return (
+                            Number(entry.dataValues.date) >= startDate && 
+                            Number(entry.dataValues.date) <= endDate
+                        )
+                    })
+                    .filter((entry: Entry) => {
+                        if (dk == DEBETKREDIT.DEBET) {
+                            return (
+                                entry.dataValues.debet == schet && 
+                                entry.dataValues.debetFirstSubcontoId == firstSubcontoId && 
+                                entry.dataValues.debetSecondSubcontoId == secondSubcontoId &&
+                                entry.dataValues.debetThirdSubcontoId == null
+                            )
+                        }
+                        else 
+                            return (
+                                entry.dataValues.kredit == schet && 
+                                entry.dataValues.kreditFirstSubcontoId == firstSubcontoId && 
+                                entry.dataValues.kreditSecondSubcontoId == secondSubcontoId &&
+                                entry.dataValues.kreditThirdSubcontoId == null
+                            )
+                    })
+            return result
+        }
+        
+    }
     
 }

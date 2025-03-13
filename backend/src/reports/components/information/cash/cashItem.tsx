@@ -5,9 +5,9 @@ import { query } from 'src/reports/querys/query';
 import { queryKor } from 'src/reports/querys/queryKor';
 
 export const cashItem = async ( 
-  startDate: number,
-  endDate: number,
-  currentSectionId: number | undefined, 
+  startDate: number | null,
+  endDate: number | null,
+  currentSectionId: number | null, 
   title: string, 
   sequelize: Sequelize ) => {
 

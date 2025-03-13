@@ -6,8 +6,8 @@ import { queryKor } from 'src/reports/querys/queryKor';
 import { query } from 'src/reports/querys/query';
 
 export const sectionItem = async ( 
-  startDate: number,
-  endDate: number,
+  startDate: number | null,
+  endDate: number | null,
   currentSectionId: number, 
   title: string,
   docs: Document[],
@@ -18,10 +18,9 @@ export const sectionItem = async (
   let maydaSavdoCountBux = 0;
   const maydaSavdoReceiverId = -1;
   let idForBuxanka = -1;
-
   // Shu erda hato bor
   
-  if (docs && docs.length > 0) {
+  if (docs && docs.length > 0 && startDate != null && endDate != null) {
     maydaSavdoCountAll = docs.filter((item: Document) => {
       return (
         item.date>= startDate && 
@@ -33,7 +32,7 @@ export const sectionItem = async (
     }).reduce((total, item:Document) => total + item.docValues.count, 0)
   }
 
-  if (docs && docs.length > 0) {
+  if (docs && docs.length > 0 && startDate != null && endDate != null) {
     maydaSavdoCountBux = docs.filter((item: Document) => {
       return (
         item.date>= startDate && 

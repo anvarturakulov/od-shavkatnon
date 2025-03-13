@@ -11,6 +11,7 @@ import { getPropertySubconto } from '@/app/service/reports/getPropertySubconto';
 import { dateToStr } from '@/app/service/reports/dateToStr';
 import { MatOborot } from './table/matOborot/matOborot';
 import { Oborotka } from './table/oborotka/oborotka';
+import { Personal } from './table/personal/personal';
 
 export default function ReportTable({ className, ...props} : ReportTableProps):JSX.Element {
     
@@ -21,7 +22,7 @@ export default function ReportTable({ className, ...props} : ReportTableProps):J
 
     const { user } = mainData.users;
     const token = user?.token;
-    const url = process.env.NEXT_PUBLIC_DOMAIN+'/api/reference/getAll/';
+    const url = process.env.NEXT_PUBLIC_DOMAIN+'/api/references/all/';
 
     const { data, mutate } = useSWR(url, (url) => getDataForSwr(url, token));
     
@@ -62,12 +63,10 @@ export default function ReportTable({ className, ...props} : ReportTableProps):J
                     <Oborotka />
                 }
 
-                {/* {contentName == ReportType.Personal && 
-                    <Personal 
-                        data={data}
-                    />
-                } */}
-                
+                {contentName == ReportType.Personal && 
+                    <Personal />
+                }
+
             </div>
             <PrintIco onClick={handlePrint} className={styles.ico}/>
         </>

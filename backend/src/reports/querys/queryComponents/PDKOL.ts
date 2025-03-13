@@ -27,21 +27,20 @@ export const PDKOL = (
     }            
 
     if (firstSubcontoId !== null && firstSubcontoId !== undefined) {
-        query += ` AND debetFirstSubcontoId = :firstSubcontoId`;
+        query += ` AND "debetFirstSubcontoId" = :firstSubcontoId`;
         replacements.firstSubcontoId = firstSubcontoId;
     }
 
     if (secondSubcontoId !== null && secondSubcontoId !== undefined) {
-        query += ` AND debetSecondSubcontoId = :secondSubcontoId`;
+        query += ` AND "debetSecondSubcontoId" = :secondSubcontoId`;
         replacements.secondSubcontoId = secondSubcontoId;
     }
 
     if (thirdSubcontoId !== null && thirdSubcontoId !== undefined) {
-        query += ` AND debetThirdSubcontoId = :thirdSubcontoId`;
+        query += ` AND "debetThirdSubcontoId" = :thirdSubcontoId`;
         replacements.thirdSubcontoId = thirdSubcontoId;
     }
 
     let stopQuery = (!schet || !startDate) ? true : false
-    
     return {query, replacements, stopQuery}
 }

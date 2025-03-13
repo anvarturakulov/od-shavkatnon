@@ -24,21 +24,22 @@ export enum Schet{
     S68 = 'S68', // КОШЕЛЕК УЧРИДИТЕЛЕЙ
 }
 
-// export interface EntryItem {
-//     date: number,
-//     docNumber: number,
-//     docId: string,
-//     documentType: DocumentType,
-//     debet: Schet,
-//     debetFirstSubcontoId: string,
-//     debetSecondSubcontoId: string,
-//     kredit: Schet,
-//     kreditFirstSubcontoId: string,
-//     kreditSecondSubcontoId: string,
-//     count: number,
-//     summa: number,
-//     comment: string,
-// }
+export interface EntryItem {
+    date: number,
+    docId: number,
+    documentType: DocumentType,
+    debet: Schet,
+    debetFirstSubcontoId: number,
+    debetSecondSubcontoId: number,
+    debetThirdSubcontoId: number,
+    kredit: Schet,
+    kreditFirstSubcontoId: number,
+    kreditSecondSubcontoId: number,
+    kreditThirdSubcontoId: number,
+    count: number,
+    summa: number,
+    comment: string,
+}
 
 export enum DEBETKREDIT {
     DEBET = 'DEBET',

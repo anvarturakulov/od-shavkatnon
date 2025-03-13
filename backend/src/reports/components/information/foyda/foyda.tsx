@@ -9,8 +9,8 @@ import { queryKor } from 'src/reports/querys/queryKor';
 
 export const foyda = async (
     data: any,
-    startDate: number,
-    endDate: number,
+    startDate: number | null,
+    endDate: number | null,
     firstPrice: number | null,
     secondPrice: number | null,
     sequelize: Sequelize,

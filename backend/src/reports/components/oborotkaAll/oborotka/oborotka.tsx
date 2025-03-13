@@ -1,17 +1,19 @@
-import { EntryItem } from 'src/interfaces/report.interface';
+import { Sequelize } from 'sequelize-typescript';
 import { oborotkaItem } from './oborotkaItem';
+import { Schet } from 'src/interfaces/report.interface';
 
-export const oborotka = (
+export const oborotka = async (
     data: any,
     subcontosList: any,
-    startDate: number,
-    endDate: number,
-    schet: string,
-    globalEntrys: Array<EntryItem> | undefined ) => {
+    startDate: number | null,
+    endDate: number | null,
+    schet: Schet | null,
+    sequelize: Sequelize ) => {
     
-    let result = [];
-    let firstList = []
-    let secondList = []
+    let result:any = [];
+    let firstList:number[] = []
+    let secondList:number[] = []
+    
     if (subcontosList?.firstList && subcontosList?.firstList.length) {
         firstList = [...subcontosList?.firstList]
     }
@@ -20,16 +22,16 @@ export const oborotka = (
         secondList = [...subcontosList?.secondList]
     }
 
-    firstList && 
-    firstList.length > 0 &&
-    firstList
-    .forEach((firstSubconto: string) => {
-        let element = oborotkaItem(data, startDate, endDate, firstSubconto, secondList, schet, globalEntrys)
-                
-        if (Object.keys(element).length>0) {
-            result.push(element)
+    
+    if (firstList && firstList.length) {
+        for (const firstSubcontoId of firstList) {
+            let element = await oborotkaItem(data, startDate, endDate, firstSubcontoId, secondList, schet, sequelize)
+            if (Object.keys(element).length>0) {
+                result.push(element)
+            }
         }
-    })
+    }
+    
     
     return {
         reportType: 'OBOROTKA',

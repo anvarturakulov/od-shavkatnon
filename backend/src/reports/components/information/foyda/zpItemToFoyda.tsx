@@ -4,8 +4,8 @@ import { queryKor } from 'src/reports/querys/queryKor';
 
 
 export const zpItemToFoyda = async ( 
-  startDate: number,
-  endDate: number,
+  startDate: number | null,
+  endDate: number | null,
   currentSectionId: number, 
   sequelize: Sequelize,
   ) => {

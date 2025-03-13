@@ -34,7 +34,6 @@ export const Doc = ({className, ...props }: DocProps) :JSX.Element => {
         let body: DocumentModel = {
             ...currentDocument
         }
-        console.log(user)
         if (user?.id) body.userId = user.id
         
         if (!validateBody(body)) {

@@ -44,7 +44,7 @@ export class ReportsController {
   @Get('/information')
   @UsePipes(new ValidationPipe({ transform: true }))
   async getInformation(@Query() query: GetEntriesQueryDto) {
-
+    
     const req: QuerySimple = {...requestTransform(query)}
     const report = await this.reportsService.getInformation(req);
 
@@ -90,10 +90,24 @@ export class ReportsController {
 
   @Roles('ALL')
   @UseGuards(RolesGuard)
+  @Get('/personal')
+  @UsePipes(new ValidationPipe({ transform: true }))
+  async getPersonal(@Query() query: GetEntriesQueryDto) {
+
+    const req: QuerySimple = {...requestTransform(query)}
+    const report = await this.reportsService.getOborotka(req);
+
+    if (!report) {
+      throw new NotFoundException(REPORT_NOT_PREPARE);
+    }
+    return report;
+  }
+
+  @Roles('ALL')
+  @UseGuards(RolesGuard)
   @Get('/analitic')
   @UsePipes(new ValidationPipe({ transform: true }))
   async getAnalitic(@Query() query: GetEntriesQueryDto) {
-
     const req: QuerySimple = {...requestTransform(query)}
     const report = await this.reportsService.getAnalitic(req);
 

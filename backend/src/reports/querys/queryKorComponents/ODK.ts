@@ -4,8 +4,8 @@ export const ODK = (
     debet: Schet,
     kredit: Schet,
     typeQuery: TypeQuery,
-    startDate: number,
-    endDate: number,
+    startDate: number | null,
+    endDate: number | null,
     firstSubcontoId: number | undefined | null, 
     secondSubcontoId: number | undefined | null,
     thirdSubcontoId: number | undefined | null,
@@ -38,17 +38,17 @@ export const ODK = (
     }        
 
     if (firstSubcontoId !== null && firstSubcontoId !== undefined) {
-        query += ` AND debetFirstSubcontoId = :firstSubcontoId`;
+        query += ` AND "debetFirstSubcontoId" = :firstSubcontoId`;
         replacements.firstSubcontoId = firstSubcontoId;
     }
 
     if (secondSubcontoId !== null && secondSubcontoId !== undefined) {
-        query += ` AND debetSecondSubcontoId = :secondSubcontoId`;
+        query += ` AND "debetSecondSubcontoId" = :secondSubcontoId`;
         replacements.secondSubcontoId = secondSubcontoId;
     }
 
     if (thirdSubcontoId !== null && thirdSubcontoId !== undefined) {
-        query += ` AND debetThirdSubcontoId = :thirdSubcontoId`;
+        query += ` AND "debetThirdSubcontoId" = :thirdSubcontoId`;
         replacements.thirdSubcontoId = thirdSubcontoId;
     }
 

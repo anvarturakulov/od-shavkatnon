@@ -4,8 +4,8 @@ export const OS = (
     debet: Schet,
     kredit: Schet,
     typeQuery: TypeQuery,
-    startDate: number,
-    endDate: number,
+    startDate: number | null,
+    endDate: number | null,
     debetFirstSubcontoId: number | undefined | null, 
     debetSecondSubcontoId: number | undefined | null,
     debetThirdSubcontoId: number | undefined | null,
@@ -41,32 +41,32 @@ export const OS = (
     }        
 
     if (debetFirstSubcontoId !== null && debetFirstSubcontoId !== undefined) {
-        query += ` AND debetFirstSubcontoId = :debetFirstSubcontoId`;
+        query += ` AND "debetFirstSubcontoId" = :debetFirstSubcontoId`;
         replacements.debetFirstSubcontoId = debetFirstSubcontoId;
     }
 
     if (debetSecondSubcontoId !== null && debetSecondSubcontoId !== undefined) {
-        query += ` AND debetSecondSubcontoId = :debetSecondSubcontoId`;
+        query += ` AND "debetSecondSubcontoId" = :debetSecondSubcontoId`;
         replacements.debetSecondSubcontoId = debetSecondSubcontoId;
     }
 
     if (debetThirdSubcontoId !== null && debetThirdSubcontoId !== undefined) {
-        query += ` AND debetThirdSubcontoId = :debetThirdSubcontoId`;
+        query += ` AND "debetThirdSubcontoId" = :debetThirdSubcontoId`;
         replacements.debetThirdSubcontoId = debetThirdSubcontoId;
     }
 
     if (kreditFirstSubcontoId !== null && kreditFirstSubcontoId !== undefined) {
-        query += ` AND kreditFirstSubcontoId = :kreditFirstSubcontoId`;
+        query += ` AND "kreditFirstSubcontoId" = :kreditFirstSubcontoId`;
         replacements.kreditFirstSubcontoId = kreditFirstSubcontoId;
     }
 
     if (kreditSecondSubcontoId !== null && kreditSecondSubcontoId !== undefined) {
-        query += ` AND kreditSecondSubcontoId = :kreditSecondSubcontoId`;
+        query += ` AND "kreditSecondSubcontoId" = :kreditSecondSubcontoId`;
         replacements.kreditSecondSubcontoId = kreditSecondSubcontoId;
     }
 
     if (kreditThirdSubcontoId !== null && kreditThirdSubcontoId !== undefined) {
-        query += ` AND kreditThirdSubcontoId = :kreditThirdSubcontoId`;
+        query += ` AND "kreditThirdSubcontoId" = :kreditThirdSubcontoId`;
         replacements.kreditThirdSubcontoId = kreditThirdSubcontoId;
     }
 

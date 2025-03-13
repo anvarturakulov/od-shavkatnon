@@ -6,8 +6,8 @@ import { queryKor } from 'src/reports/querys/queryKor';
 
 export const outIncome = async (
     data: any,
-    startDate: number,
-    endDate: number,
+    startDate: number | null,
+    endDate: number | null,
     debetSchet: Schet,
     kreditSchet: Schet,
     typeReference: TypeReference,

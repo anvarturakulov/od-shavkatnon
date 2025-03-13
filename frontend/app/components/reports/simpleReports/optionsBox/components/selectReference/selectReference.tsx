@@ -13,7 +13,7 @@ export const SelectReference = ({ label, visible, typeReference , className, ...
     const { user } = mainData.users;
     const token = user?.token;
     
-    const url = process.env.NEXT_PUBLIC_DOMAIN+'/api/reference/byType/'+typeReference;
+    const url = process.env.NEXT_PUBLIC_DOMAIN+'/api/references/byType/'+typeReference;
     
     const { data, mutate } = useSWR(url, (url) => getDataForSwr(url, token));
     
@@ -45,14 +45,14 @@ export const SelectReference = ({ label, visible, typeReference , className, ...
                 {...props}
                 onChange={(e) => changeElements(e, setMainData, mainData)}
             >   
-                <>
-                    <option 
-                        value={'NotSelected'} 
-                        data-type={null} 
-                        data-id={null}
-                        className={styles.chooseMe}
-                        >{'Тангланг =>>>>'}</option>
-                </>
+                <option 
+                    value={'NotSelected'}
+                    key={-1}
+                    data-type={null} 
+                    data-id={null}
+                    className={styles.chooseMe}
+                    >{'Тангланг =>>>>'}
+                </option>
                 {
                     data && data.length>0 && data
                     .filter((item: ReferenceModel) => {
@@ -72,15 +72,14 @@ export const SelectReference = ({ label, visible, typeReference , className, ...
                     })
                     .sort(sortByName)
                     .map((item:ReferenceModel, key:number) => (
-                    <>
                         <option 
                             value={item.name}
+                            key={key}
                             data-type={item.typeReference} 
                             data-id={item.id}    
                             >
                                 {item.name}
                         </option>
-                    </>
                 ))}
             </select>
         </div>

@@ -13,7 +13,6 @@ import { defaultDocumentTableItem } from '@/app/context/app.context.constants';
 import { DocTable } from '../docTable/docTable';
 import AddIco from './ico/add.svg'
 import { getPriceAndBalance } from '@/app/service/documents/getPriceBalance';
-import { isAdmins } from '@/app/service/common/users';
 import { UserRoles } from '@/app/interfaces/user.interface';
 
 export const DocValues = ({ className, ...props }: DocValuesProps): JSX.Element => {

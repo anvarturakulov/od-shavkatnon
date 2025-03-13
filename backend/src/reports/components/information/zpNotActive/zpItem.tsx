@@ -25,8 +25,8 @@
 
 // export const zpItem = ( 
 //   data: any,
-//   startDate: number,
-//   endDate: number,
+//   startDate: number | null,
+//   endDate: number | null,
 //   currentSectionId: string, 
 //   title: string, 
 //   globalEntrys: Array<EntryItem> | undefined,

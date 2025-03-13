@@ -14,14 +14,18 @@ import { COUNTLEAVE } from './queryComponents/COUNTLEAVE';
 import { TOTALCOME } from './queryComponents/TOTALCOME';
 import { TOTALLEAVE } from './queryComponents/TOTALLEAVE';
 
+export interface TotalResult {
+    total: string | number | null;
+}
+
 export const query = async (
     schet: Schet | null,  
     typeQuery: TypeQuery | null,  
     startDate: number | null, 
     endDate: number | null, 
-    firstSubcontoId: number | undefined | null, 
-    secondSubcontoId: number | undefined | null,
-    thirdSubcontoId: number | undefined | null, 
+    firstSubcontoId: number | null, 
+    secondSubcontoId: number | null,
+    thirdSubcontoId: number | null, 
     sequelize: Sequelize): Promise<number> => {
 
     try {
@@ -30,7 +34,7 @@ export const query = async (
         let stopQuery: boolean = false
         let middle: {[key: string]: any} = {query, replacements}
         
-        middle = (() => {
+        const middleStart = ((typeQuery:TypeQuery | null) => {
             switch (typeQuery) {
                 case TypeQuery.PDKOL: return {...PDKOL(schet, typeQuery, startDate, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId)}
                 case TypeQuery.PDSUM: return {...PDSUM(schet, typeQuery, startDate, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId)}
@@ -49,19 +53,21 @@ export const query = async (
             }
         })
 
+        middle = {...middleStart(typeQuery)}
+
         query = middle.query
         replacements = {...middle.replacements}
         stopQuery = middle.stopQuery
-        
+
         if (!stopQuery) {
-            
             const [results] = await sequelize.query(query, {
                 replacements,
                 type: 'SELECT',
-            });
-    
-            const result = results[0] as { total: string | null };
-            return result.total ? parseFloat(result.total) : 0;
+            })as [unknown[], unknown];
+
+            const parsedObj = JSON.parse(JSON.stringify(results));
+            const total = parsedObj?.total;
+            return total != null ? Number(total) : 0;
 
         } else 
             return 0
