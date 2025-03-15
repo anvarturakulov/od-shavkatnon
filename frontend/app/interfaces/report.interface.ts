@@ -10,7 +10,7 @@ export interface ReportOptions {
     startDate: number | null,
     endDate: number | null,
     firstReferenceId?: number,
-    secondReferenceId?: number,
+    secondReferenceId?: number ,
     showReport: boolean,
     startReport: boolean,
     schet: Schet,

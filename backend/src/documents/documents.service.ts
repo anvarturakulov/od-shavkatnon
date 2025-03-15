@@ -9,11 +9,12 @@ import { Sequelize } from 'sequelize-typescript';
 import { Entry } from 'src/entries/entry.model';
 import { prepareEntrysList } from './helper/entry/prepareEntrysList';
 import { console } from 'inspector';
+import { convertJson } from './helper/entry/convertJson';
 const { Op } = require('sequelize');
+const fs = require('fs');
 
 @Injectable()
 export class DocumentsService {
-
 
     constructor(
         @InjectConnection() private readonly sequelize: Sequelize,
@@ -107,13 +108,12 @@ export class DocumentsService {
     async createDocument(dto:UpdateCreateDocumentDto) {
         
         const transaction = await this.sequelize.transaction();
-        console.log('DTOOOO', dto)
         try {
             const document = await this.documentRepository.create({
                 date:dto.date, 
                 documentType: dto.documentType, 
                 docStatus: DocSTATUS.OPEN,
-                userId: dto.userId
+                userId: dto.userId ? dto.userId: 0
             })
 
             const docValues = await this.docValuesRepository.create({
@@ -161,7 +161,9 @@ export class DocumentsService {
 
     async markToDeleteById(id: number) {
         const document = await this.documentRepository.findOne({where: {id}, include: [Entry]})
+        
         const transaction = await this.sequelize.transaction();
+        
         try {
             let newStatus: DocSTATUS = DocSTATUS.DELETED
             if (document) {
@@ -210,4 +212,64 @@ export class DocumentsService {
         }
     }
 
+    async createMany(list: any) {
+        
+        // const transaction = await this.sequelize.transaction();
+        
+        if (list && list.length) {
+            for (const item of list) {
+                let element = convertJson(item)
+                const dto = {...element}
+                try {
+                    const document = await this.documentRepository.create({
+                        date:dto.date, 
+                        documentType: dto.documentType, 
+                        docStatus: DocSTATUS.OPEN,
+                        userId: dto.userId ? dto.userId: 0
+                    })
+                    console.log(dto.docValues)
+                    const docValues = await this.docValuesRepository.create({
+                        ...dto.docValues,
+                        docId: document.id
+                    })
+        
+                    const items = [...dto.docTableItems]
+        
+                    if (items && items.length > 0 && items[0].analiticId != -1 ) {
+                        for (const item of items) {
+                            const docTableItem = await this.docTableItemsRepository.create({
+                                ...item,
+                                docId: document.id
+                            })
+                        }
+                    }
+        
+                    if (dto.docStatus == DocSTATUS.PROVEDEN) {
+                        const doc = await this.documentRepository.findOne({where: {id: document.id}, include: [DocValues, DocTableItems]})
+                        if (doc) {
+                            const entrysList = [...prepareEntrysList(doc)]
+                            if (entrysList.length > 0 ) {
+                                for (const item of entrysList) {
+                                    const entry = await this.entryRepository.create({
+                                        ...item,
+                                    })
+                                }
+                            }
+                            doc.docStatus = DocSTATUS.PROVEDEN
+                            await doc.save()
+                        }
+                        
+                    }
+        
+                    // await transaction.commit();
+        
+                } catch (err) {
+                    // await transaction.rollback();
+                    // throw new Error(`Failed to create documents: ${err.message}`);
+                }
+            }
+        }
+
+        
+    }
 }

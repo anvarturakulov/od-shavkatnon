@@ -11,11 +11,11 @@ export const Oborotka = ({className, ...props }: OborotkaProps) :JSX.Element => 
     const { oborotka, reportOption } = mainData.report
     const { firstReferenceId } = reportOption
 
-    // useEffect(()=> {
-    //     if (oborotka) {
-    //         console.log('oborotka comed - ', Date.now())
-    //     }
-    // }, [oborotka])
+    useEffect(()=> {
+        if (oborotka) {
+            console.log('oborotka comed - ', Date.now())
+        }
+    }, [oborotka])
     
     let datas = oborotka ? oborotka?.values : []
     // if (oborotka) {

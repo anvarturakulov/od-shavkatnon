@@ -1,18 +1,24 @@
 'use client'
 
-import styles from './oborotka.module.css';
-import { useEffect, useState } from 'react';
+import styles from './personal.module.css';
 import { useAppContext } from '@/app/context/app.context';
 import { PersonalProps } from './personal.props';
 import { PersonalItem } from './personalItem/personalItem';
+import { useEffect } from 'react';
 
 
 export const Personal = ({className, ...props }: PersonalProps) :JSX.Element => {
     const { setMainData, mainData } = useAppContext()
-    const { oborotka, reportOption } = mainData.report
+    const { personal, reportOption } = mainData.report
     const { firstReferenceId } = reportOption
 
-    let datas = oborotka ? oborotka?.values : []
+    useEffect(()=> {
+        if (personal) {
+            console.log('personal comed - ', Date.now())
+        }
+    }, [personal])
+    
+    let datas = personal ? personal?.values : []
 
     return (
        <>

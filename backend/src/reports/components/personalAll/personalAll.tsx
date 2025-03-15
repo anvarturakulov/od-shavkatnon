@@ -9,14 +9,15 @@ export const personalAll = async (
     entries: Entry[],
     startDate: number | null,
     endDate: number | null,
+    workerId: number | null,
     sequelize: Sequelize
     ) => {
     
     let result:any[] = [];
 
-    let oborotkaResult = await personal(data, entries, startDate, endDate, sequelize)
-    result.push(oborotkaResult);
+    let personalResult = await personal(data, entries, startDate, endDate, workerId, sequelize)
+    result.push(personalResult);
         
-    return {...oborotkaResult}
+    return {...personalResult}
     
 } 

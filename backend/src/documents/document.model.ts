@@ -28,7 +28,7 @@ export class Document extends Model<Document, DocumentCreationAttrs> {
     @ForeignKey(() => User)
     @ApiProperty({example:'12222', description: 'Идентификатор пользователя'})
     @Column({type: DataType.INTEGER})
-    userId: number
+    userId?: number
 
     @ApiProperty({example:'36899955', description: 'Старый идентификатор пользователя'})
     @Column({type: DataType.STRING})

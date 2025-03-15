@@ -19,7 +19,7 @@ type Props = {
 };
 
 const keyWithParent = (key: string, obj: Maindata): string => {
-    const keys = ['document', 'journal',]
+    // const keys = ['document', 'journal',]
     
     if (key in obj.document) return `document.${key}`
     if (key in obj.journal) return `journal.${key}`

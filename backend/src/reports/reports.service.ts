@@ -66,8 +66,8 @@ export class ReportsService {
     async getPersonal(queryOborotka: QuerySimple) {
         let references = await this.referencesService.getAllReferences();
         let entrys = await this.entriesService.getAllEntries()
-        let { startDate, endDate } = queryOborotka;
-        let result = personalAll(references, entrys, startDate, endDate, this.sequelize)
+        let { startDate, endDate, firstSubcontoId } = queryOborotka;
+        let result = personalAll(references, entrys, startDate, endDate, firstSubcontoId, this.sequelize)
         return result
     }
 

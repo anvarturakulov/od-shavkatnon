@@ -7,7 +7,7 @@ export const setPriceAndBalance = (
   mainData: Maindata,
   setMainData: Function | undefined,
   schet: Schet,
-  firstSubcontoId: number,
+  firstSubcontoId: number | undefined,
   secondSubcontoId: number | undefined,
   endDate: number | null,
   forTable: boolean,
@@ -23,7 +23,7 @@ export const setPriceAndBalance = (
 
   if (!firstSubcontoId) firstSubcontoId=-1;
 
-  let url = process.env.NEXT_PUBLIC_DOMAIN + '/api/report/priceAndBalance' +
+  let url = process.env.NEXT_PUBLIC_DOMAIN + '/api/reports/priceAndBalance' +
     '?&schet=' + schet +'&endDate=' + endDate +
     '&firstSubcontoId=' + firstSubcontoId + 
     '&secondSubcontoId=' + secondSubcontoId;

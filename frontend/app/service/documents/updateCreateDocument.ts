@@ -43,6 +43,13 @@ export const updateCreateDocument = (mainData: Maindata, setMainData: Function |
 
   const uriPost = process.env.NEXT_PUBLIC_DOMAIN + '/api/documents/create';
   const uriPatch = process.env.NEXT_PUBLIC_DOMAIN + '/api/documents/update/' + currentDocument.id;
+  
+  if (isNewDocument && body.documentType == DocumentType.ZpCalculate && body.docValues.senderId == 0) {
+    body.docValues = {
+      ... body.docValues,
+      senderId: body.docValues.receiverId
+    }
+  }
 
   if (isNewDocument) {
     axios.post(uriPost, body, config)

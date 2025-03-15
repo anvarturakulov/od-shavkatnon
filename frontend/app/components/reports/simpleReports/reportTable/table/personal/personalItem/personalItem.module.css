@@ -6,7 +6,6 @@
 .title{
     text-align: left!important;
     max-width: 300px!important;
-    /* padding-left: 10px!important; */
 }
 
 .total{
@@ -18,8 +17,20 @@
 
 .totalTdKol{
     /* font-size: 14px!important; */
-    /* font-weight: 700!important; */
+    font-weight: 700!important;
     /* color: blue; */
     text-align: right!important;
   }
 
+.trRowMain{
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.opened{
+    background-color: bisque;
+}
+
+.plus{
+    cursor: pointer;
+}

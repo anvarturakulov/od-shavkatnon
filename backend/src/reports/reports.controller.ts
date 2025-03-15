@@ -31,13 +31,10 @@ export class ReportsController {
   @Get('/priceAndBalance')
   @UsePipes(new ValidationPipe({ transform: true }))
   async getPriceAndBalance(@Query() query: GetEntriesQueryDto) {
-
     const req: QuerySimple = {...requestTransform(query)}
     const report = await this.reportsService.getPriceAndBalance(req);
     return report;
-
   }
-
 
   @Roles('ALL')
   @UseGuards(RolesGuard)
@@ -95,7 +92,7 @@ export class ReportsController {
   async getPersonal(@Query() query: GetEntriesQueryDto) {
 
     const req: QuerySimple = {...requestTransform(query)}
-    const report = await this.reportsService.getOborotka(req);
+    const report = await this.reportsService.getPersonal(req);
 
     if (!report) {
       throw new NotFoundException(REPORT_NOT_PREPARE);

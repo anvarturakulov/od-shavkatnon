@@ -30,11 +30,6 @@
 .table{
   width: 100%;
 }
-.table thead td {
-  /* text-align: center; */
-  font-weight: 500;
-  font-size: 14px;
-}
 
 .totalTd{
   font-size: 14px!important;

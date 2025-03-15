@@ -10,6 +10,7 @@ export const getPersonal = (
 
   const {report, users} = mainData
   const { reportOption } = report;
+  const {firstReferenceId} = reportOption
   const {user} = users
 
   const { startDate, endDate, schet } = reportOption;
@@ -17,7 +18,10 @@ export const getPersonal = (
   const config = {
     headers: { Authorization: `Bearer ${user?.token}` }
   };
-  let url = process.env.NEXT_PUBLIC_DOMAIN + '/api/reports/personal' + '?startDate=' + startDate + '&endDate=';
+  let url = process.env.NEXT_PUBLIC_DOMAIN + '/api/reports/personal' + '?startDate=' + startDate + '&endDate='+endDate;
+  
+  if (firstReferenceId) url = url + '&firstSubcontoId='+firstReferenceId
+
   axios.get(url, config)
     .then(function (response) {
       if (setMainData) {

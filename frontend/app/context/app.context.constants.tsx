@@ -81,6 +81,7 @@ export const defaultMainData: Maindata = {
         informData: [],
         matOborot: [],
         oborotka: [],
+        personal: [],
         currentDKInnerReportId: -1,
         currentDKInnerArrayId: -1,
         dashboardCurrentReportType: '',

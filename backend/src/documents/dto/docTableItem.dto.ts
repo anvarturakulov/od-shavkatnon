@@ -10,10 +10,13 @@ export class DocTableItemDto {
     @ApiProperty({example:'12222897', description: 'Id - аналитики'})
     @IsInt({message: 'analiticId - должен быть натуральным числом'})
     analiticId: number
-
     @ApiProperty({example:'654654', description: 'Старый id аналитики'})
     @IsString({message: 'analiticOldId - должен быть строкой'})
     analiticOldId: string;
+
+    @ApiProperty({example:'150000', description: 'Остаток'})
+    @IsNumber({}, {message: 'balance - должен быть числом'})
+    balance: number;
 
     @ApiProperty({example:'10', description: 'Количество'})
     @IsNumber({}, {message: 'count - должен быть числом'})
@@ -26,4 +29,5 @@ export class DocTableItemDto {
     @ApiProperty({example:'150000', description: 'Всего'})
     @IsNumber({}, {message: 'total - должен быть числом'})
     total: number;
+
 }

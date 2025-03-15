@@ -12,6 +12,7 @@ import { ReportType } from '@/app/interfaces/report.interface';
 import { SelectOborot } from './components/selectOborot/selectOborot';
 import { getMatOborot } from '@/app/service/reports/getMatOborot';
 import { getOborotka } from '@/app/service/reports/getOborotka';
+import { getPersonal } from '@/app/service/reports/getPersonal';
 
 
 export default function OptionsBox({ className, ...props }: OptionsBoxProps): JSX.Element {
@@ -28,7 +29,7 @@ export default function OptionsBox({ className, ...props }: OptionsBoxProps): JS
             setMainData && setMainData('uploadingDashboard', true);
             if (contentName == ReportType.MatOborot) getMatOborot(setMainData, mainData)
             if (contentName == ReportType.Oborotka) getOborotka(setMainData, mainData)
-            if (contentName == ReportType.Personal) getOborotka(setMainData, mainData)
+            if (contentName == ReportType.Personal) getPersonal(setMainData, mainData)
             else return true;
         } else {
             showMessage('Санани тулдиринг', 'error', setMainData);

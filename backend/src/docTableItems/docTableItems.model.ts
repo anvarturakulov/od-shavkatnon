@@ -8,6 +8,7 @@ export interface DocTableItemCreationAttrs {
     docId: bigint
     analiticId: number
     analiticOldId: string
+    balance: number
     count: number
     price: number
     total: number
@@ -39,6 +40,10 @@ export class DocTableItems extends Model<DocTableItems, DocTableItemCreationAttr
 
     @BelongsTo(() => Reference) 
     analiticReference: Reference;
+
+    @ApiProperty({example:'10', description: 'Остаток'})
+    @Column({type: DataType.FLOAT})
+    balance: number;
 
     @ApiProperty({example:'10', description: 'Количество'})
     @Column({type: DataType.FLOAT})

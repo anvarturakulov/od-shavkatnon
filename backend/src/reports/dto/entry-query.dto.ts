@@ -16,7 +16,6 @@ export class GetEntriesQueryDto {
     @IsEnum(Schet, {message: 'schet - is Enum - select from list',})
     schet?: Schet;
 
-    
     @IsOptional()
     @IsEnum(DEBETKREDIT, {message: 'dk - is Enum - select from list',})
     dk?: DEBETKREDIT;
