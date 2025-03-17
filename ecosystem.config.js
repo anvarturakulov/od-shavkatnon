@@ -3,7 +3,7 @@ module.exports = {
     {
       name: "sh-backend",
       script: "main.js",
-      cwd: "/backend/dist",
+      cwd: "backend/dist",
       watch: true,
       env: {
         NODE_ENV: "production",
