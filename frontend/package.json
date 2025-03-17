@@ -17,7 +17,7 @@
     "har-validator": "^5.1.5",
     "lodash": "^4.17.21",
     "lodash-es": "^4.17.21",
-    "next": "13.5.5",
+    "next": "^15.2.2",
     "react": "^18",
     "react-dom": "^18",
     "react-google-recaptcha": "^3.1.0",

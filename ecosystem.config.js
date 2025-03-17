@@ -13,6 +13,7 @@ module.exports = {
     name: "sh-frontend",
     script: "npm",
     args: "start",
+    interpreter: "/home/anvar/.nvm/versions/node/v18.20.0/bin/node",
     cwd: "./frontend/app",
     watch: true,
     env: {
