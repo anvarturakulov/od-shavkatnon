@@ -4,8 +4,8 @@ const nextConfig = {}
 module.exports = {
     images: {
         domains: ['osondastur.uz'],
-        output: 'standalone'
     },
+    output: 'standalone',
     webpack(config, options) {
         config.module.rules.push({
             loader: '@svgr/webpack',
