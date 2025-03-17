@@ -276,7 +276,7 @@ export class DocumentsService {
     async pereProvodka() {
         const documents = await this.documentRepository.findAll({include: [DocValues, DocTableItems ]})
         for (const document of documents) {
-            if (document && document.docStatus == DocSTATUS.PROVEDEN) {
+            if (document ) {
                 await this.entryRepository.destroy({where: {docId:document.id}})
                 
                 const entrysList = [...prepareEntrysList(document, true)]

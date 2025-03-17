@@ -21,7 +21,8 @@ export const oborotka = async (
     if (subcontosList?.secondList && subcontosList?.secondList.length) {
         secondList = [...subcontosList?.secondList]
     }
-
+    
+    let startTime = Date.now()
     
     if (firstList && firstList.length) {
         for (const firstSubcontoId of firstList) {
@@ -32,12 +33,13 @@ export const oborotka = async (
         }
     }
     
+    let endTime = Date.now()
     
     return {
         reportType: 'OBOROTKA',
         values : [...result],
-        startTime: 0,
-        endTime: 0,
+        startTime: startTime,
+        endTime: endTime,
     }
 } 
 

@@ -17,6 +17,7 @@ export const getOborotka = (
   const config = {
     headers: { Authorization: `Bearer ${user?.token}` }
   };
+  console.log('Запрос отправлен в - ', Date.now())
   let url = process.env.NEXT_PUBLIC_DOMAIN + '/api/reports/oborotka' + '?startDate=' + startDate + '&endDate=' + endDate + '&schet=' + schet;
   axios.get(url, config)
     .then(function (response) {
@@ -25,11 +26,14 @@ export const getOborotka = (
           ...reportOption,
           startReport: true,
         }
-        console.log('start put data to frontend memory --', Date.now())
+        console.log('Запрос началь обрабатываться в --', response.data?.startTime)
+        console.log('Запрос закончил обработку в --', response.data?.endTime)
+        console.log('Ответ пришел в --', Date.now())
+        console.log('Ответ пришел в --', Date.now())
         setMainData('reportOption', { ...newReportOptions });
         setMainData('oborotka', response.data);
         setMainData('uploadingDashboard', false);
-        console.log('end put data to frontend memory --', Date.now())
+        console.log('Записал ответ в контекс --', Date.now())
       }
 
     })
@@ -39,6 +43,7 @@ export const getOborotka = (
       }
     });
 
+  console.log('Запрос получен в - ', Date.now())
   setMainData && setMainData('loading', false);
 
 }
