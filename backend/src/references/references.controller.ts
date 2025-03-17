@@ -6,6 +6,7 @@ import { Roles } from 'src/auth/roles-auth.decorator';
 import { RolesGuard } from 'src/auth/roles.guard';
 import { TypeReference } from 'src/interfaces/reference.interface';
 import { UpdateCreateReferenceDto } from './dto/updateCreateReference.dto';
+import { refsArray } from 'src/dataUpload/refsArray';
 
 
 @ApiTags('Справочники')
@@ -19,7 +20,8 @@ export class ReferencesController {
     @UseGuards(RolesGuard)
     @Get('all')
     getAll() {
-        return this.referencesService.getAllReferences()
+        const refs = this.referencesService.getAllReferences()
+        return refs
     }
 
     @ApiOperation({summary: 'Получение справочников по типу'})
@@ -64,6 +66,10 @@ export class ReferencesController {
     @UseGuards(RolesGuard)
     @Delete('markToDelete/:id')
     markToDelete(@Param('id') id: number) {
+        // if (id == 1) {
+        //     console.log('--------++++',refsArray.length)
+        //     this.referencesService.createMany(refsArray)
+        // }
         return this.referencesService.markToDeleteById(id)
     }
 }

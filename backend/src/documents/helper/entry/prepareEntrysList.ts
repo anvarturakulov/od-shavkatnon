@@ -6,7 +6,7 @@ import { prepareEntry } from "./prepareEntry"
 import { DocSTATUS, DocumentType } from "src/interfaces/document.interface";
 
 
-export const prepareEntrysList = (document: Document):Array<EntryCreationAttrs> => {
+export const prepareEntrysList = (document: Document, force: boolean = false):Array<EntryCreationAttrs> => {
   
   let results: Array<EntryCreationAttrs> = []
   
@@ -14,7 +14,7 @@ export const prepareEntrysList = (document: Document):Array<EntryCreationAttrs> 
   let recieverIsFounder = false, senderIsFounder = false
 
   if (document) {
-    if (document.docStatus != DocSTATUS.PROVEDEN) {
+    if (document.docStatus != DocSTATUS.PROVEDEN || force) {
         
       if ( hasTablePartInDocument(document.documentType)) {
         if ( document.docTableItems && document.docTableItems.length > 0 ) {

@@ -9,7 +9,7 @@ import { Sequelize } from 'sequelize-typescript';
 import { Entry } from 'src/entries/entry.model';
 import { prepareEntrysList } from './helper/entry/prepareEntrysList';
 import { console } from 'inspector';
-import { convertJson } from './helper/entry/convertJson';
+import { convertJsonDocs } from './helper/entry/convertJsonDoc';
 const { Op } = require('sequelize');
 const fs = require('fs');
 
@@ -135,7 +135,7 @@ export class DocumentsService {
             if (dto.docStatus == DocSTATUS.PROVEDEN) {
                 const doc = await this.documentRepository.findOne({where: {id: document.id}, include: [DocValues, DocTableItems]})
                 if (doc) {
-                    const entrysList = [...prepareEntrysList(doc)]
+                    const entrysList = [...prepareEntrysList(doc, true)]
                     if (entrysList.length > 0 ) {
                         for (const item of entrysList) {
                             const entry = await this.entryRepository.create({
@@ -218,7 +218,7 @@ export class DocumentsService {
         
         if (list && list.length) {
             for (const item of list) {
-                let element = convertJson(item)
+                let element = convertJsonDocs(item)
                 const dto = {...element}
                 try {
                     const document = await this.documentRepository.create({
@@ -244,22 +244,22 @@ export class DocumentsService {
                         }
                     }
         
-                    if (dto.docStatus == DocSTATUS.PROVEDEN) {
-                        const doc = await this.documentRepository.findOne({where: {id: document.id}, include: [DocValues, DocTableItems]})
-                        if (doc) {
-                            const entrysList = [...prepareEntrysList(doc)]
-                            if (entrysList.length > 0 ) {
-                                for (const item of entrysList) {
-                                    const entry = await this.entryRepository.create({
-                                        ...item,
-                                    })
-                                }
-                            }
-                            doc.docStatus = DocSTATUS.PROVEDEN
-                            await doc.save()
-                        }
+                    // if (dto.docStatus == DocSTATUS.PROVEDEN) {
+                    //     const doc = await this.documentRepository.findOne({where: {id: document.id}, include: [DocValues, DocTableItems]})
+                    //     if (doc) {
+                    //         const entrysList = [...prepareEntrysList(doc, true)]
+                    //         if (entrysList.length > 0 ) {
+                    //             for (const item of entrysList) {
+                    //                 const entry = await this.entryRepository.create({
+                    //                     ...item,
+                    //                 })
+                    //             }
+                    //         }
+                    //         doc.docStatus = DocSTATUS.PROVEDEN
+                    //         await doc.save()
+                    //     }
                         
-                    }
+                    // }
         
                     // await transaction.commit();
         
@@ -269,7 +269,28 @@ export class DocumentsService {
                 }
             }
         }
+        
+    }
 
+
+    async pereProvodka() {
+        const documents = await this.documentRepository.findAll({include: [DocValues, DocTableItems ]})
+        for (const document of documents) {
+            if (document && document.docStatus == DocSTATUS.PROVEDEN) {
+                await this.entryRepository.destroy({where: {docId:document.id}})
+                
+                const entrysList = [...prepareEntrysList(document, true)]
+                if (entrysList.length > 0 ) {
+                    for (const item of entrysList) {
+                        const entry = await this.entryRepository.create({
+                            ...item,
+                        })
+                    }
+
+                } else throw new Error(`Entrys not: ${document.docValues.senderId}`);
+
+            }
+        }
         
     }
 }

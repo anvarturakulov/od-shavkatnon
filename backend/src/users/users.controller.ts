@@ -6,6 +6,7 @@ import { Roles } from 'src/auth/roles-auth.decorator';
 import { RolesGuard } from 'src/auth/roles.guard';
 import { BanUserDto } from './dto/ban-user.dto';
 import { UpdateUserDto } from './dto/updateUser.dto';
+import { usersArray } from 'src/dataUpload/userOut';
 
 @ApiTags('Пользователи')
 @Controller('users')

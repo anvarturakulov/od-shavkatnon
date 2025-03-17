@@ -16,7 +16,7 @@ export const material = async (
     }
 
     for (const item of filteredData) {
-        let element = await materialItem(data, startDate, endDate, item?.name, item?.id, item.refValues?.un, sequelize)
+        let element = await materialItem(data, startDate, endDate, item?.name, item?.id, item?.refValues?.un, sequelize)
         if (Object.keys(element).length) {
             result.push(element)
         }

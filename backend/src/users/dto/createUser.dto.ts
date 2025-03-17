@@ -10,12 +10,12 @@ export class CreateUserDto {
 
     @ApiProperty({example:'12345678', description: 'Пароль'})
     @IsString({message: 'password - должно быть строкой'})
-    @Length(4, 16, {message: 'password - не меньше 4 и не больше 16'})
+    @Length(4, 50, {message: 'password - не меньше 4 и не больше 16'})
     readonly password: string;
 
     @ApiProperty({example:'Анвар', description: 'Имя'})
     @IsString({message: 'name - должно быть строкой'})
-    @Length(4, 16, {message: 'name - не меньше 4 и не больше 16'})
+    @Length(4, 50, {message: 'name - не меньше 4 и не больше 16'})
     readonly name: string;
 
     @ApiProperty({example:'USER ROLE', description: 'Роль'})

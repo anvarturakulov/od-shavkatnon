@@ -6,7 +6,6 @@ import { BanUserDto } from './dto/ban-user.dto';
 import { UpdateUserDto } from './dto/updateUser.dto';
 import * as bcrypt from 'bcryptjs'
 
-
 @Injectable()
 export class UsersService {
 
@@ -78,4 +77,5 @@ export class UsersService {
         }
         throw new HttpException('Пользователь не нашлась', HttpStatus.NOT_FOUND)
     }
+
 }

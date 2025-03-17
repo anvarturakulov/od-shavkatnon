@@ -4,34 +4,15 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Roles } from 'src/auth/roles-auth.decorator';
 import { DocumentsService } from './documents.service';
 import { RolesGuard } from 'src/auth/roles.guard';
-import { DocSTATUS, DocumentType } from 'src/interfaces/document.interface';
+import { DocumentType } from 'src/interfaces/document.interface';
 import { UpdateCreateDocumentDto } from './dto/updateCreateDocument.dto';
 import { Request } from 'express';
-import { DocTableItemDto } from './dto/docTableItem.dto';
-import { DocValuesDto } from './dto/docValues.dto';
-import { docsFromOldBase } from 'src/dataUpload/doc';
-import { convertJson } from './helper/entry/convertJson';
-import { docsFromOldBaseArray } from 'src/dataUpload/doc copy';
-const fs = require('fs');
+import { docsArray } from 'src/dataUpload/docArray';
 
 @Controller('documents')
 export class DocumentsController {
 
     constructor(private documentsService: DocumentsService) {}
-
-    private upload = async ()=> {
-        
-        await fs.readFile('./src/dataUpload/document.json', 'utf8', (err, data) => {
-            if (err) {
-              console.error('Ошибка чтения файла:', err);
-              return;
-            }
-            const lines = data.trim().split('\n');
-            const jsonData = lines.map(line => JSON.parse(line));
-            
-            return jsonData[0]
-          })
-    }
 
     @ApiOperation({summary: 'Получение всех документов'})
     @ApiResponse({status: 200, type: [Document]})
@@ -96,7 +77,12 @@ export class DocumentsController {
     @UseGuards(RolesGuard)
     @Delete('markToDelete/:id')
     markToDelete(@Param('id') id: number) {
-        if (id == 62) this.documentsService.createMany(docsFromOldBaseArray)
+        // if (id == 30354) {
+        //     // console.log('lengthhhhhh ---', docsArray.length)
+        //     // this.documentsService.createMany(docsArray)
+            
+        //     this.documentsService.pereProvodka()
+        // }
         return this.documentsService.markToDeleteById(id)
     }
 

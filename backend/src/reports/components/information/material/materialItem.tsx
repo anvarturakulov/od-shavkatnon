@@ -9,7 +9,7 @@ export const materialItem = async (
   endDate: number | null,
   title: string, 
   materialId: number, 
-  un: boolean,
+  un: boolean | undefined,
   sequelize: Sequelize ) => {    
 
   const idZagatovka27 = -1;

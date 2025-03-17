@@ -39,7 +39,7 @@ export const User = ({ className, ...props }: UserProps) :JSX.Element => {
                                                                                     +target.value
             }
         })
-        console.log(body.sectionId, target.id, target.value)
+        // console.log(body.sectionId, target.id, target.value)
     }
 
     useEffect(()=> {
@@ -57,7 +57,7 @@ export const User = ({ className, ...props }: UserProps) :JSX.Element => {
             }
             setBody(newBody)
         }
-    }, [mainData.users.currentUser])
+    }, [mainData.users, mainData.users.currentUser])
 
     return (
         <div className={cn(styles.referenceBox, 

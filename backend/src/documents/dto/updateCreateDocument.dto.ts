@@ -16,7 +16,7 @@ export class UpdateCreateDocumentDto {
 
     @ApiProperty({example:'12222', description: 'Идентификатор пользователя'})
     @IsString({message: 'userOldId - должен быть строкой'})
-    userOldId?: string
+    userOldId: string
 
     @ApiProperty({example:'ComeMaterial', description: 'Тип документа - из списка документов'})
     @IsEnum(DocumentType, {message: 'DocumentType - должен быть из списка типов документа'})

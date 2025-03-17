@@ -22,8 +22,6 @@ import { Document } from './documents/document.model';
 import { DocTableItems } from './docTableItems/docTableItems.model';
 import { ReportsModule } from './reports/reports.module';
 
-
-
 @Module({
     controllers: [],
     providers: [FilesService],

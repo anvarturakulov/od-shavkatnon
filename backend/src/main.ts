@@ -9,9 +9,10 @@ async function start() {
     app.setGlobalPrefix('api');
     app.enableCors({
       origin: [
-        "https://shavkatnon.softhome.uz",
+        "https://osondastur.uz",
         "http://localhost:3000",
         "http://localhost:5000",
+        "http://localhost:7000",
       ],
     });
     const config = new DocumentBuilder()

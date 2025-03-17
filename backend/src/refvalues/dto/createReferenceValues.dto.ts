@@ -12,6 +12,10 @@ export class CreateReferenceValueDto {
     @IsInt({message: 'clientForSectionId - должен быть натуральным числом'})
     clientForSectionId?: number
 
+    @ApiProperty({example:'12222', description: 'Кому относится клиент - идентификатор подразделения'})
+    @IsString({message: 'clientForSectionOldId - должен быть строкой'})
+    clientForSectionOldId?: string
+
     @ApiProperty({example:'CLIENTS', description: 'Тип партнера - ( CLIENTS || SUPPLIERS )'})
     @IsEnum(TypePartners, {message: 'typePartners - должен быть из списка типов партнеров'})
     typePartners?: TypePartners
@@ -50,22 +54,22 @@ export class CreateReferenceValueDto {
 
     @ApiProperty({example:'true', description: 'Личные затраты Шавката?'})
     @IsBoolean({message: 'shavkatCharge - значание должно быть TRUE или FALSE'})
-    shavkatCharge: boolean;
+    shavkatCharge?: boolean;
 
     @ApiProperty({example:'3400', description: 'Первая цена'})
     @IsNumber({}, {message: 'firstPrice - должен быть числом'})
-    firstPrice: number;
+    firstPrice?: number;
 
     @ApiProperty({example:'3800', description: 'Вторая цена'})
     @IsNumber({}, {message: 'secondPrice - должен быть числом'})
-    secondPrice: number;
+    secondPrice?: number;
 
     @ApiProperty({example:'4000', description: 'Третья цена'})
     @IsNumber({}, {message: 'thirdPrice - должен быть числом'})
-    thirdPrice: number;
+    thirdPrice?: number;
 
     @ApiProperty({example:'....', description: 'Id телеграм'})
     @IsString({message: 'telegramId - должен быть строкой'})
-    telegramId: string;
+    telegramId?: string;
 
 }

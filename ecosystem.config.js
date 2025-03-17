@@ -1,6 +1,6 @@
 module.exports = {
   apps : [{
-    name: "sh-backend",
+    name: "shavkatnon-backend",
     script: "node",
     cwd: "./backend/dist/main.js",
     watch: true,
@@ -9,7 +9,7 @@ module.exports = {
     }
   },
   {
-    name: "sh-frontend",
+    name: "shavkatnon-frontend",
     script: "npm",
     args: "start",
     cwd: "./frontend/app",

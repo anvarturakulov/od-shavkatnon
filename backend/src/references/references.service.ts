@@ -4,6 +4,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { TypeReference } from 'src/interfaces/reference.interface';
 import { RefValues } from 'src/refvalues/refValues.model';
 import { UpdateCreateReferenceDto } from './dto/updateCreateReference.dto';
+import { convertJsonRef } from './helpers/convertJsonRef';
 
 @Injectable()
 export class ReferencesService {
@@ -80,6 +81,37 @@ export class ReferencesService {
             return reference
         }
         throw new HttpException('Пользователь не нашлась', HttpStatus.NOT_FOUND)
+    }
+
+    async createMany(list: any) {
+            
+        if (list && list.length) {
+            for (const item of list) {
+                let element = convertJsonRef(item)
+                const dto = {...element}
+                try {
+                    const reference = await this.referenceRepository.create(
+                        {name:dto.name, typeReference:dto.typeReference, oldId: dto.oldId}
+                    )
+            
+                    if (reference) {
+                        reference.refValues = await this.refValuesRepository.create({referenceId: reference.id})
+                        const dtoRefV = {...dto.refValues}
+                        delete dtoRefV.referenceId
+                        await reference.refValues.update({...dtoRefV})
+                    }        
+                    // await transaction.commit();
+        
+                } catch (err) {
+
+                    // await transaction.rollback();
+                    throw new Error(`Failed to create documents: ${err.message} ffff ${dto.name}`);
+
+                }
+            }
+        }
+
+        
     }
 
 }

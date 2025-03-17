@@ -15,7 +15,7 @@ export const changeStatusHamir = (item: HamirModel, mainData: Maindata, setMainD
     documentType: DocumentType.ComeProduct,
     userId: user?.id ? user?.id : 0,
     docStatus: DocSTATUS.PROVEDEN,
-    docValue: {
+    docValues: {
       senderId: item.sectionId,
       receiverId: item.sectionId,
       analiticId: item.analiticId,
