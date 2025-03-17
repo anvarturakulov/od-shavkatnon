@@ -10,14 +10,13 @@ module.exports = {
       },
     },
     {
-      name: "sh-frontend",
-      script: "npm",
-      args: "start",
-      cwd: "./frontend/app",
-      watch: true,
+      name: "sh-front",
+      script: "node",
+      args: ".next/standalone/server.js",
+      cwd: "/home/anvar/od/od-shavkatnon/frontend",
       env: {
-        NODE_ENV: "production",
-      },
-    },
+        NODE_ENV: "production"
+      }
+    }
   ],
 };
