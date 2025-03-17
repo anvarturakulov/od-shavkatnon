@@ -5,6 +5,7 @@ import { ValidationPipe } from "@nestjs/common";
 
 async function start() {
     const PORT = process.env.PORT || 5000;
+    console.log('process.env.POSTGRES_PASSWORD ----', process.env.POSTGRES_PASSWORD)
     const app = await NestFactory.create(AppModule)
     app.setGlobalPrefix('api');
     app.enableCors({
