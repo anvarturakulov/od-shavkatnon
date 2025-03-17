@@ -5,7 +5,6 @@ module.exports = {
     images: {
         domains: ['osondastur.uz'],
     },
-    output: 'standalone',
     webpack(config, options) {
         config.module.rules.push({
             loader: '@svgr/webpack',
