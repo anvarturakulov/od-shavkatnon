@@ -3,7 +3,8 @@ const nextConfig = {}
 
 module.exports = {
     images: {
-        domains: ['courses-top.ru']
+        domains: ['osondastur.uz'],
+        output: 'standalone'
     },
     webpack(config, options) {
         config.module.rules.push({
