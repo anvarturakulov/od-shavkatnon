@@ -1,8 +1,8 @@
 module.exports = {
   apps : [{
     name: "shavkatnon-backend",
-    script: "/main.js",
-    cwd: "./backend/dist",
+    script: "./backend/dist/main.js",
+    cwd: "",
     watch: true,
     env: {
       NODE_ENV: "production",
