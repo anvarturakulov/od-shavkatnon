@@ -11,8 +11,8 @@ module.exports = {
     },
     {
       name: "sh-front",
-      script: "npm",
-      args: "start",
+      script: "node",
+      args: ".next/standalone/server.js",
       cwd: "/home/anvar/od/od-shavkatnon/frontend",
       env: {
         NODE_ENV: "production"
