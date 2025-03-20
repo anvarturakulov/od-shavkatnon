@@ -4,7 +4,7 @@ import { debitorKreditorInners } from './debitorKreditorInners';
 import { TypeReference } from 'src/interfaces/reference.interface';
 import { Sequelize } from 'sequelize-typescript';
 
-export const debitorKreditor = async (
+export const debitorKreditorOld = async (
     data: any,
     startDate: number | null,
     endDate: number | null,
@@ -39,3 +39,37 @@ export const debitorKreditor = async (
     return result
     
 } 
+
+export const debitorKreditor = async (
+    data: any,
+    startDate: number | null,
+    endDate: number | null,
+    sequelize: Sequelize,
+) => {
+    console.time('DebitorKreditor');
+
+    const tasks = [
+        debitorKreditorInners(data, startDate, endDate, Schet.S10, TypeReference.TMZ, 'MATERIAL', sequelize)
+            .then(result => ({ type: 'MATERIAL', values: result })),
+        debitorKreditorInners(data, startDate, endDate, Schet.S21, TypeReference.TMZ, 'ZAGATOVKA', sequelize)
+            .then(result => ({ type: 'ZAGATOVKA', values: result })),
+        debitorKreditorInners(data, startDate, endDate, Schet.S50, TypeReference.STORAGES, 'FILIAL', sequelize)
+            .then(result => ({ type: 'FILIAL', values: result })),
+        debitorKreditorInners(data, startDate, endDate, Schet.S50, TypeReference.STORAGES, 'BUXGALTER', sequelize)
+            .then(result => ({ type: 'BUXGALTER', values: result })),
+        debitorKreditorInners(data, startDate, endDate, Schet.S50, TypeReference.STORAGES, 'DELIVERY', sequelize)
+            .then(result => ({ type: 'DELIVERY', values: result })),
+        debitorKreditorInners(data, startDate, endDate, Schet.S60, TypeReference.PARTNERS, 'PARTNERS', sequelize)
+            .then(result => ({ type: 'PARTNERS', values: result })),
+        debitorKreditorInners(data, startDate, endDate, Schet.S66, TypeReference.STORAGES, 'FOUNDERS', sequelize)
+            .then(result => ({ type: 'FOUNDERS', values: result })),
+        debitorKreditorInners(data, startDate, endDate, Schet.S67, TypeReference.WORKERS, 'WORKERS', sequelize)
+            .then(result => ({ type: 'WORKERS', values: result })),
+    ];
+
+    const result = await Promise.all(tasks);
+
+    console.timeEnd('DebitorKreditor');
+    return result;
+};
+
