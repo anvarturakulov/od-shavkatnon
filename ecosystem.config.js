@@ -3,8 +3,8 @@ module.exports = {
     {
       name: "sh-backend",
       script: "dist/main.js",
-      instances: 8,             // Количество экземпляров (аналог -i 8)
-      exec_mode: "cluster",
+      // instances: 8,             // Количество экземпляров (аналог -i 8)
+      // exec_mode: "cluster",
       cwd: "backend",
       watch: true,
       env: {
