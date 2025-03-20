@@ -11,15 +11,18 @@ import { UsersModule } from 'src/users/users.module';
 import { AuthModule } from 'src/auth/auth.module';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { ReferencesModule } from 'src/references/references.module';
+import { Stock } from 'src/stocks/stock.model';
+import { StocksModule } from 'src/stocks/stocks.module';
 
 @Module({
   controllers: [DocumentsController],
   providers: [ DocumentsService],
   imports: [
-      SequelizeModule.forFeature([User, Reference, Document, DocTableItems, DocValues, Entry]),
+      SequelizeModule.forFeature([User, Reference, Document, DocTableItems, DocValues, Entry, Stock]),
       forwardRef(() => AuthModule),
       UsersModule,
-      ReferencesModule
+      ReferencesModule,
+      StocksModule
     ],
   exports: [DocumentsService]
 })

@@ -4,7 +4,7 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Roles } from 'src/auth/roles-auth.decorator';
 import { DocumentsService } from './documents.service';
 import { RolesGuard } from 'src/auth/roles.guard';
-import { DocumentType } from 'src/interfaces/document.interface';
+import { DocSTATUS, DocumentType } from 'src/interfaces/document.interface';
 import { UpdateCreateDocumentDto } from './dto/updateCreateDocument.dto';
 import { Request } from 'express';
 import { docsArray } from 'src/dataUpload/docArray';
@@ -41,8 +41,22 @@ export class DocumentsController {
         let documentType = request.query?.documentType ? request.query?.documentType : '' 
         let dateStart = request.query?.dateStart ? +request.query?.dateStart : 0
         let dateEnd = request.query?.dateEnd ? +request.query?.dateEnd : 0
-        return this.documentsService.getAllDocumentsByTypeForDate(documentType, dateStart, dateEnd)
+        console.time('Database');
+        let documents = this.documentsService.getAllDocumentsByTypeForDate(documentType, dateStart, dateEnd)
+        console.timeEnd('Database');
+        console.time('Processing');
+        if (documents) {
+            const result = documents.then((value) => {
+                const results = value.map((item:Document) =>{
+                    item.docStatus == DocSTATUS.DELETED
+                })
+            })
+        }
+        console.timeEnd('Processing');
+        return documents
     }
+    
+    
 
     @ApiOperation({summary: 'Получение документа по id'})
     @ApiResponse({status: 200, type: Document})

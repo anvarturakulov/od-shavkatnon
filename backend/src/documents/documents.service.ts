@@ -10,6 +10,8 @@ import { Entry } from 'src/entries/entry.model';
 import { prepareEntrysList } from './helper/entry/prepareEntrysList';
 import { console } from 'inspector';
 import { convertJsonDocs } from './helper/entry/convertJsonDoc';
+import { Stock } from 'src/stocks/stock.model';
+import { StocksService } from 'src/stocks/stocks.service';
 const { Op } = require('sequelize');
 const fs = require('fs');
 
@@ -21,7 +23,8 @@ export class DocumentsService {
         @InjectModel(Document) private documentRepository: typeof Document,
         @InjectModel(DocValues) private docValuesRepository: typeof DocValues,
         @InjectModel(DocTableItems) private docTableItemsRepository: typeof DocTableItems,
-        @InjectModel(Entry) private entryRepository: typeof Entry
+        @InjectModel(Entry) private entryRepository: typeof Entry,
+        private stocksService: StocksService
     ) {}
 
     async getAllDocuments() {
@@ -35,6 +38,7 @@ export class DocumentsService {
     }
 
     async getAllDocumentsByTypeForDate(documentType, dateStart: number, dateEnd: number) {
+        
         const documents = await this.documentRepository.findAll(
             {
                 where: {
@@ -141,6 +145,8 @@ export class DocumentsService {
                             const entry = await this.entryRepository.create({
                                 ...item,
                             })
+                            // create new stock and update
+                            await this.stocksService.addStockByEntry(entry)
                         }
                     }
                     doc.docStatus = DocSTATUS.PROVEDEN
@@ -170,7 +176,16 @@ export class DocumentsService {
                 if (document.docStatus == DocSTATUS.DELETED) newStatus = DocSTATUS.OPEN
                 if (document.docStatus == DocSTATUS.OPEN) newStatus = DocSTATUS.DELETED
                 if (document.docStatus == DocSTATUS.PROVEDEN) newStatus = DocSTATUS.DELETED
-                                
+                
+                // restore stock by deleted entrys
+                const entrysList = await this.entryRepository.findAll({where: {docId:document.id}})
+                if ( entrysList.length > 0 ) {
+                    for (const entry of entrysList) {
+                        // destroy stock by deleted entry
+                        await this.stocksService.removeStockByEntry(entry)
+                    }
+                }
+
                 await this.entryRepository.destroy({where: {docId:document.id}})
                 // Anvar Bu erda Entrys ni uchirish kodini ham yozish kerak
                 document.docStatus = newStatus
@@ -197,6 +212,8 @@ export class DocumentsService {
                         const entry = await this.entryRepository.create({
                             ...item,
                         })
+                        // create new stock and update
+                        await this.stocksService.addStockByEntry(entry)
                     }
                 }
                 document.docStatus = DocSTATUS.PROVEDEN

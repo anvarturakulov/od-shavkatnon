@@ -21,6 +21,8 @@ import { DocValues } from './docValues/docValues.model';
 import { Document } from './documents/document.model';
 import { DocTableItems } from './docTableItems/docTableItems.model';
 import { ReportsModule } from './reports/reports.module';
+import { StocksModule } from './stocks/stocks.module';
+import { Stock } from './stocks/stock.model';
 
 @Module({
     controllers: [],
@@ -36,7 +38,7 @@ import { ReportsModule } from './reports/reports.module';
             username: process.env.POSTGRES_USER,
             password: process.env.POSTGRES_PASSWORD,
             database: process.env.POSTGRES_DB,
-            models: [User, Reference, RefValues, Entry, DocValues, DocTableItems, Document],
+            models: [User, Reference, RefValues, Entry, DocValues, DocTableItems, Document, Stock],
             autoLoadModels: true,
           }),
         UsersModule,
@@ -49,6 +51,7 @@ import { ReportsModule } from './reports/reports.module';
         DocTableItemsModule,
         EntriesModule,
         ReportsModule,
+        StocksModule,
     ],
 })
 
