@@ -22,8 +22,11 @@ export const getInformation = (
 
   let url = process.env.NEXT_PUBLIC_DOMAIN + '/api/reports/information'+'?startDate='+interval.dateStart+'&endDate='+interval.dateEnd
   +'&reportType='+reportType+'&firstPrice='+firstPrice+'&secondPrice='+secondPrice+'&user='+user?.name;
+  
+  console.time('Fetch');
   axios.get(url, config)
     .then(function (response) {
+      console.time('Response');
       if (setMainData && !response.data?.user) {
         setMainData('informData', [ ...response.data ]);
         setMainData && setMainData('uploadingDashboard', false)
@@ -34,7 +37,9 @@ export const getInformation = (
         setMainData && setMainData('uploadingDashboard', false)
         alert(message)
       }
-      
+      console.timeEnd('Response');
+      console.timeEnd('Fetch');
+      console.log('Data received');
     })
     .catch(function (error) {
       if (setMainData) {
