@@ -48,12 +48,20 @@ export class ReportsService {
     }
 
     async getInformation(queryInformation: QuerySimple) {
+        console.time('References');
         let references = await this.referencesService.getAllReferences();
+        console.timeEnd('References');
+        console.time('Productions');
         let productions = await this.documentsService.getAllDocuments();
-        let deliverys = await this.referencesService.getDeliverys()
+        console.timeEnd('Productions');
+        console.time('Deliverys');
+        let deliverys = await this.referencesService.getDeliverys();
+        console.timeEnd('Deliverys');
         let {startDate, endDate, reportType, firstPrice, secondPrice} = queryInformation;
-        let inform = information(references, startDate, endDate, reportType, firstPrice, secondPrice, productions, deliverys, this.sequelize )
-        return inform
+        console.time('Information');
+        let inform = await information(references, startDate, endDate, reportType, firstPrice, secondPrice, productions, deliverys, this.sequelize);
+        console.timeEnd('Information');
+        return inform;
     }
 
     async getMatOtchet(queryMatOtchet: QuerySimple) {
