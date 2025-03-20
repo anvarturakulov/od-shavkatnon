@@ -41,10 +41,10 @@ export class DocumentsController {
         let documentType = request.query?.documentType ? request.query?.documentType : '' 
         let dateStart = request.query?.dateStart ? +request.query?.dateStart : 0
         let dateEnd = request.query?.dateEnd ? +request.query?.dateEnd : 0
-        console.time('Database');
+        console.time(`Database${documentType}-${dateStart}-${dateEnd}`);
         let documents = this.documentsService.getAllDocumentsByTypeForDate(documentType, dateStart, dateEnd)
-        console.timeEnd('Database');
-        console.time('Processing');
+        console.timeEnd(`Database${documentType}-${dateStart}-${dateEnd}`);
+        console.time(`Processing${documentType}-${dateStart}-${dateEnd}`);
         if (documents) {
             const result = documents.then((value) => {
                 const results = value.map((item:Document) =>{
@@ -52,7 +52,7 @@ export class DocumentsController {
                 })
             })
         }
-        console.timeEnd('Processing');
+        console.timeEnd(`Processing${documentType}-${dateStart}-${dateEnd}`);
         return documents
     }
     
