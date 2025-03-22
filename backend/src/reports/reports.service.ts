@@ -50,12 +50,15 @@ export class ReportsService {
     async getInformation(queryInformation: QuerySimple) {
         console.time('References');
         let references = await this.referencesService.getAllReferences();
+        // let references = [];
         console.timeEnd('References');
         console.time('Productions');
-        let productions = await this.documentsService.getAllDocuments();
+        // let productions = await this.documentsService.getAllDocuments();
+        let productions = [];
         console.timeEnd('Productions');
         console.time('Deliverys');
-        let deliverys = await this.referencesService.getDeliverys();
+        // let deliverys = await this.referencesService.getDeliverys();
+        let deliverys = [];
         console.timeEnd('Deliverys');
         let {startDate, endDate, reportType, firstPrice, secondPrice} = queryInformation;
         console.time('Information');
