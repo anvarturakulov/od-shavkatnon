@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { BelongsTo, Column, DataType, Model, Table, ForeignKey } from "sequelize-typescript";
+import { BelongsTo, Column, DataType, Model, Table, ForeignKey, Unique } from "sequelize-typescript";
 import { Schet } from "src/interfaces/report.interface";
 import { Reference } from "src/references/reference.model";
 
@@ -10,6 +10,8 @@ export interface StockCreationAttrs {
     secondSubcontoId: number | null
     count: number
     total: number
+    remainCount: number
+    remainTotal: number
 }
 
 
@@ -51,5 +53,14 @@ export class Stock extends Model<Stock, StockCreationAttrs> {
     @ApiProperty({example:'150000', description: 'Всего'})
     @Column({type: DataType.FLOAT})
     total: number;
+
+    @Column({ type: DataType.FLOAT })
+    remainCount: number;
+
+    @Column({ type: DataType.FLOAT })
+    remainTotal: number;
+    
+    // @Unique({ name: 'stocks_unique_date', msg: 'One stock per date' })
+    // static uniqueDateConstraint = ['schet', 'firstSubcontoId', 'secondSubcontoId', 'date'];
 
 }

@@ -1,10 +1,6 @@
 import { Sequelize } from 'sequelize-typescript';
-import { QuerySimple, Schet, TypeQuery } from 'src/interfaces/report.interface';
+import { Schet, TypeQuery } from 'src/interfaces/report.interface';
 import { BadRequestException } from '@nestjs/common';
-import { PDKOL } from './queryComponents/PDKOL';
-import { PDSUM } from './queryComponents/PDSUM';
-import { PKKOL } from './queryComponents/PKKOL';
-import { PKSUM } from './queryComponents/PKSUM';
 import { TDKOL } from './queryComponents/TDKOL';
 import { TDSUM } from './queryComponents/TDSUM';
 import { TKKOL } from './queryComponents/TKKOL';
@@ -13,6 +9,11 @@ import { COUNTCOME } from './queryComponents/COUNTCOME';
 import { COUNTLEAVE } from './queryComponents/COUNTLEAVE';
 import { TOTALCOME } from './queryComponents/TOTALCOME';
 import { TOTALLEAVE } from './queryComponents/TOTALLEAVE';
+import { StocksService } from 'src/stocks/stocks.service';
+import { POKOL } from './queryComponents/POKOL';
+import { POSUM } from './queryComponents/POSUM';
+import { KOKOL } from './queryComponents/KOKOL';
+import { KOSUM } from './queryComponents/KOSUM';
 
 export interface TotalResult {
     total: string | number | null;
@@ -26,7 +27,9 @@ export const query = async (
     firstSubcontoId: number | null, 
     secondSubcontoId: number | null,
     thirdSubcontoId: number | null, 
-    sequelize: Sequelize): Promise<number> => {
+    sequelize: Sequelize,
+    stocksService:  StocksService
+): Promise<number> => {
 
     try {
         let replacements: { [key: string]: any } = {};
@@ -34,13 +37,20 @@ export const query = async (
         let stopQuery: boolean = false
         let middle: {[key: string]: any} = {query, replacements}
         
+
+        switch (typeQuery) {
+            case TypeQuery.POKOL: 
+               return await POKOL(schet, typeQuery, startDate, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId, stocksService) 
+            case TypeQuery.POSUM: 
+                return await POSUM(schet, typeQuery, startDate, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId, stocksService)
+            case TypeQuery.KOKOL: 
+                return await KOKOL(schet, typeQuery, startDate, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId, stocksService) 
+            case TypeQuery.KOSUM: 
+               return await KOSUM(schet, typeQuery, startDate, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId, stocksService)
+        }
+
         const middleStart = ((typeQuery:TypeQuery | null) => {
             switch (typeQuery) {
-                case TypeQuery.PDKOL: return {...PDKOL(schet, typeQuery, startDate, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId)}
-                case TypeQuery.PDSUM: return {...PDSUM(schet, typeQuery, startDate, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId)}
-                case TypeQuery.PKKOL: return {...PKKOL(schet, typeQuery, startDate, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId)}
-                case TypeQuery.PKSUM: return {...PKSUM(schet, typeQuery, startDate, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId)}
-                
                 case TypeQuery.TDKOL: return {...TDKOL(schet, typeQuery, startDate, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId)}
                 case TypeQuery.TDSUM: return {...TDSUM(schet, typeQuery, startDate, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId)}
                 case TypeQuery.TKKOL: return {...TKKOL(schet, typeQuery, startDate, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId)}

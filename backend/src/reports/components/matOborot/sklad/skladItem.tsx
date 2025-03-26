@@ -4,8 +4,9 @@ import { TypeTMZ } from 'src/interfaces/reference.interface';
 import { Schet, TypeQuery } from 'src/interfaces/report.interface';
 import { Reference } from 'src/references/reference.model';
 import { query } from 'src/reports/querys/query';
+import { StocksService } from 'src/stocks/stocks.service';
 
-const prepareResult = async (data: any[], startDate, endDate, currentSectionId, sequelize, schet, typeTMZ: TypeTMZ) => {
+const prepareResult = async (data: any[], startDate, endDate, currentSectionId, sequelize, schet, typeTMZ: TypeTMZ, stocksService: StocksService) => {
   let result:any[] = [];
   let filteredData:Reference[] = []
 
@@ -14,22 +15,18 @@ const prepareResult = async (data: any[], startDate, endDate, currentSectionId, 
   }
   
   for (const item of filteredData) {
-    const PDKOL = await query(schet, TypeQuery.PDKOL, startDate, endDate, currentSectionId, item.id, null, sequelize);
-    const PDSUM = await query(schet, TypeQuery.PDSUM, startDate, endDate, currentSectionId, item.id, null, sequelize);
-    const PKKOL = await query(schet, TypeQuery.PKKOL, startDate, endDate, currentSectionId, item.id, null, sequelize);
-    const PKSUM = await query(schet, TypeQuery.PKSUM, startDate, endDate, currentSectionId, item.id, null, sequelize);
-    const TDKOL = await query(schet, TypeQuery.TDKOL, startDate, endDate, currentSectionId, item.id, null, sequelize);
-    const TDSUM = await query(schet, TypeQuery.TDSUM, startDate, endDate, currentSectionId, item.id, null, sequelize);
-    const TKKOL = await query(schet, TypeQuery.TKKOL, startDate, endDate, currentSectionId, item.id, null, sequelize);
-    const TKSUM = await query(schet, TypeQuery.TKSUM, startDate, endDate, currentSectionId, item.id, null, sequelize);
+    const POKOL = await query(schet, TypeQuery.POKOL, startDate, endDate, currentSectionId, item.id, null, sequelize, stocksService);
+    const POSUM = await query(schet, TypeQuery.POSUM, startDate, endDate, currentSectionId, item.id, null, sequelize, stocksService);
+    const TDKOL = await query(schet, TypeQuery.TDKOL, startDate, endDate, currentSectionId, item.id, null, sequelize, stocksService);
+    const TDSUM = await query(schet, TypeQuery.TDSUM, startDate, endDate, currentSectionId, item.id, null, sequelize, stocksService);
+    const TKKOL = await query(schet, TypeQuery.TKKOL, startDate, endDate, currentSectionId, item.id, null, sequelize, stocksService);
+    const TKSUM = await query(schet, TypeQuery.TKSUM, startDate, endDate, currentSectionId, item.id, null, sequelize, stocksService);
 
-    if (PDKOL || PDSUM || PKKOL || PKSUM || TDKOL || TDSUM || TKKOL || TKSUM) {
+    if (POKOL || POSUM  || TDKOL || TDSUM || TKKOL || TKSUM) {
       let element = {
         name: item.name,
-        PDKOL,
-        PDSUM,
-        PKKOL,
-        PKSUM,
+        POKOL,
+        POSUM,
         TDKOL,
         TDSUM,
         TKKOL,
@@ -53,13 +50,15 @@ export const skladItem = async(
   endDate: number | null,
   currentSectionId: number | null, 
   title: string, 
-  sequelize: Sequelize ) => {    
+  sequelize: Sequelize,
+  stocksService: StocksService
+) => {    
 
     let result:any[] = []
     result = [
-      ... await prepareResult(data, startDate, endDate, currentSectionId, sequelize, Schet.S10, TypeTMZ.MATERIAL),
-      ... await prepareResult(data, startDate, endDate, currentSectionId, sequelize, Schet.S21, TypeTMZ.HALFSTUFF),
-      ... await prepareResult(data, startDate, endDate, currentSectionId, sequelize, Schet.S28, TypeTMZ.PRODUCT),
+      ... await prepareResult(data, startDate, endDate, currentSectionId, sequelize, Schet.S10, TypeTMZ.MATERIAL, stocksService),
+      ... await prepareResult(data, startDate, endDate, currentSectionId, sequelize, Schet.S21, TypeTMZ.HALFSTUFF, stocksService),
+      ... await prepareResult(data, startDate, endDate, currentSectionId, sequelize, Schet.S28, TypeTMZ.PRODUCT, stocksService),
     ]
     
     return ( 

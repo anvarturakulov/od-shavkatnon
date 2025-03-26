@@ -2,13 +2,16 @@ import { TypeReference } from 'src/interfaces/reference.interface';
 import { skladItem } from './skladItem';
 import { Sequelize } from 'sequelize-typescript';
 import { Reference } from 'src/references/reference.model';
+import { StocksService } from 'src/stocks/stocks.service';
 
 export const sklad = async(
     data: any,
     startDate: number | null,
     endDate: number | null,
     section: number | null,
-    sequelize: Sequelize ) => {
+    sequelize: Sequelize,
+    stocksService: StocksService
+) => {
     
     let result:any[] = [];
     let filteredData:Reference[] = []
@@ -18,7 +21,7 @@ export const sklad = async(
     }
    
     for (const item of filteredData) {
-        let element = await skladItem(data, startDate, endDate, item.id, item.name, sequelize)
+        let element = await skladItem(data, startDate, endDate, item.id, item.name, sequelize, stocksService)
         if (Object.keys(element).length) {
             result.push(element)
         }

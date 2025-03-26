@@ -3,6 +3,7 @@ import { Sequelize } from 'sequelize-typescript';
 import { query } from 'src/reports/querys/query';
 import { Reference } from 'src/references/reference.model';
 import { Entry } from 'src/entries/entry.model';
+import { StocksService } from 'src/stocks/stocks.service';
 
 const getName = (data: any, id:number | null): string => {
   if (id == null) return '';
@@ -19,14 +20,15 @@ export const personalItem = async(
   startDate: number | null,
   endDate: number | null,
   workerId: number | null,
-  sequelize:Sequelize ) => {    
+  sequelize:Sequelize,
+  stocksService: StocksService
+) => {    
 
-    const PDSUM = await query(Schet.S67, TypeQuery.PDSUM, startDate, endDate, workerId, null, null, sequelize);
-    const PKSUM = await query(Schet.S67, TypeQuery.PKSUM, startDate, endDate, workerId, null, null, sequelize);
-    const TDSUM = await query(Schet.S67, TypeQuery.TDSUM, startDate, endDate, workerId, null, null, sequelize);
-    const TKSUM = await query(Schet.S67, TypeQuery.TKSUM, startDate, endDate, workerId, null, null, sequelize);
+    const POSUM = await query(Schet.S67, TypeQuery.POSUM, startDate, endDate, workerId, null, null, sequelize, stocksService);
+    const TDSUM = await query(Schet.S67, TypeQuery.TDSUM, startDate, endDate, workerId, null, null, sequelize, stocksService);
+    const TKSUM = await query(Schet.S67, TypeQuery.TKSUM, startDate, endDate, workerId, null, null, sequelize, stocksService);
 
-    if ( !PDSUM && !PKSUM && !TDSUM && !TKSUM) return {}
+    if ( !POSUM && !TDSUM && !TKSUM) return {}
     
     let subResults:any[] = []
     
@@ -67,8 +69,7 @@ export const personalItem = async(
     
     let element = {
       name: getName(data, workerId),
-      PDSUM,
-      PKSUM,
+      POSUM,
       TDSUM,
       TKSUM,
       subItems: [...subResults]

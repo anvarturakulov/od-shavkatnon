@@ -146,7 +146,7 @@ export class DocumentsService {
                                 ...item,
                             })
                             // create new stock and update
-                            await this.stocksService.addStockByEntry(entry)
+                            await this.stocksService.addTwoEntries(entry)
                         }
                     }
                     doc.docStatus = DocSTATUS.PROVEDEN
@@ -182,7 +182,7 @@ export class DocumentsService {
                 if ( entrysList.length > 0 ) {
                     for (const entry of entrysList) {
                         // destroy stock by deleted entry
-                        await this.stocksService.removeStockByEntry(entry)
+                        await this.stocksService.deleteTwoEntries(entry)
                     }
                 }
 
@@ -213,7 +213,7 @@ export class DocumentsService {
                             ...item,
                         })
                         // create new stock and update
-                        await this.stocksService.addStockByEntry(entry)
+                        await this.stocksService.addTwoEntries(entry)
                     }
                 }
                 document.docStatus = DocSTATUS.PROVEDEN
@@ -294,6 +294,8 @@ export class DocumentsService {
         const documents = await this.documentRepository.findAll({include: [DocValues, DocTableItems ]})
         for (const document of documents) {
             if (document ) {
+                document.docStatus = DocSTATUS.PROVEDEN
+                await document.save()
                 await this.entryRepository.destroy({where: {docId:document.id}})
                 
                 const entrysList = [...prepareEntrysList(document, true)]
@@ -302,6 +304,7 @@ export class DocumentsService {
                         const entry = await this.entryRepository.create({
                             ...item,
                         })
+                        await this.stocksService.addTwoEntries(entry)
                     }
 
                 } else throw new Error(`Entrys not: ${document.docValues.senderId}`);

@@ -2,8 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Stock } from './stock.model';
 import { EntryCreationAttrs } from 'src/entries/entry.model';
-import { Schet } from 'src/interfaces/report.interface';
+import { DEBETKREDIT, Schet } from 'src/interfaces/report.interface';
 import Redis from 'ioredis';
+import { Sequelize, Op } from 'sequelize';
 
 @Injectable()
 export class StocksService {
@@ -11,164 +12,293 @@ export class StocksService {
     private schetsWithOneSubconto = [Schet.S40, Schet.S50, Schet.S60, Schet.S66, Schet.S67, Schet.S68]
 
     constructor( @InjectModel(Stock) private stockRepository: typeof Stock ) {
-            this.redis = new Redis({ host: 'localhost', port: 6379 }) 
+        this.redis = new Redis({ host: 'localhost', port: 6379 }) 
+    }
+    
+    private getWhereClause(
+        schet: Schet,
+        date: bigint,
+        firstSubcontoId: number | null,
+        secondSubcontoId: number | null ) {
+
+        const where: any = { schet, date, firstSubcontoId };
+        
+        if (!this.schetsWithOneSubconto.includes(schet as Schet)) {
+          where.secondSubcontoId = secondSubcontoId;
+        } else {
+          where.secondSubcontoId = null; // Принудительно null для счетов с одним субконто
+        }
+        return where;
+    }
+
+    async addEntry(
+        schet: Schet,
+        date: bigint,
+        firstSubcontoId: number | null,
+        secondSubcontoId: number | null,
+        count: number,
+        total: number,
+        debetKredit: DEBETKREDIT
+    ) {
+
+        const where = this.getWhereClause(schet, date, firstSubcontoId, secondSubcontoId);
+        const [stock, created] = await Stock.findOrCreate({
+          where,
+          defaults: {
+            schet,
+            date,
+            firstSubcontoId,
+            secondSubcontoId: this.schetsWithOneSubconto.includes(schet) ? null : secondSubcontoId,
+            count: debetKredit == DEBETKREDIT.DEBET ? count : (-1) * count,
+            total: debetKredit == DEBETKREDIT.DEBET ? total : (-1) * total,
+            remainCount: 0,
+            remainTotal: 0,
+          },
+        });
+    
+        if (!created) {
+          if (debetKredit == DEBETKREDIT.DEBET) {
+            stock.count += count;
+            stock.total += total;
+          } else {
+            stock.count -= count;
+            stock.total -= total;
+          }
+          await stock.save();
         }
     
-
-    async addStockByEntry(entry: EntryCreationAttrs) {
-        // first 
-        let stockDebet = await this.stockRepository.findOne({
-            where: { 
-                schet: entry.debet,
-                date: entry.date,
-                firstSubcontoId: entry.debetFirstSubcontoId,
-                ... ( !this.schetsWithOneSubconto.includes(entry.debet) 
-                    ? {secondSubcontoId: entry.debetSecondSubcontoId}
-                    : {}
-                ), 
-                }
-            });
+        await this.recalculateRemains(schet, firstSubcontoId, secondSubcontoId, date);
+        await this.updateRedis(stock);
+    }
     
-            if (!stockDebet) {
-            stockDebet = await this.stockRepository.create(
-                {
-                schet: entry.debet,
-                date: entry.date,
-                firstSubcontoId: entry.debetFirstSubcontoId,
-                ... ( !this.schetsWithOneSubconto.includes(entry.debet) 
-                  ? { secondSubcontoId: entry.debetSecondSubcontoId } 
-                  : {} 
-                ),
-                count: 0,
-                total: 0
-                },
-            );
-            }
-    
-            stockDebet.count += entry.count;
-            stockDebet.total += entry.total
-            await stockDebet.save();
+    async addTwoEntries(entry: EntryCreationAttrs) {
+        await Promise.all([
+            this.addEntry(
+                entry.debet,
+                entry.date,
+                entry.debetFirstSubcontoId,
+                entry.debetSecondSubcontoId,
+                entry.count,
+                entry.total,
+                DEBETKREDIT.DEBET
+            ),
+            this.addEntry(
+                entry.kredit,
+                entry.date,
+                entry.kreditFirstSubcontoId,
+                entry.kreditSecondSubcontoId,
+                entry.count,
+                entry.total,
+                DEBETKREDIT.KREDIT
+            )
+        ]);
+    }
 
-            const redisKeyDebet = `stock:${entry.debet}
-                                   :${entry.date}
-                                   :${entry.debetFirstSubcontoId}
-                                   ${!this.schetsWithOneSubconto.includes(entry.debet) ? ':'+entry.debetSecondSubcontoId : ''}`;
-            
-            await this.redis.hset(redisKeyDebet, 'count', stockDebet.count.toString());
-            await this.redis.hset(redisKeyDebet, 'total', stockDebet.total.toString());
+    // async updateEntry(
+    //     schet: Schet,
+    //     date: bigint,
+    //     firstSubcontoId: number | null,
+    //     secondSubcontoId: number | null,
+    //     oldCount: number,
+    //     oldTotal: number,
+    //     newCount: number,
+    //     newTotal: number ) {
+
+    //     const where = this.getWhereClause(schet, date, firstSubcontoId, secondSubcontoId);
+    //     const stock = await Stock.findOne({ where });
+
+    //     if (!stock) {
+    //         throw new Error('Stock not found for this date and combination');
+    //     }
+
+    //     const deltaCount = newCount - oldCount;
+    //     const deltaTotal = newTotal - oldTotal;
+
+    //     stock.count += deltaCount;
+    //     stock.total += deltaTotal;
+    //     await stock.save();
+
+    //     await this.recalculateRemains(schet, firstSubcontoId, secondSubcontoId, date);
+    //     await this.updateRedis(stock);
+    // }
+    
+    async deleteEntry(
+        schet: Schet,
+        date: bigint,
+        firstSubcontoId: number | null,
+        secondSubcontoId: number | null,
+        count: number,
+        total: number,
+        debetKredit: DEBETKREDIT) {
+
+        const where = this.getWhereClause(schet, date, firstSubcontoId, secondSubcontoId);
+        const stock = await Stock.findOne({ where });
+
+        if (!stock) {
+            return;
+        }
+
+        if (debetKredit == DEBETKREDIT.DEBET) {
+            stock.count = stock.count - count;
+            stock.total = stock.total - total;
+        } else {
+            stock.count = stock.count + count;
+            stock.total = stock.total + total;
+        }
+        console.log('ddddddddd', debetKredit, stock.total, total)
+
+        if (stock.count === 0 && stock.total === 0) {
+            await stock.destroy();
+        } else {
+            await stock.save();
+        }
+
+        await this.recalculateRemains(schet, firstSubcontoId, secondSubcontoId, date);
         
-        // second
-        let stockKredit = await this.stockRepository.findOne({
-            where: { 
-                schet: entry.kredit,
-                date: entry.date,
-                firstSubcontoId: entry.kreditFirstSubcontoId,
-                ... ( !this.schetsWithOneSubconto.includes(entry.kredit) 
-                    ? { secondSubcontoId: entry.kreditSecondSubcontoId } 
-                    : {}
-                ),
-            }
-            });
-    
-            if (!stockKredit) {
-            stockKredit = await this.stockRepository.create(
-                {
-                schet: entry.kredit,
-                date: entry.date,
-                firstSubcontoId: entry.kreditFirstSubcontoId,
-                ... ( !this.schetsWithOneSubconto.includes(entry.kredit) 
-                    ? { secondSubcontoId: entry.kreditSecondSubcontoId } 
-                    : {}
-                ),
-                count: 0,
-                total: 0
-                },
-            );
-            }
-    
-            stockKredit.count -= entry.count;
-            stockKredit.total -= entry.total
-            await stockKredit.save();
-
-            const redisKeyKredit = `stock:${entry.kredit}
-                                   :${entry.date}
-                                   :${entry.debetFirstSubcontoId}
-                                   ${!this.schetsWithOneSubconto.includes(entry.kredit) ? ':'+entry.kreditSecondSubcontoId : ''}`;
-            
-            await this.redis.hset(redisKeyKredit, 'count', stockKredit.count.toString());
-            await this.redis.hset(redisKeyKredit, 'total', stockKredit.total.toString());
+        if (stock.count === 0 && stock.total === 0) {
+            await this.deleteFromRedis(schet, firstSubcontoId, secondSubcontoId, date);
+        } else {
+            await this.updateRedis(stock);
+        }
     }
 
-    async removeStockByEntry(entry: EntryCreationAttrs) {
-        // first 
-        let stockDebet = await this.stockRepository.findOne({
-            where: { 
-                schet: entry.debet,
-                date: entry.date,
-                firstSubcontoId: entry.debetFirstSubcontoId,
-                ... ( !this.schetsWithOneSubconto.includes(entry.debet) 
-                  ? { secondSubcontoId: entry.debetSecondSubcontoId } 
-                  : {}
-                )}
-            });
-    
-            if (stockDebet) {
-                stockDebet.count -= entry.count;
-                stockDebet.total -= entry.total
-                await stockDebet.save();
-            }
-
-            const redisKeyDebet = `stock:${entry.debet}
-                                   :${entry.date}
-                                   :${entry.debetFirstSubcontoId}
-                                   ${!this.schetsWithOneSubconto.includes(entry.debet) ? ':'+entry.debetSecondSubcontoId : ''}`;
-           
-            const cachedCountDebet = await this.redis.hget(redisKeyDebet, 'count');
-            if (cachedCountDebet !== null) {
-                const newCountDebetToCach = parseInt(cachedCountDebet, 10) - entry.count
-                await this.redis.hset(redisKeyDebet, 'count', newCountDebetToCach.toString());
-            }
-            
-            const cachedTotalDebet = await this.redis.hget(redisKeyDebet, 'total');
-            if (cachedTotalDebet !== null) {
-                const newTotalDebetToCach = parseInt(cachedTotalDebet, 10) - entry.total
-                await this.redis.hset(redisKeyDebet, 'total', newTotalDebetToCach.toString());
-            }
-            
-        // second
-        let stockKredit = await this.stockRepository.findOne({
-            where: { 
-                schet: entry.kredit,
-                date: entry.date,
-                firstSubcontoId: entry.kreditFirstSubcontoId,
-                ... ( !this.schetsWithOneSubconto.includes(entry.kredit) 
-                    ? { secondSubcontoId: entry.kreditSecondSubcontoId } 
-                    : {}
-                )}
-            });
-    
-            if (stockKredit) {
-                stockKredit.count += entry.count;
-                stockKredit.total += entry.total
-                await stockKredit.save();
-            }
-    
-            const redisKeyKredit = `stock:${entry.kredit}
-                                   :${entry.date}
-                                   :${entry.debetFirstSubcontoId}
-                                   ${!this.schetsWithOneSubconto.includes(entry.kredit) ? ':'+entry.kreditSecondSubcontoId : ''}`;
-            
-            const cachedCountKredit = await this.redis.hget(redisKeyKredit, 'count');
-            if (cachedCountKredit !== null) {
-                const newCountKreditToCach = parseInt(cachedCountKredit, 10) + entry.count
-                await this.redis.hset(redisKeyDebet, 'count', newCountKreditToCach.toString());
-            }
-            
-            const cachedTotalKredit = await this.redis.hget(redisKeyDebet, 'total');
-            if (cachedTotalKredit !== null) {
-                const newTotalKreditToCach = parseInt(cachedTotalKredit, 10) + entry.total
-                await this.redis.hset(redisKeyDebet, 'total', newTotalKreditToCach.toString());
-            }
-            
+    async deleteTwoEntries(entry: EntryCreationAttrs) {
+        console.log(entry.debet, entry.kredit)
+        await Promise.all([
+            this.deleteEntry(
+                entry.debet,
+                entry.date,
+                entry.debetFirstSubcontoId,
+                entry.debetSecondSubcontoId,
+                entry.count,
+                entry.total,
+                DEBETKREDIT.DEBET
+            ),
+            this.deleteEntry(
+                entry.kredit,
+                entry.date,
+                entry.kreditFirstSubcontoId,
+                entry.kreditSecondSubcontoId,
+                entry.count,
+                entry.total,
+                DEBETKREDIT.KREDIT
+            )
+        ]);
     }
+    
+    async recalculateRemains(
+        schet: string,
+        firstSubcontoId: number | null,
+        secondSubcontoId: number | null,
+        fromDate: bigint ) {
+        const where = {
+            schet,
+            firstSubcontoId,
+            secondSubcontoId: this.schetsWithOneSubconto.includes(schet as Schet) ? null : secondSubcontoId,
+            date: { [Op.gte]: fromDate },
+        };
+        const stocks = await Stock.findAll({
+            where,
+            order: [['date', 'ASC']],
+        });
+
+        let runningCount = 0;
+        let runningTotal = 0;
+
+        const previous = await Stock.findOne({
+            where: {
+            schet,
+            firstSubcontoId,
+            secondSubcontoId: this.schetsWithOneSubconto.includes(schet as Schet) ? null : secondSubcontoId,
+            date: { [Op.lt]: fromDate },
+            },
+            order: [['date', 'DESC']],
+        });
+        if (previous) {
+            runningCount = previous.remainCount;
+            runningTotal = previous.remainTotal;
+        }
+
+        for (const stock of stocks) {
+            runningCount += stock.count;
+            runningTotal += stock.total;
+            stock.remainCount = runningCount;
+            stock.remainTotal = runningTotal;
+            await stock.save();
+            await this.updateRedis(stock);
+        }
+    }
+    
+    async getStockByDate(
+        schet: Schet,
+        firstSubcontoId: number | null,
+        secondSubcontoId: number | null,
+        targetDate: number ) {
+        
+        // const setKey = `sorted_stock:${schet}:${firstSubcontoId}:${secondSubcontoId}`;
+        // const keys = await this.redis.zrangebyscore(setKey, '-inf', targetDate);
+
+        // if (keys.length > 0) {
+        //     const latestKey = keys[keys.length - 1];
+        //     const values = await this.redis.hgetall(latestKey);
+        //     return {
+        //         date: BigInt(latestKey.split(':')[4]),
+        //         count: parseFloat(values.count),
+        //         total: parseFloat(values.total),
+        //         remainCount: parseFloat(values.remainCount),
+        //         remainTotal: parseFloat(values.remainTotal),
+        //     };
+        // }
+
+        let where:any = {
+            schet,
+            secondSubcontoId: this.schetsWithOneSubconto.includes(schet) ? null : secondSubcontoId,
+            date: { [Op.lte]: targetDate },
+        };
+
+        if (firstSubcontoId != null) where = {
+            ...where,
+            firstSubcontoId: firstSubcontoId
+        }
+
+        const stock = await Stock.findOne({
+            where,
+            order: [['date', 'DESC']],
+        });
+
+        return stock
+            ? {
+                date: stock.date,
+                count: stock.count,
+                total: stock.total,
+                remainCount: stock.remainCount,
+                remainTotal: stock.remainTotal,
+            }
+            : { date: null, count: 0, total: 0, remainCount: 0, remainTotal: 0 };
+    }
+    
+    private async updateRedis(stock: Stock) {
+        const hashKey = `stock:${stock.schet}:${stock.firstSubcontoId}:${stock.secondSubcontoId}:${stock.date}`;
+        const setKey = `sorted_stock:${stock.schet}:${stock.firstSubcontoId}:${stock.secondSubcontoId}`;
+        await this.redis.hset(hashKey, {
+            count: stock.count.toString(),
+            total: stock.total.toString(),
+            remainCount: stock.remainCount.toString(),
+            remainTotal: stock.remainTotal.toString(),
+        });
+        await this.redis.zadd(setKey, Number(stock.date), hashKey);
+    }
+    
+    private async deleteFromRedis(
+        schet: Schet,
+        firstSubcontoId: number | null,
+        secondSubcontoId: number | null,
+        date: bigint) {
+
+        const hashKey = `stock:${schet}:${firstSubcontoId}:${secondSubcontoId}:${date}`;
+        const setKey = `sorted_stock:${schet}:${firstSubcontoId}:${secondSubcontoId}`;
+        await this.redis.del(hashKey);
+        await this.redis.zrem(setKey, hashKey);
+    }
+    
 }

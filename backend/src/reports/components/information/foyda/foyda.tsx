@@ -6,6 +6,7 @@ import { Sequelize } from 'sequelize-typescript';
 import { Reference } from 'src/references/reference.model';
 import { Document } from 'src/documents/document.model';
 import { queryKor } from 'src/reports/querys/queryKor';
+import { StocksService } from 'src/stocks/stocks.service';
 
 export const foyda = async (
     data: any,
@@ -14,8 +15,9 @@ export const foyda = async (
     firstPrice: number | null,
     secondPrice: number | null,
     sequelize: Sequelize,
-    docs: Document[],
-    deliverys: Reference[] ) => {
+    deliverys: Reference[],
+    stockService: StocksService
+) => {
     
     let result:any[] = [];
     let zpUmumBulim = 0;
@@ -58,7 +60,7 @@ export const foyda = async (
                         })
         
     for (const item of filteredData) {                    
-        let element = await foydaItem(data, startDate, endDate, item.id, item.name, firstPrice, secondPrice, sequelize, docs, deliverys, zpUmumBulim, longeChargeUmumBulim, currentPaymentUmumBulim);
+        let element = await foydaItem(data, startDate, endDate, item.id, item.name, firstPrice, secondPrice, sequelize, deliverys, zpUmumBulim, longeChargeUmumBulim, currentPaymentUmumBulim, stockService);
         if (Object.keys(element).length) {
             result.push(element)
         }

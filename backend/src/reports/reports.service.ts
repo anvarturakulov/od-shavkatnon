@@ -11,6 +11,7 @@ import { DocumentsService } from 'src/documents/documents.service';
 import { oborotkaAll } from './components/oborotkaAll/oborotkaAll';
 import { EntriesService } from 'src/entries/entries.service';
 import { personalAll } from './components/personalAll/personalAll';
+import { StocksService } from 'src/stocks/stocks.service';
 
 @Injectable()
 export class ReportsService {
@@ -21,21 +22,22 @@ export class ReportsService {
         private documentsService: DocumentsService,
         private referencesService: ReferencesService,
         private entriesService: EntriesService,
+        private stocksService: StocksService
     ) {}
 
 
     async getQueryValue(req: QuerySimple) {
         const { typeQuery, schet, startDate, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId} = req;
-        return await query(schet, typeQuery, startDate, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId, this.sequelize)
+        return await query(schet, typeQuery, startDate, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId, this.sequelize, this.stocksService)
     }
     
     async getPriceAndBalance(queryReport: QuerySimple) {
         const { schet, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId } = queryReport;
 
-        let countCome = await query(schet, TypeQuery.COUNTCOME, 0, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId, this.sequelize)
-        let countLeave = await query(schet, TypeQuery.COUNTLEAVE, 0, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId, this.sequelize)
-        let totalCome = await query(schet, TypeQuery.TOTALCOME, 0, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId, this.sequelize)
-        let totalLeave = await query(schet, TypeQuery.TOTALLEAVE, 0, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId, this.sequelize)
+        let countCome = await query(schet, TypeQuery.COUNTCOME, 0, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId, this.sequelize, this.stocksService)
+        let countLeave = await query(schet, TypeQuery.COUNTLEAVE, 0, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId, this.sequelize, this.stocksService)
+        let totalCome = await query(schet, TypeQuery.TOTALCOME, 0, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId, this.sequelize, this.stocksService)
+        let totalLeave = await query(schet, TypeQuery.TOTALLEAVE, 0, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId, this.sequelize, this.stocksService)
         
         let totalCount = countCome - countLeave;
         let totalSumma = totalCome - totalLeave;
@@ -48,21 +50,11 @@ export class ReportsService {
     }
 
     async getInformation(queryInformation: QuerySimple) {
-        console.time('References');
         let references = await this.referencesService.getAllReferences();
-        // let references = [];
-        console.timeEnd('References');
-        console.time('Productions');
-        // let productions = await this.documentsService.getAllDocuments();
-        let productions = [];
-        console.timeEnd('Productions');
-        console.time('Deliverys');
-        // let deliverys = await this.referencesService.getDeliverys();
-        let deliverys = [];
-        console.timeEnd('Deliverys');
+        let deliverys = await this.referencesService.getDeliverys();
         let {startDate, endDate, reportType, firstPrice, secondPrice} = queryInformation;
         console.time('Information');
-        let inform = await information(references, startDate, endDate, reportType, firstPrice, secondPrice, productions, deliverys, this.sequelize);
+        let inform = await information(references, startDate, endDate, reportType, firstPrice, secondPrice, deliverys, this.sequelize, this.stocksService);
         console.timeEnd('Information');
         return inform;
     }
@@ -70,7 +62,7 @@ export class ReportsService {
     async getMatOtchet(queryMatOtchet: QuerySimple) {
         let references = await this.referencesService.getAllReferences();
         let { startDate, endDate, sectionId } = queryMatOtchet;
-        let result = matOborot(references, startDate, endDate, sectionId, this.sequelize)
+        let result = matOborot(references, startDate, endDate, sectionId, this.sequelize, this.stocksService)
         return result
     }
     
@@ -78,7 +70,7 @@ export class ReportsService {
         let references = await this.referencesService.getAllReferences();
         let entrys = await this.entriesService.getAllEntries()
         let { startDate, endDate, firstSubcontoId } = queryOborotka;
-        let result = personalAll(references, entrys, startDate, endDate, firstSubcontoId, this.sequelize)
+        let result = personalAll(references, entrys, startDate, endDate, firstSubcontoId, this.sequelize, this.stocksService)
         return result
     }
 
@@ -86,7 +78,7 @@ export class ReportsService {
         let references = await this.referencesService.getAllReferences();
         let entrys = await this.entriesService.getAllEntries();
         let { startDate, endDate, schet } = queryOborotka;
-        let result = oborotkaAll(references, entrys, startDate, endDate, schet, this.sequelize)
+        let result = oborotkaAll(references, entrys, startDate, endDate, schet, this.sequelize, this.stocksService)
         return result
     }
 

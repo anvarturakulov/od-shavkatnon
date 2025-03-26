@@ -3,17 +3,21 @@ import { Schet, TypeQuery } from 'src/interfaces/report.interface';
 import { Sequelize } from 'sequelize-typescript';
 import { query } from 'src/reports/querys/query';
 import { queryKor } from 'src/reports/querys/queryKor';
+import { StocksService } from 'src/stocks/stocks.service';
 
 export const cashItem = async ( 
   startDate: number | null,
   endDate: number | null,
   currentSectionId: number | null, 
   title: string, 
-  sequelize: Sequelize ) => {
+  sequelize: Sequelize,
+  stocksService: StocksService
+) => {
 
   
-  const PDSUM = await query( Schet.S50, TypeQuery.PDSUM, startDate, endDate, currentSectionId, null, null, sequelize);
-  const PKSUM = await query( Schet.S50, TypeQuery.PKSUM, startDate, endDate, currentSectionId, null, null, sequelize);
+  const POSUM = await query( Schet.S50, TypeQuery.POSUM, startDate, endDate, currentSectionId, null, null, sequelize, stocksService);
+  const KOSUM = await query( Schet.S50, TypeQuery.KOSUM, startDate, endDate, currentSectionId, null, null, sequelize, stocksService);
+  
   const TRADEINCOME = await queryKor(Schet.S50, Schet.S40, TypeQuery.ODS, startDate, endDate, currentSectionId, null, null, sequelize);
   const MOVEINCOME = await queryKor(Schet.S50, Schet.S50, TypeQuery.ODS, startDate, endDate, currentSectionId, null, null, sequelize);
   const MOVEOUT = await queryKor(Schet.S50, Schet.S50, TypeQuery.OKS, startDate, endDate, currentSectionId, null, null, sequelize);
@@ -23,15 +27,13 @@ export const cashItem = async (
   
   const FORPARTNERS = await queryKor(Schet.S60, Schet.S50, TypeQuery.OKS, startDate, endDate, currentSectionId, null, null, sequelize);
   const FORFOUNDER = await queryKor(Schet.S66, Schet.S50, TypeQuery.OKS, startDate, endDate, currentSectionId, null, null, sequelize);
-  const TDSUM = await query( Schet.S50, TypeQuery.TDSUM,  startDate, endDate, currentSectionId, null, null, sequelize);
-  const TKSUM = await query( Schet.S50, TypeQuery.TKSUM, startDate, endDate, currentSectionId, null, null, sequelize);
 
-  if ( !(PDSUM-PKSUM) && !(TRADEINCOME+MOVEINCOME) && !(CHARGES+FORPARTNERS+MOVEOUT+FORFOUNDER) 
-      && !(PDSUM-PKSUM+TDSUM-TKSUM)) return {}
+  if ( !(POSUM) && !(TRADEINCOME+MOVEINCOME) && !(CHARGES+FORPARTNERS+MOVEOUT+FORFOUNDER) 
+      && !(KOSUM)) return {}
   return (
     {
       section: title,
-      startBalans: PDSUM-PKSUM,
+      startBalans: POSUM,
       sale: TRADEINCOME,
       moveIncome: MOVEINCOME,
       allIncome: TRADEINCOME+MOVEINCOME,
@@ -40,7 +42,7 @@ export const cashItem = async (
       moveOut: MOVEOUT,
       forFounder: FORFOUNDER,
       allOut: CHARGES+ FORPARTNERS+MOVEOUT+FORFOUNDER,
-      endBalans: PDSUM-PKSUM+TDSUM-TKSUM
+      endBalans: KOSUM
     }
       
   )

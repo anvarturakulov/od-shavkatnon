@@ -3,6 +3,7 @@ import { TypeReference, TypeSECTION } from 'src/interfaces/reference.interface';
 import { Schet, TypeQuery } from 'src/interfaces/report.interface';
 import { Reference } from 'src/references/reference.model';
 import { query } from 'src/reports/querys/query';
+import { StocksService } from 'src/stocks/stocks.service';
 
 // const valueDK = async (
 //     type: 'start' | 'end',
@@ -123,20 +124,19 @@ const valueDK = async (
     schet: Schet,
     startDate: number | null,
     endDate: number | null,
-    firstSubcontoId: number,
-    secondSubcontoId: number,
+    firstSubcontoId: number | null,
+    secondSubcontoId: number | null,
     thirdSubcontoId: number,
-    sequelize: Sequelize
+    sequelize: Sequelize,
+    stocksService: StocksService
 ) => {
-    const [PDSUM, PKSUM, TDSUM, TKSUM] = await Promise.all([
-        query(schet, TypeQuery.PDSUM, startDate, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId, sequelize),
-        query(schet, TypeQuery.PKSUM, startDate, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId, sequelize),
-        query(schet, TypeQuery.TDSUM, startDate, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId, sequelize),
-        query(schet, TypeQuery.TKSUM, startDate, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId, sequelize),
+    const [POSUM, KOSUM] = await Promise.all([
+        query(schet, TypeQuery.POSUM, startDate, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId, sequelize, stocksService),
+        query(schet, TypeQuery.KOSUM, startDate, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId, sequelize, stocksService),
     ]);
 
-    const valueStart = PDSUM - PKSUM;
-    const valueEnd = valueStart + TDSUM - TKSUM;
+    const valueStart = POSUM;
+    const valueEnd = KOSUM;
 
     return type === 'start' ? valueStart : valueEnd;
 };
@@ -149,7 +149,8 @@ export const debitorKreditorInners = async (
     schet: Schet,
     typeReference: TypeReference,
     reportId: string,
-    sequelize: Sequelize
+    sequelize: Sequelize,
+    stockService: StocksService
 ) => {
     console.time(`${reportId}-Total`);
 
@@ -175,19 +176,15 @@ export const debitorKreditorInners = async (
 
     const tasks = filteredData.map(async (item) => {
         let firstSubcontoId, secondSubcontoId, thirdSubcontoId;
-        if (typeReference === TypeReference.TMZ) {
-            firstSubcontoId = null;
-            secondSubcontoId = item.id;
-            thirdSubcontoId = null;
-        } else {
-            firstSubcontoId = item.id;
-            secondSubcontoId = null;
-            thirdSubcontoId = null;
-        }
+
+        
+        firstSubcontoId = item.id;
+        secondSubcontoId = null;
+        thirdSubcontoId = null;
 
         const [valueStart, valueEnd] = await Promise.all([
-            valueDK('start', schet, startDate, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId, sequelize),
-            valueDK('end', schet, startDate, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId, sequelize),
+            valueDK('start', schet, startDate, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId, sequelize, stockService),
+            valueDK('end', schet, startDate, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId, sequelize, stockService),
         ]);
 
         return { item, valueStart, valueEnd };

@@ -1,6 +1,7 @@
 import { Sequelize } from 'sequelize-typescript';
 import { oborotkaItem } from './oborotkaItem';
 import { Schet } from 'src/interfaces/report.interface';
+import { StocksService } from 'src/stocks/stocks.service';
 
 export const oborotka = async (
     data: any,
@@ -8,7 +9,9 @@ export const oborotka = async (
     startDate: number | null,
     endDate: number | null,
     schet: Schet | null,
-    sequelize: Sequelize ) => {
+    sequelize: Sequelize,
+    stocksService: StocksService
+) => {
     
     let result:any = [];
     let firstList:number[] = []
@@ -26,7 +29,7 @@ export const oborotka = async (
     
     if (firstList && firstList.length) {
         for (const firstSubcontoId of firstList) {
-            let element = await oborotkaItem(data, startDate, endDate, firstSubcontoId, secondList, schet, sequelize)
+            let element = await oborotkaItem(data, startDate, endDate, firstSubcontoId, secondList, schet, sequelize, stocksService)
             if (Object.keys(element).length>0) {
                 result.push(element)
             }

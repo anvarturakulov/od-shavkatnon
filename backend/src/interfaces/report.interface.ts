@@ -47,14 +47,14 @@ export enum DEBETKREDIT {
 }
 
 export enum TypeQuery {
-    PDSUM = 'PDSUM',
-    PDKOL = 'PDKOL',
-    PKSUM = 'PKSUM',
-    PKKOL = 'PKKOL',
+    POSUM = 'POSUM',
+    POKOL = 'POKOL',
     TDSUM = 'TDSUM',
     TDKOL = 'TDKOL',
     TKSUM = 'TKSUM',
     TKKOL = 'TKKOL',
+    KOSUM = 'KOSUM',
+    KOKOL = 'KOKOL',
     COUNTCOME = 'COUNTCOME',
     TOTALCOME = 'TOTALCOME',
     COUNTLEAVE = 'COUNTLEAVE',

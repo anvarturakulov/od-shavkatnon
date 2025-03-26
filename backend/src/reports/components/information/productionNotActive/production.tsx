@@ -2,13 +2,16 @@ import { ReferenceModel, TypeReference, TypeSECTION } from 'src/interfaces/refer
 import { productionItem } from './productionItem';
 import { Sequelize } from 'sequelize-typescript';
 import { Reference } from 'src/references/reference.model';
+import { StocksService } from 'src/stocks/stocks.service';
 
 export const production = async (
     data: any,
     startDate: number | null,
     endDate: number | null,
     sequelize: Sequelize,
-    hamirs: [] ) => {
+    hamirs: [],
+    stocksService: StocksService
+) => {
     
         // Anvar hamir bilan hato bor chog'i
     let result:any[] = [];
@@ -23,7 +26,7 @@ export const production = async (
     }   
 
     for (const item of filteredData) {
-        let element = await productionItem(startDate, endDate, item?.id, item.name, sequelize, hamirs)
+        let element = await productionItem(startDate, endDate, item?.id, item.name, sequelize, hamirs, stocksService)
 
         if (Object.keys(element).length) {
             result.push(element)

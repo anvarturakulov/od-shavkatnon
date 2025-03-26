@@ -6,6 +6,7 @@ import { Reference } from 'src/references/reference.model';
 import { Document } from 'src/documents/document.model';
 import { queryKor } from 'src/reports/querys/queryKor';
 import { query } from 'src/reports/querys/query';
+import { StocksService } from 'src/stocks/stocks.service';
 
 const isDelivery = (deliverys:Reference[], id:number) => {
   if (deliverys && deliverys.length) {
@@ -24,11 +25,12 @@ export const foydaItem = async (
   firstPrice: number | null,
   secondPrice: number | null,
   sequelize: Sequelize,
-  docs: Document[],
   deliverys: Reference[],
   zpUmumBulim: number,
   longeChargeUmumBulim: number, 
-  currentPaymentUmumBulim: number ) => {
+  currentPaymentUmumBulim: number,
+  stockService: StocksService
+) => {
 
   let longeCharge:number = 0;
   let filteredData:Reference[] = []
@@ -53,84 +55,87 @@ export const foydaItem = async (
   // Shu erni uzgartirish kerak 
   let idForBuxanka = -1
 
-  if (docs && docs.length > 0 && startDate != null && endDate != null) {
-    productionAllDocsCountByCompany = docs.filter((item: Document) => {
-      return (item.date>= startDate && item.date <= endDate && item.documentType == DocumentType.ComeProduct)
-    }).length
+  if (startDate != null && endDate != null) {
+    productionAllDocsCountByCompany = 0;
+    // docs.filter((item: Document) => {
+    //   return (item.date>= startDate && item.date <= endDate && item.documentType == DocumentType.ComeProduct)
+    // }).length
 
-    productionDocsCountAll = docs.filter((item: Document) => {
-      return (
-          item.date>= startDate && item.date <= endDate && item.docValues.senderId == currentSectionId 
-          && item.documentType == DocumentType.ComeProduct
-        )
-    }).length
+    productionDocsCountAll = 0 
+    // docs.filter((item: Document) => {
+    //   return (
+    //       item.date>= startDate && item.date <= endDate && item.docValues.senderId == currentSectionId 
+    //       && item.documentType == DocumentType.ComeProduct
+    //     )
+    // }).length
 
-    productionDocsCountBux = docs.filter((item: Document) => {
-      return (
-          item.date>= startDate && 
-          item.date <= endDate &&
-          item.docValues.analiticId == idForBuxanka && 
-          item.docValues.senderId == currentSectionId &&
-          item.documentType == DocumentType.ComeProduct
-        )
-    }).length
+    productionDocsCountBux = 0
+    // docs.filter((item: Document) => {
+    //   return (
+    //       item.date>= startDate && 
+    //       item.date <= endDate &&
+    //       item.docValues.analiticId == idForBuxanka && 
+    //       item.docValues.senderId == currentSectionId &&
+    //       item.documentType == DocumentType.ComeProduct
+    //     )
+    // }).length
     
-    countOutToDeliveryAll = docs.filter((item:Document) => {
-      return (
-        item.date>= startDate && 
-        item.date <= endDate && 
-        item.documentType == DocumentType.MoveProd &&
-        item.docValues.senderId == currentSectionId  &&
-        isDelivery(deliverys, item.docValues.receiverId )
-    )}
-    ).reduce((total, item:Document) => total + item.docValues.count, 0)
+    countOutToDeliveryAll = 0
+    // docs.filter((item:Document) => {
+    //   return (
+    //     item.date>= startDate && 
+    //     item.date <= endDate && 
+    //     item.documentType == DocumentType.MoveProd &&
+    //     item.docValues.senderId == currentSectionId  &&
+    //     isDelivery(deliverys, item.docValues.receiverId )
+    // )}
+    // ).reduce((total, item:Document) => total + item.docValues.count, 0)
 
-    countOutToDeliveryBux = docs.filter((item:Document) => {
-      return (
-        item.date >= startDate && 
-        item.date <= endDate && 
-        item.documentType == DocumentType.MoveProd &&
-        item.docValues.senderId == currentSectionId  &&
-        item.docValues.analiticId == idForBuxanka &&
-        isDelivery(deliverys, item.docValues.receiverId) )
-    }).reduce((total, item:Document) => total + item.docValues.count, 0)
+    countOutToDeliveryBux = 0
+    // docs.filter((item:Document) => {
+    //   return (
+    //     item.date >= startDate && 
+    //     item.date <= endDate && 
+    //     item.documentType == DocumentType.MoveProd &&
+    //     item.docValues.senderId == currentSectionId  &&
+    //     item.docValues.analiticId == idForBuxanka &&
+    //     isDelivery(deliverys, item.docValues.receiverId) )
+    // }).reduce((total, item:Document) => total + item.docValues.count, 0)
 
-    countIncomeFromDeliveryAll = docs.filter((item:Document) => {
-      return (
-        item.date>= startDate && 
-        item.date <= endDate && 
-        item.documentType == DocumentType.MoveProd &&
-        item.docValues.receiverId == currentSectionId  &&
-        isDelivery(deliverys, item.docValues.senderId) )
-    }).reduce((total, item:Document) => total + item.docValues.count, 0)
+    countIncomeFromDeliveryAll = 0
+    // docs.filter((item:Document) => {
+    //   return (
+    //     item.date>= startDate && 
+    //     item.date <= endDate && 
+    //     item.documentType == DocumentType.MoveProd &&
+    //     item.docValues.receiverId == currentSectionId  &&
+    //     isDelivery(deliverys, item.docValues.senderId) )
+    // }).reduce((total, item:Document) => total + item.docValues.count, 0)
 
-    countIncomeFromDeliveryBux = docs.filter((item:Document) => {
-      return (
-        item.date>= startDate && 
-        item.date <= endDate && 
-        item.documentType == DocumentType.MoveProd &&
-        item.docValues.receiverId == currentSectionId  &&
-        item.docValues.analiticId == idForBuxanka &&
-        isDelivery(deliverys, item.docValues.senderId) )
-    }).reduce((total, item:Document) => total + item.docValues.count, 0)
+    countIncomeFromDeliveryBux = 0
+    // docs.filter((item:Document) => {
+    //   return (
+    //     item.date>= startDate && 
+    //     item.date <= endDate && 
+    //     item.documentType == DocumentType.MoveProd &&
+    //     item.docValues.receiverId == currentSectionId  &&
+    //     item.docValues.analiticId == idForBuxanka &&
+    //     isDelivery(deliverys, item.docValues.senderId) )
+    // }).reduce((total, item:Document) => total + item.docValues.count, 0)
 
   }
 
-  const PDKOLAll = await query(Schet.S28, TypeQuery.PDKOL, startDate, endDate, currentSectionId, null, null, sequelize)
-  const PKKOLAll = await query(Schet.S28, TypeQuery.PKKOL, startDate, endDate, currentSectionId, null, null, sequelize)
-  const TDKOLAll = await query(Schet.S28, TypeQuery.TDKOL, startDate, endDate, currentSectionId, null, null, sequelize)
-  const TKKOLAll = await query(Schet.S28, TypeQuery.TKKOL, startDate, endDate, currentSectionId, null, null, sequelize)
-
-  const PDKOLBux = await query(Schet.S28, TypeQuery.PDKOL, startDate, endDate, currentSectionId, idForBuxanka, null, sequelize)
-  const PKKOLBux = await query(Schet.S28, TypeQuery.PKKOL, startDate, endDate, currentSectionId, idForBuxanka, null, sequelize)
-  const TDKOLBux = await query(Schet.S28, TypeQuery.TDKOL, startDate, endDate, currentSectionId, idForBuxanka, null, sequelize)
-  const TKKOLBux = await query(Schet.S28, TypeQuery.TKKOL, startDate, endDate, currentSectionId, idForBuxanka, null, sequelize)
+  const POKOLAll = await query(Schet.S28, TypeQuery.POKOL, startDate, endDate, currentSectionId, null, null, sequelize, stockService)
+  const KOKOLAll = await query(Schet.S28, TypeQuery.KOKOL, startDate, endDate, currentSectionId, null, null, sequelize, stockService)
   
-  const startCountAll = PDKOLAll-PKKOLAll;
-  const endCountAll = startCountAll+TDKOLAll-TKKOLAll;
+  const POKOLBux = await query(Schet.S28, TypeQuery.POKOL, startDate, endDate, currentSectionId, idForBuxanka, null, sequelize, stockService)
+  const KOKOLBux = await query(Schet.S28, TypeQuery.KOKOL, startDate, endDate, currentSectionId, idForBuxanka, null, sequelize, stockService)
 
-  const startCountBux = PDKOLBux-PKKOLBux;
-  const endCountBux = startCountBux+TDKOLBux-TKKOLBux;
+  const startCountAll = POKOLAll;
+  const endCountAll = KOKOLAll;
+
+  const startCountBux = POKOLBux;
+  const endCountBux = KOKOLBux;
 
   const productionCountAll = await queryKor(Schet.S28, Schet.S20, TypeQuery.OKK, startDate, endDate, currentSectionId, null, null, sequelize);
   const productionCountBux = await queryKor(Schet.S28, Schet.S20, TypeQuery.ODK, startDate, endDate, currentSectionId, idForBuxanka, null, sequelize);
@@ -167,7 +172,6 @@ export const foydaItem = async (
   let i = (iAll - iBux) > 0 ? (iAll - iBux) : 0
   let o = (oAll - oBux) > 0 ? (oAll - oBux) : 0
   let sale = (saleAll - saleBux) > 0 ? (saleAll - saleBux) : 0
-
 
   let valueForSale = firstPrice ? firstPrice : 0
   let valueForSaleBux = secondPrice ? secondPrice : 0

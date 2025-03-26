@@ -28,14 +28,14 @@ export const prepareEntrysList = (document: Document, force: boolean = false):Ar
         let entry = { ...prepareEntry(document, true, false, undefined, recieverIsFounder, senderIsFounder) }
         results.push(entry);
 
-        if ( 
-          document.documentType == DocumentType.SaleProd || 
-          document.documentType == DocumentType.SaleMaterial || 
-          document.documentType == DocumentType.SaleHalfStuff 
-        ) {
-          let entry = { ...prepareEntry(document, false, false, undefined, recieverIsFounder, senderIsFounder) }
-          results.push(entry);
-        }
+        // if ( 
+        //   document.documentType == DocumentType.SaleProd || 
+        //   document.documentType == DocumentType.SaleMaterial || 
+        //   document.documentType == DocumentType.SaleHalfStuff 
+        // ) {
+        //   let entry = { ...prepareEntry(document, false, false, undefined, recieverIsFounder, senderIsFounder) }
+        //   results.push(entry);
+        // }
 
         if (document.documentType == DocumentType.MoveCash) {
           if ( recieverIsFounder ) {

@@ -4,6 +4,7 @@ import { ReferenceModel, TypeReference } from 'src/interfaces/reference.interfac
 import { Schet, TypeQuery } from 'src/interfaces/report.interface';
 import { Reference } from 'src/references/reference.model';
 import { query } from 'src/reports/querys/query';
+import { StocksService } from 'src/stocks/stocks.service';
 
 export const skladItem = async ( 
   data: any,
@@ -11,7 +12,9 @@ export const skladItem = async (
   endDate: number | null,
   currentSectionId: number, 
   title: string, 
-  sequelize: Sequelize ) => {    
+  sequelize: Sequelize,
+  stocksService: StocksService
+) => {    
 
     let result:any[] = []
     let filteredData:Reference[] = []
@@ -22,25 +25,17 @@ export const skladItem = async (
 
     for (const item of filteredData) { 
 
-      const PDKOL = await query(Schet.S10, TypeQuery.PDKOL, startDate, endDate, currentSectionId, item.id, null, sequelize)+
-                    await query(Schet.S21, TypeQuery.PDKOL, startDate, endDate, currentSectionId, item.id, null, sequelize);
-      const PKKOL = await query(Schet.S10, TypeQuery.PKKOL, startDate, endDate, currentSectionId, item.id, null, sequelize)+
-                    await query(Schet.S21, TypeQuery.PKKOL, startDate, endDate, currentSectionId, item.id, null, sequelize);
-      const TDKOL = await query(Schet.S10, TypeQuery.TDKOL, startDate, endDate, currentSectionId, item.id, null, sequelize)+
-                    await query(Schet.S21, TypeQuery.TDKOL, startDate, endDate, currentSectionId, item.id, null, sequelize);
-      const TKKOL = await query(Schet.S10, TypeQuery.TKKOL, startDate, endDate, currentSectionId, item.id, null, sequelize)+
-                    await query(Schet.S21, TypeQuery.TKKOL, startDate, endDate, currentSectionId, item.id, null, sequelize);;
-      const PDSUM = await query(Schet.S10, TypeQuery.PDSUM, startDate, endDate, currentSectionId, item.id, null, sequelize)+
-                    await query(Schet.S21, TypeQuery.PDSUM, startDate, endDate, currentSectionId, item.id, null, sequelize);
-      const PKSUM = await query(Schet.S10, TypeQuery.PKSUM, startDate, endDate, currentSectionId, item.id, null, sequelize)+
-                    await query(Schet.S21, TypeQuery.PKSUM, startDate, endDate, currentSectionId, item.id, null, sequelize);
-      const TDSUM = await query(Schet.S10, TypeQuery.TDSUM, startDate, endDate, currentSectionId, item.id, null, sequelize)+
-                    await query(Schet.S21, TypeQuery.TDSUM, startDate, endDate, currentSectionId, item.id, null, sequelize);
-      const TKSUM = await query(Schet.S10, TypeQuery.TKSUM, startDate, endDate, currentSectionId, item.id, null, sequelize)+
-                    await query(Schet.S21, TypeQuery.TKSUM, startDate, endDate, currentSectionId, item.id, null, sequelize);;
+      const POKOL = await query(Schet.S10, TypeQuery.POKOL, startDate, endDate, currentSectionId, item.id, null, sequelize, stocksService)+
+                    await query(Schet.S21, TypeQuery.POKOL, startDate, endDate, currentSectionId, item.id, null, sequelize, stocksService);
+      // const PKKOL = await query(Schet.S10, TypeQuery.PKKOL, startDate, endDate, currentSectionId, item.id, null, sequelize, stocksService)+
+      //               await query(Schet.S21, TypeQuery.PKKOL, startDate, endDate, currentSectionId, item.id, null, sequelize, stocksService);
+      const POSUM = await query(Schet.S10, TypeQuery.POSUM, startDate, endDate, currentSectionId, item.id, null, sequelize, stocksService)+
+                    await query(Schet.S21, TypeQuery.POSUM, startDate, endDate, currentSectionId, item.id, null, sequelize, stocksService);
+      // const PKSUM = await query(Schet.S10, TypeQuery.PKSUM, startDate, endDate, currentSectionId, item.id, null, sequelize, stocksService)+
+      //               await query(Schet.S21, TypeQuery.PKSUM, startDate, endDate, currentSectionId, item.id, null, sequelize, stocksService);
       
-      const value = PDKOL - PKKOL + TDKOL - TKKOL
-      const valueSum = PDSUM - PKSUM + TDSUM - TKSUM
+      const value = POKOL
+      const valueSum = POSUM
       const bag = item.refValues.un ? value / 50 : 0
       let price = value ? valueSum / value : 0;
       price = item.refValues.un ? price * 50 : price

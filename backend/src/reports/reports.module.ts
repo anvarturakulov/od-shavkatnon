@@ -10,6 +10,8 @@ import { UsersModule } from 'src/users/users.module';
 import { ReferencesModule } from 'src/references/references.module';
 import { DocumentsModule } from 'src/documents/documents.module';
 import { EntriesModule } from 'src/entries/entries.module';
+import { Stock } from 'src/stocks/stock.model';
+import { StocksModule } from 'src/stocks/stocks.module';
 
 @Module({
   controllers: [ReportsController],
@@ -19,7 +21,8 @@ import { EntriesModule } from 'src/entries/entries.module';
         UsersModule,
         ReferencesModule,
         DocumentsModule,
-        EntriesModule
+        EntriesModule,
+        StocksModule
       ],
   providers: [ReportsService]
 })

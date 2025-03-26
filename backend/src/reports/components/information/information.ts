@@ -13,6 +13,7 @@ import { sklad } from "./sklad/sklad";
 import { taking } from "./takingNoActive/taking";
 import { Document } from "src/documents/document.model";
 import { Reference } from "src/references/reference.model";
+import { StocksService } from "src/stocks/stocks.service";
 
 export const information = async (
     data: any,
@@ -21,9 +22,9 @@ export const information = async (
     reportType: string | null,
     firstPrice: number | null,
     secondPrice: number | null,
-    docs: Document[],
     deliverys: Reference[],
-    sequelize: Sequelize
+    sequelize: Sequelize,
+    stocksService: StocksService
     ) => {
     
     let result:any[] = [];
@@ -33,11 +34,11 @@ export const information = async (
         result.push({'reportType': 'FINANCIAL', 'values': financialResult});
     }
     if (reportType == 'Foyda' || reportType == 'All') {
-        let foydaResult = await foyda(data, startDate, endDate, firstPrice, secondPrice, sequelize, docs, deliverys)
+        let foydaResult = await foyda(data, startDate, endDate, firstPrice, secondPrice, sequelize, deliverys, stocksService)
         result.push(foydaResult);
     }
     if (reportType == 'Cash' || reportType == 'All') {
-        let cashResult = await cash(data, startDate, endDate, sequelize)
+        let cashResult = await cash(data, startDate, endDate, sequelize, stocksService)
         result.push(cashResult);
     }
     if (reportType == 'Taking' || reportType == 'All') {
@@ -49,19 +50,19 @@ export const information = async (
         result.push(givingResult);
     }
     if (reportType == 'Section-buxgalter' || reportType == 'All') {
-        let sectionBuxResult = await section('BUXGALTER', data, startDate, endDate, docs,  sequelize )
+        let sectionBuxResult = await section('BUXGALTER', data, startDate, endDate,  sequelize, stocksService )
         result.push(sectionBuxResult);
     }
     if (reportType == 'Section-filial' || reportType == 'All') {
-        let sectionFilResult = await section('FILIAL', data, startDate, endDate, docs, sequelize)
+        let sectionFilResult = await section('FILIAL', data, startDate, endDate, sequelize, stocksService)
         result.push(sectionFilResult);
     }
     if (reportType == 'Section-delivery' || reportType == 'All') {
-        let sectionDelResult = await section('DELIVERY', data, startDate, endDate, docs, sequelize)
+        let sectionDelResult = await section('DELIVERY', data, startDate, endDate, sequelize, stocksService)
         result.push(sectionDelResult);
     }
     if (reportType == 'Sklad' || reportType == 'All') {
-        let skladResult = await sklad(data, startDate, endDate, sequelize)
+        let skladResult = await sklad(data, startDate, endDate, sequelize, stocksService)
         result.push(skladResult);
     }
     if (reportType == 'Norma' || reportType == 'All') {
@@ -73,12 +74,12 @@ export const information = async (
         result.push(materialResult); 
     }
     if (reportType == 'Section-founder' || reportType == 'All') {
-        let sectionFounderResult = await section('FOUNDER', data, startDate, endDate, docs, sequelize)
+        let sectionFounderResult = await section('FOUNDER', data, startDate, endDate, sequelize, stocksService)
         result.push(sectionFounderResult);
     }
 
     if (reportType == 'DebitorKreditor' || reportType == 'All') {
-        let debitorKreditorResult = await debitorKreditor(data, startDate, endDate, sequelize)
+        let debitorKreditorResult = await debitorKreditor(data, startDate, endDate, sequelize, stocksService)
         result.push({'reportType': 'DEBITORKREDITOR', 'values': debitorKreditorResult});
     }
 
