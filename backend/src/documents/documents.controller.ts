@@ -7,7 +7,7 @@ import { RolesGuard } from 'src/auth/roles.guard';
 import { DocSTATUS, DocumentType } from 'src/interfaces/document.interface';
 import { UpdateCreateDocumentDto } from './dto/updateCreateDocument.dto';
 import { Request } from 'express';
-import { docsArray } from 'src/dataUpload/docArray';
+import { docsArray } from 'src/dataUpload/docsOut';
 
 @Controller('documents')
 export class DocumentsController {
@@ -91,14 +91,10 @@ export class DocumentsController {
     @UseGuards(RolesGuard)
     @Delete('markToDelete/:id')
     markToDelete(@Param('id') id: number) {
-        if (id == 75785) {
+        if (id == 116675) {
             
-            // console.log('lengthhhhhh ---', docsArray.length)
             // this.documentsService.createMany(docsArray)
-           
-            console.log('Start pereprovodka')
             this.documentsService.pereProvodka()
-            console.log('End pereprovodka')
         }
         return this.documentsService.markToDeleteById(id)
     }

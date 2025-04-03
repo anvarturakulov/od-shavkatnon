@@ -15,6 +15,11 @@ export class StocksService {
         // this.redis = new Redis({ host: 'localhost', port: 6379 }) 
     }
     
+    private checkEntryForDublicate(entry: EntryCreationAttrs) {
+        return (entry.debet == entry.kredit && entry.debetFirstSubcontoId == entry.kreditFirstSubcontoId)  
+        
+    }
+
     private getWhereClause(
         schet: Schet,
         date: bigint,
@@ -72,6 +77,9 @@ export class StocksService {
     }
     
     async addTwoEntries(entry: EntryCreationAttrs) {
+        
+        if (this.checkEntryForDublicate(entry)) return
+
         await Promise.all([
             this.addEntry(
                 entry.debet,
@@ -95,6 +103,9 @@ export class StocksService {
     }
 
     async addEntrieToTMZ(entry: EntryCreationAttrs) {
+        
+        if (this.checkEntryForDublicate(entry)) return
+
         const tmzSchets = [Schet.S10, Schet.S21]
         const tmzInDebet = (
             tmzSchets.includes(entry.debet) && !tmzSchets.includes(entry.kredit)
@@ -197,6 +208,9 @@ export class StocksService {
     }
 
     async deleteTwoEntries(entry: EntryCreationAttrs) {
+        
+        if (this.checkEntryForDublicate(entry)) return
+
         await Promise.all([
             this.deleteEntry(
                 entry.debet,
@@ -220,6 +234,8 @@ export class StocksService {
     }
 
     async deleteEntrieToTMZ(entry: EntryCreationAttrs) {
+        
+        if (this.checkEntryForDublicate(entry)) return
 
         const tmzSchets = [Schet.S10, Schet.S21]
         const tmzInDebet = (

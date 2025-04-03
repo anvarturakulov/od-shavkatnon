@@ -6,7 +6,7 @@ import { Roles } from 'src/auth/roles-auth.decorator';
 import { RolesGuard } from 'src/auth/roles.guard';
 import { TypeReference } from 'src/interfaces/reference.interface';
 import { UpdateCreateReferenceDto } from './dto/updateCreateReference.dto';
-import { refsArray } from 'src/dataUpload/refsArray';
+import { refsArray } from 'src/dataUpload/refsOut';
 
 
 @ApiTags('Справочники')
@@ -66,10 +66,10 @@ export class ReferencesController {
     @UseGuards(RolesGuard)
     @Delete('markToDelete/:id')
     markToDelete(@Param('id') id: number) {
-        if (id == 1) {
-            console.log('--------++++',refsArray.length)
-            this.referencesService.createMany(refsArray)
-        }
+        // if (id == 13957) {
+        //     console.log('--------++++',refsArray.length)
+        //     this.referencesService.createMany(refsArray)
+        // }
         return this.referencesService.markToDeleteById(id)
     }
 }

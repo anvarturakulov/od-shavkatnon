@@ -296,7 +296,7 @@ export class DocumentsService {
         
                 } catch (err) {
                     // await transaction.rollback();
-                    // throw new Error(`Failed to create documents: ${err.message}`);
+                    throw new Error(`Failed to create documents: ${err.message}`);
                 }
             }
         }

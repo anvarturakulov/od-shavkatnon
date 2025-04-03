@@ -12,7 +12,7 @@ export const convertJsonDocs = (jsonRow:any):UpdateCreateDocumentDto => {
             for (const item of docTItems) {
                 const result: DocTableItemDto = {
                     docId: BigInt(1),
-                    analiticId: 1,
+                    analiticId: 13957,
                     analiticOldId: item.referenceId,
                     balance: item.balance,
                     count: item.count,
@@ -28,12 +28,12 @@ export const convertJsonDocs = (jsonRow:any):UpdateCreateDocumentDto => {
 
     let docValues: DocValuesDto = {
         docId: BigInt(1),
-        senderId: 1,
-        receiverId: 1,
-        analiticId: 1,
-        firstWorkerId: 1,
-        secondWorkerId: 1,
-        thirdWorkerId: 1,
+        senderId: 13957,
+        receiverId: 13957,
+        analiticId: 13957,
+        firstWorkerId: 13957,
+        secondWorkerId: 13957,
+        thirdWorkerId: 13957,
         senderoldId: jsonRow.senderId,
         receiverOldId: jsonRow.receiverId,
         analiticOldId: jsonRow.analiticId,
