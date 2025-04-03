@@ -17,7 +17,7 @@ export const SectionItem = ({className, item, sectionType, ...props }: SectionIt
                 counts
                 .map((element: any, key: number) => {
                         return (
-                            <div className={cn(styles.box, {
+                            <div key = {key} className={cn(styles.box, {
                                 [styles.greyRow]: (key+3) % 2 !== 0
                             })}>
                                 <Htag tag='h2' className={styles.h2}>{element?.name}</Htag>
