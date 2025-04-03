@@ -2,12 +2,14 @@ import { ReferenceModel, TypeReference } from 'src/interfaces/reference.interfac
 import { materialItem } from './materialItem';
 import { Sequelize } from 'sequelize-typescript';
 import { Reference } from 'src/references/reference.model';
+import { OborotsService } from 'src/oborots/oborots.service';
 
 export const material = async (
     data: any,
     startDate: number | null,
     endDate: number | null,
-    sequelize: Sequelize ) => {
+    oborotsService: OborotsService
+) => {
     
     let result:any[] = [];
     let filteredData:Reference[] = []
@@ -16,7 +18,7 @@ export const material = async (
     }
 
     for (const item of filteredData) {
-        let element = await materialItem(data, startDate, endDate, item?.name, item?.id, item?.refValues?.un, sequelize)
+        let element = await materialItem(data, startDate, endDate, item?.name, item?.id, item?.refValues?.un, oborotsService)
         if (Object.keys(element).length) {
             result.push(element)
         }

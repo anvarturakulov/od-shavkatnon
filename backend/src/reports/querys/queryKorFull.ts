@@ -3,7 +3,7 @@ import { Schet, TypeQuery } from 'src/interfaces/report.interface';
 import { BadRequestException } from '@nestjs/common';
 import { OK } from './queryKorFullComponents/OK';
 import { OS } from './queryKorFullComponents/OS';
-
+import { OborotsService } from 'src/oborots/oborots.service';
 
 export const queryKorFull = async (
     debet: Schet,
@@ -11,54 +11,28 @@ export const queryKorFull = async (
     typeQuery: TypeQuery,
     startDate: number | null,
     endDate: number | null,
-    debetFirstSubcontoId: number | undefined | null, 
-    debetSecondSubcontoId: number | undefined | null,
-    debetThirdSubcontoId: number | undefined | null,
-    kreditFirstSubcontoId: number | undefined | null, 
-    kreditSecondSubcontoId: number | undefined | null,
-    kreditThirdSubcontoId: number | undefined | null,
-    sequelize: Sequelize): Promise<number> => {
+    debetFirstSubcontoId: number | null, 
+    debetSecondSubcontoId: number | null,
+    debetThirdSubcontoId: number | null,
+    kreditFirstSubcontoId: number | null, 
+    kreditSecondSubcontoId: number | null,
+    kreditThirdSubcontoId: number | null,
+    oborotsService: OborotsService): Promise<number> => {
 
     try {
-        let replacements: { [key: string]: any } = {};
-        let query: string = ''
-        let stopQuery: boolean = false
-        let middle: {[key: string]: any} = {query, replacements}
         
-        middle = (() => {
-            switch (typeQuery) {
-                case TypeQuery.OS: return {...OS(
+        switch (typeQuery) {
+            case TypeQuery.OS: return await OS(
                     debet, kredit, typeQuery, startDate, endDate, debetFirstSubcontoId, 
                     debetSecondSubcontoId, debetThirdSubcontoId, kreditFirstSubcontoId, 
-                    kreditSecondSubcontoId, kreditThirdSubcontoId
-                )}
-                case TypeQuery.OK: return {...OK(
+                    kreditSecondSubcontoId, kreditThirdSubcontoId, oborotsService)
+            case TypeQuery.OK: return await OK(
                     debet, kredit, typeQuery, startDate, endDate, debetFirstSubcontoId, 
                     debetSecondSubcontoId, debetThirdSubcontoId, kreditFirstSubcontoId, 
-                    kreditSecondSubcontoId, kreditThirdSubcontoId
-                )}
-                
-            }
-        })
+                    kreditSecondSubcontoId, kreditThirdSubcontoId, oborotsService)
+        }
 
-        query = middle.query
-        replacements = {...middle.replacements}
-        stopQuery = middle.stopQuery
-        
-        if (!stopQuery) {
-            
-            const [results] = await sequelize.query(query, {
-                replacements,
-                type: 'SELECT',
-            });
-    
-            const parsedObj = JSON.parse(JSON.stringify(results));
-            const total = parsedObj?.total;
-            return total != null ? Number(total) : 0;
-
-        } else 
-            return 0
-
+        return 0
 
     } catch (error) {
         throw new BadRequestException('Database error: ' + error.message);

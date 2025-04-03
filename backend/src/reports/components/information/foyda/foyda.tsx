@@ -1,22 +1,23 @@
-import { ReferenceModel, TypeReference, TypeSECTION } from 'src/interfaces/reference.interface';
+import { TypeReference, TypeSECTION } from 'src/interfaces/reference.interface';
 import { Schet, TypeQuery } from 'src/interfaces/report.interface';
 import { foydaItem } from './foydaItem';
 import { zpItemToFoyda } from './zpItemToFoyda';
 import { Sequelize } from 'sequelize-typescript';
 import { Reference } from 'src/references/reference.model';
-import { Document } from 'src/documents/document.model';
 import { queryKor } from 'src/reports/querys/queryKor';
 import { StocksService } from 'src/stocks/stocks.service';
+import { OborotsService } from 'src/oborots/oborots.service';
 
 export const foyda = async (
     data: any,
-    startDate: number | null,
-    endDate: number | null,
+    startDate: number | null ,
+    endDate: number | null ,
     firstPrice: number | null,
     secondPrice: number | null,
     sequelize: Sequelize,
     deliverys: Reference[],
-    stockService: StocksService
+    stockService: StocksService,
+    oborotsService: OborotsService
 ) => {
     
     let result:any[] = [];
@@ -29,16 +30,16 @@ export const foyda = async (
         let idUmumBulim = arrUmumBulim[0]._id;
         let filteredData:Reference[] = []
 
-        zpUmumBulim = await zpItemToFoyda(startDate, endDate, idUmumBulim, sequelize)
+        zpUmumBulim = await zpItemToFoyda(startDate, endDate, idUmumBulim, oborotsService)
         //***
         filteredData = data.filter((item: Reference)=> {
             return item.typeReference == TypeReference.CHARGES && item.refValues.longCharge
         })
         for (const item of filteredData) {
-            longeChargeUmumBulim += await queryKor(Schet.S20, Schet.S50, TypeQuery.ODS, startDate, endDate, idUmumBulim, item.id, null, sequelize)
+            longeChargeUmumBulim += await queryKor(Schet.S20, Schet.S50, TypeQuery.ODS, startDate, endDate, idUmumBulim, item.id, null, oborotsService)
         }
 
-        currentPaymentUmumBulim = await queryKor(Schet.S20, Schet.S50, TypeQuery.ODS, startDate, endDate, idUmumBulim, null, null, sequelize) 
+        currentPaymentUmumBulim = await queryKor(Schet.S20, Schet.S50, TypeQuery.ODS, startDate, endDate, idUmumBulim, null, null, oborotsService) 
                                         - longeChargeUmumBulim;
 
     }
@@ -60,7 +61,7 @@ export const foyda = async (
                         })
         
     for (const item of filteredData) {                    
-        let element = await foydaItem(data, startDate, endDate, item.id, item.name, firstPrice, secondPrice, sequelize, deliverys, zpUmumBulim, longeChargeUmumBulim, currentPaymentUmumBulim, stockService);
+        let element = await foydaItem(data, startDate, endDate, item.id, item.name, firstPrice, secondPrice, sequelize, deliverys, zpUmumBulim, longeChargeUmumBulim, currentPaymentUmumBulim, stockService, oborotsService);
         if (Object.keys(element).length) {
             result.push(element)
         }

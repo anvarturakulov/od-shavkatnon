@@ -12,11 +12,14 @@ import { console } from 'inspector';
 import { convertJsonDocs } from './helper/entry/convertJsonDoc';
 import { Stock } from 'src/stocks/stock.model';
 import { StocksService } from 'src/stocks/stocks.service';
+import { OborotsService } from 'src/oborots/oborots.service';
+import { ConfigService } from '@nestjs/config';
 const { Op } = require('sequelize');
 const fs = require('fs');
 
 @Injectable()
 export class DocumentsService {
+    private foundersIds: string[];
 
     constructor(
         @InjectConnection() private readonly sequelize: Sequelize,
@@ -24,8 +27,13 @@ export class DocumentsService {
         @InjectModel(DocValues) private docValuesRepository: typeof DocValues,
         @InjectModel(DocTableItems) private docTableItemsRepository: typeof DocTableItems,
         @InjectModel(Entry) private entryRepository: typeof Entry,
-        private stocksService: StocksService
-    ) {}
+        private stocksService: StocksService,
+        private oborotsService: OborotsService,
+        private configService: ConfigService
+    ) {
+        const myArrayString = this.configService.get<string>('FOUNDERS_IDS'); 
+        this.foundersIds = myArrayString ? myArrayString.split('|') : []; 
+    }
 
     async getAllDocuments() {
         const documents = await this.documentRepository.findAll({include: [DocValues, DocTableItems ]})
@@ -87,7 +95,7 @@ export class DocumentsService {
                 //     }
                 // }
 
-                if (items && items.length > 0 && items[0].analiticId != -1) {
+                if (items && items.length > 0 && items[0].analiticId != null) {
                     await Promise.all(
                         items.map(item =>
                             this.docTableItemsRepository.create({
@@ -139,7 +147,7 @@ export class DocumentsService {
             if (dto.docStatus == DocSTATUS.PROVEDEN) {
                 const doc = await this.documentRepository.findOne({where: {id: document.id}, include: [DocValues, DocTableItems]})
                 if (doc) {
-                    const entrysList = [...prepareEntrysList(doc, true)]
+                    const entrysList = [...prepareEntrysList(doc, this.foundersIds, true)]
                     if (entrysList.length > 0 ) {
                         for (const item of entrysList) {
                             const entry = await this.entryRepository.create({
@@ -147,6 +155,8 @@ export class DocumentsService {
                             })
                             // create new stock and update
                             await this.stocksService.addTwoEntries(entry)
+                            await this.stocksService.addEntrieToTMZ(entry)
+                            await this.oborotsService.addEntry(entry)
                         }
                     }
                     doc.docStatus = DocSTATUS.PROVEDEN
@@ -183,6 +193,8 @@ export class DocumentsService {
                     for (const entry of entrysList) {
                         // destroy stock by deleted entry
                         await this.stocksService.deleteTwoEntries(entry)
+                        await this.stocksService.deleteEntrieToTMZ(entry)
+                        await this.oborotsService.deleteEntry(entry)
                     }
                 }
 
@@ -206,7 +218,7 @@ export class DocumentsService {
         const transaction = await this.sequelize.transaction();
         try {
             if (document && document.docStatus != DocSTATUS.PROVEDEN) {
-                const entrysList = [...prepareEntrysList(document)]
+                const entrysList = [...prepareEntrysList(document, this.foundersIds)]
                 if (entrysList.length > 0 ) {
                     for (const item of entrysList) {
                         const entry = await this.entryRepository.create({
@@ -214,6 +226,8 @@ export class DocumentsService {
                         })
                         // create new stock and update
                         await this.stocksService.addTwoEntries(entry)
+                        await this.stocksService.addEntrieToTMZ(entry)
+                        await this.oborotsService.addEntry(entry)
                     }
                 }
                 document.docStatus = DocSTATUS.PROVEDEN
@@ -241,7 +255,7 @@ export class DocumentsService {
                     const document = await this.documentRepository.create({
                         date:dto.date, 
                         documentType: dto.documentType, 
-                        docStatus: DocSTATUS.OPEN,
+                        docStatus: dto.docStatus,
                         userId: dto.userId ? dto.userId: 0
                     })
                     console.log(dto.docValues)
@@ -293,18 +307,20 @@ export class DocumentsService {
     async pereProvodka() {
         const documents = await this.documentRepository.findAll({include: [DocValues, DocTableItems ]})
         for (const document of documents) {
-            if (document ) {
+            if (document && document.docStatus != DocSTATUS.DELETED) {
                 document.docStatus = DocSTATUS.PROVEDEN
                 await document.save()
                 await this.entryRepository.destroy({where: {docId:document.id}})
                 
-                const entrysList = [...prepareEntrysList(document, true)]
+                const entrysList = [...prepareEntrysList(document, this.foundersIds, true)]
                 if (entrysList.length > 0 ) {
                     for (const item of entrysList) {
                         const entry = await this.entryRepository.create({
                             ...item,
                         })
                         await this.stocksService.addTwoEntries(entry)
+                        await this.stocksService.addEntrieToTMZ(entry)
+                        await this.oborotsService.addEntry(entry)
                     }
 
                 } else throw new Error(`Entrys not: ${document.docValues.senderId}`);

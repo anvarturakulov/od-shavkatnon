@@ -31,12 +31,6 @@ export const getInformation = (
         setMainData('informData', [ ...response.data ]);
         setMainData && setMainData('uploadingDashboard', false)
       }
-      if (setMainData && response.data?.user) {
-        let activeUser = response.data.user
-        let message = `Хозир мен ${activeUser} учун хисобот тайёрлаяпман. Бироз кутиб туринг.`
-        setMainData && setMainData('uploadingDashboard', false)
-        alert(message)
-      }
       console.timeEnd('Response');
       console.timeEnd('Fetch');
       console.log('Data received');

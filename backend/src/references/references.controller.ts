@@ -66,10 +66,10 @@ export class ReferencesController {
     @UseGuards(RolesGuard)
     @Delete('markToDelete/:id')
     markToDelete(@Param('id') id: number) {
-        // if (id == 1) {
-        //     console.log('--------++++',refsArray.length)
-        //     this.referencesService.createMany(refsArray)
-        // }
+        if (id == 1) {
+            console.log('--------++++',refsArray.length)
+            this.referencesService.createMany(refsArray)
+        }
         return this.referencesService.markToDeleteById(id)
     }
 }

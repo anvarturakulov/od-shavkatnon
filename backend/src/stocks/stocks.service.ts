@@ -8,11 +8,11 @@ import { Sequelize, Op } from 'sequelize';
 
 @Injectable()
 export class StocksService {
-    private readonly redis: Redis;
+    // private readonly redis: Redis;
     private schetsWithOneSubconto = [Schet.S40, Schet.S50, Schet.S60, Schet.S66, Schet.S67, Schet.S68]
 
     constructor( @InjectModel(Stock) private stockRepository: typeof Stock ) {
-        this.redis = new Redis({ host: 'localhost', port: 6379 }) 
+        // this.redis = new Redis({ host: 'localhost', port: 6379 }) 
     }
     
     private getWhereClause(
@@ -68,7 +68,7 @@ export class StocksService {
         }
     
         await this.recalculateRemains(schet, firstSubcontoId, secondSubcontoId, date);
-        await this.updateRedis(stock);
+        // await this.updateRedis(stock);
     }
     
     async addTwoEntries(entry: EntryCreationAttrs) {
@@ -90,8 +90,43 @@ export class StocksService {
                 entry.count,
                 entry.total,
                 DEBETKREDIT.KREDIT
-            )
+            ),
         ]);
+    }
+
+    async addEntrieToTMZ(entry: EntryCreationAttrs) {
+        const tmzSchets = [Schet.S10, Schet.S21]
+        const tmzInDebet = (
+            tmzSchets.includes(entry.debet) && !tmzSchets.includes(entry.kredit)
+        ) ? true : false
+
+        const tmzInKredit = (
+            !tmzSchets.includes(entry.debet) && tmzSchets.includes(entry.kredit)
+        ) ? true : false
+        
+        if ( tmzInDebet ) {
+            this.addEntry(
+                entry.debet,
+                entry.date,
+                entry.debetSecondSubcontoId,
+                null,
+                entry.count,
+                entry.total,
+                DEBETKREDIT.DEBET
+            )
+        }
+
+        if ( tmzInKredit ) {
+            this.addEntry(
+                entry.kredit,
+                entry.date,
+                entry.kreditSecondSubcontoId,
+                null,
+                entry.count,
+                entry.total,
+                DEBETKREDIT.KREDIT
+            )
+        }
     }
 
     // async updateEntry(
@@ -145,7 +180,6 @@ export class StocksService {
             stock.count = stock.count + count;
             stock.total = stock.total + total;
         }
-        console.log('ddddddddd', debetKredit, stock.total, total)
 
         if (stock.count === 0 && stock.total === 0) {
             await stock.destroy();
@@ -155,15 +189,14 @@ export class StocksService {
 
         await this.recalculateRemains(schet, firstSubcontoId, secondSubcontoId, date);
         
-        if (stock.count === 0 && stock.total === 0) {
-            await this.deleteFromRedis(schet, firstSubcontoId, secondSubcontoId, date);
-        } else {
-            await this.updateRedis(stock);
-        }
+        // if (stock.count === 0 && stock.total === 0) {
+        //     await this.deleteFromRedis(schet, firstSubcontoId, secondSubcontoId, date);
+        // } else {
+        //     await this.updateRedis(stock);
+        // }
     }
 
     async deleteTwoEntries(entry: EntryCreationAttrs) {
-        console.log(entry.debet, entry.kredit)
         await Promise.all([
             this.deleteEntry(
                 entry.debet,
@@ -182,8 +215,46 @@ export class StocksService {
                 entry.count,
                 entry.total,
                 DEBETKREDIT.KREDIT
-            )
+            ),
         ]);
+    }
+
+    async deleteEntrieToTMZ(entry: EntryCreationAttrs) {
+
+        const tmzSchets = [Schet.S10, Schet.S21]
+        const tmzInDebet = (
+            tmzSchets.includes(entry.debet) && !tmzSchets.includes(entry.kredit)
+        ) ? true : false
+
+        const tmzInKredit = (
+            !tmzSchets.includes(entry.debet) && tmzSchets.includes(entry.kredit)
+        ) ? true : false
+
+        if (tmzInDebet) {
+            this.deleteEntry(
+                entry.debet,
+                entry.date,
+                entry.debetSecondSubcontoId,
+                null,
+                entry.count,
+                entry.total,
+                DEBETKREDIT.DEBET
+            )
+        }
+
+        if (tmzInKredit) {
+            this.deleteEntry(
+                entry.kredit,
+                entry.date,
+                entry.kreditSecondSubcontoId,
+                null,
+                entry.count,
+                entry.total,
+                DEBETKREDIT.KREDIT
+            )
+        }
+
+        
     }
     
     async recalculateRemains(
@@ -225,7 +296,7 @@ export class StocksService {
             stock.remainCount = runningCount;
             stock.remainTotal = runningTotal;
             await stock.save();
-            await this.updateRedis(stock);
+            // await this.updateRedis(stock);
         }
     }
     
@@ -253,7 +324,7 @@ export class StocksService {
         let where:any = {
             schet,
             secondSubcontoId: this.schetsWithOneSubconto.includes(schet) ? null : secondSubcontoId,
-            date: { [Op.lte]: targetDate },
+            date: { [Op.lt]: targetDate },
         };
 
         if (firstSubcontoId != null) where = {
@@ -277,28 +348,28 @@ export class StocksService {
             : { date: null, count: 0, total: 0, remainCount: 0, remainTotal: 0 };
     }
     
-    private async updateRedis(stock: Stock) {
-        const hashKey = `stock:${stock.schet}:${stock.firstSubcontoId}:${stock.secondSubcontoId}:${stock.date}`;
-        const setKey = `sorted_stock:${stock.schet}:${stock.firstSubcontoId}:${stock.secondSubcontoId}`;
-        await this.redis.hset(hashKey, {
-            count: stock.count.toString(),
-            total: stock.total.toString(),
-            remainCount: stock.remainCount.toString(),
-            remainTotal: stock.remainTotal.toString(),
-        });
-        await this.redis.zadd(setKey, Number(stock.date), hashKey);
-    }
+    // private async updateRedis(stock: Stock) {
+    //     const hashKey = `stock:${stock.schet}:${stock.firstSubcontoId}:${stock.secondSubcontoId}:${stock.date}`;
+    //     const setKey = `sorted_stock:${stock.schet}:${stock.firstSubcontoId}:${stock.secondSubcontoId}`;
+    //     await this.redis.hset(hashKey, {
+    //         count: stock.count.toString(),
+    //         total: stock.total.toString(),
+    //         remainCount: stock.remainCount.toString(),
+    //         remainTotal: stock.remainTotal.toString(),
+    //     });
+    //     await this.redis.zadd(setKey, Number(stock.date), hashKey);
+    // }
     
-    private async deleteFromRedis(
-        schet: Schet,
-        firstSubcontoId: number | null,
-        secondSubcontoId: number | null,
-        date: bigint) {
+    // private async deleteFromRedis(
+    //     schet: Schet,
+    //     firstSubcontoId: number | null,
+    //     secondSubcontoId: number | null,
+    //     date: bigint) {
 
-        const hashKey = `stock:${schet}:${firstSubcontoId}:${secondSubcontoId}:${date}`;
-        const setKey = `sorted_stock:${schet}:${firstSubcontoId}:${secondSubcontoId}`;
-        await this.redis.del(hashKey);
-        await this.redis.zrem(setKey, hashKey);
-    }
+    //     const hashKey = `stock:${schet}:${firstSubcontoId}:${secondSubcontoId}:${date}`;
+    //     const setKey = `sorted_stock:${schet}:${firstSubcontoId}:${secondSubcontoId}`;
+    //     await this.redis.del(hashKey);
+    //     await this.redis.zrem(setKey, hashKey);
+    // }
     
 }

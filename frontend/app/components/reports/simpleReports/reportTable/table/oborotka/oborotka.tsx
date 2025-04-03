@@ -32,9 +32,7 @@ export const Oborotka = ({className, ...props }: OborotkaProps) :JSX.Element => 
                         <td className={styles.titleValue}>Колдик сумма +</td>
                         <td className={styles.titleValue}>Колдик сумма -</td>
                         <td className={styles.titleValue}>Дебет сумма</td>
-                        <td className={styles.titleValue}>Дебет сон</td>
                         <td className={styles.titleValue}>Кредит сумма</td>
-                        <td className={styles.titleValue}>Кредит сон</td>
                         <td className={styles.titleValue}>Колдик сумма +</td>
                         <td className={styles.titleValue}>Колдик сумма -</td>
                     </tr>
@@ -48,7 +46,7 @@ export const Oborotka = ({className, ...props }: OborotkaProps) :JSX.Element => 
                     })
                     .map((element: any, key: number) => {
                         // if (!element?.items.length) return <></>
-                        if (key == 0) console.log('show items - ', Date.now())
+                        // if (key == 0) console.log('show items - ', Date.now())
                         return <OborotkaItem 
                             key={key}
                             item={element}

@@ -4,6 +4,7 @@ import { Reference } from 'src/references/reference.model';
 import { personalItem } from './personalItem';
 import { Entry } from 'src/entries/entry.model';
 import { StocksService } from 'src/stocks/stocks.service';
+import { OborotsService } from 'src/oborots/oborots.service';
 
 export const personal = async (
     data: any,
@@ -11,8 +12,8 @@ export const personal = async (
     startDate: number | null,
     endDate: number | null,
     workerId: number | null,
-    sequelize: Sequelize,
-    stocksService: StocksService
+    stocksService: StocksService,
+    oborotsService: OborotsService
 ) => {
     
     let result:any = [];
@@ -27,11 +28,9 @@ export const personal = async (
                         } else return true
                     })
     }
-
-    console.log('filtered Data', workerId)
    
     for (const item of filteredData) {
-        let element = await personalItem(data, entries, startDate, endDate, item.id, sequelize, stocksService)
+        let element = await personalItem(data, entries, startDate, endDate, item.id, stocksService, oborotsService)
             if (Object.keys(element).length>0) {
                 result.push(element)
             }

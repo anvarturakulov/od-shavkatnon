@@ -1,7 +1,7 @@
 
-import { Sequelize } from 'sequelize-typescript';
 import { TypeTMZ } from 'src/interfaces/reference.interface';
 import { Schet, TypeQuery } from 'src/interfaces/report.interface';
+import { OborotsService } from 'src/oborots/oborots.service';
 import { Reference } from 'src/references/reference.model';
 import { queryKor } from 'src/reports/querys/queryKor';
 
@@ -11,7 +11,7 @@ export const normaItem = async (
   endDate: number | null,
   currentSectionId: number, 
   title: string, 
-  sequelize: Sequelize ) => {    
+  obortsService: OborotsService ) => {    
 
     let result:any[] = []
     let filteredData:Reference[] = []
@@ -20,7 +20,7 @@ export const normaItem = async (
     const idZagatovka27 = -1;
     const idZagatovka26 = -1;
     const idZagatovka = currentSectionId == idBuxankaSection ? idZagatovka26 : idZagatovka27;
-    const countHamirs = await queryKor(Schet.S20, Schet.S21, TypeQuery.OKK, startDate, endDate, currentSectionId, idZagatovka, null, sequelize);
+    const countHamirs = await queryKor(Schet.S20, Schet.S21, TypeQuery.OKK, startDate, endDate, currentSectionId, idZagatovka, null, obortsService);
     
     
     if (data && data.length) {
@@ -29,7 +29,7 @@ export const normaItem = async (
     
     for (const item of filteredData) {
      
-      const rasxod = await queryKor(Schet.S20, Schet.S10, TypeQuery.OKK, startDate, endDate, currentSectionId, item.id, null, sequelize);
+      const rasxod = await queryKor(Schet.S20, Schet.S10, TypeQuery.OKK, startDate, endDate, currentSectionId, item.id, null, obortsService);
       const referenceNorma = item.refValues.norma;
       const norma = referenceNorma ? referenceNorma * countHamirs: 0;
       const farq = norma - rasxod;  

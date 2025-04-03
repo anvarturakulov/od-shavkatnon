@@ -1,15 +1,15 @@
-import { ReferenceModel, TypeReference, TypeSECTION } from 'src/interfaces/reference.interface';
+import { TypeReference, TypeSECTION } from 'src/interfaces/reference.interface';
 import { cashItem } from './cashItem';
-import { Sequelize } from 'sequelize-typescript';
 import { Reference } from 'src/references/reference.model';
 import { StocksService } from 'src/stocks/stocks.service';
+import { OborotsService } from 'src/oborots/oborots.service';
 
 export const cash = async (
     data: any,
     startDate: number | null,
     endDate: number | null,
-    sequelize: Sequelize,
-    stocksService: StocksService
+    stocksService: StocksService,
+    oborotsService: OborotsService
  ) => {
     
     let result:any[] = [];
@@ -26,7 +26,7 @@ export const cash = async (
     }
     
     for (const item of filteredData) {
-        let element = await cashItem(startDate, endDate, item.id, item.name, sequelize, stocksService)
+        let element = await cashItem(startDate, endDate, item.id, item.name, stocksService, oborotsService)
         if (Object.keys(element).length) {
             result.push(element)
         }

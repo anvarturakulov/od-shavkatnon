@@ -35,3 +35,14 @@
 .bottomTitle{
     margin-top: 15px;
 }
+
+.total{
+    font-weight: 700;
+    text-align: right;
+    font-size: 14px;
+}
+
+.totalTitle{
+    font-weight: 700;
+    font-size: 14px;
+}

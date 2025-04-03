@@ -91,11 +91,14 @@ export class DocumentsController {
     @UseGuards(RolesGuard)
     @Delete('markToDelete/:id')
     markToDelete(@Param('id') id: number) {
-        if (id == 60641) {
+        if (id == 75785) {
+            
             // console.log('lengthhhhhh ---', docsArray.length)
             // this.documentsService.createMany(docsArray)
-            
-            this.documentsService.pereProvodka()
+           
+            // console.log('Start pereprovodka')
+            // this.documentsService.pereProvodka()
+            // console.log('End pereprovodka')
         }
         return this.documentsService.markToDeleteById(id)
     }

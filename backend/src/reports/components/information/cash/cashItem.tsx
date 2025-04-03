@@ -1,49 +1,56 @@
 import { Schet, TypeQuery } from 'src/interfaces/report.interface';
-
 import { Sequelize } from 'sequelize-typescript';
 import { query } from 'src/reports/querys/query';
 import { queryKor } from 'src/reports/querys/queryKor';
 import { StocksService } from 'src/stocks/stocks.service';
+import { OborotsService } from 'src/oborots/oborots.service';
 
 export const cashItem = async ( 
   startDate: number | null,
   endDate: number | null,
   currentSectionId: number | null, 
   title: string, 
-  sequelize: Sequelize,
-  stocksService: StocksService
+  stocksService: StocksService,
+  oborotsService: OborotsService
 ) => {
+  const promises = [
+    query(Schet.S50, TypeQuery.POSUM, startDate, endDate, currentSectionId, null, null, stocksService, oborotsService), // POSUM
+    query(Schet.S50, TypeQuery.KOSUM, startDate, endDate, currentSectionId, null, null, stocksService, oborotsService), // KOSUM
+    queryKor(Schet.S50, Schet.S40, TypeQuery.ODS, startDate, endDate, currentSectionId, null, null, oborotsService), // TRADEINCOME
+    queryKor(Schet.S50, Schet.S50, TypeQuery.ODS, startDate, endDate, currentSectionId, null, null, oborotsService), // MOVEINCOME
+    queryKor(Schet.S50, Schet.S50, TypeQuery.OKS, startDate, endDate, currentSectionId, null, null, oborotsService), // MOVEOUT
+    queryKor(Schet.S20, Schet.S50, TypeQuery.OKS, startDate, endDate, currentSectionId, null, null, oborotsService), // CHARGES часть 1
+    queryKor(Schet.S67, Schet.S50, TypeQuery.OKS, startDate, endDate, currentSectionId, null, null, oborotsService), // CHARGES часть 2
+    queryKor(Schet.S60, Schet.S50, TypeQuery.OKS, startDate, endDate, currentSectionId, null, null, oborotsService), // FORPARTNERS
+    queryKor(Schet.S66, Schet.S50, TypeQuery.OKS, startDate, endDate, currentSectionId, null, null, oborotsService), // FORFOUNDER
+  ];
 
-  
-  const POSUM = await query( Schet.S50, TypeQuery.POSUM, startDate, endDate, currentSectionId, null, null, sequelize, stocksService);
-  const KOSUM = await query( Schet.S50, TypeQuery.KOSUM, startDate, endDate, currentSectionId, null, null, sequelize, stocksService);
-  
-  const TRADEINCOME = await queryKor(Schet.S50, Schet.S40, TypeQuery.ODS, startDate, endDate, currentSectionId, null, null, sequelize);
-  const MOVEINCOME = await queryKor(Schet.S50, Schet.S50, TypeQuery.ODS, startDate, endDate, currentSectionId, null, null, sequelize);
-  const MOVEOUT = await queryKor(Schet.S50, Schet.S50, TypeQuery.OKS, startDate, endDate, currentSectionId, null, null, sequelize);
-  const CHARGES = 
-  await queryKor(Schet.S20, Schet.S50, TypeQuery.OKS, startDate, endDate, currentSectionId, null, null, sequelize) + 
-  await queryKor(Schet.S67, Schet.S50, TypeQuery.OKS, startDate, endDate, currentSectionId, null, null, sequelize);
-  
-  const FORPARTNERS = await queryKor(Schet.S60, Schet.S50, TypeQuery.OKS, startDate, endDate, currentSectionId, null, null, sequelize);
-  const FORFOUNDER = await queryKor(Schet.S66, Schet.S50, TypeQuery.OKS, startDate, endDate, currentSectionId, null, null, sequelize);
+  const [
+    POSUM,
+    KOSUM,
+    TRADEINCOME,
+    MOVEINCOME,
+    MOVEOUT,
+    chargesPart1,
+    chargesPart2,
+    FORPARTNERS,
+    FORFOUNDER,
+  ] = await Promise.all(promises);
 
-  if ( !(POSUM) && !(TRADEINCOME+MOVEINCOME) && !(CHARGES+FORPARTNERS+MOVEOUT+FORFOUNDER) 
-      && !(KOSUM)) return {}
-  return (
-    {
-      section: title,
-      startBalans: POSUM,
-      sale: TRADEINCOME,
-      moveIncome: MOVEINCOME,
-      allIncome: TRADEINCOME+MOVEINCOME,
-      charges: CHARGES,
-      forPartner: FORPARTNERS,
-      moveOut: MOVEOUT,
-      forFounder: FORFOUNDER,
-      allOut: CHARGES+ FORPARTNERS+MOVEOUT+FORFOUNDER,
-      endBalans: KOSUM
-    }
-      
-  )
-} 
+  const CHARGES = chargesPart1 + chargesPart2;
+
+  if (!(POSUM) && !(TRADEINCOME + MOVEINCOME) && !(CHARGES + FORPARTNERS + MOVEOUT + FORFOUNDER) && !(KOSUM)) return {};
+  return {
+    section: title,
+    startBalans: POSUM,
+    sale: TRADEINCOME,
+    moveIncome: MOVEINCOME,
+    allIncome: TRADEINCOME + MOVEINCOME,
+    charges: CHARGES,
+    forPartner: FORPARTNERS,
+    moveOut: MOVEOUT,
+    forFounder: FORFOUNDER,
+    allOut: CHARGES + FORPARTNERS + MOVEOUT + FORFOUNDER,
+    endBalans: KOSUM,
+  };
+};

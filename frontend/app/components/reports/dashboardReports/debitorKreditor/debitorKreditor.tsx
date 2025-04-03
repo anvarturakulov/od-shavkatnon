@@ -9,6 +9,14 @@ export const total = (key:string, data:any[], value: string) => {
     return data ? data.filter((item: any) => item?.innerReportType == key)[0]?.[value] : 0
 }
 
+// const total = (key: string, data: any[], value: string) => {
+//     if (data) {
+//         const item = data.find((item: any) => item?.innerReportType === key); // Заменил filter на find
+//         return item ? item[value] || 0 : 0;
+//     }
+//     return 0
+// };
+
 export const setDebitKreditInnerData = (currentDKInnerReportId: string, currentDKInnerArrayId: string, setMainData: Function | undefined ) =>{
     if (setMainData) {
         setMainData('currentDKInnerReportId', currentDKInnerReportId)    
@@ -42,43 +50,48 @@ export const DebitorKreditor = ({className, data, ...props }: DebitorKreditorPro
     let datas = data ? data.filter((item: any) => item?.reportType == 'DEBITORKREDITOR')[0]?.values : []
 
     let materialDebitStart = total('MATERIAL', datas, 'totalDebitStart')
-    let zagatovkaDebitStart = total('ZAGATOVKA', datas, 'totalDebitStart')
-    let filialDebitStart = total('FILIAL', datas, 'totalDebitStart')
-    let buxgalterDebitStart = total('BUXGALTER', datas, 'totalDebitStart')
-    let deliveryDebitStart = total('DELIVERY', datas, 'totalDebitStart')
-    let partnersDebitStart = total('PARTNERS', datas, 'totalDebitStart')
-    let workersDebitStart = total('WORKERS', datas, 'totalDebitStart')
-    let foundersDebitStart = total('FOUNDERS', datas, 'totalDebitStart')
-    let allDebitStart = materialDebitStart + zagatovkaDebitStart + filialDebitStart + buxgalterDebitStart + deliveryDebitStart + partnersDebitStart + workersDebitStart + foundersDebitStart;
-
     let materialDebitEnd = total('MATERIAL', datas, 'totalDebitEnd')
-    let zagatovkaDebitEnd = total('ZAGATOVKA', datas, 'totalDebitEnd')
-    let filialDebitEnd = total('FILIAL', datas, 'totalDebitEnd')
-    let buxgalterDebitEnd = total('BUXGALTER', datas, 'totalDebitEnd')
-    let deliveryDebitEnd = total('DELIVERY', datas, 'totalDebitEnd')
-    let partnersDebitEnd = total('PARTNERS', datas, 'totalDebitEnd')
-    let workersDebitEnd = total('WORKERS', datas, 'totalDebitEnd')
-    let foundersDebitEnd = total('FOUNDERS', datas, 'totalDebitEnd')
-    let allDebitEnd = materialDebitEnd + zagatovkaDebitEnd + filialDebitEnd + buxgalterDebitEnd + deliveryDebitEnd + partnersDebitEnd + workersDebitEnd + foundersDebitEnd;
-
     let materialKreditStart = total('MATERIAL', datas, 'totalKreditStart')
-    let zagatovkaKreditStart = total('ZAGATOVKA', datas, 'totalKreditStart')
-    let filialKreditStart = total('FILIAL', datas, 'totalKreditStart')
-    let buxgalterKreditStart = total('BUXGALTER', datas, 'totalKreditStart')
-    let deliveryKreditStart = total('DELIVERY', datas, 'totalKreditStart')
-    let partnersKreditStart = total('PARTNERS', datas, 'totalKreditStart')
-    let workersKreditStart = total('WORKERS', datas, 'totalKreditStart')
-    let foundersKreditStart = total('FOUNDERS', datas, 'totalKreditStart')
-    let allKreditStart = materialKreditStart + zagatovkaKreditStart + filialKreditStart + buxgalterKreditStart + deliveryKreditStart + partnersKreditStart + workersKreditStart + foundersKreditStart;
-
     let materialKreditEnd = total('MATERIAL', datas, 'totalKreditEnd')
+    
+    let zagatovkaDebitStart = total('ZAGATOVKA', datas, 'totalDebitStart')
+    let zagatovkaDebitEnd = total('ZAGATOVKA', datas, 'totalDebitEnd')
+    let zagatovkaKreditStart = total('ZAGATOVKA', datas, 'totalKreditStart')
     let zagatovkaKreditEnd = total('ZAGATOVKA', datas, 'totalKreditEnd')
+    
+    let filialDebitStart = total('FILIAL', datas, 'totalDebitStart')
+    let filialDebitEnd = total('FILIAL', datas, 'totalDebitEnd')
+    let filialKreditStart = total('FILIAL', datas, 'totalKreditStart')
     let filialKreditEnd = total('FILIAL', datas, 'totalKreditEnd')
+    
+    let buxgalterDebitStart = total('BUXGALTER', datas, 'totalDebitStart')
+    let buxgalterDebitEnd = total('BUXGALTER', datas, 'totalDebitEnd')
+    let buxgalterKreditStart = total('BUXGALTER', datas, 'totalKreditStart')
     let buxgalterKreditEnd = total('BUXGALTER', datas, 'totalKreditEnd')
+    
+    let deliveryDebitStart = total('DELIVERY', datas, 'totalDebitStart')
+    let deliveryDebitEnd = total('DELIVERY', datas, 'totalDebitEnd')
+    let deliveryKreditStart = total('DELIVERY', datas, 'totalKreditStart')
     let deliveryKreditEnd = total('DELIVERY', datas, 'totalKreditEnd')
+    
+    let partnersDebitStart = total('PARTNERS', datas, 'totalDebitStart')
+    let partnersDebitEnd = total('PARTNERS', datas, 'totalDebitEnd')
+    let partnersKreditStart = total('PARTNERS', datas, 'totalKreditStart')
     let partnersKreditEnd = total('PARTNERS', datas, 'totalKreditEnd')
+    
+    let workersDebitStart = total('WORKERS', datas, 'totalDebitStart')
+    let workersDebitEnd = total('WORKERS', datas, 'totalDebitEnd')
+    let workersKreditStart = total('WORKERS', datas, 'totalKreditStart')
     let workersKreditEnd = total('WORKERS', datas, 'totalKreditEnd')
+    
+    let foundersDebitStart = total('FOUNDERS', datas, 'totalDebitStart')
+    let foundersDebitEnd = total('FOUNDERS', datas, 'totalDebitEnd')
+    let foundersKreditStart = total('FOUNDERS', datas, 'totalKreditStart')
     let foundersKreditEnd = total('FOUNDERS', datas, 'totalKreditEnd')
+
+    let allDebitStart = materialDebitStart + zagatovkaDebitStart + filialDebitStart + buxgalterDebitStart + deliveryDebitStart + partnersDebitStart + workersDebitStart + foundersDebitStart;
+    let allDebitEnd = materialDebitEnd + zagatovkaDebitEnd + filialDebitEnd + buxgalterDebitEnd + deliveryDebitEnd + partnersDebitEnd + workersDebitEnd + foundersDebitEnd;
+    let allKreditStart = materialKreditStart + zagatovkaKreditStart + filialKreditStart + buxgalterKreditStart + deliveryKreditStart + partnersKreditStart + workersKreditStart + foundersKreditStart;
     let allKreditEnd = materialKreditEnd + zagatovkaKreditEnd + filialKreditEnd + buxgalterKreditEnd + deliveryKreditEnd + partnersKreditEnd + workersKreditEnd + foundersKreditEnd;
 
 

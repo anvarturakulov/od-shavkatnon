@@ -6,12 +6,14 @@ import { prepareEntry } from "./prepareEntry"
 import { DocSTATUS, DocumentType } from "src/interfaces/document.interface";
 
 
-export const prepareEntrysList = (document: Document, force: boolean = false):Array<EntryCreationAttrs> => {
+export const prepareEntrysList = (document: Document, foundersIds: string[], force: boolean = false):Array<EntryCreationAttrs> => {
   
   let results: Array<EntryCreationAttrs> = []
   
   // Бу хозирча шундай туриб турсин. Кейин тепадан келиш керак
-  let recieverIsFounder = false, senderIsFounder = false
+  const recieverIsFounder = foundersIds.includes(`${document.docValues.receiverId}`)
+  const senderIsFounder = foundersIds.includes(`${document.docValues.senderId}`)
+
 
   if (document) {
     if (document.docStatus != DocSTATUS.PROVEDEN || force) {
@@ -28,21 +30,21 @@ export const prepareEntrysList = (document: Document, force: boolean = false):Ar
         let entry = { ...prepareEntry(document, true, false, undefined, recieverIsFounder, senderIsFounder) }
         results.push(entry);
 
-        // if ( 
-        //   document.documentType == DocumentType.SaleProd || 
-        //   document.documentType == DocumentType.SaleMaterial || 
-        //   document.documentType == DocumentType.SaleHalfStuff 
-        // ) {
-        //   let entry = { ...prepareEntry(document, false, false, undefined, recieverIsFounder, senderIsFounder) }
-        //   results.push(entry);
-        // }
-
-        if (document.documentType == DocumentType.MoveCash) {
-          if ( recieverIsFounder ) {
-              let entry = { ...prepareEntry(document, false, false, undefined, recieverIsFounder, senderIsFounder) }
-              results.push(entry);
-            }
+        if ( 
+          document.documentType == DocumentType.SaleProd || 
+          document.documentType == DocumentType.SaleMaterial || 
+          document.documentType == DocumentType.SaleHalfStuff 
+        ) {
+          let entry = { ...prepareEntry(document, false, false, undefined, recieverIsFounder, senderIsFounder) }
+          results.push(entry);
         }
+
+        // if (document.documentType == DocumentType.MoveCash) {
+        //   if ( recieverIsFounder ) {
+        //       let entry = { ...prepareEntry(document, false, false, undefined, recieverIsFounder, senderIsFounder) }
+        //       results.push(entry);
+        //     }
+        // }
       }
       
       if (document.documentType == DocumentType.ComeHalfstuff) {

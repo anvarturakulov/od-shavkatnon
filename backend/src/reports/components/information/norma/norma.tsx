@@ -2,12 +2,14 @@ import { ReferenceModel, TypeReference, TypeSECTION } from 'src/interfaces/refer
 import { normaItem } from './normaItem';
 import { Sequelize } from 'sequelize-typescript';
 import { Reference } from 'src/references/reference.model';
+import { OborotsService } from 'src/oborots/oborots.service';
 
 export const norma = async (
     data: any,
     startDate: number | null,
     endDate: number | null,
-    sequelize: Sequelize ) => {
+    oborotsService: OborotsService
+) => {
     
     let result:any[] = [];
     let filteredData:any[] = []
@@ -22,7 +24,7 @@ export const norma = async (
     }
     
     for (const item of filteredData) {
-        let element = await normaItem(data, startDate, endDate, item.id, item.name, sequelize)
+        let element = await normaItem(data, startDate, endDate, item.id, item.name, oborotsService)
         if (Object.keys(element).length) {
             result.push(element)
         }

@@ -4,6 +4,7 @@ import { oborotka } from './oborotka/oborotka';
 import { Entry } from 'src/entries/entry.model';
 import { Sequelize } from 'sequelize-typescript';
 import { StocksService } from 'src/stocks/stocks.service';
+import { OborotsService } from 'src/oborots/oborots.service';
 
 const getSubcontosList = (entrys: Array<Entry> | undefined, schet: string | null) => {
     let newEntrys = (entrys != undefined && entrys.length) ? [...entrys] : []
@@ -39,14 +40,15 @@ export const oborotkaAll = async (
     startDate: number | null,
     endDate: number | null,
     schet: Schet | null,
-    sequelize: Sequelize,
-    stocksService: StocksService
+    stocksService: StocksService,
+    oborotsService: OborotsService
     ) => {
     
     let result:any[] = [];
     let subcontosList = getSubcontosList(entrys, schet)
+    console.log(startDate, endDate)
 
-    let oborotkaResult = await oborotka(data, subcontosList, startDate, endDate, schet, sequelize, stocksService)
+    let oborotkaResult = await oborotka(data, subcontosList, startDate, endDate, schet, stocksService, oborotsService)
     result.push(oborotkaResult);
         
     return {...oborotkaResult}

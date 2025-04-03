@@ -4,77 +4,84 @@ import { query } from 'src/reports/querys/query';
 import { Reference } from 'src/references/reference.model';
 import { Entry } from 'src/entries/entry.model';
 import { StocksService } from 'src/stocks/stocks.service';
+import { OborotsService } from 'src/oborots/oborots.service';
 
-const getName = (data: any, id:number | null): string => {
-  if (id == null) return '';
+// Оптимизируем getName с использованием Map для быстрого поиска
+const createNameMap = (data: any): Map<number, string> => {
+  const nameMap = new Map<number, string>();
   if (data && data.length) {
-    return data.filter((item: Reference) => item.id == id)[0]?.name;
+    data.forEach((item: Reference) => {
+      if (item.id != null) nameMap.set(item.id, item.name || '');
+    });
   }
-  return '';
-  
-}
+  return nameMap;
+};
 
-export const personalItem = async( 
+const getName = (nameMap: Map<number, string>, id: number | null): string => {
+  if (id == null) return '';
+  return nameMap.get(id) || '';
+};
+
+export const personalItem = async ( 
   data: any,
   entries: Entry[],
   startDate: number | null,
   endDate: number | null,
   workerId: number | null,
-  sequelize:Sequelize,
-  stocksService: StocksService
+  stocksService: StocksService,
+  oborotsService: OborotsService
 ) => {    
+  const promises = [
+    query(Schet.S67, TypeQuery.POSUM, startDate, endDate, workerId, null, null, stocksService, oborotsService),
+    query(Schet.S67, TypeQuery.TDSUM, startDate, endDate, workerId, null, null, stocksService, oborotsService),
+    query(Schet.S67, TypeQuery.TKSUM, startDate, endDate, workerId, null, null, stocksService, oborotsService),
+  ];
 
-    const POSUM = await query(Schet.S67, TypeQuery.POSUM, startDate, endDate, workerId, null, null, sequelize, stocksService);
-    const TDSUM = await query(Schet.S67, TypeQuery.TDSUM, startDate, endDate, workerId, null, null, sequelize, stocksService);
-    const TKSUM = await query(Schet.S67, TypeQuery.TKSUM, startDate, endDate, workerId, null, null, sequelize, stocksService);
+  const [POSUM, TDSUM, TKSUM] = await Promise.all(promises);
 
-    if ( !POSUM && !TDSUM && !TKSUM) return {}
-    
-    let subResults:any[] = []
-    
-    let filteredList = entries.filter(entry => {
-      return (
-          (entry.dataValues.debet == Schet.S67 && entry.dataValues.debetFirstSubcontoId == workerId)
-          || 
-          (entry.dataValues.kredit == Schet.S67 && entry.dataValues.kreditFirstSubcontoId == workerId)
-      )
-    }).filter(entry => {
-      return (
-          (startDate && endDate && entry.dataValues.date >= startDate && entry.dataValues.date <= endDate)
-      )
-    })
+  if (!POSUM && !TDSUM && !TKSUM) return {};
 
-    if (filteredList && filteredList.length) {
-      for (const entry of filteredList) {
-        const debet = entry.dataValues.debet == Schet.S67 ? true : false
-        const date = entry.dataValues.date
-        const section = debet ? getName(data, entry.dataValues?.debetSecondSubcontoId) : getName(data, entry.dataValues?.kreditSecondSubcontoId) 
-        const comment = entry.dataValues?.description
-        const TDSUM = debet ? entry.dataValues?.total : '' 
-        const TKSUM = !debet ? entry.dataValues?.total : ''
-        
-        if (TDSUM || TKSUM ) {
-          let subElement = {
-            date,
-            section,
-            comment,
-            TDSUM,
-            TKSUM
-          }
-          subResults.push(subElement) 
-        } 
+  let subResults: any[] = [];
+  const nameMap = createNameMap(data); // Создаём Map один раз для быстрого доступа
+
+  // Объединяем два фильтра в один
+  let filteredList = entries.filter(entry => {
+    const matchesWorker =
+      (entry.dataValues.debet == Schet.S67 && entry.dataValues.debetFirstSubcontoId == workerId) ||
+      (entry.dataValues.kredit == Schet.S67 && entry.dataValues.kreditFirstSubcontoId == workerId);
+    const matchesDate = startDate && endDate && entry.dataValues.date >= startDate && entry.dataValues.date <= endDate;
+    return matchesWorker && matchesDate;
+  });
+
+  if (filteredList && filteredList.length) {
+    for (const entry of filteredList) {
+      const debet = entry.dataValues.debet == Schet.S67;
+      const date = entry.dataValues.date;
+      const section = debet ? getName(nameMap, entry.dataValues?.debetSecondSubcontoId) : getName(nameMap, entry.dataValues?.kreditSecondSubcontoId);
+      const comment = entry.dataValues?.description;
+      const subTDSUM = debet ? entry.dataValues?.total : '';
+      const subTKSUM = !debet ? entry.dataValues?.total : '';
+      
+      if (subTDSUM || subTKSUM) {
+        let subElement = {
+          date,
+          section,
+          comment,
+          TDSUM: subTDSUM,
+          TKSUM: subTKSUM
+        };
+        subResults.push(subElement);
       }
     }
-    
-    
-    let element = {
-      name: getName(data, workerId),
-      POSUM,
-      TDSUM,
-      TKSUM,
-      subItems: [...subResults]
-    }
-    
-    return element
-    
-} 
+  }
+  
+  let element = {
+    name: getName(nameMap, workerId),
+    POSUM,
+    TDSUM,
+    TKSUM,
+    subItems: [...subResults]
+  };
+  
+  return element;
+};

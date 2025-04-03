@@ -4,8 +4,6 @@ import { UsersModule } from './users/users.module';
 import { ConfigModule } from '@nestjs/config';
 import { User } from './users/users.model';
 import { AuthModule } from './auth/auth.module';
-import { FilesService } from './files/files.service';
-import { FilesModule } from './files/files.module';
 import { ReferencesModule } from './references/references.module';
 import { Reference } from './references/reference.model';
 import { RefValues } from './refvalues/refValues.model';
@@ -23,10 +21,12 @@ import { DocTableItems } from './docTableItems/docTableItems.model';
 import { ReportsModule } from './reports/reports.module';
 import { StocksModule } from './stocks/stocks.module';
 import { Stock } from './stocks/stock.model';
+import { OborotsModule } from './oborots/oborots.module';
+import { Oborot } from './oborots/oborot.model';
 
 @Module({
     controllers: [],
-    providers: [FilesService],
+    providers: [],
     imports: [
         ConfigModule.forRoot({
             envFilePath: `.${process.env.NODE_ENV}.env`
@@ -38,12 +38,12 @@ import { Stock } from './stocks/stock.model';
             username: process.env.POSTGRES_USER,
             password: process.env.POSTGRES_PASSWORD,
             database: process.env.POSTGRES_DB,
-            models: [User, Reference, RefValues, Entry, DocValues, DocTableItems, Document, Stock],
+            models: [User, Reference, RefValues, Entry, DocValues, DocTableItems, Document, Stock, Oborot],
             autoLoadModels: true,
+            logging: process.env.NODE_ENV === 'development' ? false : console.log,
           }),
         UsersModule,
         AuthModule,
-        FilesModule,
         ReferencesModule,
         RefValesModule,
         DocumentsModule,
@@ -52,6 +52,7 @@ import { Stock } from './stocks/stock.model';
         EntriesModule,
         ReportsModule,
         StocksModule,
+        OborotsModule,
     ],
 })
 

@@ -5,6 +5,7 @@ import { ODS } from './queryKorComponents/ODS';
 import { ODK } from './queryKorComponents/ODK';
 import { OKS } from './queryKorComponents/OKS';
 import { OKK } from './queryKorComponents/OKK';
+import { OborotsService } from 'src/oborots/oborots.service';
 
 function hasKey(obj, key) {
     return obj !== null && typeof obj === 'object' && key in obj;
@@ -16,48 +17,46 @@ export const queryKor = async (
     typeQuery: TypeQuery,
     startDate: number | null,
     endDate: number | null,
-    firstSubcontoId: number | undefined | null, 
-    secondSubcontoId: number | undefined | null,
-    thirdSubcontoId: number | undefined | null,
-    sequelize: Sequelize): Promise<number> => {
+    firstSubcontoId: number | null, 
+    secondSubcontoId: number | null,
+    thirdSubcontoId: number | null,
+    oborotsService: OborotsService
+): Promise<number> => {
+    console.log('queryKor called with:', { debet, kredit, typeQuery, startDate, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId });
+
+    if (!oborotsService) {
+        console.error('oborotsService is undefined');
+        throw new BadRequestException('OborotsService is not provided');
+    }
 
     try {
-        let replacements: { [key: string]: any } = {};
-        let query: string = ''
-        let stopQuery: boolean = false
-        let middle: {[key: string]: any} = {query, replacements}
-        
-        const middleStart = ((typeQuery: TypeQuery) => {
-            switch (typeQuery) {
-                case TypeQuery.ODS: return {...ODS(debet, kredit, typeQuery, startDate, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId)}
-                case TypeQuery.ODK: return {...ODK(debet, kredit, typeQuery, startDate, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId)}
-                case TypeQuery.OKS: return {...OKS(debet, kredit, typeQuery, startDate, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId)}
-                case TypeQuery.OKK: return {...OKK(debet, kredit, typeQuery, startDate, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId)}    
-                }
-        })
-
-        middle = {...middleStart(typeQuery)}
-
-        query = middle.query
-        replacements = {...middle.replacements}
-        stopQuery = middle.stopQuery
-        
-        if (!stopQuery) {
-            
-            const [results] = await sequelize.query(query, {
-                replacements,
-                type: 'SELECT',
-            });
-
-            const parsedObj = JSON.parse(JSON.stringify(results));
-            const total = parsedObj?.total;
-            return total != null ? Number(total) : 0;
-            
-        } else 
-            return 0
-
-
+        switch (typeQuery) {
+            case TypeQuery.ODS:
+                console.log('Calling ODS');
+                const odsResult = await ODS(debet, kredit, typeQuery, startDate, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId, oborotsService);
+                console.log('ODS completed:', odsResult);
+                return odsResult || 0;
+            case TypeQuery.ODK:
+                console.log('Calling ODK');
+                const odkResult = await ODK(debet, kredit, typeQuery, startDate, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId, oborotsService);
+                console.log('ODK completed:', odkResult);
+                return odkResult || 0;
+            case TypeQuery.OKS:
+                console.log('Calling OKS');
+                const oksResult = await OKS(debet, kredit, typeQuery, startDate, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId, oborotsService);
+                console.log('OKS completed:', oksResult);
+                return oksResult || 0;
+            case TypeQuery.OKK:
+                console.log('Calling OKK');
+                const okkResult = await OKK(debet, kredit, typeQuery, startDate, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId, oborotsService);
+                console.log('OKK completed:', okkResult);
+                return okkResult || 0;
+            default:
+                console.log('Unknown typeQuery:', typeQuery);
+                return 0;
+        }
     } catch (error) {
+        console.error('Error in queryKor:', error);
         throw new BadRequestException('Database error: ' + error.message);
     }
-}
+};

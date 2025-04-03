@@ -12,10 +12,10 @@ export const SelectOborot = ({ label, visible , className, ...props }: SelectObo
 
     let oborotTypeData = [
         { title: 'Харажатлар', schet: Schet.S20 },
-        { title: 'Хом ашё', schet: Schet.S10 },
-        { title: '21 счет', schet: Schet.S21 },
+        // { title: 'Хом ашё', schet: Schet.S10 },
+        // { title: '21 счет', schet: Schet.S21 },
         { title: '23 счет', schet: Schet.S23 },
-        { title: 'Тайёр махсулот', schet: Schet.S28 },
+        // { title: 'Тайёр махсулот', schet: Schet.S28 },
         { title: 'Мижозлар', schet: Schet.S40 },
         { title: 'Таъминотчи ва хамкорлар', schet: Schet.S60 },
         { title: 'Касса', schet: Schet.S50 },
@@ -23,7 +23,7 @@ export const SelectOborot = ({ label, visible , className, ...props }: SelectObo
     ]
     
     if (isAdmins(user) || isGuest(user)) oborotTypeData.push({ title: 'Таъсисчилар', schet: Schet.S66 })
-    if (isAdmins(user)) oborotTypeData.push({ title: 'Хамёнлар', schet: Schet.S68 })
+    // if (isAdmins(user)) oborotTypeData.push({ title: 'Хамёнлар', schet: Schet.S68 })
 
     const changeElements = (e: React.FormEvent<HTMLSelectElement>, setMainData: Function | undefined, mainData: Maindata) => {
         let target = e.currentTarget;

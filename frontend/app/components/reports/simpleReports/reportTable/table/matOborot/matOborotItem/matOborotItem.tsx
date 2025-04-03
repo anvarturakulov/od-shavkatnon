@@ -5,10 +5,8 @@ import { numberValue } from '@/app/service/common/converters';
 import { totalByKey } from '@/app/components/reports/dashboardReports/inform';
 
 export const MatOborotItem = ({className, item, section, ...props }: MatOborotItemProps) :JSX.Element => {
-    let PDKOL = totalByKey('PDKOL', item?.items)
-    let PKKOL = totalByKey('PKKOL', item?.items);
-    let PDSUM = totalByKey('PDSUM', item?.items)
-    let PKSUM = totalByKey('PKSUM', item?.items)
+    let POKOL = totalByKey('POKOL', item?.items)
+    let POSUM = totalByKey('POSUM', item?.items);
     let TDKOL = totalByKey('TDKOL', item?.items)
     let TDSUM = totalByKey('TDSUM', item?.items)
     let TKKOL = totalByKey('TKKOL', item?.items)
@@ -43,14 +41,14 @@ export const MatOborotItem = ({className, item, section, ...props }: MatOborotIt
                           <td id='itemName' className={styles.title}>{element?.name}</td>
                           <td>--</td>
                           <td>--</td>
-                          <td>{numberValue(element?.PDKOL-element?.PKKOL)}</td>
-                          <td>{numberValue(element?.PDSUM-element?.PKSUM)}</td>
+                          <td>{numberValue(element?.POKOL)}</td>
+                          <td>{numberValue(element?.POSUM)}</td>
                           <td>{numberValue(element?.TDKOL)}</td>
                           <td>{numberValue(element?.TDSUM)}</td>
                           <td>{numberValue(element?.TKKOL)}</td>
                           <td>{numberValue(element?.TKSUM)}</td>
-                          <td>{numberValue(element?.PDKOL-element?.PKKOL+element?.TDKOL-element?.TKKOL)}</td>
-                          <td>{numberValue(element?.PDSUM-element?.PKSUM+element?.TDSUM-element?.TKSUM)}</td>
+                          <td>{numberValue(element?.POKOL+element?.TDKOL-element?.TKKOL)}</td>
+                          <td>{numberValue(element?.POSUM+element?.TDSUM-element?.TKSUM)}</td>
                         </tr>
                     )
                 })
@@ -64,14 +62,14 @@ export const MatOborotItem = ({className, item, section, ...props }: MatOborotIt
               <td>Жами</td>
               <td></td>
               <td></td>
-              <td className={styles.totalTd}>{numberValue(PDKOL-PKKOL)}</td>
-              <td className={styles.totalTd}>{numberValue(PDSUM-PKSUM)}</td>
+              <td className={styles.totalTd}>{numberValue(POKOL)}</td>
+              <td className={styles.totalTd}>{numberValue(POSUM)}</td>
               <td className={styles.totalTd}>{numberValue(TDKOL)}</td>
               <td className={styles.totalTd}>{numberValue(TDSUM)}</td>
               <td className={styles.totalTd}>{numberValue(TKKOL)}</td>
               <td className={styles.totalTd}>{numberValue(TKSUM)}</td>
-              <td className={styles.totalTd}>{numberValue(PDKOL-PKKOL+TDKOL-TKKOL)}</td>
-              <td className={styles.totalTd}>{numberValue(PDSUM-PKSUM+TDSUM-TKSUM)}</td>
+              <td className={styles.totalTd}>{numberValue(POKOL+TDKOL-TKKOL)}</td>
+              <td className={styles.totalTd}>{numberValue(POSUM+TDSUM-TKSUM)}</td>
 
               </tr>
       </thead>

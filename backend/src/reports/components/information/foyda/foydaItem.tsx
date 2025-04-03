@@ -7,6 +7,7 @@ import { Document } from 'src/documents/document.model';
 import { queryKor } from 'src/reports/querys/queryKor';
 import { query } from 'src/reports/querys/query';
 import { StocksService } from 'src/stocks/stocks.service';
+import { OborotsService } from 'src/oborots/oborots.service';
 
 const isDelivery = (deliverys:Reference[], id:number) => {
   if (deliverys && deliverys.length) {
@@ -29,7 +30,8 @@ export const foydaItem = async (
   zpUmumBulim: number,
   longeChargeUmumBulim: number, 
   currentPaymentUmumBulim: number,
-  stockService: StocksService
+  stockService: StocksService,
+  oborotsService: OborotsService
 ) => {
 
   let longeCharge:number = 0;
@@ -42,7 +44,7 @@ export const foydaItem = async (
   })}
 
   for (const item of filteredData) {
-    longeCharge += await queryKor(Schet.S20, Schet.S50, TypeQuery.ODS, startDate, endDate, currentSectionId, item.id, null, sequelize)
+    longeCharge += await queryKor(Schet.S20, Schet.S50, TypeQuery.ODS, startDate, endDate, currentSectionId, item.id, null, oborotsService)
   }
     
   let productionDocsCountAll = 0;
@@ -125,11 +127,11 @@ export const foydaItem = async (
 
   }
 
-  const POKOLAll = await query(Schet.S28, TypeQuery.POKOL, startDate, endDate, currentSectionId, null, null, sequelize, stockService)
-  const KOKOLAll = await query(Schet.S28, TypeQuery.KOKOL, startDate, endDate, currentSectionId, null, null, sequelize, stockService)
+  const POKOLAll = await query(Schet.S28, TypeQuery.POKOL, startDate, endDate, currentSectionId, null, null, stockService, oborotsService)
+  const KOKOLAll = await query(Schet.S28, TypeQuery.KOKOL, startDate, endDate, currentSectionId, null, null, stockService, oborotsService)
   
-  const POKOLBux = await query(Schet.S28, TypeQuery.POKOL, startDate, endDate, currentSectionId, idForBuxanka, null, sequelize, stockService)
-  const KOKOLBux = await query(Schet.S28, TypeQuery.KOKOL, startDate, endDate, currentSectionId, idForBuxanka, null, sequelize, stockService)
+  const POKOLBux = await query(Schet.S28, TypeQuery.POKOL, startDate, endDate, currentSectionId, idForBuxanka, null, stockService, oborotsService)
+  const KOKOLBux = await query(Schet.S28, TypeQuery.KOKOL, startDate, endDate, currentSectionId, idForBuxanka, null, stockService, oborotsService)
 
   const startCountAll = POKOLAll;
   const endCountAll = KOKOLAll;
@@ -137,22 +139,22 @@ export const foydaItem = async (
   const startCountBux = POKOLBux;
   const endCountBux = KOKOLBux;
 
-  const productionCountAll = await queryKor(Schet.S28, Schet.S20, TypeQuery.OKK, startDate, endDate, currentSectionId, null, null, sequelize);
-  const productionCountBux = await queryKor(Schet.S28, Schet.S20, TypeQuery.ODK, startDate, endDate, currentSectionId, idForBuxanka, null, sequelize);
+  const productionCountAll = await queryKor(Schet.S28, Schet.S20, TypeQuery.OKK, startDate, endDate, currentSectionId, null, null, oborotsService);
+  const productionCountBux = await queryKor(Schet.S28, Schet.S20, TypeQuery.ODK, startDate, endDate, currentSectionId, idForBuxanka, null, oborotsService);
   
-  const brakCountAll = await queryKor(Schet.S20, Schet.S28, TypeQuery.OKK, startDate, endDate, currentSectionId, null, null, sequelize);
-  const brakCountBux = await queryKor(Schet.S20, Schet.S28, TypeQuery.OKK, startDate, endDate, currentSectionId, idForBuxanka, null, sequelize);
+  const brakCountAll = await queryKor(Schet.S20, Schet.S28, TypeQuery.OKK, startDate, endDate, currentSectionId, null, null, oborotsService);
+  const brakCountBux = await queryKor(Schet.S20, Schet.S28, TypeQuery.OKK, startDate, endDate, currentSectionId, idForBuxanka, null, oborotsService);
   
-  const productionImportSumm = await queryKor(Schet.S28, Schet.S60, TypeQuery.ODS, startDate, endDate, currentSectionId, null, null, sequelize);
+  const productionImportSumm = await queryKor(Schet.S28, Schet.S60, TypeQuery.ODS, startDate, endDate, currentSectionId, null, null, oborotsService);
   
-  const moveOutCountAll = await queryKor(Schet.S28, Schet.S28, TypeQuery.OKK, startDate, endDate, currentSectionId, null, null, sequelize);
-  const moveOutCountBux = await queryKor(Schet.S28, Schet.S28, TypeQuery.OKK, startDate, endDate, currentSectionId, idForBuxanka, null, sequelize);
+  const moveOutCountAll = await queryKor(Schet.S28, Schet.S28, TypeQuery.OKK, startDate, endDate, currentSectionId, null, null, oborotsService);
+  const moveOutCountBux = await queryKor(Schet.S28, Schet.S28, TypeQuery.OKK, startDate, endDate, currentSectionId, idForBuxanka, null, oborotsService);
   
-  const moveIncomeCountAll = await queryKor(Schet.S28, Schet.S28, TypeQuery.ODK, startDate, endDate, currentSectionId, null, null, sequelize);
-  const moveIncomeCountBux = await queryKor(Schet.S28, Schet.S28, TypeQuery.ODK, startDate, endDate, currentSectionId, idForBuxanka, null, sequelize);
+  const moveIncomeCountAll = await queryKor(Schet.S28, Schet.S28, TypeQuery.ODK, startDate, endDate, currentSectionId, null, null, oborotsService);
+  const moveIncomeCountBux = await queryKor(Schet.S28, Schet.S28, TypeQuery.ODK, startDate, endDate, currentSectionId, idForBuxanka, null, oborotsService);
 
-  const saleAll = await queryKor(Schet.S40, Schet.S28, TypeQuery.OKS, startDate, endDate, currentSectionId, null, null, sequelize);
-  const saleBux = await queryKor(Schet.S40, Schet.S28, TypeQuery.OKS, startDate, endDate, currentSectionId, idForBuxanka, null, sequelize);
+  const saleAll = await queryKor(Schet.S40, Schet.S28, TypeQuery.OKS, startDate, endDate, currentSectionId, null, null, oborotsService);
+  const saleBux = await queryKor(Schet.S40, Schet.S28, TypeQuery.OKS, startDate, endDate, currentSectionId, idForBuxanka, null, oborotsService);
 
   const countDeleviryAll = (countOutToDeliveryAll-countIncomeFromDeliveryAll) <= 0 ? 0 : (countOutToDeliveryAll-countIncomeFromDeliveryAll)   
   const countDeleviryBux = (countOutToDeliveryBux-countIncomeFromDeliveryBux) <= 0 ? 0 : (countOutToDeliveryBux-countIncomeFromDeliveryBux)   
@@ -179,17 +181,17 @@ export const foydaItem = async (
   const saleWithMoveBux = saleBux + (dBux - iBux + oBux) * valueForSaleBux;
   const saleWithMoveAll = saleWithMove + saleWithMoveBux
 
-  const zagatovka = await queryKor(Schet.S20, Schet.S21, TypeQuery.OKS, startDate, endDate, currentSectionId, null, null, sequelize);
-  const materials = await queryKor(Schet.S20, Schet.S10, TypeQuery.OKS, startDate, endDate, currentSectionId, null, null, sequelize);
-  const zp = await queryKor(Schet.S20, Schet.S67, TypeQuery.ODS, startDate, endDate, currentSectionId, null, null, sequelize);
+  const zagatovka = await queryKor(Schet.S20, Schet.S21, TypeQuery.OKS, startDate, endDate, currentSectionId, null, null, oborotsService);
+  const materials = await queryKor(Schet.S20, Schet.S10, TypeQuery.OKS, startDate, endDate, currentSectionId, null, null, oborotsService);
+  const zp = await queryKor(Schet.S20, Schet.S67, TypeQuery.ODS, startDate, endDate, currentSectionId, null, null, oborotsService);
 
   const addingZp = productionAllDocsCountByCompany>0 ? zpUmumBulim * productionDocsCountAll / productionAllDocsCountByCompany : 0; 
   const addingLongeCharge = productionAllDocsCountByCompany>0 ? longeChargeUmumBulim * productionDocsCountAll / productionAllDocsCountByCompany : 0;
   const addingCurrentPayment = productionAllDocsCountByCompany>0 ? currentPaymentUmumBulim * productionDocsCountAll / productionAllDocsCountByCompany : 0;
 
-  const services = await queryKor(Schet.S20, Schet.S60, TypeQuery.ODS, startDate, endDate, currentSectionId, null, null, sequelize);
+  const services = await queryKor(Schet.S20, Schet.S60, TypeQuery.ODS, startDate, endDate, currentSectionId, null, null, oborotsService);
   
-  const currentPayment = await queryKor(Schet.S20, Schet.S50, TypeQuery.ODS, startDate, endDate, currentSectionId, null, null, sequelize) - longeCharge;
+  const currentPayment = await queryKor(Schet.S20, Schet.S50, TypeQuery.ODS, startDate, endDate, currentSectionId, null, null, oborotsService) - longeCharge;
   
   const currentCharges = zagatovka + materials + zp + addingZp + currentPayment + services + addingCurrentPayment;
   const currentEarning = saleWithMove - currentCharges;

@@ -3,14 +3,15 @@ import { skladItem } from './skladItem';
 import { Sequelize } from 'sequelize-typescript';
 import { Reference } from 'src/references/reference.model';
 import { StocksService } from 'src/stocks/stocks.service';
+import { OborotsService } from 'src/oborots/oborots.service';
 
 export const sklad = async(
     data: any,
     startDate: number | null,
     endDate: number | null,
     section: number | null,
-    sequelize: Sequelize,
-    stocksService: StocksService
+    stocksService: StocksService,
+    oborotsService: OborotsService
 ) => {
     
     let result:any[] = [];
@@ -21,7 +22,7 @@ export const sklad = async(
     }
    
     for (const item of filteredData) {
-        let element = await skladItem(data, startDate, endDate, item.id, item.name, sequelize, stocksService)
+        let element = await skladItem(data, startDate, endDate, item.id, item.name, stocksService, oborotsService)
         if (Object.keys(element).length) {
             result.push(element)
         }

@@ -52,7 +52,7 @@ export const convertJsonDocs = (jsonRow:any):UpdateCreateDocumentDto => {
         userId: 13,
         userOldId: jsonRow.user,
         documentType: jsonRow.documentType,
-        docStatus: jsonRow?.deleted == true ? DocSTATUS.DELETED : DocSTATUS.PROVEDEN,
+        docStatus: jsonRow?.deleted == true ? DocSTATUS.DELETED : DocSTATUS.OPEN,
         docValues: {...docValues},
         docTableItems: [...docTableItems]
     }

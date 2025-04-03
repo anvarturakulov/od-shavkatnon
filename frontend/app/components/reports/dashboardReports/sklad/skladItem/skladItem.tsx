@@ -35,7 +35,24 @@ export const SkladItem = ({className, item, ...props }: SkladItemProps) :JSX.Ele
                         </div>
                     )
                 })
-
+            }
+            
+            {
+                item?.items &&
+                item?.items.length &&
+                <div className={styles.row} key={900}>
+                    <div className={styles.totalTitle}>Жами</div>
+                    <div className={styles.value}></div>
+                    <div className={styles.value}></div>
+                    <div className={styles.value}></div>
+                    <div className={styles.total}>{
+                        numberValue(item?.items.reduce((acc:any, item:any) => {
+                            return acc + (item.valueSum || 0)}, 0))
+                        }
+                    </div>
+                </div>
+                    
+                
             }
             
             

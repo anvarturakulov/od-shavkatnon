@@ -15,7 +15,7 @@ export const convertJsonRef = (jsonRow:any):UpdateCreateReferenceDto => {
         // clientForSectionId: jsonRow.clientForDeliveryId,
         referenceId: 1,
         clientForSectionOldId: jsonRow.clientForDeliveryId,
-        typePartners: jsonRow.TypePartners,
+        typePartners: jsonRow.typePartners,
         typeTMZ: jsonRow.typeTMZ,
         typeSection: TypeSECTION.ACCOUNTANT,
         unit: jsonRow.unit,

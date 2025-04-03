@@ -1,19 +1,7 @@
-.sectionName{
-    background-color:rgba(228, 227, 226, 0.5);
-    color: red;
-}
-
 .title{
     text-align: left!important;
     max-width: 300px!important;
     /* padding-left: 10px!important; */
-}
-
-.total{
-    /* background-color: rgb(198, 228, 230); */
-    /* font-size: 400!important; */
-    font-weight: 700!important;
-    color: blue;
 }
 
 .totalTdKol{
@@ -21,5 +9,14 @@
     /* font-weight: 700!important; */
     /* color: blue; */
     text-align: right!important;
-  }
+}
+
+.innerItems {
+    background-color: rgba(231, 221, 209, 0.3);
+}
+
+.plus{
+    cursor: pointer;
+    text-align: center!important;
+}
 

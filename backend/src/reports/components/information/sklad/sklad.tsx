@@ -1,15 +1,15 @@
-import { ReferenceModel, TypeReference, TypeSECTION } from 'src/interfaces/reference.interface';
+import { TypeReference, TypeSECTION } from 'src/interfaces/reference.interface';
 import { skladItem } from './skladItem';
-import { Sequelize } from 'sequelize-typescript';
 import { Reference } from 'src/references/reference.model';
 import { StocksService } from 'src/stocks/stocks.service';
+import { OborotsService } from 'src/oborots/oborots.service';
 
 export const sklad = async (
     data: any,
     startDate: number | null,
     endDate: number | null,
-    sequelize: Sequelize,
-    stocksService: StocksService
+    stocksService: StocksService,
+    oborotsService: OborotsService
 ) => {
     
     let result:any[] = [];
@@ -19,13 +19,13 @@ export const sklad = async (
         filteredData  = data.filter((item: Reference) => item?.typeReference == TypeReference.STORAGES)
                             .filter((item: Reference) => !item?.refValues.markToDeleted)
                             .filter((item: Reference) => {
-                                if ( item.refValues.typeSection == TypeSECTION.STORAGE ) return true
+                                if ( item.refValues.typeSection == TypeSECTION.STORAGE || item.refValues.typeSection == TypeSECTION.FILIAL  ) return true
                                 return false
                             })
     }
 
     for (const item of filteredData) {
-        let element = await skladItem(data, startDate, endDate, item.id, item.name, sequelize, stocksService)
+        let element = await skladItem(data, startDate, endDate, item.id, item.name, stocksService, oborotsService)
         if (Object.keys(element).length) {
             result.push(element)
         }

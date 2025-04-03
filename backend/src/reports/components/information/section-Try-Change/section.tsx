@@ -4,14 +4,15 @@ import { Document } from 'src/documents/document.model';
 import { Sequelize } from 'sequelize-typescript';
 import { Reference } from 'src/references/reference.model';
 import { StocksService } from 'src/stocks/stocks.service';
+import { OborotsService } from 'src/oborots/oborots.service';
 
 export const section = async (
     sectionType: 'DELIVERY' | 'FILIAL' | 'BUXGALTER' | 'FOUNDER',
     data: any,
     startDate: number | null,
     endDate: number | null,
-    sequelize: Sequelize,
-    stocksService: StocksService
+    stocksService: StocksService,
+    oborotsService: OborotsService
 ) => {
     
     let result:any[] = [];
@@ -30,7 +31,7 @@ export const section = async (
     }
 
     for (const item of filteredData) {
-        let element = await sectionItem(startDate, endDate, item.id, item.name, sectionType, sequelize, stocksService)
+        let element = await sectionItem(startDate, endDate, item.id, item.name, sectionType, stocksService, oborotsService)
         if (Object.keys(element).length) {
             result.push(element)
         }

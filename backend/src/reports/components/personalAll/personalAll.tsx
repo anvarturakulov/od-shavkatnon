@@ -4,6 +4,7 @@ import { personal } from './personal/personal';
 import { Sequelize } from 'sequelize-typescript';
 import { Entry } from 'src/entries/entry.model';
 import { StocksService } from 'src/stocks/stocks.service';
+import { OborotsService } from 'src/oborots/oborots.service';
 
 export const personalAll = async (
     data: any,
@@ -11,13 +12,13 @@ export const personalAll = async (
     startDate: number | null,
     endDate: number | null,
     workerId: number | null,
-    sequelize: Sequelize,
-    stocksService: StocksService
+    stocksService: StocksService,
+    oborotsService: OborotsService
     ) => {
     
     let result:any[] = [];
 
-    let personalResult = await personal(data, entries, startDate, endDate, workerId, sequelize, stocksService)
+    let personalResult = await personal(data, entries, startDate, endDate, workerId, stocksService, oborotsService)
     result.push(personalResult);
         
     return {...personalResult}
