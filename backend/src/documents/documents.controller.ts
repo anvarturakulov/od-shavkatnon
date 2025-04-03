@@ -96,9 +96,9 @@ export class DocumentsController {
             // console.log('lengthhhhhh ---', docsArray.length)
             // this.documentsService.createMany(docsArray)
            
-            // console.log('Start pereprovodka')
-            // this.documentsService.pereProvodka()
-            // console.log('End pereprovodka')
+            console.log('Start pereprovodka')
+            this.documentsService.pereProvodka()
+            console.log('End pereprovodka')
         }
         return this.documentsService.markToDeleteById(id)
     }

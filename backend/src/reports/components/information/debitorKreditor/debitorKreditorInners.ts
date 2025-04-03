@@ -89,6 +89,7 @@ export const debitorKreditorInners = async (
                 if (reportId === 'FILIAL') return item?.refValues.typeSection === TypeSECTION.FILIAL;
                 if (reportId === 'BUXGALTER') return (
                     item?.refValues.typeSection === TypeSECTION.ACCOUNTANT ||
+                    item?.refValues.typeSection === TypeSECTION.STORAGE ||
                     item?.refValues.typeSection === TypeSECTION.DIRECTOR
                 );
                 return true;

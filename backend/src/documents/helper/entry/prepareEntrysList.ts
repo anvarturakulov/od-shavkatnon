@@ -39,12 +39,12 @@ export const prepareEntrysList = (document: Document, foundersIds: string[], for
           results.push(entry);
         }
 
-        // if (document.documentType == DocumentType.MoveCash) {
-        //   if ( recieverIsFounder ) {
-        //       let entry = { ...prepareEntry(document, false, false, undefined, recieverIsFounder, senderIsFounder) }
-        //       results.push(entry);
-        //     }
-        // }
+        if (document.documentType == DocumentType.MoveCash) {
+          if ( recieverIsFounder ) {
+              let entry = { ...prepareEntry(document, false, false, undefined, recieverIsFounder, senderIsFounder) }
+              results.push(entry);
+            }
+        }
       }
       
       if (document.documentType == DocumentType.ComeHalfstuff) {

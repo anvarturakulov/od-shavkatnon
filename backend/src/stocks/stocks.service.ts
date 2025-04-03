@@ -66,7 +66,7 @@ export class StocksService {
           }
           await stock.save();
         }
-    
+        // console.log(stock)
         await this.recalculateRemains(schet, firstSubcontoId, secondSubcontoId, date);
         // await this.updateRedis(stock);
     }

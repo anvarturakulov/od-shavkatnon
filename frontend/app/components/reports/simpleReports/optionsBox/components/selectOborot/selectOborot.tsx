@@ -23,7 +23,7 @@ export const SelectOborot = ({ label, visible , className, ...props }: SelectObo
     ]
     
     if (isAdmins(user) || isGuest(user)) oborotTypeData.push({ title: 'Таъсисчилар', schet: Schet.S66 })
-    // if (isAdmins(user)) oborotTypeData.push({ title: 'Хамёнлар', schet: Schet.S68 })
+    if (isAdmins(user)) oborotTypeData.push({ title: 'Хамёнлар', schet: Schet.S68 })
 
     const changeElements = (e: React.FormEvent<HTMLSelectElement>, setMainData: Function | undefined, mainData: Maindata) => {
         let target = e.currentTarget;

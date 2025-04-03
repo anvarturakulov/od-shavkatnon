@@ -40,7 +40,7 @@ import { Oborot } from './oborots/oborot.model';
             database: process.env.POSTGRES_DB,
             models: [User, Reference, RefValues, Entry, DocValues, DocTableItems, Document, Stock, Oborot],
             autoLoadModels: true,
-            logging: process.env.NODE_ENV === 'development' ? false : console.log,
+            // logging: process.env.NODE_ENV === 'development' ? false : console.log,
           }),
         UsersModule,
         AuthModule,

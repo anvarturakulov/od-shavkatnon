@@ -24,19 +24,21 @@ export const section = async (
                                 if (sectionType == 'DELIVERY') return item.refValues.typeSection == TypeSECTION.DELIVERY
                                 if (sectionType == 'FILIAL') return item.refValues.typeSection == TypeSECTION.FILIAL
                                 if (sectionType == 'BUXGALTER') return (item.refValues.typeSection == TypeSECTION.ACCOUNTANT 
-                                                                    || item.refValues.typeSection == TypeSECTION.DIRECTOR)
+                                                                    || item.refValues.typeSection == TypeSECTION.DIRECTOR 
+                                                                    || item.refValues.typeSection == TypeSECTION.STORAGE
+                                                                )
                                 if (sectionType == 'FOUNDER') return item.refValues.typeSection == TypeSECTION.FOUNDER
                                 return false
                             })
     }
 
     for (const item of filteredData) {
-        let element = await sectionItem(startDate, endDate, item.id, item.name, sectionType, stocksService, oborotsService)
+        let element = await sectionItem(data, startDate, endDate, item.id, item.name, sectionType, stocksService, oborotsService)
         if (Object.keys(element).length) {
             result.push(element)
         }
     }
-    console.log('RESULT ---', result)
+    
     return {
         reportType: `SECTION-${sectionType}`,
         values : [...result]

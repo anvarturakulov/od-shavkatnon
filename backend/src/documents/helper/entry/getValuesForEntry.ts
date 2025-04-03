@@ -161,22 +161,10 @@ export const getValuesForEntry = (doc: Document, newEntry: boolean, hasTable: bo
             total,
           };
         }
-        if (!recieverIsFounder && senderIsFounder ) 
+        if ( senderIsFounder ) 
           return {
             debet: Schet.S00,
-            kredit: Schet.S66,
-            debetFirstSubcontoId: senderId,
-            debetSecondSubcontoId: analiticId,
-            kreditFirstSubcontoId: senderId,
-            kreditSecondSubcontoId: analiticId,
-            count: 0,
-            total,
-        };
-
-        if (recieverIsFounder && !senderIsFounder ) 
-          return {
-            debet: Schet.S66,
-            kredit: Schet.S50,
+            kredit: Schet.S68,
             debetFirstSubcontoId: senderId,
             debetSecondSubcontoId: analiticId,
             kreditFirstSubcontoId: senderId,
@@ -228,67 +216,44 @@ export const getValuesForEntry = (doc: Document, newEntry: boolean, hasTable: bo
         };
 
       case DocumentType.MoveCash:
-        // if (!newEntry) {
-        //   return {
-        //     debet: Schet.S68,
-        //     kredit: Schet.S00,
-        //     debetFirstSubcontoId: receiverId,
-        //     debetSecondSubcontoId: senderId,
-        //     kreditFirstSubcontoId: senderId,
-        //     kreditSecondSubcontoId: receiverId,
-        //     count: 0,
-        //     total
-        //   }
-        // } else {
-        //   if (recieverIsFounder) {
-        //     return {
-        //       debet: Schet.S66,
-        //       kredit: Schet.S50,
-        //       debetFirstSubcontoId: receiverId,
-        //       debetSecondSubcontoId: senderId,
-        //       kreditFirstSubcontoId: senderId,
-        //       kreditSecondSubcontoId: receiverId,
-        //       count: 0,
-        //       total
-        //     }
-        //   } else return {
-        //     debet: Schet.S50,
-        //     kredit: doc.date > remaindDate ? Schet.S50 : Schet.S00,
-        //     debetFirstSubcontoId: receiverId,
-        //     debetSecondSubcontoId: senderId,
-        //     kreditFirstSubcontoId: senderId,
-        //     kreditSecondSubcontoId: receiverId,
-        //     count: 0,
-        //     total,
-        //   };        
-        // }
-        if (recieverIsFounder && senderIsFounder) {
+        if (!newEntry) {
           return {
-                debet: Schet.S66,
-                kredit: Schet.S66,
-                debetFirstSubcontoId: receiverId,
-                debetSecondSubcontoId: senderId,
-                kreditFirstSubcontoId: senderId,
-                kreditSecondSubcontoId: receiverId,
-                count: 0,
-                total
-              }
-        }
-
-        if (recieverIsFounder && !senderIsFounder) {
-          return {
-                debet: Schet.S66,
-                kredit: doc.date > remaindDate ? Schet.S50 : Schet.S00,
-                debetFirstSubcontoId: receiverId,
-                debetSecondSubcontoId: senderId,
-                kreditFirstSubcontoId: senderId,
-                kreditSecondSubcontoId: receiverId,
-                count: 0,
-                total
-              }
-        }
-
-        if (!recieverIsFounder && !senderIsFounder) {
+            debet: Schet.S00,
+            kredit: Schet.S68,
+            debetFirstSubcontoId: receiverId,
+            debetSecondSubcontoId: senderId,
+            kreditFirstSubcontoId: senderId,
+            kreditSecondSubcontoId: receiverId,
+            count: 0,
+            total
+          }
+        } else {
+          if (recieverIsFounder && senderIsFounder) {
+            return {
+                  debet: Schet.S68,
+                  kredit: Schet.S68,
+                  debetFirstSubcontoId: receiverId,
+                  debetSecondSubcontoId: senderId,
+                  kreditFirstSubcontoId: senderId,
+                  kreditSecondSubcontoId: receiverId,
+                  count: 0,
+                  total
+                }
+          }
+    
+          if (recieverIsFounder && !senderIsFounder) {
+            return {
+                  debet: Schet.S66,
+                  kredit: doc.date > remaindDate ? Schet.S50 : Schet.S00,
+                  debetFirstSubcontoId: receiverId,
+                  debetSecondSubcontoId: senderId,
+                  kreditFirstSubcontoId: senderId,
+                  kreditSecondSubcontoId: receiverId,
+                  count: 0,
+                  total
+                }
+          }
+  
           return {
                 debet: Schet.S50,
                 kredit: doc.date > remaindDate ? Schet.S50 : Schet.S00,
@@ -299,7 +264,7 @@ export const getValuesForEntry = (doc: Document, newEntry: boolean, hasTable: bo
                 count: 0,
                 total
               }
-        }
+        } 
 
       case DocumentType.MoveHalfstuff:
         return {
