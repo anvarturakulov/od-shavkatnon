@@ -15,7 +15,7 @@ export const defaultDocumentTableItem: DocTableItem = {
 export const defaultDocValue: DocValues = {
     senderId: 0,
     receiverId: 0,
-    // analiticId: 0,
+    analiticId: 0,
     senderoldId: '',
     receiverOldId: '',
     analiticOldId: '',
@@ -74,6 +74,7 @@ export const defaultMainData: Maindata = {
     },
     reference: {
         currentReference: undefined,
+        allReferences: undefined
     },
     report: {
         reportOption: {...defaultReportOptions},

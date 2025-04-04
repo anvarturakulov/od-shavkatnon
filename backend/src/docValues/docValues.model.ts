@@ -11,9 +11,9 @@ export interface DocValuesCreationAttrs {
     receiverOldId: string
     analiticId: number
     analiticOldId: string
-    firstWorkerId: number
-    secondWorkerId: number
-    thirdWorkerId: number
+    firstWorkerId: number | null
+    secondWorkerId: number | null
+    thirdWorkerId: number | null
     isWorker: boolean
     isPartner: boolean
     isFounder: boolean
@@ -74,30 +74,6 @@ export class DocValues extends Model<DocValues, DocValuesCreationAttrs> {
     @ApiProperty({example:'654654', description: 'Старый id аналитики'})
     @Column({type: DataType.STRING})
     analiticOldId: string;
-
-    @ForeignKey(() => Reference)
-    @ApiProperty({example:'12222897', description: 'Id - первого рабочего'})
-    @Column({type: DataType.INTEGER})
-    firstWorkerId: number
-
-    @BelongsTo(() => Reference) 
-    firstWorkerReference: Reference;
-
-    @ForeignKey(() => Reference)
-    @ApiProperty({example:'12222897', description: 'Id - второго рабочего'})
-    @Column({type: DataType.INTEGER})
-    secondWorkerId: number
-
-    @BelongsTo(() => Reference) 
-    secondWorkerReference: Reference;
-
-    @ForeignKey(() => Reference)
-    @ApiProperty({example:'12222897', description: 'Id - третьего рабочего'})
-    @Column({type: DataType.INTEGER})
-    thirdWorkerId: number
-
-    @BelongsTo(() => Reference) 
-    thirdWorkerIdReference: Reference;
 
     @ApiProperty({example:'true', description: 'isWorker?'})
     @Column({type: DataType.BOOLEAN, defaultValue: false})

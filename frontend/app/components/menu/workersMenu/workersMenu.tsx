@@ -67,9 +67,9 @@ export default function UserMenu({menuData, className, ...props}:UserMenuProps):
                 defValue.docValues.receiverId = definedItemIdForReceiver ? definedItemIdForReceiver : 0
                 defValue.docValues.senderId = definedItemIdForSender ? definedItemIdForSender : 0
 
-                defValue.docValues.firstWorkerId = mainData.document.definedTandirWorkers.firstWorker
-                defValue.docValues.secondWorkerId = mainData.document.definedTandirWorkers.secondWorker
-                defValue.docValues.thirdWorkerId = mainData.document.definedTandirWorkers.thirdWorker
+                // defValue.docValues.firstWorkerId = mainData.document.definedTandirWorkers.firstWorker
+                // defValue.docValues.secondWorkerId = mainData.document.definedTandirWorkers.secondWorker
+                // defValue.docValues.thirdWorkerId = mainData.document.definedTandirWorkers.thirdWorker
 
                 setMainData('currentDocument', {...defValue});
             }
@@ -96,30 +96,30 @@ export default function UserMenu({menuData, className, ...props}:UserMenuProps):
     
     return (
         <>
-            {menu.map((item, i) => (
-            <>
-            <ul className={styles.ul}>
-                {item.subMenu.length && (
-                    item.subMenu.map((elem,k)=> (
-                        <>
-                            {  role && elem.roles.includes(role) &&
-                                <li 
-                                    className={cn(styles.subItem)}
-                                    onClick={() => onClickSubItem(elem.title, elem.description, elem.type, mainData)}
-                                    key={elem.title}
-                                >
-                                    {elem.description? elem.description : elem.title}
-                                </li>
+            {
+            menu.map((item, i) => (
+                <ul className={styles.ul} key={i}>
+                    {item.subMenu.length && (
+                        item.subMenu.map((elem,k)=> {
+                            if (role && elem.roles.includes(role)) {
+                                return (
+                                    <li 
+                                        className={cn(styles.subItem)}
+                                        onClick={() => onClickSubItem(elem.title, elem.description, elem.type, mainData)}
+                                        key={elem.title}
+                                    >
+                                        {elem.description? elem.description : elem.title}
+                                    </li>
+                                )
                             }
-                        </>
-                    ))
-                )}
-            </ul>
-            </>
+                            
+                        })  
+                    )}
+                </ul>
                 
             ))}
 
-            {
+            {/* {
                 (
                     user?.role == UserRoles.HEADSECTION ||
                     user?.role == UserRoles.SELLER
@@ -129,7 +129,7 @@ export default function UserMenu({menuData, className, ...props}:UserMenuProps):
                     <Button appearance='primary' className={styles.maydaBtn} onClick={()=>showMayda(setMainData)}>Майда савдо</Button>
                     <Mayda/>
                 </>
-            }
+            } */}
 
             <div className={styles.journalBox}>
                 { <MiniJournal/> }
@@ -155,17 +155,11 @@ export default function UserMenu({menuData, className, ...props}:UserMenuProps):
                     }
                     {
                         user?.role == UserRoles.DELIVERY &&
-                        <>
-                            {/* <RefreshPanel/> */}
-                            <Section data={informData} sectionType='delivery' currentSection ={storageIdFromUser}/>
-                        </>
+                        <Section data={informData} sectionType='delivery' currentSection ={storageIdFromUser}/>
                     }
                     {
                         user?.role == UserRoles.KASSIR &&
-                        <>
-                            {/* <RefreshPanel/> */}
-                            <Section data={informData} sectionType='buxgalter' currentSection ={storageIdFromUser}/>
-                        </>
+                        <Section data={informData} sectionType='buxgalter' currentSection ={storageIdFromUser}/>
                     }
                 </>
             }

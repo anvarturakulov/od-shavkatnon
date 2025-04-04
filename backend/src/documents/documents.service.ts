@@ -62,6 +62,22 @@ export class DocumentsService {
         return documents 
     }
 
+    async getAllDocsByDate(dateStart: number, dateEnd: number) {
+        
+        const documents = await this.documentRepository.findAll(
+            {
+                where: {
+                        date: { 
+                            [Op.gte]: dateStart,
+                            [Op.lte]: dateEnd
+                        },
+                    }, 
+                include: [DocValues, DocTableItems]
+            }
+        )
+        return documents 
+    }
+
     async getDocumentById(id: number) {
         const document = await this.documentRepository.findOne({where: {id}, include: [DocValues, DocTableItems]})
         return document

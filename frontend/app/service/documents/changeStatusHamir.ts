@@ -24,9 +24,6 @@ export const changeStatusHamir = (item: HamirModel, mainData: Maindata, setMainD
       balance: 0,
       total: 0,
       comment: item.order + ' - хамир',
-      firstWorkerId: item.firstWorker,
-      secondWorkerId: item.secondWorker,
-      thirdWorkerId: item.thirdWorker,
     },
     docTableItems: [defaultDocumentTableItem]
   }

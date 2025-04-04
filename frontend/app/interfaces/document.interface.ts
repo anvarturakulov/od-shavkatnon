@@ -52,9 +52,6 @@ export interface DocValues {
     receiverOldId?: string;
     analiticId?: number,
     analiticOldId?: string;
-    firstWorkerId?: number | null,
-    secondWorkerId?: number | null,
-    thirdWorkerId?: number | null,
     isWorker?: boolean,
     isPartner?: boolean,
     isFounder?: boolean,

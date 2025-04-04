@@ -11,6 +11,8 @@ import { showMessage } from '@/app/service/common/showMessage'
 import ReCAPTCHA from 'react-google-recaptcha'
 import { setTodayToInterval } from '@/app/service/reports/setTodayToInterval'
 import { BodyForLogin, dashboardUsersList, workersUsersList } from '@/app/interfaces/user.interface'
+import useSWR from 'swr'
+import { getDataForSwr } from '@/app/service/common/getDataForSwr'
 
 const defaultBody: BodyForLogin = {
   email: '',
@@ -45,6 +47,7 @@ export default function Auth() {
   
   useEffect(() => {
     const {user} = mainData.users
+    
     if (user != undefined) {
       if (dashboardUsersList.includes(user?.role)) {
         redirect('/dashboard')

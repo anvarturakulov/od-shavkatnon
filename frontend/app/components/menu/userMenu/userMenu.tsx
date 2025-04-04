@@ -65,9 +65,9 @@ export default function UserMenu({menuData, className, ...props}:UserMenuProps):
                 defValue.docValues.receiverId = definedItemIdForReceiver ? definedItemIdForReceiver : -1
                 defValue.docValues.senderId = definedItemIdForSender ? definedItemIdForSender : -1
 
-                defValue.docValues.firstWorkerId = mainData.document.definedTandirWorkers.firstWorker
-                defValue.docValues.secondWorkerId = mainData.document.definedTandirWorkers.secondWorker
-                defValue.docValues.thirdWorkerId = mainData.document.definedTandirWorkers.thirdWorker
+                // defValue.docValues.firstWorkerId = mainData.document.definedTandirWorkers.firstWorker
+                // defValue.docValues.secondWorkerId = mainData.document.definedTandirWorkers.secondWorker
+                // defValue.docValues.thirdWorkerId = mainData.document.definedTandirWorkers.thirdWorker
 
                 setMainData('currentDocument', {...defValue});
             }
@@ -117,7 +117,7 @@ export default function UserMenu({menuData, className, ...props}:UserMenuProps):
                 
             ))}
 
-            {
+            {/* {
                 (
                     user?.role == UserRoles.HEADSECTION ||
                     user?.role == UserRoles.SELLER
@@ -127,7 +127,7 @@ export default function UserMenu({menuData, className, ...props}:UserMenuProps):
                     <Button appearance='primary' className={styles.maydaBtn} onClick={()=>showMayda(setMainData)}>Майда савдо</Button>
                     <Mayda/>
                 </>
-            }
+            } */}
 
             <div className={styles.journalBox}>
                 { <MiniJournal/> }

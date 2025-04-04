@@ -16,7 +16,7 @@ import { UserRoles } from '@/app/interfaces/user.interface';
 import { useEffect, useState } from 'react';
 
 
-export const SelectReferenceInForm = ({ label, typeReference, visibile=true , definedItemId ,currentItemId, type, className, ...props }: SelectReferenceInFormProps): JSX.Element => {
+export const SelectReferenceInForm = ({ label, typeReference, visibile=true , definedItemId ,currentItemId, type, maydaSavdo, className, ...props }: SelectReferenceInFormProps): JSX.Element => {
     const {mainData, setMainData} = useAppContext();
     const { user } = mainData.users;
     const { contentName } = mainData.window;
@@ -39,7 +39,7 @@ export const SelectReferenceInForm = ({ label, typeReference, visibile=true , de
         }
     }, [data])
 
-    const changeElements = (e: React.FormEvent<HTMLSelectElement>, setMainData: Function | undefined, mainData: Maindata, type: TypeForSelectInForm) => {
+    const changeElements = (e: React.FormEvent<HTMLSelectElement>, setMainData: Function | undefined, mainData: Maindata, type: TypeForSelectInForm, maydaSavdo: boolean | undefined) => {
         
         const { user } = mainData.users;
         const { contentName } = mainData.window;
@@ -62,20 +62,28 @@ export const SelectReferenceInForm = ({ label, typeReference, visibile=true , de
               
             if (type == 'analitic' && id) {
                 currentItem.docValues.analiticId = id
-                console.log(currentItem.docValues.analiticId)
                 if (docsDependentToBalance.includes(contentName)) currentItem.docValues.balance = 0;
                 if (docsDependentToMiddlePrice.includes(contentName)) currentItem.docValues.price = 0;
 
                 if (user?.role == UserRoles.DELIVERY) {
-                    let price = getPropertySubconto(data, id).firstPrice
+                    let price = getPropertySubconto(data, id).refValues.firstPrice
+                    console.log(price)
                     
                     if (price) {
                         currentItem.docValues.price = price
                         currentItem.docValues.total = price * currentItem.docValues.count
                     }
                 }
-            }
 
+                if (maydaSavdo) {
+                    let price = getPropertySubconto(data, id).refValues.thirdPrice
+                    console.log(price)
+                    if (price) {
+                        currentItem.docValues.price = price
+                        currentItem.docValues.total = price * currentItem.docValues.count
+                    }
+                }
+            }
             if ( setMainData ) {
                 setMainData('currentDocument', {...currentItem})
             }
@@ -102,7 +110,7 @@ export const SelectReferenceInForm = ({ label, typeReference, visibile=true , de
             <select
                 className={cn(styles.select)}
                 {...props}
-                onChange={(e) => changeElements(e, setMainData, mainData, type)}
+                onChange={(e) => changeElements(e, setMainData, mainData, type, maydaSavdo)}
                 disabled = { flagDisabled }
                 value={selected}
             >   

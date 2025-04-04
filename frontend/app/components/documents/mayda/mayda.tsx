@@ -16,6 +16,9 @@ import { getPropertySubconto } from '@/app/service/reports/getPropertySubconto';
 import { CheckBoxInTable } from '../document/inputs/checkBoxInForm/checkBoxInForm';
 import { getDefinedItemIdForSender } from '../document/docValues/doc.values.functions';
 import { defaultDocument } from '@/app/context/app.context.constants';
+import { InputInForm } from '../document/inputs/inputInForm/inputInForm';
+import { validateBody } from '@/app/service/documents/validateBody';
+import { updateCreateDocument } from '@/app/service/documents/updateCreateDocument';
 
 export const Mayda = ({className, ...props }: MaydaProps) :JSX.Element => {
     
@@ -23,11 +26,11 @@ export const Mayda = ({className, ...props }: MaydaProps) :JSX.Element => {
     const [count, setCount] = useState<number>(0)
     const {currentDocument} = mainData.document
     const { user } = mainData.users;
-    const token = user?.token;
-    const url = process.env.NEXT_PUBLIC_DOMAIN+'/api/reference/getAll/';
-    const { data, mutate } = useSWR(url, (url) => getDataForSwr(url, token));
+    // const token = user?.token;
+    // const url = process.env.NEXT_PUBLIC_DOMAIN+'/api/references/all/';
+    // const { data, mutate } = useSWR(url, (url) => getDataForSwr(url, token));
 
-    let num = getRandomID()
+    // let num = getRandomID()
     let dateDoc = new Date();
     let dateStr = dateDoc.toISOString().split('T')[0]
 
@@ -57,9 +60,6 @@ export const Mayda = ({className, ...props }: MaydaProps) :JSX.Element => {
             total: 0,
             cashFromPartner: 0,
             comment: '',
-            firstWorkerId: 0,
-            secondWorkerId: 0,
-            thirdWorkerId: 0,
         },
         docTableItems: [],
     }   
@@ -76,58 +76,69 @@ export const Mayda = ({className, ...props }: MaydaProps) :JSX.Element => {
     }
 
     const onSubmit = (newDocument: DocumentModel, count: number, mainData: Maindata, setMainData: Function | undefined) => {
-        const {currentDocument} = mainData.document
-        let price = getPropertySubconto(data, currentDocument.docValues.analiticId).thirdPrice
-        let total = price ? price * count : 0
-
-        let body:DocumentModel = {
-            ...newDocument,
-            docValues : {
-                ...newDocument.docValues,
-                analiticId: currentDocument.docValues.analiticId,
-                count,
-                total,
-            }
-        }
-
-        if (currentDocument.docValues.isWorker) {
-            if (!currentDocument.docValues.receiverId) {
-                showMessage('Ходимни танланг', 'error', setMainData)
-                return
-            } else {
-                body.docValues.receiverId = currentDocument.docValues.receiverId
-            }
-        } 
-            
-        if ( !body.docValues.analiticId ) {
-            showMessage('Махсулотни танланг', 'error', setMainData)
-            return
-        }
-
-        if ( !body.docValues.total ) {
-            showMessage('Махсулот суммаси йук', 'error', setMainData)
-            return
-        }
-        const { user } = mainData.users
-        delete body.id;
-  
-        const config = {
-            headers: { Authorization: `Bearer ${user?.token}` }
-        };
- 
-        const uriPost = process.env.NEXT_PUBLIC_DOMAIN + '/api/document/create';
+        // const {currentDocument} = mainData.document
         
-        axios.post(uriPost, body, config)
-        .then(function (request) {
-            showMessage('Янги хужжат киритилди', 'success', setMainData)
-            let defValue = {...defaultDocument} 
-            setMainData && setMainData('currentDocument', {...defValue})
-        })
-        .catch(function (error) {
-            if (setMainData) {
-            showMessage(error.message, 'error', setMainData)
-            }
-        });
+        // let body:DocumentModel = {
+        //     ...newDocument,
+        //     docValues : {
+        //         ...newDocument.docValues,
+        //         analiticId: currentDocument.docValues.analiticId,
+        //         count: currentDocument.docValues.count,
+        //         total: currentDocument.docValues.total,
+        //     }
+        // }
+
+        // if (currentDocument.docValues.isWorker) {
+        //     if (!currentDocument.docValues.receiverId) {
+        //         showMessage('Ходимни танланг', 'error', setMainData)
+        //         return
+        //     } else {
+        //         body.docValues.receiverId = currentDocument.docValues.receiverId
+        //     }
+        // } 
+            
+        // if ( !body.docValues.analiticId ) {
+        //     showMessage('Махсулотни танланг', 'error', setMainData)
+        //     return
+        // }
+
+        // if ( !body.docValues.total ) {
+        //     showMessage('Махсулот суммаси йук', 'error', setMainData)
+        //     return
+        // }
+        // const { user } = mainData.users
+        // delete body.id;
+  
+        // const config = {
+        //     headers: { Authorization: `Bearer ${user?.token}` }
+        // };
+ 
+        // const uriPost = process.env.NEXT_PUBLIC_DOMAIN + '/api/documents/create';
+        
+        // axios.post(uriPost, body, config)
+        // .then(function (request) {
+        //     showMessage('Янги хужжат киритилди', 'success', setMainData)
+        //     let defValue = {...defaultDocument} 
+        //     setMainData && setMainData('currentDocument', {...defValue})
+        // })
+        // .catch(function (error) {
+        //     if (setMainData) {
+        //     showMessage(error.message, 'error', setMainData)
+        //     }
+        // });
+        const {currentDocument} = mainData.document;
+        const {user} = mainData.users
+        // setDisabled(true)
+        let body: DocumentModel = {
+            ...currentDocument
+        }
+        if (user?.id) body.userId = user.id
+        console.log(body)
+        if (!validateBody(body)) {
+            showMessage('Хужжатни тулдиришда хатолик бор.', 'error', setMainData);
+        } else {
+            updateCreateDocument(mainData, setMainData);
+        }
         setMainData && setMainData('showMayda', false)
     } 
 
@@ -142,6 +153,7 @@ export const Mayda = ({className, ...props }: MaydaProps) :JSX.Element => {
                     visibile={true}
                     currentItemId={currentDocument?.docValues.analiticId}
                     type='analitic'
+                    maydaSavdo={true}
                 />
                 <div className={styles.workersBox}>
                     <CheckBoxInTable label = 'Ходим' id={'worker'}/>
@@ -153,7 +165,13 @@ export const Mayda = ({className, ...props }: MaydaProps) :JSX.Element => {
                         type='receiver'
                     />
                 </div>
-                <input type='number' className={styles.input} onChange={(e) => setValue(e)}/>
+                <InputInForm 
+                    nameControl='count' 
+                    type='number' 
+                    label='Сон' 
+                    visible={true} 
+                    />
+                {/* <input type='number' className={styles.input} onChange={(e) => setValue(e)}/> */}
                 <div className={styles.boxBtn} >
                     <Button 
                         className={styles.button} 

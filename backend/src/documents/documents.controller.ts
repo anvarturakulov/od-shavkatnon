@@ -7,7 +7,6 @@ import { RolesGuard } from 'src/auth/roles.guard';
 import { DocSTATUS, DocumentType } from 'src/interfaces/document.interface';
 import { UpdateCreateDocumentDto } from './dto/updateCreateDocument.dto';
 import { Request } from 'express';
-import { docsArray } from 'src/dataUpload/docsOut';
 
 @Controller('documents')
 export class DocumentsController {
@@ -55,8 +54,20 @@ export class DocumentsController {
         console.timeEnd(`Processing${documentType}-${dateStart}-${dateEnd}`);
         return documents
     }
-    
-    
+
+    @ApiOperation({summary: 'Получение документов по типу и по дате'})
+    @ApiResponse({status: 200, type: [Document]})
+    @Roles('ALL')
+    @UseGuards(RolesGuard)
+    @Get('byDate')
+    getAllDocsByDate(@Req() request: Request) {
+        let dateStart = request.query?.dateStart ? +request.query?.dateStart : 0
+        let dateEnd = request.query?.dateEnd ? +request.query?.dateEnd : 0
+        
+        let documents = this.documentsService.getAllDocsByDate(dateStart, dateEnd)
+        
+        return documents
+    }
 
     @ApiOperation({summary: 'Получение документа по id'})
     @ApiResponse({status: 200, type: Document})

@@ -33,9 +33,10 @@ export default function MiniJournal({ className, ...props}:MiniJournalProps):JSX
     }
 
     const token = user?.token;
-    let url = process.env.NEXT_PUBLIC_DOMAIN+'/api/document/getAll/';
-    // const url = process.env.NEXT_PUBLIC_DOMAIN+'/api/document/byTypeForDate'+'?documentType='+contentName+'&dateStart='+dateStartForUrl+'&dateEnd='+dateEndForUrl;
-    const urlReferences = process.env.NEXT_PUBLIC_DOMAIN+'/api/reference/getAll/';
+    const userId = user?.id
+    // let url = process.env.NEXT_PUBLIC_DOMAIN+'/api/documents/all/';
+    const url = process.env.NEXT_PUBLIC_DOMAIN+'/api/documents/byDate'+'?userId='+userId+'&dateStart='+dateStartForUrl+'&dateEnd='+dateEndForUrl;
+    const urlReferences = process.env.NEXT_PUBLIC_DOMAIN+'/api/references/all/';
 
     const { data : documents, mutate } = useSWR(url, (url) => getDataForSwr(url, token));
     const { data : references, mutate: mutateReferences } = useSWR(urlReferences, (urlReferences) => getDataForSwr(urlReferences, token));
@@ -46,13 +47,6 @@ export default function MiniJournal({ className, ...props}:MiniJournalProps):JSX
         setMainData && setMainData('updateDataForDocumentJournal', false);
     }, [showDocumentWindow, updateDataForDocumentJournal])
 
-    // let currentVal: string, today: number
-
-    // currentVal = (new Date()).toISOString().split('T')[0]
-    // today = Date.parse(currentVal)
-    // let startDate = today
-    // let endDate = today +86399999
-
     return (
         <>
             <div className={styles.title}>Хужжатлар руйхати</div>
@@ -62,44 +56,41 @@ export default function MiniJournal({ className, ...props}:MiniJournalProps):JSX
                         <tbody className={styles.tbody}>
                             {documents && documents.length>0 && 
                             documents
-                            .filter((item:DocumentModel, key: number) => (item.date >= dateStartForUrl && item.date <= dateEndForUrl))
                             .filter((item:DocumentModel, key: number) => {
                                 return (
                                     item.userId == user?.id || 
-                                    item.docValues.receiverId == user?.sectionId 
+                                    item.docValues?.receiverId == user?.sectionId 
                                 )
                             })
                             .sort((a:DocumentModel, b:DocumentModel) => a.date - b.date)
                             .map((item:DocumentModel, key: number) => (
-                                <>
-                                    <tr 
-                                        key={key} 
-                                        className={cn(className, {
-                                                [styles.deleted]: item.docStatus == DocSTATUS.DELETED,
-                                                [styles.trRow]: 1,
-                                                
-                                            })}>
-                                        <td className={cn(styles.documentType, {
-                                            [styles.proveden]: item.docStatus == DocSTATUS.PROVEDEN
+                                <tr 
+                                    key={key} 
+                                    className={cn(className, {
+                                            [styles.deleted]: item.docStatus == DocSTATUS.DELETED,
+                                            [styles.trRow]: 1,
+                                            
                                         })}>
-                                                {getDescriptionDocument(item.documentType)}
-                                        </td>
-                                        <td>{`${getNameReference(references,item.docValues.receiverId)}`}</td>
-                                        <td>{getNameReference(references,item.docValues.senderId)}</td>
-                                        <td className={styles.rowDate}>{secondsToDateString(item.date)}</td>
-                                        <td className={cn(styles.rowSumma, styles.tdSumma)}>{item.docValues.total ? item.docValues.total:item.docValues.comment}</td>
-                                        <td>{`${getNameReference(references,item.docValues.analiticId)? getNameReference(references,item.docValues.analiticId): ''} ${item.docValues.count ? `(${item.docValues.count})`: ''}`}</td>
-                                        {
-                                            item.docStatus != DocSTATUS.PROVEDEN &&
-                                            item.docValues.receiverId == user?.sectionId &&
-                                            item.documentType != DocumentType.LeaveCash &&
-                                            <td><button 
-                                                className={cn(styles.receiveBtn)}
-                                                onClick={()=>setProvodkaByReciever(item.id, item.docStatus == DocSTATUS.PROVEDEN , setMainData, mainData)}
-                                                >Кабул килиш</button></td>
-                                        }
-                                    </tr>
-                                </>    
+                                    <td className={cn(styles.documentType, {
+                                        [styles.proveden]: item.docStatus == DocSTATUS.PROVEDEN
+                                    })}>
+                                            {getDescriptionDocument(item.documentType)}
+                                    </td>
+                                    <td>{`${getNameReference(references,item.docValues?.receiverId)}`}</td>
+                                    <td>{getNameReference(references,item.docValues?.senderId)}</td>
+                                    <td className={styles.rowDate}>{secondsToDateString(item.date)}</td>
+                                    <td className={cn(styles.rowSumma, styles.tdSumma)}>{item.docValues?.total ? item.docValues?.total:item.docValues?.comment}</td>
+                                    <td>{`${getNameReference(references,item.docValues?.analiticId)? getNameReference(references,item.docValues?.analiticId): ''} ${item.docValues?.count ? `(${item.docValues?.count})`: ''}`}</td>
+                                    {
+                                        item.docStatus != DocSTATUS.PROVEDEN &&
+                                        item.docValues?.receiverId == user?.sectionId &&
+                                        item.documentType != DocumentType.LeaveCash &&
+                                        <td><button 
+                                            className={cn(styles.receiveBtn)}
+                                            onClick={()=>setProvodkaByReciever(item.id, item.docStatus == DocSTATUS.PROVEDEN , setMainData, mainData)}
+                                            >Кабул килиш</button></td>
+                                    }
+                                </tr>
                             ))}
                         </tbody>
                     </table>

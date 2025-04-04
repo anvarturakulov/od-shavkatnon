@@ -88,32 +88,7 @@ export const DocValues = ({ className, ...props }: DocValuesProps): JSX.Element 
                     type='analitic'
                 />
 
-                {
-                    contentName == DocumentType.ComeProduct &&
-                    <>
-                        <SelectReferenceInForm 
-                            label={'Ёпувчи исми'} 
-                            typeReference= {TypeReference.WORKERS}
-                            visibile={true}
-                            currentItemId={currentDocument?.docValues.firstWorkerId}
-                            type='firstWorker'
-                        />
-                        <SelectReferenceInForm 
-                            label={'Биринчи зувалачи исми'} 
-                            typeReference= {TypeReference.WORKERS}
-                            visibile={options.analiticIsVisible}
-                            currentItemId={currentDocument?.docValues.secondWorkerId}
-                            type='secondWorker'
-                        />
-                        <SelectReferenceInForm 
-                            label={'Иккинчи зувалачи исми'} 
-                            typeReference= {TypeReference.WORKERS}
-                            visibile={options.analiticIsVisible}
-                            currentItemId={currentDocument?.docValues.thirdWorkerId}
-                            type='thirdWorker'
-                        />
-                    </>
-                }
+                
                 {
                     !options.tableIsVisible &&
                     options.balansIsVisible &&

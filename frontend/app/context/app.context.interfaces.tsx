@@ -11,6 +11,7 @@ export interface Maindata {
   },
   reference: {
     currentReference: ReferenceModel | undefined,
+    allReferences: Array<ReferenceModel> | undefined
   },
   report: {
     reportOption: ReportOptions,
