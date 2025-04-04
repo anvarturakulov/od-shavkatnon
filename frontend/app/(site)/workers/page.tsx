@@ -21,9 +21,11 @@ export default function Users() {
   const { user } = mainData.users;
   const [tandirworkers, setTandirWorkers] = useState<boolean>(false);
 
-  if (user == undefined) {
-    redirect('/');
-  }
+  useEffect(() => {
+    if (user == undefined) {
+      redirect('/');
+    }
+  }, [user]);
 
   return (
     <>
