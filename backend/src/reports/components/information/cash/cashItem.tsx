@@ -28,7 +28,8 @@ export const cashItem = async (
   const [
     POSUM,
     KOSUM,
-    TRADEINCOME,
+    TRADEINCOME40,
+    TRADEINCOME60,
     MOVEINCOME,
     MOVEOUT,
     chargesPart1,
@@ -39,13 +40,13 @@ export const cashItem = async (
 
   const CHARGES = chargesPart1 + chargesPart2;
 
-  if (!(POSUM) && !(TRADEINCOME + MOVEINCOME) && !(CHARGES + FORPARTNERS + MOVEOUT + FORFOUNDER) && !(KOSUM)) return {};
+  if (!(POSUM) && !(TRADEINCOME40 + MOVEINCOME) && !(CHARGES + FORPARTNERS + MOVEOUT + FORFOUNDER) && !(KOSUM)) return {};
   return {
     section: title,
     startBalans: POSUM,
-    sale: TRADEINCOME,
+    sale: TRADEINCOME40+TRADEINCOME60,
     moveIncome: MOVEINCOME,
-    allIncome: TRADEINCOME + MOVEINCOME,
+    allIncome: TRADEINCOME40 + MOVEINCOME + TRADEINCOME60,
     charges: CHARGES,
     forPartner: FORPARTNERS,
     moveOut: MOVEOUT,
