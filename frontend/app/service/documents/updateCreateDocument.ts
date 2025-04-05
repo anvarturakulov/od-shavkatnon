@@ -2,7 +2,7 @@ import axios from 'axios';
 import { showMessage } from '../common/showMessage';
 import { Maindata } from '@/app/context/app.context.interfaces';
 import { DocSTATUS, DocumentModel, DocumentType } from '@/app/interfaces/document.interface';
-import { defaultDocument } from '@/app/context/app.context.constants';
+import { defaultDocument, defaultDocumentTableItem, defaultDocValue } from '@/app/context/app.context.constants';
 import { workersUsersList } from '@/app/interfaces/user.interface';
 
 export const updateCreateDocument = (mainData: Maindata, setMainData: Function | undefined) => {
@@ -17,7 +17,7 @@ export const updateCreateDocument = (mainData: Maindata, setMainData: Function |
   let docsForNoProveden: Array<string> = [DocumentType.MoveCash, DocumentType.MoveProd, DocumentType.LeaveCash]
   delete body.id;
   if (body.docValues.analiticId == 0) {
-    const newDocValues = {...body.docValues}
+    let newDocValues = {...body.docValues}
     delete newDocValues.analiticId
     body = {
       ...body,
@@ -42,7 +42,14 @@ export const updateCreateDocument = (mainData: Maindata, setMainData: Function |
       setMainData('clearControlElements', true);
       setMainData('showDocumentWindow', false);
       setMainData('isNewDocument', false);
-      setMainData('currentDocument', { ...defaultDocument });
+      const defValue:DocumentModel = {
+        ...defaultDocument,
+        docValues: {...defaultDocValue},
+        docTableItems: [defaultDocumentTableItem]
+      }
+      setMainData('currentDocument', { ...defValue });
+      setMainData('docValues', { ...defaultDocValue });
+
       if (user && workersUsersList.includes(user?.role)) {
         setMainData('mainPage', true);
       }

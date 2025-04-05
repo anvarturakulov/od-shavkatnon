@@ -33,7 +33,8 @@ export const SelectReferenceInForm = ({ label, typeReference, visibile=true , de
                 (
                     elem?.id == definedItemId || 
                     elem?.id == currentItemId 
-                ))]?.name
+                ))]?.name || 'NotSelected'
+                console.log('initialValue', initialValue, type)
             setSelected(initialValue)
         }
     }, [data, currentItemId, definedItemId])
@@ -61,13 +62,12 @@ export const SelectReferenceInForm = ({ label, typeReference, visibile=true , de
               
             if (type == 'analitic' && id) {
                 currentItem.docValues.analiticId = id
-                console.log(currentItem.docValues.analiticId)
+
                 if (docsDependentToBalance.includes(contentName)) currentItem.docValues.balance = 0;
                 if (docsDependentToMiddlePrice.includes(contentName)) currentItem.docValues.price = 0;
 
                 if (user?.role == UserRoles.DELIVERY) {
                     let price = getPropertySubconto(data, id).refValues.firstPrice
-                    console.log(price)
                     
                     if (price) {
                         currentItem.docValues.price = price
@@ -84,7 +84,6 @@ export const SelectReferenceInForm = ({ label, typeReference, visibile=true , de
                     }
                 }
             }
-            console.log(currentItem.docValues.analiticId)
             if ( setMainData ) {
                 setMainData('currentDocument', {...currentItem})
             }

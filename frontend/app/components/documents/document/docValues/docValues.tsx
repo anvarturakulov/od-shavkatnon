@@ -14,6 +14,7 @@ import { DocTable } from '../docTable/docTable';
 import AddIco from './ico/add.svg'
 import { getPriceAndBalance } from '@/app/service/documents/getPriceBalance';
 import { UserRoles } from '@/app/interfaces/user.interface';
+import { useEffect } from 'react';
 
 export const DocValues = ({ className, ...props }: DocValuesProps): JSX.Element => {
     
@@ -38,7 +39,9 @@ export const DocValues = ({ className, ...props }: DocValuesProps): JSX.Element 
     
     let definedItemIdForReceiver = getDefinedItemIdForReceiver(role, storageIdFromUser, contentName)
     let definedItemIdForSender = getDefinedItemIdForSender(role, storageIdFromUser, contentName)
+    const definedItemIdForAnalitic = 0
     
+
     return (
         <>
             <div className={styles.partnersBox}>
@@ -84,9 +87,9 @@ export const DocValues = ({ className, ...props }: DocValuesProps): JSX.Element 
                     label={getLabelForAnalitic(currentDocument, options)} 
                     typeReference= {getTypeReferenceForAnalitic(currentDocument, options)}
                     visibile={options.analiticIsVisible}
-                    currentItemId={currentDocument.docValues.analiticId}
+                    currentItemId={currentDocument?.docValues.analiticId}
                     type='analitic'
-                    definedItemId= {0}
+                    definedItemId= {definedItemIdForAnalitic}
                 />
                 
                 {

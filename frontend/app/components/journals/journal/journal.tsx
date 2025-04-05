@@ -231,7 +231,20 @@ export default function Journal({ className, ...props}:JournalProps):JSX.Element
                             .filter((item:DocumentModel) => {
                                 const {comment} = filter
                                 if (comment != 'Изох') {
-                                    if (item.docValues?.comment && (item.docValues?.comment+getNameReference(references,item.docValues?.analiticId)).toLowerCase().includes(comment.toLocaleLowerCase())) return true
+                                    if (item.docValues?.comment) {
+                                        if (
+                                            (item.docValues?.comment+getNameReference(references,item.docValues?.analiticId))
+                                            .toLowerCase()
+                                            .includes(comment.toLocaleLowerCase())
+                                        ) return true
+
+                                        if (
+                                            (getNameReference(references,item.docValues?.analiticId))
+                                            .toLowerCase()
+                                            .includes(comment.toLocaleLowerCase())
+                                        ) return true
+                                    }
+                                    
                                 } else return true
                             })
                             .filter((item:DocumentModel) => {

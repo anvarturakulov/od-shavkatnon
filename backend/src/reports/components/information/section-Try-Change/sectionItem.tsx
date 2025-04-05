@@ -70,7 +70,8 @@ export const sectionItem = async (
       
     ] = await Promise.all(promises);
     
-    const total = POKOL + KOKOL + OBKOLD2828 + OBKOLD2820 + productionImportCol + OBKOLK2028 + OBKOLK4028 
+    // const total: boolean = (!POKOL && !KOKOL && !OBKOLD2828 && !OBKOLD2820 && !productionImportCol && !OBKOLK2028 && !OBKOLK4028) 
+
 
     let element = {
       name: item.name,
@@ -84,7 +85,7 @@ export const sectionItem = async (
       endBalansCountNon: KOKOL,
     }  
     
-    if (Object.keys(element).length && total) {
+    if (Object.keys(element).length) {
         results.push(element)
     }
   }

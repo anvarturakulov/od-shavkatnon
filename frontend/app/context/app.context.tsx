@@ -22,6 +22,7 @@ const keyWithParent = (key: string, obj: Maindata): string => {
     // const keys = ['document', 'journal',]
     
     if (key in obj.document) return `document.${key}`
+    if (key in obj.document.currentDocument) return `document.currentDocument.${key}`
     if (key in obj.journal) return `journal.${key}`
     if (key in obj.reference) return `reference.${key}`
     if (key in obj.report) return `report.${key}`
