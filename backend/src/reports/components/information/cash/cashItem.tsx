@@ -17,6 +17,7 @@ export const cashItem = async (
     query(Schet.S50, TypeQuery.POSUM, startDate, endDate, currentSectionId, null, null, stocksService, oborotsService), // POSUM
     query(Schet.S50, TypeQuery.KOSUM, startDate, endDate, currentSectionId, null, null, stocksService, oborotsService), // KOSUM
     queryKor(Schet.S50, Schet.S40, TypeQuery.ODS, startDate, endDate, currentSectionId, null, null, oborotsService), // TRADEINCOME
+    queryKor(Schet.S50, Schet.S60, TypeQuery.ODS, startDate, endDate, currentSectionId, null, null, oborotsService), // TRADEINCOME
     queryKor(Schet.S50, Schet.S50, TypeQuery.ODS, startDate, endDate, currentSectionId, null, null, oborotsService), // MOVEINCOME
     queryKor(Schet.S50, Schet.S50, TypeQuery.OKS, startDate, endDate, currentSectionId, null, null, oborotsService), // MOVEOUT
     queryKor(Schet.S20, Schet.S50, TypeQuery.OKS, startDate, endDate, currentSectionId, null, null, oborotsService), // CHARGES часть 1
