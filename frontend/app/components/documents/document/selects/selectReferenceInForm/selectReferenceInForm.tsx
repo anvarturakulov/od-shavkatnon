@@ -32,12 +32,11 @@ export const SelectReferenceInForm = ({ label, typeReference, visibile=true , de
             const initialValue = data[data.findIndex((elem: ReferenceModel) => 
                 (
                     elem?.id == definedItemId || 
-                    elem?.id == currentItemId ||
-                    definedTandirWorkers(elem?.id, mainData, type)
+                    elem?.id == currentItemId 
                 ))]?.name
             setSelected(initialValue)
         }
-    }, [data])
+    }, [data, currentItemId, definedItemId])
 
     const changeElements = (e: React.FormEvent<HTMLSelectElement>, setMainData: Function | undefined, mainData: Maindata, type: TypeForSelectInForm, maydaSavdo: boolean | undefined) => {
         
@@ -62,6 +61,7 @@ export const SelectReferenceInForm = ({ label, typeReference, visibile=true , de
               
             if (type == 'analitic' && id) {
                 currentItem.docValues.analiticId = id
+                console.log(currentItem.docValues.analiticId)
                 if (docsDependentToBalance.includes(contentName)) currentItem.docValues.balance = 0;
                 if (docsDependentToMiddlePrice.includes(contentName)) currentItem.docValues.price = 0;
 
@@ -84,6 +84,7 @@ export const SelectReferenceInForm = ({ label, typeReference, visibile=true , de
                     }
                 }
             }
+            console.log(currentItem.docValues.analiticId)
             if ( setMainData ) {
                 setMainData('currentDocument', {...currentItem})
             }
@@ -312,10 +313,8 @@ export const SelectReferenceInForm = ({ label, typeReference, visibile=true , de
                             return !item.refValues?.longCharge && !item.refValues?.shavkatCharge
                         }
                         if (
-                            currentDocument.docValues.senderoldId == '6645f381d8cc46842f33e9e9' || 
-                            currentDocument.docValues.senderoldId == '6645f4e1d8cc46842f33ea2b' ||
-                            currentDocument.docValues.senderoldId == '664455bbadb82fe6d06df149'
-
+                            currentDocument.docValues.senderId == 19948 || 
+                            currentDocument.docValues.senderId == 19949 
                         )
                             return item.refValues?.shavkatCharge
                         else return !item.refValues?.shavkatCharge

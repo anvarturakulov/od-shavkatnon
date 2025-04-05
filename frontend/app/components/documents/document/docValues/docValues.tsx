@@ -84,10 +84,10 @@ export const DocValues = ({ className, ...props }: DocValuesProps): JSX.Element 
                     label={getLabelForAnalitic(currentDocument, options)} 
                     typeReference= {getTypeReferenceForAnalitic(currentDocument, options)}
                     visibile={options.analiticIsVisible}
-                    currentItemId={currentDocument?.docValues.analiticId}
+                    currentItemId={currentDocument.docValues.analiticId}
                     type='analitic'
+                    definedItemId= {0}
                 />
-
                 
                 {
                     !options.tableIsVisible &&
