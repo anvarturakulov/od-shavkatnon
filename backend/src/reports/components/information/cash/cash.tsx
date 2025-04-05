@@ -20,7 +20,10 @@ export const cash = async (
                            .filter((item: Reference) => {
                                 if ( item.refValues.typeSection == TypeSECTION.ACCOUNTANT || 
                                     item.refValues.typeSection == TypeSECTION.FILIAL ||
-                                    item.refValues.typeSection == TypeSECTION.DELIVERY ) return true
+                                    item.refValues.typeSection == TypeSECTION.DELIVERY ||
+                                    item.refValues.typeSection == TypeSECTION.STORAGE ||
+                                    item.refValues.typeSection == TypeSECTION.DIRECTOR
+                                ) return true
                                 return false
                            })
     }
