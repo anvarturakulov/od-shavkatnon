@@ -105,7 +105,7 @@ export class DocumentsController {
         if (id == 116675) {
             
             // this.documentsService.createMany(docsArray)
-            this.documentsService.pereProvodka()
+            // this.documentsService.pereProvodka()
         }
         return this.documentsService.markToDeleteById(id)
     }
