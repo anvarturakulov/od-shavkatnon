@@ -230,21 +230,13 @@ export default function Journal({ className, ...props}:JournalProps):JSX.Element
                             
                             .filter((item:DocumentModel) => {
                                 const {comment} = filter
-                                if (comment != 'Изох') {
-                                    if (item.docValues?.comment) {
-                                        if (
-                                            (item.docValues?.comment+getNameReference(references,item.docValues?.analiticId))
-                                            .toLowerCase()
-                                            .includes(comment.toLocaleLowerCase())
-                                        ) return true
-
-                                        if (
-                                            (getNameReference(references,item.docValues?.analiticId))
-                                            .toLowerCase()
-                                            .includes(comment.toLocaleLowerCase())
-                                        ) return true
-                                    }
-                                    
+                                const analiticName = getNameReference(references,item.docValues?.analiticId)
+                                const itemComment = item.docValues?.comment
+                                const bigString = `${itemComment}${analiticName}`.toLocaleLowerCase()
+                                const commentInLowerCase = comment.toLocaleLowerCase()
+                                
+                                if (comment != 'Изох' && analiticName) {
+                                    if (bigString.includes(commentInLowerCase)) return true
                                 } else return true
                             })
                             .filter((item:DocumentModel) => {
