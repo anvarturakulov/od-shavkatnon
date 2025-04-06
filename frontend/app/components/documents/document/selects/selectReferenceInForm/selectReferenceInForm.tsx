@@ -217,7 +217,8 @@ export const SelectReferenceInForm = ({ label, typeReference, visibile=true , de
                                 item.refValues?.typeSection == TypeSECTION.STORAGE ||
                                 item.refValues?.typeSection == TypeSECTION.DELIVERY ||
                                 item.refValues?.typeSection == TypeSECTION.ACCOUNTANT  ||
-                                item.refValues?.typeSection == TypeSECTION.FOUNDER
+                                item.refValues?.typeSection == TypeSECTION.FOUNDER ||
+                                item.refValues?.typeSection == TypeSECTION.DIRECTOR
                             ) 
                         } else if (user?.role == UserRoles.GLBUX) {
                             return (
