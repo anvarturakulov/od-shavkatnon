@@ -172,12 +172,14 @@ export const SelectReferenceInForm = ({ label, typeReference, visibile=true , de
                                 item.refValues?.typeSection == TypeSECTION.FILIAL || 
                                 item.refValues?.typeSection == TypeSECTION.FOUNDER ||
                                 item.refValues?.typeSection == TypeSECTION.COMMON || 
-                                item.refValues?.typeSection == TypeSECTION.DIRECTOR
+                                item.refValues?.typeSection == TypeSECTION.DIRECTOR ||
+                                item.refValues?.typeSection == TypeSECTION.STORAGE
                             ) 
                         } else if (user?.role == UserRoles.GLBUX || user?.role == UserRoles.ZAMGLBUX) {
                             return (
                                 item.refValues?.typeSection == TypeSECTION.FILIAL ||
-                                item.refValues?.typeSection == TypeSECTION.COMMON 
+                                item.refValues?.typeSection == TypeSECTION.COMMON ||
+                                item.refValues?.typeSection == TypeSECTION.STORAGE 
                             )
                         } else {
                             return (
@@ -201,7 +203,8 @@ export const SelectReferenceInForm = ({ label, typeReference, visibile=true , de
                             item.refValues?.typeSection == TypeSECTION.FILIAL ||
                             item.refValues?.typeSection == TypeSECTION.ACCOUNTANT || 
                             item.refValues?.typeSection == TypeSECTION.FOUNDER ||
-                            item.refValues?.typeSection == TypeSECTION.DIRECTOR
+                            item.refValues?.typeSection == TypeSECTION.DIRECTOR ||
+                            item.refValues?.typeSection == TypeSECTION.STORAGE
                         ) 
                         } 
                     }

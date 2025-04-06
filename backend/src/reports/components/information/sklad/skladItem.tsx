@@ -23,19 +23,19 @@ export const skladItem = async (
 
     for (const item of filteredData) { 
       const promises = [
-        query(Schet.S10, TypeQuery.POKOL, startDate, endDate, currentSectionId, item.id, null, stocksService, oborotsService),
-        query(Schet.S21, TypeQuery.POKOL, startDate, endDate, currentSectionId, item.id, null, stocksService, oborotsService),
-        query(Schet.S10, TypeQuery.POSUM, startDate, endDate, currentSectionId, item.id, null, stocksService, oborotsService),
-        query(Schet.S21, TypeQuery.POSUM, startDate, endDate, currentSectionId, item.id, null, stocksService, oborotsService),
+        query(Schet.S10, TypeQuery.KOKOL, startDate, endDate, currentSectionId, item.id, null, stocksService, oborotsService),
+        query(Schet.S21, TypeQuery.KOKOL, startDate, endDate, currentSectionId, item.id, null, stocksService, oborotsService),
+        query(Schet.S10, TypeQuery.KOSUM, startDate, endDate, currentSectionId, item.id, null, stocksService, oborotsService),
+        query(Schet.S21, TypeQuery.KOSUM, startDate, endDate, currentSectionId, item.id, null, stocksService, oborotsService),
       ];
 
-      const [pokolS10, pokolS21, posumS10, posumS21] = await Promise.all(promises);
+      const [kokolS10, kokolS21, kosumS10, kosumS21] = await Promise.all(promises);
 
-      const POKOL = pokolS10 + pokolS21;
-      const POSUM = posumS10 + posumS21;
+      const KOKOL = kokolS10 + kokolS21;
+      const KOSUM = kosumS10 + kosumS21;
       
-      const value = POKOL;
-      const valueSum = POSUM;
+      const value = KOKOL;
+      const valueSum = KOSUM;
       const bag = item.refValues.un ? value / 50 : 0;
       let price = value ? valueSum / value : 0;
       price = item.refValues.un ? price * 50 : price;
