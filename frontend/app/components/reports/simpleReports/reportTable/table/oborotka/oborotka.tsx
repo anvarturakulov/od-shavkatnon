@@ -5,7 +5,6 @@ import styles from './oborotka.module.css';
 import { useEffect, useState } from 'react';
 import { useAppContext } from '@/app/context/app.context';
 
-
 export const Oborotka = ({className, ...props }: OborotkaProps) :JSX.Element => {
     const { setMainData, mainData } = useAppContext()
     const { oborotka, reportOption } = mainData.report

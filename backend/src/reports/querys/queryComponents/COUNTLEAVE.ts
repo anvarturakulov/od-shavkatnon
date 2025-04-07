@@ -13,7 +13,7 @@ export const COUNTLEAVE = async (
 ) => {
 
     return (
-        await oborotsService.getOborotByDate('COUNT', 0, Number(endDate)-1, 
+        await oborotsService.getOborotByDate('COUNT', 0, Number(endDate), 
                 null, null, null, null,
                 schet, firstSubcontoId, secondSubcontoId, thirdSubcontoId) 
         ).result

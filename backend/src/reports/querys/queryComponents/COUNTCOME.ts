@@ -13,7 +13,7 @@ export const COUNTCOME = async (
 ) => {
 
     return (
-        await oborotsService.getOborotByDate('COUNT', 0, Number(endDate)-1, 
+        await oborotsService.getOborotByDate('COUNT', 0, Number(endDate), 
                 schet, firstSubcontoId, secondSubcontoId, thirdSubcontoId, 
                 null, null, null, null)
         ).result
