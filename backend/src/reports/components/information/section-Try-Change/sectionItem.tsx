@@ -36,7 +36,7 @@ export const sectionItem = async (
   }
 
   let maydaSavdoCount = maydaSavdoCountAll - maydaSavdoCountBux;
-  let schetCash = sectionType == 'FOUNDER' ? Schet.S66 : Schet.S50;
+  let schetCash = sectionType == 'FOUNDER' ? Schet.S68 : Schet.S50;
 
   filteredData = data.filter((item: Reference) => {
     return (
