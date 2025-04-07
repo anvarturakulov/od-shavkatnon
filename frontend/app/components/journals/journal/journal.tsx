@@ -205,7 +205,15 @@ export default function Journal({ className, ...props}:JournalProps):JSX.Element
                         <tbody className={styles.tbody}>
                             {documents && documents.length>0 && 
                             documents
-                            .sort((a:DocumentModel, b:DocumentModel) => a.date - b.date)
+                            .sort((a:DocumentModel, b:DocumentModel) => {
+                                const dateComparison = a.date - b.date;
+
+                                if (dateComparison === 0 && a.id && b.id) {
+                                    return a.id - b.id;
+                                }
+                                
+                                return dateComparison;
+                            })
                             .filter((item:DocumentModel) => {
                                 if (journalChechboxs.charges ) {
                                     if (!item.docValues?.isWorker && !item.docValues?.isPartner) return true
