@@ -22,7 +22,7 @@ export const SelectOborot = ({ label, visible , className, ...props }: SelectObo
         { title: 'Ходимлар иш хакиси', schet: Schet.S67 },
     ]
     
-    if (isAdmins(user) || isGuest(user)) oborotTypeData.push({ title: 'Таъсисчилар', schet: Schet.S66 })
+    if (isAdmins(user)) oborotTypeData.push({ title: 'Таъсисчилар', schet: Schet.S66 })
     if (isAdmins(user)) oborotTypeData.push({ title: 'Хамёнлар', schet: Schet.S68 })
 
     const changeElements = (e: React.FormEvent<HTMLSelectElement>, setMainData: Function | undefined, mainData: Maindata) => {

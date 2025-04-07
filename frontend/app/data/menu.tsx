@@ -123,7 +123,7 @@ export const MenuData:Array<MenuItem> = [
                 title: DocumentType.TakeProfit, description:'Фойда таксимоти',
                 type: 'document', active: false,
                 roles: 
-                [UserRoles.HEADCOMPANY, UserRoles.ADMIN, UserRoles.GUEST]
+                [UserRoles.HEADCOMPANY, UserRoles.ADMIN]
             },
         ]
     },
@@ -135,31 +135,31 @@ export const MenuData:Array<MenuItem> = [
                 title: TypeReference.TMZ, description:'Товар моддий бойликлар', 
                 type: 'reference', active:false,
                 roles: 
-                [UserRoles.HEADCOMPANY, UserRoles.ADMIN, UserRoles.GUEST, UserRoles.GLBUX]
+                [UserRoles.HEADCOMPANY, UserRoles.ADMIN, UserRoles.GLBUX]
             },
             { 
                 title: TypeReference.STORAGES, description:'Цех ва омборхоналар',
                 type: 'reference', active: false,
                 roles: 
-                [UserRoles.HEADCOMPANY, UserRoles.ADMIN, UserRoles.GUEST] 
+                [UserRoles.HEADCOMPANY, UserRoles.ADMIN] 
             },
             { 
                 title: TypeReference.PARTNERS, description:'Хамкорлар', 
                 type: 'reference', active: false,
                 roles: 
-                [UserRoles.HEADCOMPANY, UserRoles.ADMIN, UserRoles.GUEST, UserRoles.GLBUX]
+                [UserRoles.HEADCOMPANY, UserRoles.ADMIN, UserRoles.GLBUX]
             },
             { 
                 title: TypeReference.WORKERS, description:'Ходимлар',
                 type: 'reference', active: false,
                 roles: 
-                [UserRoles.HEADCOMPANY, UserRoles.ADMIN, UserRoles.GUEST, UserRoles.GLBUX, UserRoles.ZP]
+                [UserRoles.HEADCOMPANY, UserRoles.ADMIN, UserRoles.GLBUX, UserRoles.ZP]
             },
             { 
                 title: TypeReference.CHARGES, description:'Харажатлар',
                 type: 'reference', active: false,
                 roles: 
-                [UserRoles.HEADCOMPANY, UserRoles.ADMIN, UserRoles.GUEST]
+                [UserRoles.HEADCOMPANY, UserRoles.ADMIN]
             },
 
         ]

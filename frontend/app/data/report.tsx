@@ -6,19 +6,19 @@ export const DashboardReportData:Array<DashboardReportItem> = [
         title: 'Умум. пул окими',
         code: 'Financial',
         id: 1,
-        roles: [UserRoles.HEADCOMPANY, UserRoles.ADMIN, UserRoles.GUEST]
+        roles: [UserRoles.HEADCOMPANY, UserRoles.ADMIN]
     },
     {
         id: 2,
         title: 'Дебитор кредитор',
         code: 'DebitorKreditor',
-        roles: [UserRoles.HEADCOMPANY, UserRoles.ADMIN, UserRoles.GUEST]
+        roles: [UserRoles.HEADCOMPANY, UserRoles.ADMIN]
     },
     {
         id: 3,
         title: 'Фойда хисоби',
         code: 'Foyda',
-        roles: [UserRoles.HEADCOMPANY, UserRoles.ADMIN, UserRoles.GUEST]
+        roles: [UserRoles.HEADCOMPANY, UserRoles.ADMIN]
     },
     {
         id: 4,
@@ -78,7 +78,7 @@ export const DashboardReportData:Array<DashboardReportItem> = [
         id: 13,
         title: 'Таъсисчилар',
         code: 'Section-founder',
-        roles: [UserRoles.HEADCOMPANY, UserRoles.ADMIN, UserRoles.GUEST]
+        roles: [UserRoles.HEADCOMPANY, UserRoles.ADMIN]
     },
 
     
