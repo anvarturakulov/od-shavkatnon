@@ -7,11 +7,37 @@ import { RolesGuard } from 'src/auth/roles.guard';
 import { DocSTATUS, DocumentType } from 'src/interfaces/document.interface';
 import { UpdateCreateDocumentDto } from './dto/updateCreateDocument.dto';
 import { Request } from 'express';
+import TelegramBot from 'node-telegram-bot-api';
+// import { ReferencesForTelegramMessage, sendMessageToChanel } from './helper/entry/telegramMessage';
 
 @Controller('documents')
 export class DocumentsController {
 
     constructor(private documentsService: DocumentsService) {}
+    // public bot = new TelegramBot(`${process.env.BOT_TOKEN}`, { polling: true })
+  
+    // private sendMessage = async (dto: CreateDocumentDto, newDocument: boolean, messageInDeleting?: string,) => {
+        
+    //     const user = await this.userService.findUserByName(dto.user);
+
+    //     let sender, receiver, analitic, firstWorker, secondWorker, thirdWorker
+    //     if (dto.senderId) sender = await this.referenceService.findById(dto.senderId);
+    //     if (dto.receiverId) receiver = await this.referenceService.findById(dto.receiverId);
+    //     if (dto.analiticId) analitic = await this.referenceService.findById(dto.analiticId);
+    //     if (dto.firstWorkerId) firstWorker = await this.referenceService.findById(dto.firstWorkerId);
+    //     if (dto.secondWorkerId) secondWorker = await this.referenceService.findById(dto.secondWorkerId);
+    //     if (dto.thirdWorkerId) thirdWorker = await this.referenceService.findById(dto.thirdWorkerId);
+
+    //     let references: ReferencesForTelegramMessage = {
+    //         sender,
+    //         receiver,
+    //         analitic,
+    //         firstWorker,
+    //         secondWorker,
+    //         thirdWorker,
+    //     }
+    //     sendMessageToChanel(dto, user, references, newDocument, messageInDeleting, this.bot)
+    // }
 
     @ApiOperation({summary: 'Получение всех документов'})
     @ApiResponse({status: 200, type: [Document]})
