@@ -7,7 +7,7 @@ import { RolesGuard } from 'src/auth/roles.guard';
 import { DocSTATUS, DocumentType } from 'src/interfaces/document.interface';
 import { UpdateCreateDocumentDto } from './dto/updateCreateDocument.dto';
 import { Request } from 'express';
-import TelegramBot from 'node-telegram-bot-api';
+// import TelegramBot from 'node-telegram-bot-api';
 // import { ReferencesForTelegramMessage, sendMessageToChanel } from './helper/entry/telegramMessage';
 
 @Controller('documents')
