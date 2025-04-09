@@ -21,11 +21,11 @@ import { OborotsModule } from 'src/oborots/oborots.module';
         forwardRef(() => AuthModule),
         UsersModule,
         ReferencesModule,
-        DocumentsModule,
         EntriesModule,
         StocksModule,
         OborotsModule
       ],
-  providers: [ReportsService]
+  providers: [ReportsService],
+  exports: [ReportsService]
 })
 export class ReportsModule {}

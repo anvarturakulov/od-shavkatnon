@@ -54,6 +54,19 @@ export class ReferencesService implements OnModuleInit {
     return reference;
   }
 
+  async getWorker(telegramId: string) {
+    const reference = await this.referenceRepository.findOne({
+      where: {},
+      include: [{
+        model: RefValues,
+        where: {
+          telegramId: telegramId
+        },
+        required: true}]
+    });
+    return reference;
+  }
+
   async updateReferenceById(id: number, dto: UpdateCreateReferenceDto) {
     const reference = await this.referenceRepository.findOne({
       where: { id },

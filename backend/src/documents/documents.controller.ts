@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, NotFoundException, Param, Patch, Post, Req, UseGuards } from '@nestjs/common';
 import { Document } from 'src/documents/document.model';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Roles } from 'src/auth/roles-auth.decorator';
@@ -7,37 +7,24 @@ import { RolesGuard } from 'src/auth/roles.guard';
 import { DocSTATUS, DocumentType } from 'src/interfaces/document.interface';
 import { UpdateCreateDocumentDto } from './dto/updateCreateDocument.dto';
 import { Request } from 'express';
-// import TelegramBot from 'node-telegram-bot-api';
-// import { ReferencesForTelegramMessage, sendMessageToChanel } from './helper/entry/telegramMessage';
+import * as TelegramBot from 'node-telegram-bot-api';
+import { ReferencesForTelegramMessage, sendMessageToChanel } from './helper/entry/telegramMessage';
+import { UsersService } from 'src/users/users.service';
+import { ReferencesService } from 'src/references/references.service';
+import { DOCUMENT_NOT_FOUND_ERROR } from './document.constants';
+import { sendMessage } from './helper/entry/sendMessage';
 
 @Controller('documents')
 export class DocumentsController {
 
-    constructor(private documentsService: DocumentsService) {}
-    // public bot = new TelegramBot(`${process.env.BOT_TOKEN}`, { polling: true })
-  
-    // private sendMessage = async (dto: CreateDocumentDto, newDocument: boolean, messageInDeleting?: string,) => {
-        
-    //     const user = await this.userService.findUserByName(dto.user);
-
-    //     let sender, receiver, analitic, firstWorker, secondWorker, thirdWorker
-    //     if (dto.senderId) sender = await this.referenceService.findById(dto.senderId);
-    //     if (dto.receiverId) receiver = await this.referenceService.findById(dto.receiverId);
-    //     if (dto.analiticId) analitic = await this.referenceService.findById(dto.analiticId);
-    //     if (dto.firstWorkerId) firstWorker = await this.referenceService.findById(dto.firstWorkerId);
-    //     if (dto.secondWorkerId) secondWorker = await this.referenceService.findById(dto.secondWorkerId);
-    //     if (dto.thirdWorkerId) thirdWorker = await this.referenceService.findById(dto.thirdWorkerId);
-
-    //     let references: ReferencesForTelegramMessage = {
-    //         sender,
-    //         receiver,
-    //         analitic,
-    //         firstWorker,
-    //         secondWorker,
-    //         thirdWorker,
-    //     }
-    //     sendMessageToChanel(dto, user, references, newDocument, messageInDeleting, this.bot)
-    // }
+    constructor(
+        private documentsService: DocumentsService,
+        private usersService: UsersService,
+        private referencesService: ReferencesService
+    ) {}
+    public bot = new TelegramBot(`${process.env.BOT_TOKEN}`, { polling: true });
+    
+    
 
     @ApiOperation({summary: 'Получение всех документов'})
     @ApiResponse({status: 200, type: [Document]})
@@ -109,8 +96,15 @@ export class DocumentsController {
     @Roles('ALL')
     @UseGuards(RolesGuard)
     @Patch('update/:id')
-    updateDocument(@Param('id') id: number,@Body() dto:UpdateCreateDocumentDto) {
-        return this.documentsService.updateDocumentById(id, dto)
+    async updateDocument(@Param('id') id: number,@Body() dto:UpdateCreateDocumentDto) {
+        const updatedDocument = await this.documentsService.updateDocumentById(id, dto);
+        
+        if (!updatedDocument) {
+            throw new NotFoundException(DOCUMENT_NOT_FOUND_ERROR);
+        }
+        
+        if (updatedDocument) sendMessage(dto, false, this.usersService, this.referencesService, this.bot)
+        return updatedDocument;
     }
 
     @ApiOperation({summary: 'Открыть новый документ'})
@@ -118,8 +112,11 @@ export class DocumentsController {
     @Roles('ALL')
     @UseGuards(RolesGuard)
     @Post('/create')
-    createDocument(@Body() dto:UpdateCreateDocumentDto) {
-        return this.documentsService.createDocument(dto)
+    async createDocument(@Body() dto:UpdateCreateDocumentDto) {
+        let newDoc = this.documentsService.createDocument(dto, this.usersService, this.referencesService, this.bot);
+        if ((await newDoc) && (await newDoc).docStatus == DocSTATUS.PROVEDEN) {
+            sendMessage(dto, true, this.usersService, this.referencesService, this.bot)
+        }
     }
 
     @ApiOperation({summary: 'Пометить на удаление документа'})
@@ -127,13 +124,20 @@ export class DocumentsController {
     @Roles('ALL')
     @UseGuards(RolesGuard)
     @Delete('markToDelete/:id')
-    markToDelete(@Param('id') id: number) {
-        if (id == 116675) {
-            
-            // this.documentsService.createMany(docsArray)
-            // this.documentsService.pereProvodka()
+    async markToDelete(@Param('id') id: number) {
+        
+        const markedDoc = await this.documentsService.markToDeleteById(id, this.bot);
+
+        if (!markedDoc) {
+        throw new HttpException(DOCUMENT_NOT_FOUND_ERROR, HttpStatus.NOT_FOUND);
         }
-        return this.documentsService.markToDeleteById(id)
+
+        const document = await this.documentsService.getDocumentById(id);
+        
+        let newDto = { ...JSON.parse(JSON.stringify(document)) }
+        let messageIndeleting = newDto.docStatus == DocSTATUS.DELETED ? 'ЧЕК УЧИРИЛДИ' : 'ЧЕК ТИКЛАНДИ'
+        sendMessage(newDto, false, this.usersService, this.referencesService, this.bot, messageIndeleting)
+        return markedDoc
     }
 
     @ApiOperation({summary: 'Дать проводку на документ'})
@@ -141,8 +145,18 @@ export class DocumentsController {
     @Roles('ALL')
     @UseGuards(RolesGuard)
     @Patch('setProvodka/:id')
-    setProvodka(@Param('id') id: number) {
-        return this.documentsService.setProvodka(id)
+    async setProvodka(@Param('id') id: number) {
+        const docForProvodka = await this.documentsService.setProvodka(id);
+        const document = await this.documentsService.getDocumentById(id);
+
+        let newDto = { ...JSON.parse(JSON.stringify(document)) }
+
+        if (!docForProvodka) {
+            throw new NotFoundException(DOCUMENT_NOT_FOUND_ERROR);
+        }
+        if (docForProvodka) sendMessage(newDto, true, this.usersService, this.referencesService, this.bot)
+        return docForProvodka;
+
     }
 
     

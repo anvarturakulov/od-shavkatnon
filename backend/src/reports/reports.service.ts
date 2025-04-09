@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/sequelize';
 import { Sequelize } from 'sequelize-typescript';
 import { Entry } from 'src/entries/entry.model';
-import { DEBETKREDIT, QuerySimple, TypeQuery } from 'src/interfaces/report.interface';
+import { DEBETKREDIT, QuerySimple, QueryWorker, Schet, TypeQuery } from 'src/interfaces/report.interface';
 import { query } from './querys/query';
 import { information } from './components/information/information';
 import { matOborot } from './components/matOborot/matOborot';
@@ -21,7 +21,6 @@ export class ReportsService {
     constructor(
         @InjectModel(Entry) private entryRepository: typeof Entry,
         @InjectConnection() private readonly sequelize: Sequelize,
-        private documentsService: DocumentsService,
         private referencesService: ReferencesService,
         private entriesService: EntriesService,
         private stocksService: StocksService,
@@ -121,5 +120,39 @@ export class ReportsService {
         }
         
     }
+
+    async getWorkerInformation(queryWorker: QueryWorker) {
+        const { startDate, endDate, workerId, name } = queryWorker;
+        const entrys = await this.entriesService.getAllEntries();
+        let result = 
+            entrys
+            .filter((entry: Entry) => {
+                return (
+                    (entry.date >= startDate && entry.date <= endDate) &&
+                    (entry.debet == Schet.S67 || entry.kredit == Schet.S67) &&
+                    (entry.debetFirstSubcontoId == workerId || entry.kreditFirstSubcontoId == workerId)
+                )
+            })
+            
+          
+        const newArray = result
+            // .sort((a: Entry, b: Entry) => Number(a.date) - Number(b.date)) // Сортировка по дате
+            .map((entry: Entry) => ({
+                date: Number(entry.date),
+                type: entry.debet == Schet.S67 ? 'ойлик берилди' : 'иш хаки хисобланди',
+                value: entry.total,
+                comment: entry.description,
+                name,
+            }));
+    
+        const POSUM = await query(Schet.S67, TypeQuery.POSUM, startDate, endDate, workerId, null, null, this.stocksService, this.oborotsService)
+        let amount = POSUM
+        
+        return {
+          amount,
+          result: newArray
+        }
+    
+      }
     
 }

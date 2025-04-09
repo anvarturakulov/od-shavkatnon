@@ -15,6 +15,7 @@ import { ReferencesModule } from 'src/references/references.module';
 import { Stock } from 'src/stocks/stock.model';
 import { StocksModule } from 'src/stocks/stocks.module';
 import { OborotsModule } from 'src/oborots/oborots.module';
+import { ReportsModule } from 'src/reports/reports.module';
 
 @Module({
   controllers: [DocumentsController],
@@ -26,7 +27,8 @@ import { OborotsModule } from 'src/oborots/oborots.module';
       UsersModule,
       ReferencesModule,
       StocksModule,
-      OborotsModule
+      OborotsModule,
+      ReportsModule
     ],
   exports: [DocumentsService]
 })

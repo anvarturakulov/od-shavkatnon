@@ -14,6 +14,12 @@ import { Stock } from 'src/stocks/stock.model';
 import { StocksService } from 'src/stocks/stocks.service';
 import { OborotsService } from 'src/oborots/oborots.service';
 import { ConfigService } from '@nestjs/config';
+import * as TelegramBot from 'node-telegram-bot-api';
+import { ReferencesService } from 'src/references/references.service';
+import { ReportsService } from 'src/reports/reports.service';
+import { QueryWorker } from 'src/interfaces/report.interface';
+import { UsersService } from 'src/users/users.service';
+import { sendMessage } from './helper/entry/sendMessage';
 const { Op } = require('sequelize');
 const fs = require('fs');
 
@@ -29,11 +35,15 @@ export class DocumentsService {
         @InjectModel(Entry) private entryRepository: typeof Entry,
         private stocksService: StocksService,
         private oborotsService: OborotsService,
-        private configService: ConfigService
+        private configService: ConfigService,
+        private referencesService: ReferencesService,
+        private reportsService: ReportsService
     ) {
         const myArrayString = this.configService.get<string>('FOUNDERS_IDS'); 
         this.foundersIds = myArrayString ? myArrayString.split('|') : []; 
     }
+
+    private startBotListining: boolean = false
 
     async getAllDocuments() {
         const documents = await this.documentRepository.findAll({include: [DocValues, DocTableItems ]})
@@ -133,7 +143,7 @@ export class DocumentsService {
         }
     }
 
-    async createDocument(dto:UpdateCreateDocumentDto) {
+    async createDocument(dto:UpdateCreateDocumentDto, usersSer:UsersService, refSer: ReferencesService, bot: TelegramBot) {
         
         const transaction = await this.sequelize.transaction();
         try {
@@ -177,6 +187,7 @@ export class DocumentsService {
                     }
                     doc.docStatus = DocSTATUS.PROVEDEN
                     await doc.save()
+                    sendMessage(dto, true, usersSer, refSer, bot)
                 }
                 
             }
@@ -191,9 +202,9 @@ export class DocumentsService {
 
     }
 
-    async markToDeleteById(id: number) {
-        const document = await this.documentRepository.findOne({where: {id}, include: [Entry]})
+    async markToDeleteById(id: number, bot: TelegramBot) {
         
+        const document = await this.documentRepository.findOne({where: {id}, include: [Entry]})
         const transaction = await this.sequelize.transaction();
         
         try {
@@ -214,8 +225,19 @@ export class DocumentsService {
                     }
                 }
 
-                await this.entryRepository.destroy({where: {docId:document.id}})
                 // Anvar Bu erda Entrys ni uchirish kodini ham yozish kerak
+                await this.entryRepository.destroy({where: {docId:document.id}})
+
+                // if (document.docStatus == DocSTATUS.DELETED && !this.startBackupProcess) {
+                //     this.startBackupProcess = true
+                //     let backup = await this.backupProcess(bot)
+                // }
+              
+                if (!this.startBotListining) {
+                    this.startBotListining = true
+                    this.botListining(bot)
+                }
+
                 document.docStatus = newStatus
                 await document.save()
             }
@@ -290,23 +312,7 @@ export class DocumentsService {
                         }
                     }
         
-                    // if (dto.docStatus == DocSTATUS.PROVEDEN) {
-                    //     const doc = await this.documentRepository.findOne({where: {id: document.id}, include: [DocValues, DocTableItems]})
-                    //     if (doc) {
-                    //         const entrysList = [...prepareEntrysList(doc, true)]
-                    //         if (entrysList.length > 0 ) {
-                    //             for (const item of entrysList) {
-                    //                 const entry = await this.entryRepository.create({
-                    //                     ...item,
-                    //                 })
-                    //             }
-                    //         }
-                    //         doc.docStatus = DocSTATUS.PROVEDEN
-                    //         await doc.save()
-                    //     }
-                        
-                    // }
-        
+                    
                     // await transaction.commit();
         
                 } catch (err) {
@@ -344,4 +350,40 @@ export class DocumentsService {
         }
         
     }
+
+    botListining(bot: TelegramBot) {
+        bot.on('text', async msg => {
+          if (msg.text && msg.text[0] != '?') return
+          let days = 0
+          if (msg.text && msg.text.length > 0) {
+            days = + (msg.text.slice(1, msg.text.length))
+          }
+          
+          const worker = msg.from && await this.referencesService.getWorker(`${msg.from.id}`);
+          console.log('Worker ----************',worker, days)
+          const now:number = Date.now()
+          if (worker && msg.from) {
+            const queryWorker: QueryWorker = {
+                startDate: days ? now- (days * 86400*1000 + 1): now, 
+                endDate: now, 
+                workerId: worker.id,
+                name: worker ? worker.name: '',
+              }
+        
+              const report = await this.reportsService.getWorkerInformation(queryWorker);
+              if (report.result && report.result.length > 0 && msg.from) {
+                
+                const sortedArray = report.result.sort((a, b) => a.date - b.date)
+                console.log(sortedArray)
+
+                sortedArray.forEach(element => {
+                  if (msg.from) {
+                      bot.sendMessage(msg.from.id, `${new Date(element.date).toLocaleDateString('ru-RU')} санада:  ${element.value} сум ${element.type}`);  
+                  }
+                });
+              }
+              if (!days) bot.sendMessage(msg.from.id, `Хурматли ${queryWorker.name} бугунги кунга сизнинг ${report.amount} сум ${report.amount>0? 'пулингиз бор': 'карзингиз бор'}--${days}`);
+            
+          }})
+      }
 }

@@ -92,3 +92,11 @@ export interface QuerySimple {
     kreditSecondSubcontoId: number | null,
     kreditThirdSubcontoId: number | null, 
 }
+
+
+export interface QueryWorker {
+    startDate: number,
+    endDate: number,
+    workerId: number,
+    name: string
+}
