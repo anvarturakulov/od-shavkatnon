@@ -381,7 +381,7 @@ export class DocumentsService {
                   }
                 });
               }
-              if (!days) bot.sendMessage(msg.from.id, `Хурматли ${queryWorker.name} бугунги кунга сизнинг ${report.amount} сум ${report.amount>0? 'пулингиз бор': 'карзингиз бор'}`);
+            //   if (!days) bot.sendMessage(msg.from.id, `Хурматли ${queryWorker.name} бугунги кунга сизнинг ${report.amount} сум ${report.amount>0? 'пулингиз бор': 'карзингиз бор'}`);
             
           }})
       }
