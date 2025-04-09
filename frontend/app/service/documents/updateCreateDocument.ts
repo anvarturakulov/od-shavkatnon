@@ -16,14 +16,15 @@ export const updateCreateDocument = (mainData: Maindata, setMainData: Function |
   
   let docsForNoProveden: Array<string> = [DocumentType.MoveCash, DocumentType.MoveProd, DocumentType.LeaveCash]
   delete body.id;
-  // if (body.docValues.analiticId && body.docValues.analiticId == 0) {
-  //   let newDocValues = {...body.docValues}
-  //   delete newDocValues.analiticId
-  //   body = {
-  //     ...body,
-  //     docValues: {...newDocValues}
-  //   }
-  // }
+  
+  if (body.docValues.analiticId && body.docValues.analiticId == 0) {
+    let newDocValues = {...body.docValues}
+    delete newDocValues.analiticId
+    body = {
+      ...body,
+      docValues: {...newDocValues}
+    }
+  }
   if (isNewDocument) {
     if (docsForNoProveden.includes(contentName)) {
       body.docStatus = DocSTATUS.OPEN
