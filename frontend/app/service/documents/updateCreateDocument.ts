@@ -43,13 +43,13 @@ export const updateCreateDocument = (mainData: Maindata, setMainData: Function |
       setMainData('clearControlElements', true);
       setMainData('showDocumentWindow', false);
       setMainData('isNewDocument', false);
-      // const defValue:DocumentModel = {
-      //   ...defaultDocument,
-      //   docValues: {...defaultDocValue},
-      //   docTableItems: [defaultDocumentTableItem]
-      // }
-      // setMainData('currentDocument', { ...defValue });
-      // setMainData('docValues', { ...defaultDocValue });
+      const defValue:DocumentModel = {
+        ...defaultDocument,
+        docValues: {...defaultDocValue},
+        docTableItems: [defaultDocumentTableItem]
+      }
+      setMainData('currentDocument', { ...defValue });
+      setMainData('docValues', { ...defaultDocValue });
 
       if (user && workersUsersList.includes(user?.role)) {
         setMainData('mainPage', true);
