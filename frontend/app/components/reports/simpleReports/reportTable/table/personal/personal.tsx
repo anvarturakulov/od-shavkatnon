@@ -12,12 +12,6 @@ export const Personal = ({className, ...props }: PersonalProps) :JSX.Element => 
     const { personal, reportOption } = mainData.report
     const { firstReferenceId } = reportOption
 
-    useEffect(()=> {
-        if (personal) {
-            console.log('personal comed - ', Date.now())
-        }
-    }, [personal])
-    
     let datas = personal ? personal?.values : []
 
     return (

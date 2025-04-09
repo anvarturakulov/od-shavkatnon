@@ -56,7 +56,6 @@ export class ReportsService {
         let references = await this.referencesService.getAllReferences();
         let deliverys = await this.referencesService.getDeliverys();
         let {startDate, endDate, reportType, firstPrice, secondPrice} = queryInformation;
-        console.log('startDate-',startDate, ' endDate- ',endDate)
         console.time('Information');
         let inform = await information(references, startDate, endDate, reportType, firstPrice, secondPrice, deliverys, this.sequelize, this.stocksService, this.oborotsService);
         console.timeEnd('Information');

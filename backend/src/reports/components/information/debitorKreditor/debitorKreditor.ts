@@ -35,7 +35,6 @@ export const debitorKreditor = async (
 
 
     const result = await Promise.all(tasks);
-    console.log('Result size:', JSON.stringify(result).length / 1024 / 1024, 'MB');
     console.timeEnd('DebitorKreditor');
     return result;
 };

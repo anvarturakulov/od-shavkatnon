@@ -12,7 +12,6 @@ export const Oborotka = ({className, ...props }: OborotkaProps) :JSX.Element => 
 
     useEffect(()=> {
         if (oborotka) {
-            console.log('oborotka comed - ', Date.now())
         }
     }, [oborotka])
     

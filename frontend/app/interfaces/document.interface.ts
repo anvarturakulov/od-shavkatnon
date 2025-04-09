@@ -50,7 +50,7 @@ export interface DocValues {
     senderoldId?: string;
     receiverId: number,
     receiverOldId?: string;
-    analiticId?: number,
+    analiticId: number,
     analiticOldId?: string;
     isWorker?: boolean,
     isPartner?: boolean,

@@ -9,7 +9,6 @@ export const financial = async (
     endDate: number | null,
     oborotsService: OborotsService
 ) => {
-    console.log('ENTER === >>>>>>>>>>>>>>>')
     const promises = [
         outIncome(data, startDate, endDate, Schet.S67, Schet.S50, TypeReference.WORKERS, 'outZP', 'out', false, oborotsService),
         outIncome(data, startDate, endDate, Schet.S60, Schet.S50, TypeReference.PARTNERS, 'outPartner', 'out', false, oborotsService),

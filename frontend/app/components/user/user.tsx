@@ -39,7 +39,6 @@ export const User = ({ className, ...props }: UserProps) :JSX.Element => {
                                                                                     +target.value
             }
         })
-        // console.log(body.sectionId, target.id, target.value)
     }
 
     useEffect(()=> {

@@ -21,7 +21,6 @@ export const getValuesForEntry = (doc: Document, newEntry: boolean, hasTable: bo
   if (doc) {
     let documentType = doc.documentType;
     let { receiverId, senderId, analiticId, count, total, isPartner, isWorker } = doc.docValues
-    console.log(recieverIsFounder, senderIsFounder)
     let leaveMaterialWithTable = {
         debetFirstSubcontoId: senderId,
         debetSecondSubcontoId: receiverId,

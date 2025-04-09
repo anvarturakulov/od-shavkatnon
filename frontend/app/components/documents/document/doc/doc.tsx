@@ -27,6 +27,22 @@ export const Doc = ({className, ...props }: DocProps) :JSX.Element => {
         }
     },[])
 
+    useEffect(() => {
+        if (isNewDocument && currentDocument.docValues.analiticId !== 0) {
+            const newDocument = {
+                ...currentDocument,
+                userId: mainData.users.user?.id,
+                documentType: mainData.window.contentName,
+                docValues: {
+                    ...currentDocument.docValues,
+                    analiticId: 0
+                }
+            };
+            setMainData && setMainData('currentDocument', newDocument);
+        }
+    }, [isNewDocument]);
+
+    
     const onSubmit = ( mainData: Maindata, setMainData: Function| undefined ) => {
         const {currentDocument} = mainData.document;
         const {user} = mainData.users
@@ -44,7 +60,6 @@ export const Doc = ({className, ...props }: DocProps) :JSX.Element => {
             setDisabled(true)
         }
     }
-
     const BtnBox = (
         <div className={styles.boxBtn}>
             {

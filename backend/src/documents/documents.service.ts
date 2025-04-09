@@ -274,7 +274,6 @@ export class DocumentsService {
                         docStatus: dto.docStatus,
                         userId: dto.userId ? dto.userId: 0
                     })
-                    console.log(dto.docValues)
                     const docValues = await this.docValuesRepository.create({
                         ...dto.docValues,
                         docId: document.id

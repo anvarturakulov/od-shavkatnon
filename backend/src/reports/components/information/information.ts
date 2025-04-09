@@ -32,7 +32,6 @@ export const information = async (
     
     if (reportType == 'Financial' || reportType == 'All') {
         let financialResult = await financial(data, startDate, endDate, oborotsService)
-        console.log('FINANCIAL ==== >>>>>>', financialResult)
         result.push({'reportType': 'FINANCIAL', 'values': financialResult});
     }
 

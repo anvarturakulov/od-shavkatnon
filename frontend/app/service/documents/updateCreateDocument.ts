@@ -16,14 +16,14 @@ export const updateCreateDocument = (mainData: Maindata, setMainData: Function |
   
   let docsForNoProveden: Array<string> = [DocumentType.MoveCash, DocumentType.MoveProd, DocumentType.LeaveCash]
   delete body.id;
-  if (body.docValues.analiticId == 0) {
-    let newDocValues = {...body.docValues}
-    delete newDocValues.analiticId
-    body = {
-      ...body,
-      docValues: {...newDocValues}
-    }
-  }
+  // if (body.docValues.analiticId && body.docValues.analiticId == 0) {
+  //   let newDocValues = {...body.docValues}
+  //   delete newDocValues.analiticId
+  //   body = {
+  //     ...body,
+  //     docValues: {...newDocValues}
+  //   }
+  // }
   if (isNewDocument) {
     if (docsForNoProveden.includes(contentName)) {
       body.docStatus = DocSTATUS.OPEN
@@ -42,13 +42,13 @@ export const updateCreateDocument = (mainData: Maindata, setMainData: Function |
       setMainData('clearControlElements', true);
       setMainData('showDocumentWindow', false);
       setMainData('isNewDocument', false);
-      const defValue:DocumentModel = {
-        ...defaultDocument,
-        docValues: {...defaultDocValue},
-        docTableItems: [defaultDocumentTableItem]
-      }
-      setMainData('currentDocument', { ...defValue });
-      setMainData('docValues', { ...defaultDocValue });
+      // const defValue:DocumentModel = {
+      //   ...defaultDocument,
+      //   docValues: {...defaultDocValue},
+      //   docTableItems: [defaultDocumentTableItem]
+      // }
+      // setMainData('currentDocument', { ...defValue });
+      // setMainData('docValues', { ...defaultDocValue });
 
       if (user && workersUsersList.includes(user?.role)) {
         setMainData('mainPage', true);
@@ -65,7 +65,6 @@ export const updateCreateDocument = (mainData: Maindata, setMainData: Function |
       senderId: body.docValues.receiverId
     }
   }
-
   if (isNewDocument) {
     axios.post(uriPost, body, config)
       .then(function (request) {

@@ -23,7 +23,6 @@ export const updateCreateReference = (
 
   const id = body.id;
   delete body.id;
-  // console.log('body --', body)
 
   const uriPost = process.env.NEXT_PUBLIC_DOMAIN + '/api/references/create';
   const uriPatch = process.env.NEXT_PUBLIC_DOMAIN + '/api/references/' + id;

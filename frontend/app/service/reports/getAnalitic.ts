@@ -26,8 +26,6 @@ export const getAnalitic = (
   axios.get(url, config)
     .then(function (response) {
       if (setMainData) {
-        // setMainData('analitic', [...response.data]);
-        // console.log('analitic---',response.data)
         showMessage([...response.data], 'success', setMainData)
       }
 

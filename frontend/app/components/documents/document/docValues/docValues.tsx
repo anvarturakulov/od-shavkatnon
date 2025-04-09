@@ -39,8 +39,6 @@ export const DocValues = ({ className, ...props }: DocValuesProps): JSX.Element 
     
     let definedItemIdForReceiver = getDefinedItemIdForReceiver(role, storageIdFromUser, contentName)
     let definedItemIdForSender = getDefinedItemIdForSender(role, storageIdFromUser, contentName)
-    const definedItemIdForAnalitic = 0
-    
 
     return (
         <>
@@ -89,7 +87,6 @@ export const DocValues = ({ className, ...props }: DocValuesProps): JSX.Element 
                     visibile={options.analiticIsVisible}
                     currentItemId={currentDocument?.docValues.analiticId}
                     type='analitic'
-                    definedItemId= {definedItemIdForAnalitic}
                 />
                 
                 {

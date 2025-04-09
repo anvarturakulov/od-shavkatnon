@@ -23,7 +23,6 @@ export const outIncome = async (
         filteredData = data.filter((item: Reference) => item?.typeReference == typeReference);
     }
 
-    console.log('debetSchet', debetSchet)
     // Собираем все запросы параллельно
     const totalPromise = typeReport == 'out' ?
         queryKor(debetSchet, kreditSchet, TypeQuery.OKS, startDate, endDate, null, null, null, oborotsService) :
@@ -50,7 +49,6 @@ export const outIncome = async (
         total,
         innerValues: [...result]
     };
-    console.log(output);
     return output;
 
     return {}

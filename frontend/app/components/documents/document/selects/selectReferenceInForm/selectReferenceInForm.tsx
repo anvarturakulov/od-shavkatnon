@@ -10,11 +10,9 @@ import { sortByName } from '@/app/service/references/sortByName';
 import { getTypeDocumentForReference } from '@/app/service/documents/getTypeDocumentForReference';
 import { DocumentType } from '@/app/interfaces/document.interface';
 import { getPropertySubconto } from '@/app/service/reports/getPropertySubconto';
-import { definedTandirWorkers } from './helper';
 import { docsDependentToBalance, docsDependentToMiddlePrice } from '../../doc/helpers/documentTypes';
 import { UserRoles } from '@/app/interfaces/user.interface';
 import { useEffect, useState } from 'react';
-
 
 export const SelectReferenceInForm = ({ label, typeReference, visibile=true , definedItemId ,currentItemId, type, maydaSavdo, className, ...props }: SelectReferenceInFormProps): JSX.Element => {
     const {mainData, setMainData} = useAppContext();
@@ -34,7 +32,6 @@ export const SelectReferenceInForm = ({ label, typeReference, visibile=true , de
                     elem?.id == definedItemId || 
                     elem?.id == currentItemId 
                 ))]?.name || 'NotSelected'
-                console.log('initialValue', initialValue, type)
             setSelected(initialValue)
         }
     }, [data, currentItemId, definedItemId])
@@ -77,7 +74,6 @@ export const SelectReferenceInForm = ({ label, typeReference, visibile=true , de
 
                 if (maydaSavdo) {
                     let price = getPropertySubconto(data, id).refValues.thirdPrice
-                    console.log(price)
                     if (price) {
                         currentItem.docValues.price = price
                         currentItem.docValues.total = price * currentItem.docValues.count

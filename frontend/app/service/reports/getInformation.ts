@@ -33,7 +33,6 @@ export const getInformation = (
       }
       console.timeEnd('Response');
       console.timeEnd('Fetch');
-      console.log('Data received');
     })
     .catch(function (error) {
       if (setMainData) {

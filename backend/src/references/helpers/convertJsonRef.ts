@@ -31,7 +31,6 @@ export const convertJsonRef = (jsonRow:any):UpdateCreateReferenceDto => {
         telegramId: jsonRow.telegramId,
     }
     const idP = jsonRow._id.$oid.trim() 
-    console.log('idp =-========', idP)  
     let ref:UpdateCreateReferenceDto = {
         oldId: idP,
         name: jsonRow.name,

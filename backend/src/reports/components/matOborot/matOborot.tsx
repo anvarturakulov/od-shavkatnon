@@ -15,7 +15,6 @@ export const matOborot = async (
     ) => {
     
     let result:any[] = [];
-    console.log(startDate, endDate)
     let skladResult = await sklad(data, startDate, endDate, section, stocksService, oborotsService)
     result.push(skladResult);
 
