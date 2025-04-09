@@ -360,7 +360,6 @@ export class DocumentsService {
           }
           
           const worker = msg.from && await this.referencesService.getWorker(`${msg.from.id}`);
-          console.log('Worker ----************',worker, days)
           const now:number = Date.now()
           if (worker && msg.from) {
             const queryWorker: QueryWorker = {
@@ -382,7 +381,7 @@ export class DocumentsService {
                   }
                 });
               }
-              if (!days) bot.sendMessage(msg.from.id, `Хурматли ${queryWorker.name} бугунги кунга сизнинг ${report.amount} сум ${report.amount>0? 'пулингиз бор': 'карзингиз бор'}--${days}`);
+              if (!days) bot.sendMessage(msg.from.id, `Хурматли ${queryWorker.name} бугунги кунга сизнинг ${report.amount} сум ${report.amount>0? 'пулингиз бор': 'карзингиз бор'}`);
             
           }})
       }
