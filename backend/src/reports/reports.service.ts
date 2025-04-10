@@ -146,7 +146,7 @@ export class ReportsService {
             }));
     
         const POSUM = await query(Schet.S67, TypeQuery.POSUM, startDate, endDate, workerId, null, null, this.stocksService, this.oborotsService)
-        let amount = POSUM
+        let amount = (-1)*POSUM
         
         return {
           amount,
