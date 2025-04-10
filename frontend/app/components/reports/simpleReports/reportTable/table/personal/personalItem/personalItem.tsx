@@ -28,10 +28,10 @@ export const PersonalItem = ({className, item, ...props }: PersonalItemProps) :J
           <td className={styles.title}></td>
           <td className={styles.title}></td>
           <td className={styles.title}></td>
-          <td className={styles.totalTdKol}>{numberValue(item?.PKSUM-item?.PDSUM)}</td>
+          <td className={styles.totalTdKol}>{numberValue((-1)*item?.POSUM)}</td>
           <td className={styles.totalTdKol}>{numberValue(item?.TKSUM)}</td>
           <td className={styles.totalTdKol}>{numberValue(item?.TDSUM)}</td>
-          <td className={styles.totalTdKol}>{numberValue(item?.PKSUM-item?.PDSUM-item?.TDSUM+item?.TKSUM)}</td>
+          <td className={styles.totalTdKol}>{numberValue((-1)*item?.POSUM+item?.TKSUM-item?.TDSUM)}</td>
         </tr>
       </thead>
       <tbody className={styles.tbody}>

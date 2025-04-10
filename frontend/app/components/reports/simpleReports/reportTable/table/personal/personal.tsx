@@ -5,14 +5,22 @@ import { useAppContext } from '@/app/context/app.context';
 import { PersonalProps } from './personal.props';
 import { PersonalItem } from './personalItem/personalItem';
 import { useEffect } from 'react';
+import { numberValue } from '@/app/service/common/converters';
 
 
 export const Personal = ({className, ...props }: PersonalProps) :JSX.Element => {
     const { setMainData, mainData } = useAppContext()
     const { personal, reportOption } = mainData.report
     const { firstReferenceId } = reportOption
+    let TOTALPOSUM = 0, TOTALTDSUM = 0, TOTALTKSUM = 0, TOTALKOSUM = 0
 
     let datas = personal ? personal?.values : []
+    if (datas && datas.length>0) {
+        TOTALPOSUM = datas.reduce((summa:number, item:any) => summa + (-1)*item.POSUM, 0)
+        TOTALTDSUM = datas.reduce((summa:number, item:any) => summa + item.TDSUM, 0)
+        TOTALTKSUM = datas.reduce((summa:number, item:any) => summa + item.TKSUM, 0)
+        TOTALKOSUM = TOTALPOSUM + TOTALTDSUM - TOTALTKSUM
+    }
 
     return (
        <>
@@ -40,6 +48,19 @@ export const Personal = ({className, ...props }: PersonalProps) :JSX.Element => 
                         />
                     })
                 }
+                <thead>
+                    <tr>
+                        <td ></td>
+                        <td className={styles.titleName}>Жами</td>
+                        <td className={styles.titleValue}></td>
+                        <td className={styles.titleValue}></td>
+                        <td className={styles.titleValue}></td>
+                        <td className={styles.titleValue}>{numberValue(TOTALPOSUM)}</td>
+                        <td className={styles.titleValue}>{numberValue(TOTALTDSUM)}</td>
+                        <td className={styles.titleValue}>{numberValue(TOTALTKSUM)}</td>
+                        <td className={styles.titleValue}>{numberValue(TOTALKOSUM)}</td>
+                    </tr>
+                </thead>
                 
             </table>
        </>
