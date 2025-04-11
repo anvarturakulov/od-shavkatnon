@@ -9,8 +9,6 @@ import { Reference } from './references/reference.model';
 import { RefValues } from './refvalues/refValues.model';
 import { DocumentsModule } from './documents/documents.module';
 import { DocTableItemsModule } from './docTableItems/docTableItems.module';
-import { DocValuesController } from './docValues/docValues.controller';
-import { DocValuesService } from './docValues/docValues.service';
 import { RefValesModule } from './refvalues/refValues.module';
 import { DocValuesModule } from './docValues/docValues.module';
 import { EntriesModule } from './entries/entries.module';
