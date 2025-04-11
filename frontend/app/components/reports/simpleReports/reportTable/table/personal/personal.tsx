@@ -15,11 +15,11 @@ export const Personal = ({className, ...props }: PersonalProps) :JSX.Element => 
     let TOTALPOSUM = 0, TOTALTDSUM = 0, TOTALTKSUM = 0, TOTALKOSUM = 0
 
     let datas = personal ? personal?.values : []
-    if (datas && datas.length>0) {
-        TOTALPOSUM = datas.reduce((summa:number, item:any) => summa + (-1)*item.POSUM, 0)
-        TOTALTDSUM = datas.reduce((summa:number, item:any) => summa + item.TDSUM, 0)
-        TOTALTKSUM = datas.reduce((summa:number, item:any) => summa + item.TKSUM, 0)
-        TOTALKOSUM = TOTALPOSUM + TOTALTDSUM - TOTALTKSUM
+    if (datas.length > 0) {
+        TOTALPOSUM = datas.reduce((summa: number, item:any) => summa + (item.POSUM ? -item.POSUM : 0), 0);
+        TOTALTDSUM = datas.reduce((summa: number, item:any) => summa + (item.TDSUM || 0), 0);
+        TOTALTKSUM = datas.reduce((summa: number, item:any) => summa + (item.TKSUM || 0), 0);
+        TOTALKOSUM = TOTALPOSUM + TOTALTDSUM - TOTALTKSUM;
     }
 
     return (
@@ -41,6 +41,7 @@ export const Personal = ({className, ...props }: PersonalProps) :JSX.Element => 
                 {
                     datas && datas.length &&
                     datas
+                    .sort((a:any, b:any) => a.name.localeCompare(b.name))
                     .map((element: any, key: number) => {
                         return <PersonalItem 
                             key={key}

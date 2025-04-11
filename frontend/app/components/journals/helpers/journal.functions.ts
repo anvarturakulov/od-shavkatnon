@@ -63,7 +63,7 @@ export const deleteItemDocument = (id: number | undefined, docDate: number| unde
   }
 }
 
-export const setProvodkaToDoc = (id: number | undefined, token: string | undefined, docStatus: DocSTATUS, setMainData: Function | undefined, mainData: Maindata, receiverId: number | undefined) => {
+export const setProvodkaToDoc = (id: number | undefined, token: string | undefined, docStatus: DocSTATUS, setMainData: Function | undefined, mainData: Maindata, receiverId: number | undefined, senderId: number | undefined) => {
   if (docStatus == DocSTATUS.OPEN) {
     let yes = confirm('Хужжатга провдка берамизми')
     const { user } = mainData.users
@@ -72,7 +72,7 @@ export const setProvodkaToDoc = (id: number | undefined, token: string | undefin
     if (
         yes && 
         ( user?.role == UserRoles.ADMIN || user?.role == UserRoles.HEADCOMPANY ) || 
-        ( user?.sectionId == receiverId)
+        ( user?.sectionId == receiverId && user?.sectionId != senderId)
     ){
       setProvodkaToDocument(id, setMainData, mainData)
     } else {
