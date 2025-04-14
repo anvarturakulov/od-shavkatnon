@@ -6,16 +6,15 @@ import { useAppContext } from '@/app/context/app.context';
 import useSWR from 'swr';
 import cn from 'classnames';
 import { getDataForSwr } from '@/app/service/common/getDataForSwr';
-import { HamirModel } from '@/app/interfaces/hamir.interface';
+import { HamirModel, SendingHamir } from '@/app/interfaces/hamir.interface';
 import { createHamirsForDayByUser } from '@/app/service/documents/createHamirsForDayByUser';
 import { Maindata } from '@/app/context/app.context.interfaces';
-import { getNameReference } from '../helpers/journal.functions';
 import { changeStatusHamir } from '@/app/service/documents/changeStatusHamir';
 import { SelectReferenceForTandirs } from './selectReferenceForTandirs/selectReferenceForTandirs';
 import { secondsToDateString } from '../../documents/document/doc/helpers/doc.functions';
 import { UserRoles } from '@/app/interfaces/user.interface';
-import { DocSTATUS } from '@/app/interfaces/document.interface';
-
+import { DocSTATUS, DocumentModel, DocumentType } from '@/app/interfaces/document.interface';
+import { TypeReference } from '@/app/interfaces/reference.interface';
 
 export default function Hamirs({ className, ...props} : HamirsProps ):JSX.Element {
     
@@ -29,10 +28,14 @@ export default function Hamirs({ className, ...props} : HamirsProps ):JSX.Elemen
     let dateStr = dateNowPlussedInString.toISOString().split('T')[0]
 
     const token = user?.token;
-    let url = process.env.NEXT_PUBLIC_DOMAIN+'/api/hamir/getForDate/'+dateStr;
+
+    const documentType = DocumentType.ComeProduct
+    const referenceType = TypeReference.TMZ
+
+    let url = process.env.NEXT_PUBLIC_DOMAIN+'/api/documents/byTypeForDate'+'?documentType='+documentType+'&dateStart='+dateStartForUrl+'&dateEnd='+dateEndForUrl;
     const { data : hamirs, mutate } = useSWR(url, (url) => getDataForSwr(url, token));
     
-    const urlReferences = process.env.NEXT_PUBLIC_DOMAIN+'/api/reference/getAll';
+    const urlReferences = process.env.NEXT_PUBLIC_DOMAIN+'/api/references/byType/'+referenceType;
     const { data : references, mutate: mutateReferences } = useSWR(urlReferences, (urlReferences) => getDataForSwr(urlReferences, token));
 
     useEffect(() => {
@@ -41,13 +44,8 @@ export default function Hamirs({ className, ...props} : HamirsProps ):JSX.Elemen
     }, [mainData.journal.updateHamirJournal])
 
     const createHamirs = (date: number, userName: string | undefined, mainData: Maindata, setMainData: Function | undefined) => {
-        const {firstWorker, secondWorker, thirdWorker} = mainData.document.definedTandirWorkers
-
-        let question = `Бугунги хамирларни -
-        ${getNameReference(references, firstWorker)},
-        ${getNameReference(references, secondWorker)},
-        ${getNameReference(references, thirdWorker)} 
-        ларга тулдирайми. Бугунги ходимларни кейин узгартириш кийин`;
+        
+        let question = `Бугунги хамирларни тулдирайми`;
 
         if (date && userName) {
             if (user?.role == UserRoles.TANDIR) {
@@ -71,11 +69,12 @@ export default function Hamirs({ className, ...props} : HamirsProps ):JSX.Elemen
         }).length
     }
 
-    const sendHamir = (e:React.FormEvent<HTMLButtonElement>, item: HamirModel, mainDate: Maindata, setMainData: Function | undefined) => {
+    const sendHamir = (e:React.FormEvent<HTMLButtonElement>, id: number | undefined, order: string | undefined, mainDate: Maindata, setMainData: Function | undefined) => {
         const { user } = mainData.users;
 
         if (user?.role == UserRoles.TANDIR) {
             let target = e.currentTarget;
+            
             let count = Number(target.parentNode?.parentNode?.querySelector('input')?.value);
             let select = target.parentNode?.parentNode?.querySelector('select')
             let selectedElement = select?.options[select.selectedIndex];
@@ -86,11 +85,18 @@ export default function Hamirs({ className, ...props} : HamirsProps ):JSX.Elemen
 
             if (count > 90) {
                 alert('Сон хато киритилди')
-            } else if ( count > 0 && analiticId > 0 && confirm(`${item.order} - хамирдан тандирга ${count} та зувала бердингизми`)) {
-                item.zuvala = count;
-                item.analiticId = analiticId;
-                changeStatusHamir(item, mainData, setMainData)
-                setMainData && setMainData('updateHamirJournal', true)
+            } else if 
+                ( count > 0 && id && analiticId > 0 && 
+                  confirm(`${order} - хамирдан тандирга ${count} та зувала бердингизми`)
+                ) {
+                    const hamir: SendingHamir = {
+                        id,
+                        analiticId,
+                        count
+                    }
+                    
+                    changeStatusHamir(hamir, mainData, setMainData)
+                    setMainData && setMainData('updateHamirJournal', true)
             }
         }
 
@@ -116,55 +122,59 @@ export default function Hamirs({ className, ...props} : HamirsProps ):JSX.Elemen
                         <tbody className={styles.tbody}>
                             {hamirs && hamirs.length>0 && 
                             hamirs
-                            .filter((item:HamirModel, key: number) => {
-                                return (item.user == user?.name)
+                            .filter((item:DocumentModel, key: number) => {
+                                return (item.userId == user?.id)
                             })
-                            .filter((item:HamirModel) => {
+                            .filter((item:DocumentModel) => {
                                 return (
-                                    item.sectionId == user?.sectionId
-                                    &&
-                                    item.user == user.name
+                                    item.docValues.senderId == user?.sectionId
                                 )
                             })
-                            .sort((a:HamirModel, b:HamirModel) => {
-                               if (a.order && b.order) {
-                                return a?.order - b?.order
+                            .sort((a:DocumentModel, b:DocumentModel) => {
+                               if (a.docValues.comment && b.docValues.comment) {
+                                return a.docValues.comment.localeCompare(b.docValues.comment)
                                }
                             })
-                            .map((item:HamirModel, key: number) => (
-                                <>
-                                    <tr 
-                                        key={key} 
-                                        className={cn(styles.trRow, {
-                                                [styles.proveden]: item.docStatus == DocSTATUS.PROVEDEN,
-                                                [styles.bigTr]: tandir
-                                            })}>
-                                        <td className={styles.date}>{secondsToDateString(item.date)}</td>
-                                        <td className={styles.order}>{`-- ${item.order} --` }</td>
-                                       
-                                        {
-                                            tandir &&
-                                            <td>
-                                                <input className={cn(styles.count, {
+                            .map((item:DocumentModel, key: number) => (
+                                <tr 
+                                    key={key} 
+                                    className={cn(styles.trRow, {
+                                            [styles.proveden]: item.docStatus == DocSTATUS.PROVEDEN,
+                                            [styles.bigTr]: tandir
+                                        })}>
+                                    <td className={styles.date}>{secondsToDateString(item.date)}</td>
+                                    <td className={styles.order}>{`-- ${item.docValues.comment} --` }</td>
+                                    
+                                    {
+                                        tandir &&
+                                        <td>
+                                            <input 
+                                                className={cn(styles.count, {
                                                     [styles.disabledInput]: item.docStatus == DocSTATUS.PROVEDEN
-                                                })} type='number'
-                                                value={item.zuvala} disabled={item.docStatus == DocSTATUS.PROVEDEN}
-                                                />    
-                                            </td>
-                                        }
-                                        <td> 
-                                            <SelectReferenceForTandirs idForSelect={`#${item.order}`} currentItemId={item.analiticId} disabled={item.docStatus == DocSTATUS.PROVEDEN}/>
+                                                })} 
+                                                type='number'
+                                                value={item.docValues.count} 
+                                                disabled={item.docStatus == DocSTATUS.PROVEDEN}
+                                            />    
                                         </td>
+                                    }
+                                    <td> 
+                                        <SelectReferenceForTandirs 
+                                            data = {references}
+                                            idForSelect={`#${item.docValues.comment}`} 
+                                            currentItemId={item.docValues.analiticId} 
+                                            disabled={item.docStatus == DocSTATUS.PROVEDEN}
+                                        />
+                                    </td>
 
-                                        <td className={styles.action}>
-                                            <button className={cn(styles.sendBtn, {
-                                                                [styles.notVisible]: item.docStatus == DocSTATUS.PROVEDEN,
-                                                              })}
-                                                    onClick={(e) => sendHamir(e, item, mainData, setMainData)}
-                                            >Жунатиш</button>
-                                        </td>
-                                    </tr>
-                                </>    
+                                    <td className={styles.action}>
+                                        <button className={cn(styles.sendBtn, {
+                                                            [styles.notVisible]: item.docStatus == DocSTATUS.PROVEDEN,
+                                                            })}
+                                                onClick={(e) => sendHamir(e, item.id, item.docValues.comment, mainData, setMainData)}
+                                        >Жунатиш</button>
+                                    </td>
+                                </tr>
                             ))}
                         </tbody>
                     </table>

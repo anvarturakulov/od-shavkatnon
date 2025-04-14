@@ -1,34 +1,10 @@
 import { Maindata } from '@/app/context/app.context.interfaces';
-import { HamirModel } from '@/app/interfaces/hamir.interface';
+import { SendingHamir } from '@/app/interfaces/hamir.interface';
 import { showMessage } from '../common/showMessage';
 import axios from 'axios';
-import { DocSTATUS, DocumentModel, DocumentType } from '@/app/interfaces/document.interface';
-import { defaultDocumentTableItem } from '@/app/context/app.context.constants';
 
-
-export const changeStatusHamir = (item: HamirModel, mainData: Maindata, setMainData: Function | undefined) => {
+export const changeStatusHamir = (hamir: SendingHamir, mainData: Maindata, setMainData: Function | undefined) => {
   const { user } = mainData.users
-  const { firstWorker, secondWorker, thirdWorker} = mainData.document.definedTandirWorkers
-
-  let defaultDocForProduct: DocumentModel = {
-    date: item.date,
-    documentType: DocumentType.ComeProduct,
-    userId: user?.id ? user?.id : 0,
-    docStatus: DocSTATUS.PROVEDEN,
-    docValues: {
-      senderId: item.sectionId,
-      receiverId: item.sectionId,
-      analiticId: item.analiticId,
-      count: item.zuvala ? item.zuvala : 0,
-      price: 0,
-      balance: 0,
-      total: 0,
-      comment: item.order + ' - хамир',
-    },
-    docTableItems: [defaultDocumentTableItem]
-  }
-
-  let newDoc = {...defaultDocForProduct} 
 
   const config = {
     headers: { Authorization: `Bearer ${user?.token}` }
@@ -42,9 +18,9 @@ export const changeStatusHamir = (item: HamirModel, mainData: Maindata, setMainD
     }
   }
 
-  const uriPost = process.env.NEXT_PUBLIC_DOMAIN + '/api/hamir/'+item.id;
+  const uriPost = process.env.NEXT_PUBLIC_DOMAIN + '/api/documents/sendhamirs'+hamir.id;
 
-  axios.patch(uriPost, newDoc, config)
+  axios.patch(uriPost, hamir, config)
     .then(function (request) {
       actions('')
     })

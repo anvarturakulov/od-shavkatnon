@@ -140,7 +140,28 @@ export class DocumentsService {
     }
   }
 
-  // Обновлённая функция createDocument (оставлена как есть, уже с транзакциями)
+  async updateHamirsById(id: number, count: number, analiticId) {
+    const transaction = await this.sequelize.transaction();
+    try {
+      const document = await this.documentRepository.findOne({
+        where: { id },
+        include: [DocValues, DocTableItems],
+        transaction,
+      });
+
+      if (!document) {
+        throw new Error(`Document with id ${id} not found`);
+      }
+
+      if (document.docValues) {
+        await document.docValues.update({ count, analiticId }, { transaction });
+      } 
+      return document;
+    } catch (error) {
+      throw new Error(`Failed to update document: ${error.message}`);
+    }
+  }
+
   async createDocument(dto: UpdateCreateDocumentDto, usersSer: UsersService, refSer: ReferencesService, bot: TelegramBot) {
     const transaction = await this.sequelize.transaction();
     try {

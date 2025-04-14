@@ -6,15 +6,8 @@ import { ReferenceModel, TypeReference } from '@/app/interfaces/reference.interf
 import { getDataForSwr } from '@/app/service/common/getDataForSwr';
 import { sortByName } from '@/app/service/references/sortByName';
 
-export const SelectReferenceForTandirs = ({ idForSelect, currentItemId, disabled, className, ...props }: SelectReferenceForTandirsProps): JSX.Element => {
+export const SelectReferenceForTandirs = ({ data, idForSelect, currentItemId, disabled, className, ...props }: SelectReferenceForTandirsProps): JSX.Element => {
 
-    const {mainData, setMainData} = useAppContext();
-    const { user } = mainData.users;
-    const token = user?.token;
-    const url = process.env.NEXT_PUBLIC_DOMAIN+'/api/reference/byType/'+'TMZ';
-    
-    const { data, mutate } = useSWR(url, (url) => getDataForSwr(url, token));
-    
     return (
         <div className={styles.box}>
             <select
@@ -30,16 +23,14 @@ export const SelectReferenceForTandirs = ({ idForSelect, currentItemId, disabled
                 .sort(sortByName)
                 .filter((item:ReferenceModel) => !item.refValues?.markToDeleted)
                 .map((item:ReferenceModel, key:number) => (
-                    <>
-                        <option 
-                            value={item.name}
-                            data-type={item.typeReference}
-                            data-id={item.id}
-                            selected={item.id == currentItemId}
-                            >
-                                {item.name}
-                        </option>
-                    </>
+                    <option 
+                        value={item.name}
+                        data-type={item.typeReference}
+                        data-id={item.id}
+                        selected={item.id == currentItemId}
+                        >
+                            {item.name}
+                    </option>
                 ))}
             </select>
         </div>

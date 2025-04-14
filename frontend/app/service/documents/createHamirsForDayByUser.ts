@@ -3,7 +3,6 @@ import { HamirModel } from '@/app/interfaces/hamir.interface';
 import { showMessage } from '../common/showMessage';
 import axios from 'axios';
 import { DocSTATUS } from '@/app/interfaces/document.interface';
-import { UserRoles } from '@/app/interfaces/user.interface';
 
 export const createHamirsForDayByUser = (date: number, mainData: Maindata, setMainData: Function | undefined) => {
   const { user } = mainData.users
@@ -18,25 +17,6 @@ export const createHamirsForDayByUser = (date: number, mainData: Maindata, setMa
     firstWorker: definedTandirWorkers.firstWorker,
   }
 
-  if (user?.role == UserRoles.TANDIR) {
-    body = {
-      ...body,
-      secondWorker: definedTandirWorkers.secondWorker,
-      thirdWorker: definedTandirWorkers.thirdWorker
-    } 
-  }
-
-  if ((user?.role == UserRoles.TANDIR) && (
-    !body.firstWorker || !body.secondWorker || !body.thirdWorker )) {
-      showMessage(`Ходимлар танланмаган`, 'error', setMainData)
-      return
-    }
-
-  if (!body.firstWorker ) {
-    showMessage(`Ходим танланмаган`, 'error', setMainData)
-    return
-  }
-
   const config = {
     headers: { Authorization: `Bearer ${user?.token}` }
   };
@@ -49,7 +29,7 @@ export const createHamirsForDayByUser = (date: number, mainData: Maindata, setMa
     }
   }
 
-  const uriPost = process.env.NEXT_PUBLIC_DOMAIN + '/api/hamir/create';
+  const uriPost = process.env.NEXT_PUBLIC_DOMAIN + '/api/documents/createhamirs';
 
   axios.post(uriPost, body, config)
     .then(function (request) {

@@ -13,3 +13,9 @@ export interface HamirModel {
   zuvala?: number,
   docStatus: DocSTATUS
 }
+
+export interface SendingHamir {
+  id: number,
+  count: number,
+  analiticId: number
+}

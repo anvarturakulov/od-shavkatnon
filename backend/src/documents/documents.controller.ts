@@ -4,7 +4,7 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Roles } from 'src/auth/roles-auth.decorator';
 import { DocumentsService } from './documents.service';
 import { RolesGuard } from 'src/auth/roles.guard';
-import { DocSTATUS, DocumentType } from 'src/interfaces/document.interface';
+import { DocSTATUS, DocumentType, SendingHamir } from 'src/interfaces/document.interface';
 import { UpdateCreateDocumentDto } from './dto/updateCreateDocument.dto';
 import { Request } from 'express';
 import * as TelegramBot from 'node-telegram-bot-api';
@@ -156,6 +156,56 @@ export class DocumentsController {
         }
         if (docForProvodka) sendMessage(newDto, true, this.usersService, this.referencesService, this.bot)
         return docForProvodka;
+
+    }
+
+    @ApiOperation({summary: 'Открыть новый документ'})
+    @ApiResponse({status: 200, type: Document})
+    @Roles('ALL')
+    @UseGuards(RolesGuard)
+    @Post('/createhamirs')
+    async createHamirs(@Body() dto:UpdateCreateDocumentDto) {
+        // let newDoc = this.documentsService.createDocument(dto, this.usersService, this.referencesService, this.bot);
+        // if ((await newDoc) && (await newDoc).docStatus == DocSTATUS.PROVEDEN) {
+        //     sendMessage(dto, true, this.usersService, this.referencesService, this.bot)
+        // }
+
+        // let hamirs = await this.hamirService.getHamirsByUserToDate(dto)
+        // let countHamir = dto.fromHamirchi ? 51 : 31
+        // dto.analiticId = '659d2778630ca82ec3dcadf8';
+        
+        // if (dto.sectionId != '' && dto.analiticId != '' && !hamirs.length) {
+        //     for (let i = 1; i < countHamir; i++) {
+        //         let newDto = { ...dto };
+        //         newDto.order = i;
+        //         let newHamir = this.hamirService.createHamir(newDto);
+        //     }
+        // }
+    }
+
+    @ApiOperation({summary: 'Дать проводку на документ'})
+    @ApiResponse({status: 200, type: Document})
+    @Roles('ALL')
+    @UseGuards(RolesGuard)
+    @Patch('sendhamirs/:id')
+    async sendHamirs(@Param('id') id: number, @Body() dto:SendingHamir) {
+        const count = dto.count | 0 
+        const analiticId = dto.count | 0 
+        
+        if (count && analiticId) {
+            const doc = await this.documentsService.updateHamirsById(id, count, analiticId)
+            const docForProvodka = await this.documentsService.setProvodka(id);
+            
+            let newDto = { ...JSON.parse(JSON.stringify(doc)) }
+            if (!docForProvodka) {
+                throw new NotFoundException(DOCUMENT_NOT_FOUND_ERROR);
+            }
+    
+            if (docForProvodka) sendMessage(newDto, true, this.usersService, this.referencesService, this.bot)
+            return docForProvodka;
+        }
+
+        return 
 
     }
 

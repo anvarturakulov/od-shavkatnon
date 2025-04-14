@@ -55,3 +55,8 @@ export enum DocSTATUS {
 //     comment?: string;
 // }
 
+export interface SendingHamir {
+    id: number,
+    count: number,
+    analiticId: number
+}
