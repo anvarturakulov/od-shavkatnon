@@ -18,7 +18,7 @@ export const changeStatusHamir = (hamir: SendingHamir, mainData: Maindata, setMa
     }
   }
 
-  const uriPost = process.env.NEXT_PUBLIC_DOMAIN + '/api/documents/sendhamirs'+hamir.id;
+  const uriPost = process.env.NEXT_PUBLIC_DOMAIN + '/api/documents/sendhamirs/'+hamir.id;
 
   axios.patch(uriPost, hamir, config)
     .then(function (request) {

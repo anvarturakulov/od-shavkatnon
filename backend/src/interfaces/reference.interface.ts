@@ -26,6 +26,7 @@ export enum TypeSECTION {
     ACCOUNTANT = 'ACCOUNTANT',
     DIRECTOR = 'DIRECTOR',
     FOUNDER = 'FOUNDER',
+    TANDIR = 'TANDIR'
 }
 
 export interface RefValues {

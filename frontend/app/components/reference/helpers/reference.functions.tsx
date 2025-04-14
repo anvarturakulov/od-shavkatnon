@@ -57,6 +57,7 @@ export const defineTypeSection = (typeSection: string): TypeSECTION => {
         case 'FILIAL': return TypeSECTION.FILIAL
         case 'FOUNDER': return TypeSECTION.FOUNDER
         case 'STORAGE': return TypeSECTION.STORAGE
+        case 'TANDIR': return TypeSECTION.TANDIR
         default: return TypeSECTION.DELIVERY
     } 
 }

@@ -2,19 +2,26 @@ import { Maindata } from '@/app/context/app.context.interfaces';
 import { HamirModel } from '@/app/interfaces/hamir.interface';
 import { showMessage } from '../common/showMessage';
 import axios from 'axios';
-import { DocSTATUS } from '@/app/interfaces/document.interface';
+import { DocSTATUS, DocumentModel, DocumentType } from '@/app/interfaces/document.interface';
 
 export const createHamirsForDayByUser = (date: number, mainData: Maindata, setMainData: Function | undefined) => {
   const { user } = mainData.users
-  const { definedTandirWorkers } = mainData.document
   
-  let body: HamirModel = {
+  if (!user?.id || !user?.sectionId) return
+  
+  let body:DocumentModel = {
     date,
-    sectionId: user?.sectionId ? user.sectionId : -1,
-    analiticId: -1,
+    docValues: {
+      senderId: user?.sectionId,
+      receiverId: 0,
+      count: 0,
+      price: 0,
+      total: 0
+    },
     docStatus: DocSTATUS.OPEN,
-    user : user?.name ? user.name : '',
-    firstWorker: definedTandirWorkers.firstWorker,
+    userId : user?.id,
+    documentType: DocumentType.ComeProduct,
+    docTableItems: []
   }
 
   const config = {

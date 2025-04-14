@@ -165,22 +165,35 @@ export class DocumentsController {
     @UseGuards(RolesGuard)
     @Post('/createhamirs')
     async createHamirs(@Body() dto:UpdateCreateDocumentDto) {
-        // let newDoc = this.documentsService.createDocument(dto, this.usersService, this.referencesService, this.bot);
-        // if ((await newDoc) && (await newDoc).docStatus == DocSTATUS.PROVEDEN) {
-        //     sendMessage(dto, true, this.usersService, this.referencesService, this.bot)
-        // }
-
-        // let hamirs = await this.hamirService.getHamirsByUserToDate(dto)
-        // let countHamir = dto.fromHamirchi ? 51 : 31
-        // dto.analiticId = '659d2778630ca82ec3dcadf8';
+        const sectionId = dto.docValues.senderId
+        const senderSection = await this.referencesService.getReferenceById(sectionId)
         
-        // if (dto.sectionId != '' && dto.analiticId != '' && !hamirs.length) {
-        //     for (let i = 1; i < countHamir; i++) {
-        //         let newDto = { ...dto };
-        //         newDto.order = i;
-        //         let newHamir = this.hamirService.createHamir(newDto);
-        //     }
-        // }
+        let newRecieverId
+        if (senderSection) newRecieverId = Number(senderSection.refValues.comment)
+
+        dto = {
+            ...dto,
+            docValues: {
+                ...dto.docValues,
+                receiverId: newRecieverId
+            }
+        }
+
+        if (!dto.docValues.senderId || !dto.docValues.receiverId ) return
+        
+        for (let i = 1; i < 31; i++) {
+            let newDto = {
+                ...dto,
+                docValues: {
+                    ...dto.docValues,
+                    comment: String(i) + ' - зувала'    
+                }
+            }
+            
+            const newDoc = this.documentsService.createDocument(newDto, this.usersService, this.referencesService, this.bot);
+        }
+        return true
+
     }
 
     @ApiOperation({summary: 'Дать проводку на документ'})
@@ -190,10 +203,12 @@ export class DocumentsController {
     @Patch('sendhamirs/:id')
     async sendHamirs(@Param('id') id: number, @Body() dto:SendingHamir) {
         const count = dto.count | 0 
-        const analiticId = dto.count | 0 
+        const analiticId = dto.analiticId | 0 
         
         if (count && analiticId) {
             const doc = await this.documentsService.updateHamirsById(id, count, analiticId)
+            console.log('analiticId --', doc.docValues.analiticId, '----', 'count --', doc.docValues.count)
+
             const docForProvodka = await this.documentsService.setProvodka(id);
             
             let newDto = { ...JSON.parse(JSON.stringify(doc)) }

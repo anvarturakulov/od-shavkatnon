@@ -156,8 +156,10 @@ export class DocumentsService {
       if (document.docValues) {
         await document.docValues.update({ count, analiticId }, { transaction });
       } 
+      await transaction.commit();
       return document;
     } catch (error) {
+      await transaction.rollback();
       throw new Error(`Failed to update document: ${error.message}`);
     }
   }
@@ -468,7 +470,7 @@ export class DocumentsService {
         const report = await this.reportsService.getWorkerInformation(queryWorker);
         if (report.result && report.result.length > 0 && msg.from) {
           const sortedArray = report.result.sort((a, b) => a.date - b.date);
-          console.log(sortedArray);
+          // console.log(sortedArray);
 
           sortedArray.forEach(element => {
             if (msg.from) {

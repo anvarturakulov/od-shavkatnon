@@ -15,6 +15,7 @@ import { secondsToDateString } from '../../documents/document/doc/helpers/doc.fu
 import { UserRoles } from '@/app/interfaces/user.interface';
 import { DocSTATUS, DocumentModel, DocumentType } from '@/app/interfaces/document.interface';
 import { TypeReference } from '@/app/interfaces/reference.interface';
+import { dateNumberToString } from '@/app/service/common/converterForDates';
 
 export default function Hamirs({ className, ...props} : HamirsProps ):JSX.Element {
     
@@ -23,12 +24,16 @@ export default function Hamirs({ className, ...props} : HamirsProps ):JSX.Elemen
     const userName = user?.name;
     let tandir = user?.role == UserRoles.TANDIR
     
-    let dateNowPlussedInNumber = Date.now() + 32400000
-    let dateNowPlussedInString = new Date(dateNowPlussedInNumber);
-    let dateStr = dateNowPlussedInString.toISOString().split('T')[0]
+    const dateNowPlussedInNumber = Date.now() + 32400000
+    const dateNowPlussedInString = dateNumberToString(dateNowPlussedInNumber);
+    let dateStartForUrl, dateEndForUrl
+
+    if (dateNowPlussedInNumber) {
+        dateStartForUrl = Date.parse(dateNowPlussedInString)
+        dateEndForUrl = Date.parse(dateNowPlussedInString) + 86399999
+    }
 
     const token = user?.token;
-
     const documentType = DocumentType.ComeProduct
     const referenceType = TypeReference.TMZ
 
@@ -61,11 +66,8 @@ export default function Hamirs({ className, ...props} : HamirsProps ):JSX.Elemen
     let visibilityFillBtn = true
 
     if (hamirs && hamirs.length) {
-        visibilityFillBtn = !hamirs.filter((item: HamirModel)=> {
-            return (
-                    item.sectionId == user?.sectionId &&
-                    item.user == user?.name
-                )
+        visibilityFillBtn = !hamirs.filter((item: DocumentModel)=> {
+            return item.docValues.senderId == user?.sectionId
         }).length
     }
 
@@ -80,15 +82,11 @@ export default function Hamirs({ className, ...props} : HamirsProps ):JSX.Elemen
             let selectedElement = select?.options[select.selectedIndex];
 
             let dataId = selectedElement?.getAttribute('data-id') || ''
-            let analiticId: number = -1
+            let analiticId: number = 0
             if (dataId) analiticId = +dataId
 
-            if (count > 90) {
-                alert('Сон хато киритилди')
-            } else if 
-                ( count > 0 && id && analiticId > 0 && 
-                  confirm(`${order} - хамирдан тандирга ${count} та зувала бердингизми`)
-                ) {
+            if (id && analiticId) {
+                if (count < 90) {
                     const hamir: SendingHamir = {
                         id,
                         analiticId,
@@ -97,7 +95,10 @@ export default function Hamirs({ className, ...props} : HamirsProps ):JSX.Elemen
                     
                     changeStatusHamir(hamir, mainData, setMainData)
                     setMainData && setMainData('updateHamirJournal', true)
+                }   
+                else alert('Сон хато киритилди')
             }
+            
         }
 
     }
@@ -107,14 +108,12 @@ export default function Hamirs({ className, ...props} : HamirsProps ):JSX.Elemen
             {
                 <div className={styles.container} >
                     <table className={styles.table}>
-                        <thead className={cn(styles.thead, {
-                            [styles.theadWithTandir]: tandir
-                        })}>
+                        <thead className={cn(styles.thead)}>
                             <tr key='0' >
                                 <th key='2' className={cn(styles.date,{
                                     [styles.width50]: tandir
                                 })}>Сана</th>
-                                <th key='4' className={styles.order}>Хамир тартиби</th>
+                                <th key='4'>Хамир тартиби</th>
                                 <th key = '5'>Амал</th>
                                 
                             </tr>
@@ -131,10 +130,19 @@ export default function Hamirs({ className, ...props} : HamirsProps ):JSX.Elemen
                                 )
                             })
                             .sort((a:DocumentModel, b:DocumentModel) => {
-                               if (a.docValues.comment && b.docValues.comment) {
-                                return a.docValues.comment.localeCompare(b.docValues.comment)
-                               }
+                                const dateComparison = a.date - b.date;
+
+                                if (dateComparison === 0 && a.id && b.id) {
+                                    return a.id - b.id;
+                                }
+                                
+                                return dateComparison;
                             })
+                            // .sort((a:DocumentModel, b:DocumentModel) => {
+                            //    if (a.docValues.comment && b.docValues.comment) {
+                            //     return a.docValues.comment.localeCompare(b.docValues.comment)
+                            //    }
+                            // })
                             .map((item:DocumentModel, key: number) => (
                                 <tr 
                                     key={key} 
@@ -153,7 +161,8 @@ export default function Hamirs({ className, ...props} : HamirsProps ):JSX.Elemen
                                                     [styles.disabledInput]: item.docStatus == DocSTATUS.PROVEDEN
                                                 })} 
                                                 type='number'
-                                                value={item.docValues.count} 
+                                                defaultValue={item.docValues.count}
+                                                // value={item.docValues.count} 
                                                 disabled={item.docStatus == DocSTATUS.PROVEDEN}
                                             />    
                                         </td>

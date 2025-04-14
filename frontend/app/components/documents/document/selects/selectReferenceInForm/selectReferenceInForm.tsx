@@ -152,14 +152,25 @@ export const SelectReferenceInForm = ({ label, typeReference, visibile=true , de
                     if ((type == 'receiver' || type == 'sender') && 
                          ( contentName == DocumentType.MoveHalfstuff || 
                            contentName == DocumentType.MoveMaterial ||
-                           contentName == DocumentType.ComeHalfstuff ||
-                           contentName == DocumentType.ComeProduct ))
+                           contentName == DocumentType.ComeHalfstuff ))
                         {
                             return (
                                 item.refValues?.typeSection == TypeSECTION.FILIAL  || 
                                 item.refValues?.typeSection == TypeSECTION.STORAGE
                             ) 
                         }
+                    
+                    if (type == 'receiver' && contentName == DocumentType.ComeProduct ) {
+                            return (
+                                item.refValues?.typeSection == TypeSECTION.FILIAL  || 
+                                item.refValues?.typeSection == TypeSECTION.STORAGE
+                            ) 
+                        }
+
+                    if (type == 'sender' && contentName == DocumentType.ComeProduct ) {
+                        // console.log(item.refValues?.typeSection)
+                        return (item.refValues?.typeSection == TypeSECTION.TANDIR)
+                    }
                     
                     if ((type == 'receiver') && 
                         contentName == DocumentType.LeaveCash) {

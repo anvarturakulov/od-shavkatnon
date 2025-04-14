@@ -22,22 +22,13 @@
 
 .table tr:nth-child(even) {
     background-color: #f5f5f5;
-    
 }
 
 .table tr {
     margin: 5px 0;
-    border: 2px dotted blue;
+    border: 1px solid black;
 }
 
-.table tr:hover {
-    margin: 5px 0;
-    border: 1px solid green;
-}
-
-.table th {
-    font-weight: bold;
-}
 
 .table thead,
 .table tbody tr {
@@ -45,12 +36,8 @@
     width: 100%;
 }
 
-.table thead .theadWithTandir{
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-}
 .table thead {
-    width: calc(100% - 1.1em);
+    width: calc(100%);
     position: relative;
 }
 
@@ -61,14 +48,6 @@
     overflow-x: hidden;
 }
 
-.table thead th:last-child:after {
-    content: ' ';
-    position: absolute;
-    width: 1.1em;
-    height: 40px;
-    right: -1.1em;
-    top: 0;
-}
 .proveden {
     background-color: green!important;
     color: #fff;
@@ -81,9 +60,10 @@
 }
 
 .title{
-    font-size: 23px;
+    font-size: 18px;
     margin: 10px 0px;
-    margin-bottom: 20px;
+    margin: 20px;
+    text-align: center;
 }
 
 .button{
@@ -98,10 +78,6 @@
     min-width: 100px;
 }
 
-.width50{
-    width: 50%;
-}
-
 .sendBtn{
     padding: 10px;
     font-weight: 600;
@@ -114,11 +90,6 @@
     width: 100%;
 }
 
-.order{
-    color: blue;
-    font-weight: 500;
-}
-
 .box{
     margin-top: 20px;
 }
@@ -129,11 +100,16 @@
 
 .count{
     padding: 10px;
-    border: 1px solid blue;
-    width: 100px;
+    width: 100%;
     font-size: 16px;
+    border: 0.6px dotted blue;
 }
 
 .disabledInput{
     background: yellow;
 }
+
+.date, .order{
+    font-weight: 500;
+}
+

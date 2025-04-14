@@ -49,7 +49,7 @@ export default function Users() {
           mainData.window.mainPage && user?.role == UserRoles.TANDIR &&
           <>
             <Hamirs/>
-            <button className={styles.btnForTandir} onClick={()=> setTandirWorkers(state => !state)}>Бугунги ходимлар руйхати</button>
+            {/* <button className={styles.btnForTandir} onClick={()=> setTandirWorkers(state => !state)}>Бугунги ходимлар руйхати</button> */}
           </>
         }
 

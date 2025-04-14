@@ -245,8 +245,9 @@ export default function Journal({ className, ...props}:JournalProps):JSX.Element
                                 const bigString = `${itemComment}${analiticName}`.toLocaleLowerCase()
                                 const commentInLowerCase = comment.toLocaleLowerCase()
                                 
-                                if (comment != 'Изох' && analiticName) {
-                                    if (bigString.includes(commentInLowerCase)) return true
+                                if (comment != 'Изох') {
+                                    if (bigString.includes(commentInLowerCase)) return true 
+                                    else return false
                                 } else return true
                             })
                             .filter((item:DocumentModel) => {
