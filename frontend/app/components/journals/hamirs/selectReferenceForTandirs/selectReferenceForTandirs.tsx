@@ -28,6 +28,7 @@ export const SelectReferenceForTandirs = ({ data, idForSelect, currentItemId, di
                         data-type={item.typeReference}
                         data-id={item.id}
                         selected={item.id == currentItemId}
+                        key={key}
                         >
                             {item.name}
                     </option>
