@@ -2,47 +2,51 @@
 import { FoydaItemProps } from './foydaItem.props';
 import styles from './foydaItem.module.css';
 import { numberValue } from '@/app/service/common/converters';
+import { FoydaSubItem } from '../foydaSubItem/foydaSubItem';
+
+const totalByKey = (key:string, data:any[]) => {
+  let total = 0;
+  data && data.length &&
+  data.forEach((item:any) => {
+      total += item[key]
+  })
+  return total
+}
 
 export const FoydaItem = ({className, item, ...props }: FoydaItemProps) :JSX.Element => {
-    return (
-       <>
-        <tbody>
-            <tr>
-              <td className={styles.title}>{item?.section}</td>
-              <td>
-                {numberValue(item?.productionCountAll)} <br/>
-                <span className={styles.span}>({numberValue(item?.productionCountBux)})</span>
-              </td>
-              <td>
-                {numberValue(item?.productionDocsCountAll)}
-                <span className={styles.span}>({numberValue(item?.productionDocsCountBux)})</span>
-              </td>
-              <td>
-                {numberValue(item?.saleCountWithOutMoveAll)}<br/>
-                <span className={styles.span}>({numberValue(item?.saleCountWithOutMoveBux)})</span>
-              </td>
-              <td>
-                {numberValue(item?.countDeleviryAll)}<br/>
-                <span className={styles.span}>({numberValue(item?.countDeleviryBux)})</span>
-              </td>
-              <td>
-                {numberValue(item?.saleWithMoveAll)}<br/>
-                <span className={styles.span}>({numberValue(item?.saleWithMoveBux)})</span>
-              </td>
-              <td>{numberValue(item?.zagatovka)}</td>
-              <td >{numberValue(item?.materials)}</td>
-              <td>{numberValue(item?.zp)}</td>
-              <td>{numberValue(item?.addingZp)}</td>
-              <td>{numberValue(item?.services)}</td>
-              <td>{numberValue(item?.currentPayment)}</td>
-              <td>{numberValue(item?.addingCurrentPayment)}</td>
-              <td>{numberValue(item?.longPayment)}</td>
-              <td>{numberValue(item?.addingLongeCharge)}</td>
-              <td>{numberValue(item?.realEarning)}</td>
-              <td>{numberValue(item?.koefCurrentEarningToOneProduct)}</td>
-              <td>{numberValue(item?.currentEarning)}</td>
-            </tr>
-        </tbody>
-      </>
-    )
+  const datas = item.subItems ? [...item.subItems] : []    
+  return (
+      <tbody className={styles.tbody}>
+          <tr className={styles.tr}>
+            <td className={styles.column}>{item?.section}</td>
+            <td className={styles.column}>{numberValue(totalByKey('productionCount', datas))}</td>
+            <td className={styles.column}>{numberValue(totalByKey('comeProductDocsByProduct', datas))}</td>
+            <td className={styles.column}>{numberValue(totalByKey('saleCountWithOutMove', datas))}</td>
+            <td className={styles.column}>{numberValue(totalByKey('countDeleviry', datas))}</td>
+            <td className={styles.column}>{numberValue(totalByKey('saleWithMove', datas))}</td>
+            <td className={styles.column}>{numberValue(totalByKey('zagatovka', datas))}</td>
+            <td className={styles.column}>{numberValue(totalByKey('material', datas))}</td>
+            <td className={styles.column}>{numberValue(totalByKey('zp', datas))}</td>
+            <td className={styles.column}>{numberValue(totalByKey('service', datas))}</td>
+            <td className={styles.column}>{numberValue(totalByKey('payment', datas))}</td>
+            <td className={styles.column}>{numberValue(totalByKey('addingZagatovka', datas))}</td>
+            <td className={styles.column}>{numberValue(totalByKey('addingMaterial', datas))}</td>
+            <td className={styles.column}>{numberValue(totalByKey('addingZp', datas))}</td>
+            <td className={styles.column}>{numberValue(totalByKey('addingService', datas))}</td>
+            <td className={styles.column}>{numberValue(totalByKey('addingPayment', datas))}</td>
+            <td className={styles.column}>{numberValue(totalByKey('earning', datas))}</td>
+            <td className={styles.column}></td>
+            <td className={styles.column}></td>
+          </tr>
+          {
+            datas && datas.length && datas
+            .map((element: any, key: number) => {
+                return <FoydaSubItem 
+                    key={key}
+                    item={element}
+                />
+            })
+          }
+      </tbody>
+  )
 } 

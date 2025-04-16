@@ -4,8 +4,21 @@ import { FoydaItem } from './foydaItem/foydaItem';
 import styles from './foyda.module.css';
 import { useEffect, useState } from 'react';
 import { numberValue } from '@/app/service/common/converters';
-import { totalByKey } from '../inform';
 
+const totalByKey = (key:string, data:any[]) => {
+    let total = 0;
+    data && data.length &&
+    data.forEach((item:any) => {
+        let totalInner = 0
+        if (item.subItems && item.subItems.length) {
+            item.subItems.forEach((elem: any) => {
+                totalInner += elem[key]
+            })
+        }
+        total += totalInner
+    })
+    return total
+  }
 
 export const Foyda = ({className, data, ...props }: FoydaProps) :JSX.Element => {
 
@@ -22,7 +35,7 @@ export const Foyda = ({className, data, ...props }: FoydaProps) :JSX.Element => 
             <table className={styles.table}>
                 <thead>
                     <tr>
-                        <td >Цех</td>
+                        <td className={styles.section}>Цех</td>
                         <td>Ишлаб чикар. нон сони</td>
                         <td>Хамир сони</td>
                         <td>Цехдага сав. нон сони</td>
@@ -31,12 +44,13 @@ export const Foyda = ({className, data, ...props }: FoydaProps) :JSX.Element => 
                         <td>Ун харажати</td>
                         <td>Хом ашёлар хараж.</td>
                         <td>Иш хаки хараж.</td>
-                        <td>Бошкарув иш хаки</td>
                         <td>Коммун ва бошка хараж.</td>
-                        <td>Цех буйича кунлик пуллик хараж.</td>
-                        <td>Умумдан келган кунлик хараж.</td>
-                        <td>Цех буйича ойлик пуллик хараж</td>
-                        <td>Умумдан келган ойлик пуллик хараж</td>
+                        <td>Пуллик хараж.</td>
+                        <td>Умум - ун харажати</td>
+                        <td>Умум - хом ашё харажати</td>
+                        <td>Умум - иш хаки</td>
+                        <td>Умум - комм. ва бошка хараж</td>
+                        <td>Умум - пуллик харажатлар</td>
                         <td>Соф фойда</td>
                         <td>Хом аше нормаси</td>
                         <td>1 та нонга нис. фойда</td>
@@ -52,41 +66,27 @@ export const Foyda = ({className, data, ...props }: FoydaProps) :JSX.Element => 
                         />
                     })
                 }
-                <thead>
-                    <tr>
-                        <td>Жами</td>
-                        <td className={styles.totalTd}>
-                            {numberValue(totalByKey('productionCountAll', datas))} <br/>
-                            (<span>{numberValue(totalByKey('productionCountBux', datas))}</span>)
-                        </td>
-                        <td className={styles.totalTd}>
-                            {numberValue(totalByKey('productionDocsCountAll', datas))} <br/>
-                            <span>({numberValue(totalByKey('productionDocsCountBux', datas))})</span>
-                        </td>
-                        <td className={styles.totalTd}>
-                            {numberValue(totalByKey('saleCountWithOutMoveAll', datas))} <br/>
-                            <span>({numberValue(totalByKey('saleCountWithOutMoveBux', datas))})</span>
-                        </td>
-                        <td className={styles.totalTd}>
-                            {numberValue(totalByKey('countDeleviryAll', datas))}<br/>
-                            <span>({numberValue(totalByKey('countDeleviryBux', datas))})</span>
-                        </td>
-                        <td className={styles.totalTd}>
-                            {numberValue(totalByKey('saleWithMoveAll', datas))}<br/>
-                            <span>({numberValue(totalByKey('saleWithMoveBux', datas))})</span>
-                        </td>
-                        <td className={styles.totalTd}>{numberValue(totalByKey('zagatovka', datas))}</td>
-                        <td className={styles.totalTd}>{numberValue(totalByKey('materials', datas))}</td>
-                        <td className={styles.totalTd}>{numberValue(totalByKey('zp', datas))}</td>
-                        <td className={styles.totalTd}>{numberValue(totalByKey('addingZp', datas))}</td>
-                        <td className={styles.totalTd}>{numberValue(totalByKey('services', datas))}</td>
-                        <td className={styles.totalTd}>{numberValue(totalByKey('currentPayment', datas))}</td>
-                        <td className={styles.totalTd}>{numberValue(totalByKey('addingCurrentPayment', datas))}</td>
-                        <td className={styles.totalTd}>{numberValue(totalByKey('longPayment', datas))}</td>
-                        <td className={styles.totalTd}>{numberValue(totalByKey('addingLongeCharge', datas))}</td>
-                        <td className={styles.totalTd}>{numberValue(totalByKey('realEarning', datas))}</td>
-                        <td className={styles.totalTd}>{numberValue(totalByKey('koefCurrentEarningToOneProduct', datas)/4)}</td>
-                        <td className={styles.totalTd}>{numberValue(totalByKey('currentEarning', datas)/4)}</td>
+                <thead className={styles.thead}>
+                    <tr className={styles.tr}>
+                        <td className={styles.section}>Жами</td>
+                        <td className={styles.column}>{numberValue(totalByKey('productionCount', datas))}</td>
+                        <td className={styles.column}>{numberValue(totalByKey('comeProductDocsByProduct', datas))}</td>
+                        <td className={styles.column}>{numberValue(totalByKey('saleCountWithOutMove', datas))}</td>
+                        <td className={styles.column}>{numberValue(totalByKey('countDeleviry', datas))}</td>
+                        <td className={styles.column}>{numberValue(totalByKey('saleWithMove', datas))}</td>
+                        <td className={styles.column}>{numberValue(totalByKey('zagatovka', datas))}</td>
+                        <td className={styles.column}>{numberValue(totalByKey('material', datas))}</td>
+                        <td className={styles.column}>{numberValue(totalByKey('zp', datas))}</td>
+                        <td className={styles.column}>{numberValue(totalByKey('service', datas))}</td>
+                        <td className={styles.column}>{numberValue(totalByKey('payment', datas))}</td>
+                        <td className={styles.column}>{numberValue(totalByKey('addingZagatovka', datas))}</td>
+                        <td className={styles.column}>{numberValue(totalByKey('addingMaterial', datas))}</td>
+                        <td className={styles.column}>{numberValue(totalByKey('addingZp', datas))}</td>
+                        <td className={styles.column}>{numberValue(totalByKey('addingService', datas))}</td>
+                        <td className={styles.column}>{numberValue(totalByKey('addingPayment', datas))}</td>
+                        <td className={styles.column}>{numberValue(totalByKey('earning', datas))}</td>
+                        <td className={styles.column}></td>
+                        <td className={styles.column}></td>    
                     </tr>
                 </thead>
             </table>

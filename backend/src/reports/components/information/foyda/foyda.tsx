@@ -1,15 +1,13 @@
 import { TypeReference, TypeSECTION, TypeTMZ } from 'src/interfaces/reference.interface';
 import { Schet, TypeQuery } from 'src/interfaces/report.interface';
 import { foydaItem } from './foydaItem';
-import { zpItemToFoyda } from './zpItemToFoyda';
 import { Sequelize } from 'sequelize-typescript';
 import { Reference } from 'src/references/reference.model';
-import { queryKor } from 'src/reports/querys/queryKor';
 import { StocksService } from 'src/stocks/stocks.service';
 import { OborotsService } from 'src/oborots/oborots.service';
-import { DocumentsService } from 'src/documents/documents.service';
 import { DocumentType } from 'src/interfaces/document.interface';
 import { Document } from 'src/documents/document.model';
+import { DocumentsService } from 'src/documents/documents.service';
 
 const getValue = (jsonString: string, key: string) => {
     try{
@@ -39,9 +37,9 @@ export const foyda = async (
     
     const docsComeProduct:Document[] = await documentsService.getAllDocumentsByType(DocumentType.ComeProduct)
     const docsMoveProduct:Document[] = await documentsService.getAllDocumentsByType(DocumentType.MoveProd)
-    
+
     const arrUmumBulim = data.filter((item: Reference) => item.refValues.typeSection == TypeSECTION.COMMON)
-    const idUmumBulim = arrUmumBulim[0]._id | 0;
+    const idUmumBulim = arrUmumBulim[0].id | 0;
 
     const arrUmumProduct = data.filter((item: Reference) => {
         const commonProduct = item.refValues.comment ? getValue(item.refValues.comment, 'common') : false
@@ -52,7 +50,7 @@ export const foyda = async (
             commonProduct
         )
     })
-    const idUmumProduct = arrUmumProduct[0]._id | 0;
+    const idUmumProduct = arrUmumProduct[0].id | 0;
 
     // if (data && data.length>0) {
     //     let arrUmumBulim = data.filter((item: Reference) => item.refValues.typeSection == TypeSECTION.COMMON)
@@ -76,23 +74,11 @@ export const foyda = async (
 
     let filteredData:Reference[] = []
     
-    data && data.length > 0 && data
-    .filter((item: any) => item?.typeReference == TypeReference.STORAGES && !item.deleted)
-    .filter((item: any) => {
-        if ( item.filial ) return true
-        return false;
-    })
+    filteredData  = data.filter((item: Reference) => item.refValues.typeSection == TypeSECTION.FILIAL)
 
-    filteredData  = data.filter((item: Reference) => {
-                        return (
-                            item?.typeReference == TypeReference.STORAGES && 
-                            !item.refValues.markToDeleted && 
-                            item.refValues.typeSection == TypeSECTION.FILIAL
-                        )
-                    })
-        
     for (const item of filteredData) {                    
         let element = await foydaItem(data, deliverys, docsComeProduct, docsMoveProduct, startDate, endDate, item.id, item.name, idUmumBulim, idUmumProduct, sequelize, stockService, oborotsService);
+        // console.log('item --', element?.subItems)
         if (Object.keys(element).length) {
             result.push(element)
         }

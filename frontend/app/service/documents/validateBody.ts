@@ -3,7 +3,7 @@ import { DocumentModel, DocumentType } from "../../interfaces/document.interface
 export const validateBody = (body: DocumentModel): Boolean => {
 
   const { date, id, documentType, docTableItems } = body
-  const { analiticId, senderId, receiverId, total, count } = body.docValues
+  const { analiticId, senderId, receiverId, productForChargeId, total, count } = body.docValues
 
   if (!date || !id || !documentType) return false
 
@@ -120,6 +120,19 @@ export const validateBody = (body: DocumentModel): Boolean => {
     `${DocumentType.LeaveMaterial}`,
     `${DocumentType.MoveMaterial}`,
   ]
+
+  const documentsWithProductForChargeId = [
+    `${DocumentType.LeaveProd}`,
+    `${DocumentType.LeaveMaterial}`,
+    `${DocumentType.LeaveHalfstuff}`,
+    `${DocumentType.LeaveCash}`,
+    `${DocumentType.ZpCalculate}`,
+    `${DocumentType.ServicesFromPartners}`,
+  ]
+
+  if (documentsWithProductForChargeId.includes(documentType)) {
+    if ( !productForChargeId ) return false
+  }
 
   return true
 

@@ -15,10 +15,12 @@ import { ConfigService } from '@nestjs/config';
 import * as TelegramBot from 'node-telegram-bot-api';
 import { ReferencesService } from 'src/references/references.service';
 import { ReportsService } from 'src/reports/reports.service';
-import { QueryWorker } from 'src/interfaces/report.interface';
+import { QueryWorker, Schet, TypeQuery } from 'src/interfaces/report.interface';
 import { UsersService } from 'src/users/users.service';
 import { sendMessage } from './helper/entry/sendMessage';
 import { Op } from 'sequelize'; // Используем импорт вместо require
+import { query } from 'src/reports/querys/query';
+import { EntriesService } from 'src/entries/entries.service';
 
 @Injectable()
 export class DocumentsService {
@@ -35,7 +37,8 @@ export class DocumentsService {
     private oborotsService: OborotsService,
     private configService: ConfigService,
     private referencesService: ReferencesService,
-    private reportsService: ReportsService
+    private entriesService: EntriesService,
+
   ) {
     const myArrayString = this.configService.get<string>('FOUNDERS_IDS');
     this.foundersIds = myArrayString ? myArrayString.split('|') : [];
@@ -448,6 +451,41 @@ export class DocumentsService {
     }
   }
 
+  async getWorkerInformation(queryWorker: QueryWorker) {
+    const { startDate, endDate, workerId, name } = queryWorker;
+    const entrys = await this.entriesService.getAllEntries();
+    let result = 
+        entrys
+        .filter((entry: Entry) => {
+            return (
+                (entry.date >= startDate && entry.date <= endDate) &&
+                (entry.debet == Schet.S67 || entry.kredit == Schet.S67) &&
+                (entry.debetFirstSubcontoId == workerId || entry.kreditFirstSubcontoId == workerId)
+            )
+        })
+        
+      
+    const newArray = result
+        // .sort((a: Entry, b: Entry) => Number(a.date) - Number(b.date)) // Сортировка по дате
+        .map((entry: Entry) => ({
+            date: Number(entry.date),
+            type: entry.debet == Schet.S67 ? 'ойлик берилди' : 'иш хаки хисобланди',
+            value: entry.total,
+            comment: entry.description,
+            name,
+        }));
+
+    const POSUM = await query(Schet.S67, TypeQuery.POSUM, startDate, endDate, workerId, null, null, this.stocksService, this.oborotsService)
+    let amount = (-1)*POSUM
+    
+    return {
+      amount,
+      result: newArray
+    }
+
+  }
+
+
   // Метод botListining остаётся без изменений
   botListining(bot: TelegramBot) {
     bot.on('text', async msg => {
@@ -467,7 +505,7 @@ export class DocumentsService {
           name: worker ? worker.name : '',
         };
 
-        const report = await this.reportsService.getWorkerInformation(queryWorker);
+        const report = await this.getWorkerInformation(queryWorker);
         if (report.result && report.result.length > 0 && msg.from) {
           const sortedArray = report.result.sort((a, b) => a.date - b.date);
           // console.log(sortedArray);

@@ -25,7 +25,8 @@ export const foydaSubItem = async (
   endDate: number | null,
   sectionId: number,
   productId: number, 
-  title: string,
+  productTitle: string,
+  productComment: string | undefined,
   idUmumBulim: number, 
   idUmumProduct: number,
   sequelize: Sequelize,
@@ -68,7 +69,8 @@ export const foydaSubItem = async (
           item.date <= endDate && 
           item.documentType == DocumentType.MoveProd &&
           item.docValues.senderId == sectionId  &&
-          isDelivery(deliverys, item.docValues.receiverId )
+          isDelivery(deliverys, item.docValues.receiverId) &&
+          item.docValues.productForChargeId == productId
       )}
       ).reduce((total, item:Document) => total + item.docValues.count, 0)
 
@@ -78,7 +80,9 @@ export const foydaSubItem = async (
           item.date <= endDate && 
           item.documentType == DocumentType.MoveProd &&
           item.docValues.receiverId == sectionId  &&
-          isDelivery(deliverys, item.docValues.senderId) )
+          isDelivery(deliverys, item.docValues.senderId) &&
+          item.docValues.productForChargeId == productId
+        )
       }).reduce((total, item:Document) => total + item.docValues.count, 0)
 
     }
@@ -110,32 +114,31 @@ export const foydaSubItem = async (
     let o = oAll > 0 ? oAll : 0
     let saleI = sale > 0 ? sale : 0
 
-    let firstPrice = 0
-    let valueForSale = firstPrice ? firstPrice : 0
+    const priceForResult = productComment ? Number(productComment) : 0
     
-    const saleWithMove = saleI + (d - i + o) * valueForSale;
+    const saleWithMove = saleI + (d - i + o) * priceForResult;
 
     const queries = [
-      queryKor(Schet.S20, Schet.S21, TypeQuery.OKS, startDate, endDate, null, null, null, oborotsService), // zagatovkaByCompany
-      queryKor(Schet.S20, Schet.S21, TypeQuery.OKS, startDate, endDate, sectionId, null, null, oborotsService), // zagatovkaBySection
+      queryKor(Schet.S20, Schet.S21, TypeQuery.ODS, startDate, endDate, null, null, null, oborotsService), // zagatovkaByCompany
+      queryKor(Schet.S20, Schet.S21, TypeQuery.ODS, startDate, endDate, sectionId, null, null, oborotsService), // zagatovkaBySection
       
-      queryKor(Schet.S20, Schet.S21, TypeQuery.OKS, startDate, endDate, idUmumBulim, null, null, oborotsService), // zagatovkaUmumBulim
-      queryKor(Schet.S20, Schet.S10, TypeQuery.OKS, startDate, endDate, idUmumBulim, null, null, oborotsService), // materialUmumBulim
+      queryKor(Schet.S20, Schet.S21, TypeQuery.ODS, startDate, endDate, idUmumBulim, null, null, oborotsService), // zagatovkaUmumBulim
+      queryKor(Schet.S20, Schet.S10, TypeQuery.ODS, startDate, endDate, idUmumBulim, null, null, oborotsService), // materialUmumBulim
       queryKor(Schet.S20, Schet.S67, TypeQuery.ODS, startDate, endDate, idUmumBulim, null, null, oborotsService), // zpUmumBulim
       queryKor(Schet.S20, Schet.S60, TypeQuery.ODS, startDate, endDate, idUmumBulim, null, null, oborotsService), // serviceUmumBulim
       queryKor(Schet.S20, Schet.S50, TypeQuery.ODS, startDate, endDate, idUmumBulim, null, null, oborotsService), // paymentUmumBulim
 
-      queryKor(Schet.S20, Schet.S21, TypeQuery.OKS, startDate, endDate, sectionId, productId, null, oborotsService), // zagatovka
-      queryKor(Schet.S20, Schet.S10, TypeQuery.OKS, startDate, endDate, sectionId, productId, null, oborotsService), // material
-      queryKor(Schet.S20, Schet.S67, TypeQuery.ODS, startDate, endDate, sectionId, productId, null, oborotsService), // zp
-      queryKor(Schet.S20, Schet.S60, TypeQuery.ODS, startDate, endDate, sectionId, productId, null, oborotsService), // service
-      queryKor(Schet.S20, Schet.S50, TypeQuery.ODS, startDate, endDate, sectionId, productId, null, oborotsService), // payment
-      
-      queryKor(Schet.S20, Schet.S21, TypeQuery.OKS, startDate, endDate, sectionId, idUmumProduct, null, oborotsService), // zagatovkaUmumProduct
-      queryKor(Schet.S20, Schet.S10, TypeQuery.OKS, startDate, endDate, sectionId, idUmumProduct, null, oborotsService), // materialUmumProduct
-      queryKor(Schet.S20, Schet.S67, TypeQuery.ODS, startDate, endDate, sectionId, idUmumProduct, null, oborotsService), // zpUmumProduct
-      queryKor(Schet.S20, Schet.S60, TypeQuery.ODS, startDate, endDate, sectionId, idUmumProduct, null, oborotsService), // serviceUmumProduct
-      queryKor(Schet.S20, Schet.S50, TypeQuery.ODS, startDate, endDate, sectionId, idUmumProduct, null, oborotsService) // paymentUmumProduct
+      queryKor(Schet.S20, Schet.S21, TypeQuery.ODS, startDate, endDate, sectionId, null, productId, oborotsService), // zagatovka
+      queryKor(Schet.S20, Schet.S10, TypeQuery.ODS, startDate, endDate, sectionId, null, productId, oborotsService), // material
+      queryKor(Schet.S20, Schet.S67, TypeQuery.ODS, startDate, endDate, sectionId, null, productId, oborotsService), // zp
+      queryKor(Schet.S20, Schet.S60, TypeQuery.ODS, startDate, endDate, sectionId, null, productId, oborotsService), // service
+      queryKor(Schet.S20, Schet.S50, TypeQuery.ODS, startDate, endDate, sectionId, null, productId, oborotsService), // payment
+
+      queryKor(Schet.S20, Schet.S21, TypeQuery.ODS, startDate, endDate, sectionId, null, idUmumProduct, oborotsService), // zagatovkaUmumProduct
+      queryKor(Schet.S20, Schet.S10, TypeQuery.ODS, startDate, endDate, sectionId, null, idUmumProduct, oborotsService), // materialUmumProduct
+      queryKor(Schet.S20, Schet.S67, TypeQuery.ODS, startDate, endDate, sectionId, null, idUmumProduct, oborotsService), // zpUmumProduct
+      queryKor(Schet.S20, Schet.S60, TypeQuery.ODS, startDate, endDate, sectionId, null, idUmumProduct, oborotsService), // serviceUmumProduct
+      queryKor(Schet.S20, Schet.S50, TypeQuery.ODS, startDate, endDate, sectionId, null, idUmumProduct, oborotsService) // paymentUmumProduct
     ];
     
     // Выполняем все запросы параллельно и ждем их завершения
@@ -166,8 +169,12 @@ export const foydaSubItem = async (
     
     const koefUmumProduct = 
       zagatovkaBySection ? 
-      zagatovkaUmumProduct * zagatovka / zagatovkaBySection 
+      zagatovka / zagatovkaBySection 
       : 0
+
+
+
+    console.log(koefUmumBulim, koefUmumProduct )
 
     const addingZagatovka = zagatovkaUmumBulim * koefUmumBulim + zagatovkaUmumProduct * koefUmumProduct ;
     const addingMaterial = materialUmumBulim * koefUmumBulim + materialUmumProduct * koefUmumProduct ;
@@ -176,7 +183,7 @@ export const foydaSubItem = async (
     const addingPayment = paymentUmumBulim * koefUmumBulim + paymentUmumProduct * koefUmumProduct ;
 
     const charges = 
-      zagatovka + addingZagatovka
+      zagatovka + addingZagatovka + 
       material + addingMaterial + 
       zp + addingZp +
       service + addingService +
@@ -187,7 +194,7 @@ export const foydaSubItem = async (
 
   return (
     {
-      title,
+      title: productTitle,
       sectionId,
       productId,
       comeProductDocsBySection,

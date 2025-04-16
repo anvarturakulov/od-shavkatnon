@@ -16,6 +16,7 @@ import { Stock } from 'src/stocks/stock.model';
 import { StocksModule } from 'src/stocks/stocks.module';
 import { OborotsModule } from 'src/oborots/oborots.module';
 import { ReportsModule } from 'src/reports/reports.module';
+import { EntriesModule } from 'src/entries/entries.module';
 
 @Module({
   controllers: [DocumentsController],
@@ -28,7 +29,7 @@ import { ReportsModule } from 'src/reports/reports.module';
       ReferencesModule,
       StocksModule,
       OborotsModule,
-      ReportsModule
+      EntriesModule
     ],
   exports: [DocumentsService]
 })

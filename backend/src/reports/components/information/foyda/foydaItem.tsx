@@ -49,15 +49,15 @@ export const foydaItem = async (
 
   if (data && data.length) {
     filteredData = data.filter((item: Reference)=> {
-                        return item.typeReference == TypeReference.TMZ && 
-                               item.refValues.typeTMZ == TypeTMZ.PRODUCT
-  })}
+                        return item.refValues.typeTMZ == TypeTMZ.PRODUCT
+    }
+  )}
 
+  // console.log(filteredData)
   for (const item of filteredData) {
     
     if (item.id != idUmumProduct) {
-      const element = foydaSubItem(data, docsComeProduct, docsMoveProduct, deliverys, startDate, endDate, currentSectionId, item.id, item.name, idUmumBulim, idUmumProduct, sequelize, stockService, oborotsService)
-    
+      const element = await foydaSubItem(data, docsComeProduct, docsMoveProduct, deliverys, startDate, endDate, currentSectionId, item.id, item.name, item.refValues.comment, idUmumBulim, idUmumProduct, sequelize, stockService, oborotsService)
       if (Object.keys(element).length) {
         result.push(element)
       }

@@ -16,15 +16,7 @@ export const RefreshPanel = ({className, ...props }: RefreshPanelProps) :JSX.Ele
     const { user } = mainData.users
 
     const refreshReport = async (mainData: Maindata, setMainData: Function | undefined) => {
-        let firstPrice:string|null = ''
-        let secondPrice:string|null = ''
-
-        if (mainData.report.dashboardCurrentReportType == 'Foyda') {
-            firstPrice = prompt('Катта нон учун нархни киритинг')
-            secondPrice = prompt('Оддий нон учун нархни киритинг')
-            
-        }
-        getInformation(setMainData, mainData, firstPrice, secondPrice );
+        getInformation(setMainData, mainData);
     }
     
     let dateStartInStr = dateNumberToString(dateStart)

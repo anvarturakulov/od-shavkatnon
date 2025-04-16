@@ -3,7 +3,7 @@ import styles from './selectReferenceInForm.module.css';
 import { useAppContext } from '@/app/context/app.context';
 import useSWR from 'swr';
 import cn from 'classnames';
-import { ReferenceModel, TypePartners, TypeReference, TypeSECTION } from '@/app/interfaces/reference.interface';
+import { ReferenceModel, TypePartners, TypeReference, TypeSECTION, TypeTMZ } from '@/app/interfaces/reference.interface';
 import { Maindata } from '@/app/context/app.context.interfaces';
 import { getDataForSwr } from '@/app/service/common/getDataForSwr';
 import { sortByName } from '@/app/service/references/sortByName';
@@ -124,7 +124,7 @@ export const SelectReferenceInForm = ({ label, typeReference, visibile=true , de
                 {data && data.length>0  &&
                 data
                 .filter((item:ReferenceModel) => {
-                    if (typeReference == TypeReference.TMZ) {
+                    if (typeReference == TypeReference.TMZ && type != 'productForCharge' ) {
                         switch (typeDocumentForReference) {
                             case 'MATERIAL':
                                 return item.refValues?.typeTMZ == 'MATERIAL'
@@ -173,7 +173,13 @@ export const SelectReferenceInForm = ({ label, typeReference, visibile=true , de
                         // console.log(item.refValues?.typeSection)
                         return (item.refValues?.typeSection == TypeSECTION.TANDIR)
                     }
+
+                    type == 'productForCharge'
                     
+                    if (type == 'productForCharge') {
+                        return (item.refValues?.typeTMZ == TypeTMZ.PRODUCT)
+                    }
+
                     if ((type == 'receiver') && 
                         contentName == DocumentType.LeaveCash) {
                         if ( user?.role == UserRoles.ADMIN || user?.role == UserRoles.HEADCOMPANY ) {

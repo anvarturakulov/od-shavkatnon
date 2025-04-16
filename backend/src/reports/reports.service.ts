@@ -7,13 +7,15 @@ import { query } from './querys/query';
 import { information } from './components/information/information';
 import { matOborot } from './components/matOborot/matOborot';
 import { ReferencesService } from 'src/references/references.service';
-import { DocumentsService } from 'src/documents/documents.service';
 import { oborotkaAll } from './components/oborotkaAll/oborotkaAll';
 import { EntriesService } from 'src/entries/entries.service';
 import { personalAll } from './components/personalAll/personalAll';
 import { StocksService } from 'src/stocks/stocks.service';
 import { OborotsService } from 'src/oborots/oborots.service';
-import { start } from 'repl';
+import { Document } from 'src/documents/document.model';
+import { DocValues } from 'src/docValues/docValues.model';
+import { DocTableItems } from 'src/docTableItems/docTableItems.model';
+import { DocumentsService } from 'src/documents/documents.service';
 
 @Injectable()
 export class ReportsService {
@@ -21,6 +23,7 @@ export class ReportsService {
     constructor(
         @InjectModel(Entry) private entryRepository: typeof Entry,
         @InjectConnection() private readonly sequelize: Sequelize,
+        @InjectModel(Document) private documentRepository: typeof Document,
         private referencesService: ReferencesService,
         private entriesService: EntriesService,
         private stocksService: StocksService,
@@ -28,6 +31,15 @@ export class ReportsService {
         private documentsService: DocumentsService
     ) {}
 
+    async getAllDocumentsByType(documentType) {
+        // const documents = await this.documentsService.getAllDocumentsByType(documentType)
+        // return documents;
+        const documents = await this.documentRepository.findAll({
+            where: { documentType },
+            include: [DocValues, DocTableItems],
+          });
+          return documents;
+    }
 
     async getQueryValue(req: QuerySimple) {
         const { typeQuery, schet, startDate, endDate, firstSubcontoId, secondSubcontoId, thirdSubcontoId} = req;
@@ -57,7 +69,7 @@ export class ReportsService {
         let deliverys = await this.referencesService.getDeliverys();
         let {startDate, endDate, reportType} = queryInformation;
         console.time('Information');
-        let inform = await information(references, startDate, endDate, reportType, deliverys, this.sequelize, this.stocksService, this.oborotsService);
+        let inform = await information(references, startDate, endDate, reportType, deliverys, this.sequelize, this.stocksService, this.oborotsService, this.documentsService);
         console.timeEnd('Information');
         return inform;
     }
@@ -122,38 +134,5 @@ export class ReportsService {
         
     }
 
-    async getWorkerInformation(queryWorker: QueryWorker) {
-        const { startDate, endDate, workerId, name } = queryWorker;
-        const entrys = await this.entriesService.getAllEntries();
-        let result = 
-            entrys
-            .filter((entry: Entry) => {
-                return (
-                    (entry.date >= startDate && entry.date <= endDate) &&
-                    (entry.debet == Schet.S67 || entry.kredit == Schet.S67) &&
-                    (entry.debetFirstSubcontoId == workerId || entry.kreditFirstSubcontoId == workerId)
-                )
-            })
-            
-          
-        const newArray = result
-            // .sort((a: Entry, b: Entry) => Number(a.date) - Number(b.date)) // Сортировка по дате
-            .map((entry: Entry) => ({
-                date: Number(entry.date),
-                type: entry.debet == Schet.S67 ? 'ойлик берилди' : 'иш хаки хисобланди',
-                value: entry.total,
-                comment: entry.description,
-                name,
-            }));
-    
-        const POSUM = await query(Schet.S67, TypeQuery.POSUM, startDate, endDate, workerId, null, null, this.stocksService, this.oborotsService)
-        let amount = (-1)*POSUM
         
-        return {
-          amount,
-          result: newArray
-        }
-    
-      }
-    
 }

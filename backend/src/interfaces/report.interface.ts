@@ -82,9 +82,7 @@ export interface QuerySimple {
     endDate: number | null, 
     firstSubcontoId: number | null, 
     secondSubcontoId: number | null,
-    thirdSubcontoId: number | null
-    firstPrice: number | null,
-    secondPrice: number | null,
+    thirdSubcontoId: number | null,
     debetFirstSubcontoId: number | null, 
     debetSecondSubcontoId: number | null,
     debetThirdSubcontoId: number | null, 

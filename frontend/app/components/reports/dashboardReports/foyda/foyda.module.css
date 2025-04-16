@@ -18,7 +18,7 @@
 
 .table td,
 .table th {
-    border: 0.5px dotted #ddd;
+    border: .5px solid #ddd;
     text-align: right;
     padding: 7px;
     font-weight: 400;
@@ -51,4 +51,18 @@
   cursor: pointer;
   border-radius: 5px;
   font-weight: 700;
+}
+
+.section{
+  width: 150px!important;
+  /* color: red; */
+}
+
+.table .thead td {
+  font-weight: 700;
+  font-size: 15px;
+  background: #cacbd1;
+  text-align: right;
+  /* font-style: oblique; */
+  /* color: blue; */
 }

@@ -5,8 +5,6 @@ import { Maindata } from '@/app/context/app.context.interfaces';
 export const getInformation = (
   setMainData: Function | undefined, 
   mainData: Maindata,
-  firstPrice: string | null,
-  secondPrice: string | null,
   endDate?: number,
   ) => {
   
@@ -21,7 +19,7 @@ export const getInformation = (
   setMainData && setMainData('uploadingDashboard', true)
 
   let url = process.env.NEXT_PUBLIC_DOMAIN + '/api/reports/information'+'?startDate='+interval.dateStart+'&endDate='+interval.dateEnd
-  +'&reportType='+reportType+'&firstPrice='+firstPrice+'&secondPrice='+secondPrice+'&user='+user?.name;
+  +'&reportType='+reportType+'&user='+user?.name;
   
   console.time('Fetch');
   axios.get(url, config)

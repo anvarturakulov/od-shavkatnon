@@ -15,8 +15,6 @@ export const requestTransform = (query: GetEntriesQueryDto): QuerySimple => {
         firstSubcontoId: query.firstSubcontoId || null,
         secondSubcontoId: query.secondSubcontoId || null,
         thirdSubcontoId: query.thirdSubcontoId || null,
-        firstPrice: query.firstPrice || null,
-        secondPrice: query.secondPrice || null,
         debetFirstSubcontoId: query.debetFirstSubcontoId || null,
         debetSecondSubcontoId: query.debetSecondSubcontoId || null,
         debetThirdSubcontoId: query.debetThirdSubcontoId || null,
