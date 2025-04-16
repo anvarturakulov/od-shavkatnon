@@ -56,6 +56,8 @@ export const SelectReferenceInForm = ({ label, typeReference, visibile=true , de
                 if (docsDependentToMiddlePrice.includes(contentName)) currentItem.docValues.price = 0;
             }
             if (type == 'receiver' && id) currentItem.docValues.receiverId = id;
+
+            if (type == 'productForCharge' && id) currentItem.docValues.productForChargeId = id;
               
             if (type == 'analitic' && id) {
                 currentItem.docValues.analiticId = id

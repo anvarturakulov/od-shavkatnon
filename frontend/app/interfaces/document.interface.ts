@@ -52,6 +52,7 @@ export interface DocValues {
     receiverOldId?: string;
     analiticId?: number,
     analiticOldId?: string;
+    productForChargeId?: number,
     isWorker?: boolean,
     isPartner?: boolean,
     isFounder?: boolean,
@@ -87,6 +88,10 @@ export interface OptionsForDocument {
     analiticType: TypeReference,
     analiticLabel: string,
     analiticIsVisible: boolean
+
+    productForChargeType: TypeReference,
+    productForChargeLabel: string,
+    productForChargeIsVisible: boolean
 
     cashFromPartnerLabel: string,
     cashFromPartnerVisible: boolean,

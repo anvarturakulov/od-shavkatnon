@@ -1,13 +1,14 @@
 import { Schet, TypeQuery } from 'src/interfaces/report.interface';
-import { ReferenceModel, TypeReference } from 'src/interfaces/reference.interface';
-import { DocumentType } from 'src/interfaces/document.interface';
+import { TypeReference, TypeTMZ } from 'src/interfaces/reference.interface';
 import { Sequelize } from 'sequelize-typescript';
 import { Reference } from 'src/references/reference.model';
-import { Document } from 'src/documents/document.model';
 import { queryKor } from 'src/reports/querys/queryKor';
 import { query } from 'src/reports/querys/query';
 import { StocksService } from 'src/stocks/stocks.service';
 import { OborotsService } from 'src/oborots/oborots.service';
+import { Document } from 'src/documents/document.model';
+import { DocumentType } from 'src/interfaces/document.interface';
+import { foydaSubItem } from './foydaSubElements';
 
 const isDelivery = (deliverys:Reference[], id:number) => {
   if (deliverys && deliverys.length) {
@@ -17,225 +18,60 @@ const isDelivery = (deliverys:Reference[], id:number) => {
   return false
 }
 
+const getValue = (jsonString: string, key: string) => {
+  try{
+    const object = JSON.parse(jsonString)
+    if (key in object) return object[key]
+    return undefined
+  } catch {
+    return undefined
+  }
+}
+
 export const foydaItem = async ( 
   data: any,
+  deliverys: Reference[],
+  docsComeProduct: Document[],
+  docsMoveProduct: Document[],
   startDate: number | null,
   endDate: number | null,
   currentSectionId: number, 
   title: string,
-  firstPrice: number | null,
-  secondPrice: number | null,
+  idUmumBulim: number, 
+  idUmumProduct: number,
   sequelize: Sequelize,
-  deliverys: Reference[],
-  zpUmumBulim: number,
-  longeChargeUmumBulim: number, 
-  currentPaymentUmumBulim: number,
   stockService: StocksService,
   oborotsService: OborotsService
 ) => {
 
-  let longeCharge:number = 0;
   let filteredData:Reference[] = []
+  let result:any[] = []
 
   if (data && data.length) {
     filteredData = data.filter((item: Reference)=> {
-                        return item.typeReference == TypeReference.CHARGES && 
-                        item.refValues.longCharge
+                        return item.typeReference == TypeReference.TMZ && 
+                               item.refValues.typeTMZ == TypeTMZ.PRODUCT
   })}
 
   for (const item of filteredData) {
-    longeCharge += await queryKor(Schet.S20, Schet.S50, TypeQuery.ODS, startDate, endDate, currentSectionId, item.id, null, oborotsService)
+    
+    if (item.id != idUmumProduct) {
+      const element = foydaSubItem(data, docsComeProduct, docsMoveProduct, deliverys, startDate, endDate, currentSectionId, item.id, item.name, idUmumBulim, idUmumProduct, sequelize, stockService, oborotsService)
+    
+      if (Object.keys(element).length) {
+        result.push(element)
+      }
+    }
+    
   }
     
-  let productionDocsCountAll = 0;
-  let productionDocsCountBux = 0;
-  let productionAllDocsCountByCompany = 0;
-  let countOutToDeliveryAll = 0;
-  let countOutToDeliveryBux = 0;
-  let countIncomeFromDeliveryAll = 0; 
-  let countIncomeFromDeliveryBux = 0;
-  // Shu erni uzgartirish kerak 
-  let idForBuxanka = -1
-
-  if (startDate != null && endDate != null) {
-    productionAllDocsCountByCompany = 0;
-    // docs.filter((item: Document) => {
-    //   return (item.date>= startDate && item.date <= endDate && item.documentType == DocumentType.ComeProduct)
-    // }).length
-
-    productionDocsCountAll = 0 
-    // docs.filter((item: Document) => {
-    //   return (
-    //       item.date>= startDate && item.date <= endDate && item.docValues.senderId == currentSectionId 
-    //       && item.documentType == DocumentType.ComeProduct
-    //     )
-    // }).length
-
-    productionDocsCountBux = 0
-    // docs.filter((item: Document) => {
-    //   return (
-    //       item.date>= startDate && 
-    //       item.date <= endDate &&
-    //       item.docValues.analiticId == idForBuxanka && 
-    //       item.docValues.senderId == currentSectionId &&
-    //       item.documentType == DocumentType.ComeProduct
-    //     )
-    // }).length
-    
-    countOutToDeliveryAll = 0
-    // docs.filter((item:Document) => {
-    //   return (
-    //     item.date>= startDate && 
-    //     item.date <= endDate && 
-    //     item.documentType == DocumentType.MoveProd &&
-    //     item.docValues.senderId == currentSectionId  &&
-    //     isDelivery(deliverys, item.docValues.receiverId )
-    // )}
-    // ).reduce((total, item:Document) => total + item.docValues.count, 0)
-
-    countOutToDeliveryBux = 0
-    // docs.filter((item:Document) => {
-    //   return (
-    //     item.date >= startDate && 
-    //     item.date <= endDate && 
-    //     item.documentType == DocumentType.MoveProd &&
-    //     item.docValues.senderId == currentSectionId  &&
-    //     item.docValues.analiticId == idForBuxanka &&
-    //     isDelivery(deliverys, item.docValues.receiverId) )
-    // }).reduce((total, item:Document) => total + item.docValues.count, 0)
-
-    countIncomeFromDeliveryAll = 0
-    // docs.filter((item:Document) => {
-    //   return (
-    //     item.date>= startDate && 
-    //     item.date <= endDate && 
-    //     item.documentType == DocumentType.MoveProd &&
-    //     item.docValues.receiverId == currentSectionId  &&
-    //     isDelivery(deliverys, item.docValues.senderId) )
-    // }).reduce((total, item:Document) => total + item.docValues.count, 0)
-
-    countIncomeFromDeliveryBux = 0
-    // docs.filter((item:Document) => {
-    //   return (
-    //     item.date>= startDate && 
-    //     item.date <= endDate && 
-    //     item.documentType == DocumentType.MoveProd &&
-    //     item.docValues.receiverId == currentSectionId  &&
-    //     item.docValues.analiticId == idForBuxanka &&
-    //     isDelivery(deliverys, item.docValues.senderId) )
-    // }).reduce((total, item:Document) => total + item.docValues.count, 0)
-
-  }
-
-  const POKOLAll = await query(Schet.S28, TypeQuery.POKOL, startDate, endDate, currentSectionId, null, null, stockService, oborotsService)
-  const KOKOLAll = await query(Schet.S28, TypeQuery.KOKOL, startDate, endDate, currentSectionId, null, null, stockService, oborotsService)
   
-  const POKOLBux = await query(Schet.S28, TypeQuery.POKOL, startDate, endDate, currentSectionId, idForBuxanka, null, stockService, oborotsService)
-  const KOKOLBux = await query(Schet.S28, TypeQuery.KOKOL, startDate, endDate, currentSectionId, idForBuxanka, null, stockService, oborotsService)
-
-  const startCountAll = POKOLAll;
-  const endCountAll = KOKOLAll;
-
-  const startCountBux = POKOLBux;
-  const endCountBux = KOKOLBux;
-
-  const productionCountAll = await queryKor(Schet.S28, Schet.S20, TypeQuery.OKK, startDate, endDate, currentSectionId, null, null, oborotsService);
-  const productionCountBux = await queryKor(Schet.S28, Schet.S20, TypeQuery.ODK, startDate, endDate, currentSectionId, idForBuxanka, null, oborotsService);
-  
-  const brakCountAll = await queryKor(Schet.S20, Schet.S28, TypeQuery.OKK, startDate, endDate, currentSectionId, null, null, oborotsService);
-  const brakCountBux = await queryKor(Schet.S20, Schet.S28, TypeQuery.OKK, startDate, endDate, currentSectionId, idForBuxanka, null, oborotsService);
-  
-  const productionImportSumm = await queryKor(Schet.S28, Schet.S60, TypeQuery.ODS, startDate, endDate, currentSectionId, null, null, oborotsService);
-  
-  const moveOutCountAll = await queryKor(Schet.S28, Schet.S28, TypeQuery.OKK, startDate, endDate, currentSectionId, null, null, oborotsService);
-  const moveOutCountBux = await queryKor(Schet.S28, Schet.S28, TypeQuery.OKK, startDate, endDate, currentSectionId, idForBuxanka, null, oborotsService);
-  
-  const moveIncomeCountAll = await queryKor(Schet.S28, Schet.S28, TypeQuery.ODK, startDate, endDate, currentSectionId, null, null, oborotsService);
-  const moveIncomeCountBux = await queryKor(Schet.S28, Schet.S28, TypeQuery.ODK, startDate, endDate, currentSectionId, idForBuxanka, null, oborotsService);
-
-  const saleAll = await queryKor(Schet.S40, Schet.S28, TypeQuery.OKS, startDate, endDate, currentSectionId, null, null, oborotsService);
-  const saleBux = await queryKor(Schet.S40, Schet.S28, TypeQuery.OKS, startDate, endDate, currentSectionId, idForBuxanka, null, oborotsService);
-
-  const countDeleviryAll = (countOutToDeliveryAll-countIncomeFromDeliveryAll) <= 0 ? 0 : (countOutToDeliveryAll-countIncomeFromDeliveryAll)   
-  const countDeleviryBux = (countOutToDeliveryBux-countIncomeFromDeliveryBux) <= 0 ? 0 : (countOutToDeliveryBux-countIncomeFromDeliveryBux)   
-  
-  const saleCountWithOutMoveAll = startCountAll + productionCountAll - brakCountAll - moveOutCountAll + moveIncomeCountAll - endCountAll;
-  const saleCountWithOutMoveBux = startCountBux + productionCountBux - brakCountBux - moveOutCountBux + moveIncomeCountBux - endCountBux;
-  
-  let dAll = countDeleviryAll > 0 ? countDeleviryAll : 0
-  let iAll = (moveIncomeCountAll-countIncomeFromDeliveryAll) > 0 ? (moveIncomeCountAll-countIncomeFromDeliveryAll) : 0
-  let oAll = (moveOutCountAll - countOutToDeliveryAll ) > 0 ? (moveOutCountAll - countOutToDeliveryAll ) : 0
-  
-  let dBux = countDeleviryBux > 0 ? countDeleviryBux : 0
-  let iBux = (moveIncomeCountBux-countIncomeFromDeliveryBux) > 0 ? (moveIncomeCountBux-countIncomeFromDeliveryBux) : 0
-  let oBux = (moveOutCountBux - countOutToDeliveryBux ) > 0 ? (moveOutCountBux - countOutToDeliveryBux ) : 0
-  
-  let d = (dAll - dBux) > 0 ? (dAll - dBux) : 0
-  let i = (iAll - iBux) > 0 ? (iAll - iBux) : 0
-  let o = (oAll - oBux) > 0 ? (oAll - oBux) : 0
-  let sale = (saleAll - saleBux) > 0 ? (saleAll - saleBux) : 0
-
-  let valueForSale = firstPrice ? firstPrice : 0
-  let valueForSaleBux = secondPrice ? secondPrice : 0
-  const saleWithMove = sale + (d - i + o) * valueForSale;
-  const saleWithMoveBux = saleBux + (dBux - iBux + oBux) * valueForSaleBux;
-  const saleWithMoveAll = saleWithMove + saleWithMoveBux
-
-  const zagatovka = await queryKor(Schet.S20, Schet.S21, TypeQuery.OKS, startDate, endDate, currentSectionId, null, null, oborotsService);
-  const materials = await queryKor(Schet.S20, Schet.S10, TypeQuery.OKS, startDate, endDate, currentSectionId, null, null, oborotsService);
-  const zp = await queryKor(Schet.S20, Schet.S67, TypeQuery.ODS, startDate, endDate, currentSectionId, null, null, oborotsService);
-
-  const addingZp = productionAllDocsCountByCompany>0 ? zpUmumBulim * productionDocsCountAll / productionAllDocsCountByCompany : 0; 
-  const addingLongeCharge = productionAllDocsCountByCompany>0 ? longeChargeUmumBulim * productionDocsCountAll / productionAllDocsCountByCompany : 0;
-  const addingCurrentPayment = productionAllDocsCountByCompany>0 ? currentPaymentUmumBulim * productionDocsCountAll / productionAllDocsCountByCompany : 0;
-
-  const services = await queryKor(Schet.S20, Schet.S60, TypeQuery.ODS, startDate, endDate, currentSectionId, null, null, oborotsService);
-  
-  const currentPayment = await queryKor(Schet.S20, Schet.S50, TypeQuery.ODS, startDate, endDate, currentSectionId, null, null, oborotsService) - longeCharge;
-  
-  const currentCharges = zagatovka + materials + zp + addingZp + currentPayment + services + addingCurrentPayment;
-  const currentEarning = saleWithMove - currentCharges;
-  let koefCurrentEarningToOneProduct = 0;
-  if (productionDocsCountAll>0) {
-    koefCurrentEarningToOneProduct = (zagatovka  + materials) / productionDocsCountAll
-  }
-  
-  let newItem = 0;
-  
-  const longPayment =  longeCharge;
-  const realEarning = (saleWithMoveAll - productionImportSumm) - currentCharges - longPayment - addingLongeCharge ;
-  let currentEarningForOneElement = 0;
-  if (productionCountAll>0) {
-    currentEarningForOneElement = 0 
-  }
 
   return (
     {
       section: title,
       sectionId: currentSectionId,
-      productionAllDocsCountByCompany,
-      productionDocsCountAll,
-      productionDocsCountBux,
-      productionCountAll,
-      productionCountBux,
-      saleCountWithOutMoveAll,
-      saleCountWithOutMoveBux,
-      countDeleviryAll,
-      countDeleviryBux,
-      saleWithMoveAll,
-      saleWithMoveBux,
-      zagatovka,
-      materials,
-      zp,
-      addingZp,
-      services,
-      addingCurrentPayment,
-      currentPayment,
-      currentEarning:currentEarningForOneElement,
-      koefCurrentEarningToOneProduct,
-      addingLongeCharge,
-      longPayment,
-      realEarning
+      subItems: [...result]
     }
       
   )

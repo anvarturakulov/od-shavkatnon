@@ -1,7 +1,7 @@
 import { TypeReference } from '@/app/interfaces/reference.interface';
 import { DetailedHTMLProps, SelectHTMLAttributes } from "react";
 
-export type TypeForSelectInForm = 'sender' | 'receiver' | 'analitic' | 'firstWorker' | 'secondWorker' | 'thirdWorker'
+export type TypeForSelectInForm = 'sender' | 'receiver' | 'analitic' | 'firstWorker' | 'secondWorker' | 'thirdWorker' | 'productForCharge'
 
 export interface SelectReferenceInFormProps extends DetailedHTMLProps<SelectHTMLAttributes<HTMLSelectElement>, HTMLSelectElement> {
     label: string,

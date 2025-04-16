@@ -24,7 +24,8 @@ export class ReportsService {
         private referencesService: ReferencesService,
         private entriesService: EntriesService,
         private stocksService: StocksService,
-        private oborotsService: OborotsService
+        private oborotsService: OborotsService,
+        private documentsService: DocumentsService
     ) {}
 
 
@@ -54,9 +55,9 @@ export class ReportsService {
     async getInformation(queryInformation: QuerySimple) {
         let references = await this.referencesService.getAllReferences();
         let deliverys = await this.referencesService.getDeliverys();
-        let {startDate, endDate, reportType, firstPrice, secondPrice} = queryInformation;
+        let {startDate, endDate, reportType} = queryInformation;
         console.time('Information');
-        let inform = await information(references, startDate, endDate, reportType, firstPrice, secondPrice, deliverys, this.sequelize, this.stocksService, this.oborotsService);
+        let inform = await information(references, startDate, endDate, reportType, deliverys, this.sequelize, this.stocksService, this.oborotsService);
         console.timeEnd('Information');
         return inform;
     }

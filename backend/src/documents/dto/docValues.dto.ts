@@ -31,6 +31,10 @@ export class DocValuesDto {
     @IsString({message: 'analiticOldId - аналитики должен быть строкой'})
     analiticOldId: string;
 
+    @ApiProperty({example:'12222897', description: 'Id - аналитики'})
+    @IsInt({message: 'analiticId - должен быть натуральным числом'})
+    productForChargeId: number
+
     @ApiProperty({example:'true', description: 'isWorker?'})
     @IsBoolean({message: 'isWorker Значание должно быть TRUE или FALSE'})
     isWorker: boolean;

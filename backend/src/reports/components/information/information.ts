@@ -14,18 +14,18 @@ import { taking } from "./takingTry-Change/taking";
 import { Reference } from "src/references/reference.model";
 import { StocksService } from "src/stocks/stocks.service";
 import { OborotsService } from "src/oborots/oborots.service";
+import { DocumentsService } from "src/documents/documents.service";
 
 export const information = async (
     data: any,
     startDate: number | null,
     endDate: number | null,
     reportType: string | null,
-    firstPrice: number | null,
-    secondPrice: number | null,
     deliverys: Reference[],
     sequelize: Sequelize,
     stocksService: StocksService,
-    oborotsService: OborotsService
+    oborotsService: OborotsService,
+    documentsService: DocumentsService
     ) => {
     
     let result:any[] = [];
@@ -36,7 +36,7 @@ export const information = async (
     }
 
     if (reportType == 'Foyda' || reportType == 'All') {
-        let foydaResult = await foyda(data, startDate, endDate, firstPrice, secondPrice, sequelize, deliverys, stocksService, oborotsService)
+        let foydaResult = await foyda(data, startDate, endDate, sequelize, deliverys, stocksService, oborotsService, documentsService)
         result.push(foydaResult);
     }
 

@@ -31,6 +31,7 @@ export const convertJsonDocs = (jsonRow:any):UpdateCreateDocumentDto => {
         senderId: 13957,
         receiverId: 13957,
         analiticId: 13957,
+        productForChargeId: 13957,
         senderoldId: jsonRow.senderId,
         receiverOldId: jsonRow.receiverId,
         analiticOldId: jsonRow.analiticId,
@@ -43,6 +44,7 @@ export const convertJsonDocs = (jsonRow:any):UpdateCreateDocumentDto => {
         total: jsonRow.total,
         cashFromPartner: jsonRow.jsonRow,
         comment: jsonRow.comment
+        
     }
     let doc:UpdateCreateDocumentDto = {
         date: jsonRow.date,

@@ -11,6 +11,7 @@ export interface DocValuesCreationAttrs {
     receiverOldId: string
     analiticId: number
     analiticOldId: string
+    productForChargeId: number
     firstWorkerId: number | null
     secondWorkerId: number | null
     thirdWorkerId: number | null
@@ -74,6 +75,14 @@ export class DocValues extends Model<DocValues, DocValuesCreationAttrs> {
     @ApiProperty({example:'654654', description: 'Старый id аналитики'})
     @Column({type: DataType.STRING})
     analiticOldId: string;
+
+    @ForeignKey(() => Reference)
+    @ApiProperty({example:'12222897', description: 'Id - продукта для учета расходов'})
+    @Column({type: DataType.INTEGER})
+    productForChargeId: number
+
+    @BelongsTo(() => Reference) 
+    productForChargeReference: Reference;
 
     @ApiProperty({example:'true', description: 'isWorker?'})
     @Column({type: DataType.BOOLEAN, defaultValue: false})

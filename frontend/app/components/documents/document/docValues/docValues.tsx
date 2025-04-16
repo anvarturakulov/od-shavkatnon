@@ -51,6 +51,9 @@ export const DocValues = ({ className, ...props }: DocValuesProps): JSX.Element 
                     type='receiver'
                     definedItemId= {definedItemIdForReceiver}
                 />
+
+                
+
                 <SelectReferenceInForm 
                     label={options.senderLabel} 
                     typeReference={options.senderType}
@@ -63,6 +66,23 @@ export const DocValues = ({ className, ...props }: DocValuesProps): JSX.Element 
             </div>
 
             <div className={cn(styles.valuesBox)}>
+                
+                <SelectReferenceInForm 
+                    label={getLabelForAnalitic(currentDocument, options)} 
+                    typeReference= {getTypeReferenceForAnalitic(currentDocument, options)}
+                    visibile={options.analiticIsVisible}
+                    currentItemId={currentDocument?.docValues.analiticId}
+                    type='analitic'
+                />
+
+                <SelectReferenceInForm 
+                    label={options.productForChargeLabel} 
+                    typeReference={options.productForChargeType}
+                    visibile={options.productForChargeIsVisible}
+                    currentItemId={currentDocument?.docValues.productForChargeId}
+                    type='productForCharge'
+                />
+                
                 <div className={styles.checkBoxs}>
                     { 
                         hasWorkers &&                   
@@ -81,13 +101,7 @@ export const DocValues = ({ className, ...props }: DocValuesProps): JSX.Element 
 
                 </div>
                 
-                <SelectReferenceInForm 
-                    label={getLabelForAnalitic(currentDocument, options)} 
-                    typeReference= {getTypeReferenceForAnalitic(currentDocument, options)}
-                    visibile={options.analiticIsVisible}
-                    currentItemId={currentDocument?.docValues.analiticId}
-                    type='analitic'
-                />
+                
                 
                 {
                     !options.tableIsVisible &&

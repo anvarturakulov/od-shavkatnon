@@ -16,6 +16,7 @@ export const defaultDocValue: DocValues = {
     senderId: 0,
     receiverId: 0,
     analiticId: 0,
+    productForChargeId:0,
     senderoldId: '',
     receiverOldId: '',
     analiticOldId: '',

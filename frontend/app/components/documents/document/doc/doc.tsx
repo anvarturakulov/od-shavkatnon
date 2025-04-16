@@ -35,7 +35,9 @@ export const Doc = ({className, ...props }: DocProps) :JSX.Element => {
                 documentType: mainData.window.contentName,
                 docValues: {
                     ...currentDocument.docValues,
-                    analiticId: 0
+                    analiticId: 0,
+                    productForChargeId: 0,
+                    
                 }
             };
             setMainData && setMainData('currentDocument', newDocument);

@@ -20,10 +20,11 @@ export interface ResultgetValuesForEntry {
 export const getValuesForEntry = (doc: Document, newEntry: boolean, hasTable: boolean, tableItem: DocTableItems | undefined, recieverIsFounder: boolean, senderIsFounder:boolean): ResultgetValuesForEntry => {
   if (doc) {
     let documentType = doc.documentType;
-    let { receiverId, senderId, analiticId, count, total, isPartner, isWorker } = doc.docValues
+    let { receiverId, senderId, analiticId, productForChargeId, count, total, isPartner, isWorker } = doc.docValues
     let leaveMaterialWithTable = {
         debetFirstSubcontoId: senderId,
         debetSecondSubcontoId: receiverId,
+        debetThirdSubcontoId: productForChargeId,
         kreditFirstSubcontoId: senderId,
         kreditSecondSubcontoId: (hasTable && doc.docTableItems?.length && !newEntry && tableItem?.analiticId) ? tableItem.analiticId : null,
         count: (hasTable && doc.docTableItems?.length && !newEntry && tableItem?.count) ? tableItem.count : 0,
@@ -129,6 +130,7 @@ export const getValuesForEntry = (doc: Document, newEntry: boolean, hasTable: bo
           kredit: doc.date > remaindDate ? Schet.S20 : Schet.S00,
           debetFirstSubcontoId: receiverId,
           debetSecondSubcontoId: analiticId,
+
           kreditFirstSubcontoId: senderId,
           kreditSecondSubcontoId: analiticId,
           count,
@@ -177,6 +179,7 @@ export const getValuesForEntry = (doc: Document, newEntry: boolean, hasTable: bo
           kredit: Schet.S50,
           debetFirstSubcontoId: receiverId,
           debetSecondSubcontoId: analiticId,
+          debetThirdSubcontoId: productForChargeId,
           kreditFirstSubcontoId: senderId,
           kreditSecondSubcontoId: analiticId,
           count: 0,
@@ -189,6 +192,7 @@ export const getValuesForEntry = (doc: Document, newEntry: boolean, hasTable: bo
           kredit: Schet.S21,
           debetFirstSubcontoId: senderId,
           debetSecondSubcontoId: receiverId,
+          debetThirdSubcontoId: productForChargeId,
           kreditFirstSubcontoId: senderId,
           kreditSecondSubcontoId: analiticId,
           count,
@@ -208,6 +212,7 @@ export const getValuesForEntry = (doc: Document, newEntry: boolean, hasTable: bo
           kredit: Schet.S28,
           debetFirstSubcontoId: senderId,
           debetSecondSubcontoId: receiverId,
+          debetThirdSubcontoId: productForChargeId,
           kreditFirstSubcontoId: senderId,
           kreditSecondSubcontoId: analiticId,
           count,
@@ -358,6 +363,7 @@ export const getValuesForEntry = (doc: Document, newEntry: boolean, hasTable: bo
           kredit: Schet.S67,
           debetFirstSubcontoId: receiverId,
           debetSecondSubcontoId: analiticId,
+          debetThirdSubcontoId: productForChargeId,
           kreditFirstSubcontoId: analiticId,
           kreditSecondSubcontoId: receiverId,
           count,
@@ -383,6 +389,7 @@ export const getValuesForEntry = (doc: Document, newEntry: boolean, hasTable: bo
           kredit: Schet.S60,
           debetFirstSubcontoId: receiverId,
           debetSecondSubcontoId: senderId,
+          debetThirdSubcontoId: productForChargeId,
           kreditFirstSubcontoId: analiticId,
           kreditSecondSubcontoId: receiverId,
           count,

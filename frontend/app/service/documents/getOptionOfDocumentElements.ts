@@ -6,6 +6,8 @@ export const getOptionOfDocumentElements = (documentType: string): OptionsForDoc
     let senderType = TypeReference.STORAGES, senderLabel = '', senderIsVisible = false
     let receiverType = TypeReference.STORAGES, receiverLabel = '', recieverIsVisible = false  
     let analiticType = TypeReference.STORAGES , analiticLabel = '', analiticIsVisible = false
+    let productForChargeType = TypeReference.TMZ, productForChargeLabel = '', productForChargeIsVisible = false
+    
     let cashFromPartnerLabel = '' , cashFromPartnerVisible = false;
     let tableIsVisible = false;
     let balansIsVisible = true;
@@ -228,6 +230,10 @@ export const getOptionOfDocumentElements = (documentType: string): OptionsForDoc
         analiticLabel = 'Тайёр махсулот'
         analiticIsVisible = true
 
+        productForChargeType = TypeReference.TMZ
+        productForChargeLabel = 'Харажат кайси махсулот учун'
+        productForChargeIsVisible = true
+
         priceIsVisible = false;
         totalIsVisible = false;
     }
@@ -244,6 +250,10 @@ export const getOptionOfDocumentElements = (documentType: string): OptionsForDoc
         analiticType = TypeReference.TMZ
         analiticLabel = 'Хом ашё'
         analiticIsVisible = false
+
+        productForChargeType = TypeReference.TMZ
+        productForChargeLabel = 'Харажат кайси махсулот учун'
+        productForChargeIsVisible = true
 
         tableIsVisible = true
 
@@ -266,6 +276,10 @@ export const getOptionOfDocumentElements = (documentType: string): OptionsForDoc
         analiticType = TypeReference.TMZ
         analiticLabel = 'Я.Т.М'
         analiticIsVisible = true
+
+        productForChargeType = TypeReference.TMZ
+        productForChargeLabel = 'Харажат кайси махсулот учун'
+        productForChargeIsVisible = true
 
         totalIsDisabled = true;
         priceIsDisabled = true;
@@ -373,6 +387,10 @@ export const getOptionOfDocumentElements = (documentType: string): OptionsForDoc
         analiticLabel = 'Харажат тури'
         analiticIsVisible = true
 
+        productForChargeType = TypeReference.TMZ
+        productForChargeLabel = 'Харажат кайси махсулот учун'
+        productForChargeIsVisible = true
+
         priceIsVisible = false;
         countIsVisible = false;
         balansIsVisible = false;
@@ -391,6 +409,10 @@ export const getOptionOfDocumentElements = (documentType: string): OptionsForDoc
         analiticType = TypeReference.WORKERS
         analiticLabel = 'Ходим'
         analiticIsVisible = true;
+
+        productForChargeType = TypeReference.TMZ
+        productForChargeLabel = 'Харажат кайси махсулот учун'
+        productForChargeIsVisible = true
 
         priceIsVisible = false;
         countIsVisible = false;
@@ -428,6 +450,10 @@ export const getOptionOfDocumentElements = (documentType: string): OptionsForDoc
         analiticLabel = 'Корхона'
         analiticIsVisible = true;
 
+        productForChargeType = TypeReference.TMZ
+        productForChargeLabel = 'Харажат кайси махсулот учун'
+        productForChargeIsVisible = true
+
         priceIsVisible = false;
         countIsVisible = false;
         balansIsVisible = false;
@@ -443,6 +469,9 @@ export const getOptionOfDocumentElements = (documentType: string): OptionsForDoc
         analiticType,
         analiticLabel,
         analiticIsVisible,
+        productForChargeType,
+        productForChargeLabel,
+        productForChargeIsVisible,
         cashFromPartnerLabel,
         cashFromPartnerVisible,
         tableIsVisible,
