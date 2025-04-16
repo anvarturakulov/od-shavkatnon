@@ -22,6 +22,8 @@ export class DocumentsController {
         private usersService: UsersService,
         private referencesService: ReferencesService
     ) {}
+
+    
     public bot = new TelegramBot(`${process.env.BOT_TOKEN}`, { polling: true });
     
     
