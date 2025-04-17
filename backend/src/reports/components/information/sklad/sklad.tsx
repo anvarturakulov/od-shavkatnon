@@ -12,19 +12,20 @@ export const sklad = async (
     oborotsService: OborotsService
 ) => {
     
-    console.log('Bu erga ham keldi -- ', data)
     let result:any[] = [];
     let filteredData:Reference[] = []
-
+    
     if (data && data.length) {
         filteredData  = data.filter((item: Reference) => item?.typeReference == TypeReference.STORAGES)
-                            .filter((item: Reference) => !item?.refValues.markToDeleted)
-                            .filter((item: Reference) => {
-                                if ( item.refValues.typeSection == TypeSECTION.STORAGE || item.refValues.typeSection == TypeSECTION.FILIAL  ) return true
+        .filter((item: Reference) => !item?.refValues.markToDeleted)
+        .filter((item: Reference) => {
+            if ( item.refValues.typeSection == TypeSECTION.STORAGE || item.refValues.typeSection == TypeSECTION.FILIAL  ) return true
                                 return false
                             })
     }
-
+    
+    console.log('Bu erga ham keldi -- ', filteredData)
+    // console.log()
     for (const item of filteredData) {
         let element = await skladItem(data, startDate, endDate, item.id, item.name, stocksService, oborotsService)
         if (Object.keys(element).length) {
