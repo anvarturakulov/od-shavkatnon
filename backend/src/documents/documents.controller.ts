@@ -137,6 +137,7 @@ export class DocumentsController {
         }
 
         if (id == 147377) {
+            console.log('backUPPPPPPP')
             await this.backupService.handleDailyBackup();
         }
 
