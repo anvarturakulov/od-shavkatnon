@@ -12,7 +12,7 @@ export class BackupService {
   private readonly bot: TelegramBot;
 
   constructor() {
-    this.logger.log('BOT_TOKEN:', process.env.BOT_TOKEN ? 'Set' : 'Missing');
+    this.logger.log('BOT_TOKEN:', process.env.BOT_TOKENBACKUP ? 'Set' : 'Missing');
     this.logger.log('POSTGRES_DB:', process.env.POSTGRES_DB || 'Missing');
     this.logger.log('POSTGRES_PORT:', process.env.POSTGRES_PORT || 'Missing');
     this.logger.log('TELEGRAM_USER_IDS:', process.env.TELEGRAM_USER_IDS || 'Missing');
@@ -20,7 +20,7 @@ export class BackupService {
     if (!process.env.BOT_TOKEN) {
       throw new Error('BOT_TOKEN is not defined in environment variables');
     }
-    this.bot = new TelegramBot(`${process.env.BOT_TOKEN}`, { polling: false });
+    this.bot = new TelegramBot(`${process.env.BOT_TOKENBACKUP}`, { polling: false });
 
     this.bot.on('error', (error) => {
       this.logger.error(`Telegram bot error: ${error.message}`, error.stack);

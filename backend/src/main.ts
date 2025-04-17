@@ -1,8 +1,10 @@
+import * as nodeCrypto from 'crypto';
+(global as any).nodeCrypto = nodeCrypto;
+
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { ValidationPipe } from "@nestjs/common";
-import { webcrypto } from 'crypto';
 
 async function start() {
     const PORT = process.env.PORT || 5000;
