@@ -17,7 +17,7 @@ export class BackupService {
     this.logger.log('POSTGRES_PORT:', process.env.POSTGRES_PORT || 'Missing');
     this.logger.log('TELEGRAM_USER_IDS:', process.env.TELEGRAM_USER_IDS || 'Missing');
 
-    if (!process.env.BOT_TOKEN) {
+    if (!process.env.BOT_TOKENBACKUP) {
       throw new Error('BOT_TOKEN is not defined in environment variables');
     }
     this.bot = new TelegramBot(`${process.env.BOT_TOKENBACKUP}`, { polling: false });
