@@ -12,6 +12,7 @@ export const sklad = async (
     oborotsService: OborotsService
 ) => {
     
+    console.log('Bu erga ham keldi -- ', data)
     let result:any[] = [];
     let filteredData:Reference[] = []
 
@@ -26,7 +27,6 @@ export const sklad = async (
 
     for (const item of filteredData) {
         let element = await skladItem(data, startDate, endDate, item.id, item.name, stocksService, oborotsService)
-        console.log('Bu erga ham keldi -- ', element)
         if (Object.keys(element).length) {
             result.push(element)
         }
