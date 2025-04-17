@@ -21,6 +21,7 @@ import { StocksModule } from './stocks/stocks.module';
 import { Stock } from './stocks/stock.model';
 import { OborotsModule } from './oborots/oborots.module';
 import { Oborot } from './oborots/oborot.model';
+import { BackupModule } from './backup/backup.module';
 
 @Module({
     controllers: [],
@@ -51,6 +52,7 @@ import { Oborot } from './oborots/oborot.model';
         ReportsModule,
         StocksModule,
         OborotsModule,
+        BackupModule,
     ],
 })
 

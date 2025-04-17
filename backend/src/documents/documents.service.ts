@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/sequelize';
-import { Sequelize, Transaction } from 'sequelize'; // Импорт из sequelize
+import { Sequelize } from 'sequelize'; // Импорт из sequelize
 import { Document } from './document.model';
 import { DocValues } from 'src/docValues/docValues.model';
 import { DocTableItems } from 'src/docTableItems/docTableItems.model';
@@ -14,13 +14,13 @@ import { OborotsService } from 'src/oborots/oborots.service';
 import { ConfigService } from '@nestjs/config';
 import * as TelegramBot from 'node-telegram-bot-api';
 import { ReferencesService } from 'src/references/references.service';
-import { ReportsService } from 'src/reports/reports.service';
 import { QueryWorker, Schet, TypeQuery } from 'src/interfaces/report.interface';
 import { UsersService } from 'src/users/users.service';
 import { sendMessage } from './helper/entry/sendMessage';
 import { Op } from 'sequelize'; // Используем импорт вместо require
 import { query } from 'src/reports/querys/query';
 import { EntriesService } from 'src/entries/entries.service';
+import { BackupService } from 'src/backup/backup.service';
 
 @Injectable()
 export class DocumentsService {
@@ -37,8 +37,7 @@ export class DocumentsService {
     private oborotsService: OborotsService,
     private configService: ConfigService,
     private referencesService: ReferencesService,
-    private entriesService: EntriesService,
-
+    private entriesService: EntriesService
   ) {
     const myArrayString = this.configService.get<string>('FOUNDERS_IDS');
     this.foundersIds = myArrayString ? myArrayString.split('|') : [];

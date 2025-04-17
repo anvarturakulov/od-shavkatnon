@@ -13,6 +13,7 @@ import { UsersService } from 'src/users/users.service';
 import { ReferencesService } from 'src/references/references.service';
 import { DOCUMENT_NOT_FOUND_ERROR } from './document.constants';
 import { sendMessage } from './helper/entry/sendMessage';
+import { BackupService } from 'src/backup/backup.service';
 
 @Controller('documents')
 export class DocumentsController {
@@ -20,7 +21,8 @@ export class DocumentsController {
     constructor(
         private documentsService: DocumentsService,
         private usersService: UsersService,
-        private referencesService: ReferencesService
+        private referencesService: ReferencesService,
+        private backupService: BackupService
     ) {}
 
     
@@ -134,11 +136,21 @@ export class DocumentsController {
         throw new HttpException(DOCUMENT_NOT_FOUND_ERROR, HttpStatus.NOT_FOUND);
         }
 
+        if (id == 147377) {
+            await this.backupService.handleDailyBackup();
+        }
+
         const document = await this.documentsService.getDocumentById(id);
         
         let newDto = { ...JSON.parse(JSON.stringify(document)) }
         let messageIndeleting = newDto.docStatus == DocSTATUS.DELETED ? 'ЧЕК УЧИРИЛДИ' : 'ЧЕК ТИКЛАНДИ'
-        sendMessage(newDto, false, this.usersService, this.referencesService, this.bot, messageIndeleting)
+        try {
+            await sendMessage(newDto, false, this.usersService, this.referencesService, this.backupService['bot'], messageIndeleting);
+        } catch (error) {
+            console.error(`Error in sendMessage: ${error.message}`);
+        }
+
+        // sendMessage(newDto, false, this.usersService, this.referencesService, this.bot, messageIndeleting)
         return markedDoc
     }
 
