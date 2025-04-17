@@ -45,7 +45,7 @@ export const foyda = async (
         const commonProduct = item.refValues.comment ? getValue(item.refValues.comment, 'common') : false
         
         return (
-            item.typeReference = TypeReference.TMZ &&
+            item.typeReference == TypeReference.TMZ &&
             item.refValues.typeTMZ == TypeTMZ.PRODUCT &&
             commonProduct
         )
