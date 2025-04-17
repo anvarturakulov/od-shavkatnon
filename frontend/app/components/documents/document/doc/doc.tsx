@@ -12,6 +12,7 @@ import { Maindata } from '@/app/context/app.context.interfaces';
 import { validateBody } from '@/app/service/documents/validateBody';
 import { showMessage } from '@/app/service/common/showMessage';
 import { updateCreateDocument } from '@/app/service/documents/updateCreateDocument';
+import { defaultDocument, defaultDocValue } from '@/app/context/app.context.constants';
 
 export const Doc = ({className, ...props }: DocProps) :JSX.Element => {
     
@@ -27,20 +28,39 @@ export const Doc = ({className, ...props }: DocProps) :JSX.Element => {
         }
     },[])
 
+    // useEffect(() => {
+    //     if (isNewDocument && currentDocument.docValues.analiticId !== 0) {
+    //         const newDocument = {
+    //             ...currentDocument,
+    //             userId: mainData.users.user?.id,
+    //             documentType: mainData.window.contentName,
+    //             docValues: {
+    //                 ...currentDocument.docValues,
+    //                 analiticId: 0,
+    //                 productForChargeId: 0,
+                    
+    //             }
+    //         };
+    //         setMainData && setMainData('currentDocument', newDocument);
+    //     }
+    // }, [isNewDocument]);
+
     useEffect(() => {
-        if (isNewDocument && currentDocument.docValues.analiticId !== 0) {
+        if (isNewDocument) {
             const newDocument = {
-                ...currentDocument,
+                ...defaultDocument,
+                date: currentDocument.date,
                 userId: mainData.users.user?.id,
                 documentType: mainData.window.contentName,
                 docValues: {
-                    ...currentDocument.docValues,
-                    analiticId: 0,
-                    productForChargeId: 0,
-                    
+                    ...defaultDocValue,
                 }
             };
-            setMainData && setMainData('currentDocument', newDocument);
+            if (setMainData) {
+                setMainData('currentDocument', newDocument);
+                // setMainData('isNewDocument', false)
+            }
+
         }
     }, [isNewDocument]);
 
@@ -55,6 +75,7 @@ export const Doc = ({className, ...props }: DocProps) :JSX.Element => {
         if (user?.id) body.userId = user.id
         
         if (!validateBody(body)) {
+            console.log(body)
             showMessage('Хужжатни тулдиришда хатолик бор.', 'error', setMainData);
             setDisabled(false)
         } else {

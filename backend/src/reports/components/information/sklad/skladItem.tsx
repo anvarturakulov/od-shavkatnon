@@ -30,7 +30,7 @@ export const skladItem = async (
       ];
 
       const [kokolS10, kokolS21, kosumS10, kosumS21] = await Promise.all(promises);
-
+      console.log(kokolS10, kokolS21, kosumS10, kosumS21)
       const KOKOL = kokolS10 + kokolS21;
       const KOSUM = kosumS10 + kosumS21;
       
