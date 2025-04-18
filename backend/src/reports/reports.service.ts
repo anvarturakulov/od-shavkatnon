@@ -16,6 +16,7 @@ import { Document } from 'src/documents/document.model';
 import { DocValues } from 'src/docValues/docValues.model';
 import { DocTableItems } from 'src/docTableItems/docTableItems.model';
 import { DocumentsService } from 'src/documents/documents.service';
+import { clients } from './components/clients/clients';
 
 @Injectable()
 export class ReportsService {
@@ -132,6 +133,14 @@ export class ReportsService {
             return result
         }
         
+    }
+
+    async getClients(queryMatOtchet: QuerySimple) {
+        let references = await this.referencesService.getAllReferences();
+        let { startDate, endDate, sectionId } = queryMatOtchet;
+        console.log('SECTION ID', sectionId)
+        let result = clients(references, startDate, endDate, sectionId, this.stocksService, this.oborotsService)
+        return result
     }
 
         

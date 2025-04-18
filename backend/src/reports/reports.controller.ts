@@ -114,4 +114,19 @@ export class ReportsController {
     }
     return report;
   }
+
+  @Roles('ALL')
+  @UseGuards(RolesGuard)
+  @Get('/clients')
+  @UsePipes(new ValidationPipe({ transform: true }))
+  async getClients(@Query() query: GetEntriesQueryDto) {
+
+    const req: QuerySimple = {...requestTransform(query)}
+    const report = await this.reportsService.getClients(req);
+
+    if (!report) {
+      throw new NotFoundException(REPORT_NOT_PREPARE);
+    }
+    return report;
+  }
 }

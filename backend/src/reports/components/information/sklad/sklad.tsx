@@ -11,16 +11,12 @@ export const sklad = async (
   stocksService: StocksService,
   oborotsService: OborotsService
 ) => {
-  console.log('Input data:', data);
-  console.log('Data length:', data?.length);
-  console.log('startDate:', startDate);
-  console.log('endDate:', endDate);
+  
 
   let result: any[] = [];
   let filteredData: Reference[] = [];
 
   if (!data || !data.length) {
-    console.log('No data provided');
     return {
       reportType: 'SKLAD',
       values: [],
@@ -37,7 +33,6 @@ export const sklad = async (
     );
   });
 
-  console.log('filteredData:', filteredData);
 
   for (const item of filteredData) {
     let element = await skladItem(data, startDate, endDate, item.id, item.name, stocksService, oborotsService);

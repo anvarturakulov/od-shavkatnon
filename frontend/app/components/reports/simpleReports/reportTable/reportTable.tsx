@@ -12,6 +12,7 @@ import { dateToStr } from '@/app/service/reports/dateToStr';
 import { MatOborot } from './table/matOborot/matOborot';
 import { Oborotka } from './table/oborotka/oborotka';
 import { Personal } from './table/personal/personal';
+import { Clients } from './table/clients/clients';
 
 export default function ReportTable({ className, ...props} : ReportTableProps):JSX.Element {
     
@@ -65,6 +66,10 @@ export default function ReportTable({ className, ...props} : ReportTableProps):J
 
                 {contentName == ReportType.Personal && 
                     <Personal />
+                }
+
+                {contentName == ReportType.Clients && 
+                    <Clients />
                 }
 
             </div>

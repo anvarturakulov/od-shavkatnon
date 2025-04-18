@@ -186,6 +186,12 @@ export const MenuData:Array<MenuItem> = [
                 roles: 
                 [UserRoles.HEADCOMPANY, UserRoles.ADMIN, UserRoles.GLBUX, UserRoles.GUEST, UserRoles.ZAMGLBUX]
             },
+            { 
+                title: ReportType.Clients, description:'Мижозлар тахлили',
+                type: 'report', active: false,
+                roles: 
+                [UserRoles.HEADCOMPANY, UserRoles.ADMIN, UserRoles.GLBUX, UserRoles.GUEST, UserRoles.ZAMGLBUX]
+            },
         ]
     },
     {

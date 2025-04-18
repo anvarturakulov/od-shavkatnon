@@ -4,6 +4,7 @@ export enum ReportType {
     MatOborot = 'MatOborot',
     Personal = 'Personal',
     Oborotka = 'Oborotka',
+    Clients = 'Clients'
 }
 
 export interface ReportOptions {

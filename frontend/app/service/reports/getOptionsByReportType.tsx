@@ -13,6 +13,8 @@ export const getOptionsByReportType = (reportType:string, schet: Schet):Result =
             return {label:'Ходим', typeReference: TypeReference.WORKERS}
         case ReportType.MatOborot:
             return { label: 'Булим ёки цех', typeReference: TypeReference.STORAGES }
+        case ReportType.Clients:
+            return { label: 'Булим', typeReference: TypeReference.STORAGES }
         case ReportType.Oborotka:
             switch(schet) {
                 case Schet.S10:
@@ -38,7 +40,6 @@ export const getOptionsByReportType = (reportType:string, schet: Schet):Result =
                 default:
                     return { label: 'Ноаник', typeReference: TypeReference.STORAGES }
             }
-            
             return { label: 'Булим ёки цех', typeReference: TypeReference.STORAGES }
         default:
             return { label: 'Корхона', typeReference: TypeReference.PARTNERS }

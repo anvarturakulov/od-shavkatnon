@@ -28,7 +28,6 @@ export const SelectReference = ({ label, visible, typeReference , className, ...
             ...reportOption,
             [target.id]: id,
         }
-        
         if (setMainData) {
             setMainData('reportOption', {...newObj})
         }

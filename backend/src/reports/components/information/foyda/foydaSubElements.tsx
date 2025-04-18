@@ -174,7 +174,7 @@ export const foydaSubItem = async (
 
 
 
-    console.log(koefUmumBulim, koefUmumProduct )
+    // console.log(koefUmumBulim, koefUmumProduct )
 
     const addingZagatovka = zagatovkaUmumBulim * koefUmumBulim + zagatovkaUmumProduct * koefUmumProduct ;
     const addingMaterial = materialUmumBulim * koefUmumBulim + materialUmumProduct * koefUmumProduct ;

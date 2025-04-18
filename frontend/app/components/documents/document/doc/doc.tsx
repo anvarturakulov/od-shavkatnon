@@ -48,7 +48,7 @@ export const Doc = ({className, ...props }: DocProps) :JSX.Element => {
     useEffect(() => {
         if (isNewDocument) {
             const newDocument = {
-                ...defaultDocument,
+                ...currentDocument,
                 date: currentDocument.date,
                 userId: mainData.users.user?.id,
                 documentType: mainData.window.contentName,
@@ -75,7 +75,6 @@ export const Doc = ({className, ...props }: DocProps) :JSX.Element => {
         if (user?.id) body.userId = user.id
         
         if (!validateBody(body)) {
-            console.log(body)
             showMessage('Хужжатни тулдиришда хатолик бор.', 'error', setMainData);
             setDisabled(false)
         } else {

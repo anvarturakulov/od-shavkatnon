@@ -13,6 +13,7 @@ import { SelectOborot } from './components/selectOborot/selectOborot';
 import { getMatOborot } from '@/app/service/reports/getMatOborot';
 import { getOborotka } from '@/app/service/reports/getOborotka';
 import { getPersonal } from '@/app/service/reports/getPersonal';
+import { getClients } from '@/app/service/reports/getClients';
 
 
 export default function OptionsBox({ className, ...props }: OptionsBoxProps): JSX.Element {
@@ -24,12 +25,13 @@ export default function OptionsBox({ className, ...props }: OptionsBoxProps): JS
 
     const showReport = ( setMainData: Function | undefined, mainData: Maindata ) => {
         const { reportOption } = mainData.report;
-        const { startDate, endDate } = reportOption;
+        const { startDate, endDate, firstReferenceId } = reportOption;
         if ( startDate != 0 && endDate != 0 ) {
             setMainData && setMainData('uploadingDashboard', true);
             if (contentName == ReportType.MatOborot) getMatOborot(setMainData, mainData)
             if (contentName == ReportType.Oborotka) getOborotka(setMainData, mainData)
             if (contentName == ReportType.Personal) getPersonal(setMainData, mainData)
+            if (contentName == ReportType.Clients) getClients(setMainData, mainData)
             else return true;
         } else {
             showMessage('Санани тулдиринг', 'error', setMainData);

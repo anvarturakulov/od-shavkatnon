@@ -20,6 +20,7 @@ export interface Maindata {
     matOborot: Array<any>,
     oborotka: any,
     personal: any,
+    clients: any,
     currentDKInnerReportId: number,
     currentDKInnerArrayId: number,
     dashboardCurrentReportType: string,
