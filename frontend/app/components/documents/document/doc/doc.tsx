@@ -47,13 +47,16 @@ export const Doc = ({className, ...props }: DocProps) :JSX.Element => {
 
     useEffect(() => {
         if (isNewDocument) {
-            const newDocument = {
+            const newDocument: DocumentModel= {
                 ...currentDocument,
                 date: currentDocument.date,
-                userId: mainData.users.user?.id,
+                userId: mainData.users.user?.id ? mainData.users.user?.id : 0,
                 documentType: mainData.window.contentName,
                 docValues: {
-                    ...defaultDocValue,
+                    ...currentDocument.docValues,
+                    analiticId: 0,
+                    productForChargeId: 0,
+                    comment : '',
                 }
             };
             if (setMainData) {
