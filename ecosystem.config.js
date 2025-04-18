@@ -1,26 +1,25 @@
 module.exports = {
-  apps : [
+  apps: [
     {
       name: "sh-backend",
       script: "dist/main.js",
-      // instances: 8,             // Количество экземпляров (аналог -i 8)
-      // exec_mode: "cluster",
-      cwd: "backend",
-      watch: true,
+      cwd: "/home/anvar/od/od-shavkatnon/backend",
+      interpreter: "/home/anvar/.nvm/versions/node/v20.6.0/bin/node", // Замени на точную версию
+      watch: false,
       env: {
         NODE_ENV: "production",
       },
     },
-  {
-    name: "sh-frontend",
-    script: "npm",
-    args: "start",
-    interpreter: "/home/anvar/.nvm/versions/node/v18.20.0/bin/node",
-    cwd: "./frontend/app",
-    watch: true,
-    env: {
-      NODE_ENV: "production",
-    }
-  }
-]
+    {
+      name: "sh-frontend",
+      script: "npm",
+      args: "start",
+      interpreter: "/home/anvar/.nvm/versions/node/v20.6.0/bin/node",
+      cwd: "/home/anvar/od/od-shavkatnon/frontend/app",
+      watch: false,
+      env: {
+        NODE_ENV: "production",
+      },
+    },
+  ],
 };
