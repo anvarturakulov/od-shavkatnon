@@ -251,15 +251,15 @@ export class BackupService {
     }
 
     // Удаление ZIP-файла
-    try {
-      if (fs.existsSync(normalizedZipFile)) {
-        fs.unlinkSync(normalizedZipFile);
-        this.logger.log(`ZIP file deleted: ${normalizedZipFile}`);
-      } else {
-        this.logger.warn(`ZIP file already deleted or not found: ${normalizedZipFile}`);
-      }
-    } catch (error) {
-      this.logger.error('Error deleting ZIP file:', error);
-    }
+    // try {
+    //   if (fs.existsSync(normalizedZipFile)) {
+    //     fs.unlinkSync(normalizedZipFile);
+    //     this.logger.log(`ZIP file deleted: ${normalizedZipFile}`);
+    //   } else {
+    //     this.logger.warn(`ZIP file already deleted or not found: ${normalizedZipFile}`);
+    //   }
+    // } catch (error) {
+    //   this.logger.error('Error deleting ZIP file:', error);
+    // }
   }
 }

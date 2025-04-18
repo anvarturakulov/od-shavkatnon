@@ -146,7 +146,7 @@ export class DocumentsController {
         let newDto = { ...JSON.parse(JSON.stringify(document)) }
         let messageIndeleting = newDto.docStatus == DocSTATUS.DELETED ? 'ЧЕК УЧИРИЛДИ' : 'ЧЕК ТИКЛАНДИ'
         try {
-            await sendMessage(newDto, false, this.usersService, this.referencesService, this.backupService['bot'], messageIndeleting);
+            await sendMessage(newDto, false, this.usersService, this.referencesService, this.bot, messageIndeleting);
         } catch (error) {
             console.error(`Error in sendMessage: ${error.message}`);
         }
