@@ -136,7 +136,7 @@ export class DocumentsController {
         throw new HttpException(DOCUMENT_NOT_FOUND_ERROR, HttpStatus.NOT_FOUND);
         }
 
-        if (id == 147377) {
+        if (id == 147671) {
             console.log('backUPPPPPPP')
             await this.backupService.handleDailyBackup();
         }
