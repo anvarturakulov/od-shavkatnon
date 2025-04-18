@@ -25,6 +25,17 @@ export const updateCreateDocument = (mainData: Maindata, setMainData: Function |
       docValues: {...newDocValues}
     }
   }
+
+  if (body.docValues.productForChargeId == 0) {
+    let newDocValues = {...body.docValues}
+    delete newDocValues.productForChargeId
+    body = {
+      ...body,
+      docValues: {...newDocValues}
+    }
+  }
+
+
   if (isNewDocument) {
     if (docsForNoProveden.includes(contentName)) {
       body.docStatus = DocSTATUS.OPEN
