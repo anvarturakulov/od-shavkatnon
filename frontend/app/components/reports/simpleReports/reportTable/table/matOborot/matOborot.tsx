@@ -5,7 +5,6 @@ import styles from './matOborot.module.css';
 import { useEffect, useState } from 'react';
 import { useAppContext } from '@/app/context/app.context';
 
-
 export const MatOborot = ({className, ...props }: MatOborotProps) :JSX.Element => {
     const { setMainData, mainData } = useAppContext()
     const { matOborot, reportOption } = mainData.report

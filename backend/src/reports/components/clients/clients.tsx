@@ -3,69 +3,107 @@ import { Sequelize } from 'sequelize-typescript';
 import { Reference } from 'src/references/reference.model';
 import { StocksService } from 'src/stocks/stocks.service';
 import { OborotsService } from 'src/oborots/oborots.service';
-import { clientItem } from './clientItem';
+import { query } from 'src/reports/querys/query';
+import { Schet, TypeQuery } from 'src/interfaces/report.interface';
 
-export const clients = async(
-    data: any,
-    startDate: number | null,
-    endDate: number | null,
-    sectionId: number | null,
-    stocksService: StocksService,
-    oborotsService: OborotsService
+// Экспортируем интерфейсы
+export interface Value {
+  count: number;
+  summa: number;
+}
+
+export interface Client {
+  name: string | undefined;
+  id: number;
+}
+
+export const clients = async (
+  data: any,
+  startDate: number | null,
+  endDate: number | null,
+  sectionId: number | null,
+  stocksService: StocksService,
+  oborotsService: OborotsService
 ) => {
-    
-    let result:any[] = [];
-    
-    let clientsArray:Reference[] = []
+  let clientsArray: Reference[] = [];
 
-    if (data && data.length) {
-        clientsArray = data.filter((item: Reference) => {
-            return (
-                item?.typeReference == TypeReference.PARTNERS &&
-                item?.refValues.typePartners == TypePartners.CLIENTS &&
-                item?.refValues.clientForSectionId == sectionId
-            )
-        })
-    }
+  if (data && data.length) {
+    clientsArray = data.filter((item: Reference) => {
+      return (
+        item?.typeReference == TypeReference.PARTNERS &&
+        item?.refValues.typePartners == TypePartners.CLIENTS &&
+        item?.refValues.clientForSectionId == sectionId
+      );
+    });
+  }
 
-    let days: number[] = []
-    let day:number = 0
-    if (startDate && endDate) {
-        day = startDate
-        while (day <= endDate) {
-            days.push(day)
-            day += 86400000
-        }
+  let days: number[] = [0];
+  let day: number = 0;
+  if (startDate && endDate) {
+    day = startDate;
+    while (day <= endDate) {
+      days.push(day);
+      day += 86400000;
     }
-    // const va
-    interface Value {
-        count: number,
-        summa: number
-    }
+  }
 
-    const defaultValue: Value = {
-        count : 0,
-        summa : 0
-    }
-    let chessTable: Value[][]
+  days.push(0);
 
-    // for (let i=0; i<days.length; i++) {
-    //     for (let j=0; j<clientsArray.length; j++) {
-    //         chessTable[i][j] = defaultValue
-    //     }
-    // }
-    
-   
-    // for (const item of filteredData) {
-    //     let element = await clientItem(data, startDate, endDate, item.id, item.name, stocksService, oborotsService)
-    //     if (Object.keys(element).length) {
-    //         result.push(element)
-    //     }
-    // }
-    
-    return {
-        reportType: 'SKLAD',
-        values : [...result]
-    }
-} 
+  const defaultValue: Value = {
+    count: 0,
+    summa: 0,
+  };
 
+  let chessTable: (Value | Client)[][] = [];
+
+  for (let i = 0; i < days.length - 1; i++) {
+    chessTable[i] = [];
+    if (i === 0) {
+      for (let j = 0; j < clientsArray.length; j++) {
+        const clientId = clientsArray[j]?.id || 0;
+        const clientName = clientsArray[j]?.name || undefined;
+        chessTable[i][j] = { name: clientName, id: clientId };
+      }
+    } else {
+      const promises = clientsArray.map(async (_, j) => {
+        const clientId = clientsArray[j]?.id || 0;
+        const [count, summa] = await Promise.all([
+          query(
+            Schet.S40,
+            TypeQuery.TDKOL,
+            days[i],
+            days[i + 1],
+            sectionId,
+            clientId,
+            null,
+            stocksService,
+            oborotsService
+          ),
+          query(
+            Schet.S40,
+            TypeQuery.TDSUM,
+            days[i],
+            days[i + 1],
+            sectionId,
+            clientId,
+            null,
+            stocksService,
+            oborotsService
+          ),
+        ]);
+        return { count, summa };
+      });
+      chessTable[i] = await Promise.all(promises);
+    }
+  }
+
+  return {
+    reportType: 'SKLAD',
+    values: [...chessTable],
+    dimensions: {
+      height: chessTable.length,
+      width: chessTable.length > 0 ? chessTable[0].length : 0,
+    },
+    days: days.slice(1, -1), // Убираем 0 в начале и конце
+  };
+};

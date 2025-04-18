@@ -27,7 +27,7 @@ export const getClients = (
         }
 
         setMainData('reportOption', { ...newReportOptions });
-        setMainData('clients', [...response.data]);
+        setMainData('clients', {...response.data});
         setMainData('uploadingDashboard', false);
       }
 
