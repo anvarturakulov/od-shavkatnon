@@ -71,28 +71,26 @@ export class StocksService {
   async addTwoEntries(entry: EntryCreationAttrs, transaction?: Transaction) {
     if (this.checkEntryForDublicate(entry)) return;
 
-    await Promise.all([
-      this.addEntry(
-        entry.debet,
-        entry.date,
-        entry.debetFirstSubcontoId,
-        entry.debetSecondSubcontoId,
-        entry.count,
-        entry.total,
-        DEBETKREDIT.DEBET,
-        transaction
-      ),
-      this.addEntry(
-        entry.kredit,
-        entry.date,
-        entry.kreditFirstSubcontoId,
-        entry.kreditSecondSubcontoId,
-        entry.count,
-        entry.total,
-        DEBETKREDIT.KREDIT,
-        transaction
-      ),
-    ]);
+    await this.addEntry(
+      entry.debet,
+      entry.date,
+      entry.debetFirstSubcontoId,
+      entry.debetSecondSubcontoId,
+      entry.count,
+      entry.total,
+      DEBETKREDIT.DEBET,
+      transaction
+    )
+    await this.addEntry(
+      entry.kredit,
+      entry.date,
+      entry.kreditFirstSubcontoId,
+      entry.kreditSecondSubcontoId,
+      entry.count,
+      entry.total,
+      DEBETKREDIT.KREDIT,
+      transaction
+    )
   }
 
   async addEntrieToTMZ(entry: EntryCreationAttrs, transaction?: Transaction) {
@@ -161,7 +159,6 @@ export class StocksService {
   async deleteTwoEntries(entry: EntryCreationAttrs, transaction?: Transaction) {
     if (this.checkEntryForDublicate(entry)) return;
 
-    await Promise.all([
       this.deleteEntry(
         entry.debet,
         entry.date,
@@ -171,7 +168,7 @@ export class StocksService {
         entry.total,
         DEBETKREDIT.DEBET,
         transaction
-      ),
+      )
       this.deleteEntry(
         entry.kredit,
         entry.date,
@@ -181,8 +178,7 @@ export class StocksService {
         entry.total,
         DEBETKREDIT.KREDIT,
         transaction
-      ),
-    ]);
+      )
   }
 
   async deleteEntrieToTMZ(entry: EntryCreationAttrs, transaction?: Transaction) {

@@ -271,13 +271,19 @@ export class DocumentsService {
           transaction,
         });
         if (entrysList.length > 0) {
-          await Promise.all(
-            entrysList.map(async entry => {
-              await this.stocksService.deleteTwoEntries(entry, transaction);
-              await this.stocksService.deleteEntrieToTMZ(entry, transaction);
-              await this.oborotsService.deleteEntry(entry, transaction);
-            })
-          );
+          // await Promise.all(
+          //   entrysList.map(async entry => {
+          //     await this.stocksService.deleteTwoEntries(entry, transaction);
+          //     await this.stocksService.deleteEntrieToTMZ(entry, transaction);
+          //     await this.oborotsService.deleteEntry(entry, transaction);
+          //   })
+          // );
+
+          for (const entry of entrysList) {
+            await this.stocksService.deleteTwoEntries(entry, transaction);
+            await this.stocksService.deleteEntrieToTMZ(entry, transaction);
+            await this.oborotsService.deleteEntry(entry, transaction);
+          }
           await this.entryRepository.destroy({ where: { docId: document.id }, transaction });
         }
       }
@@ -406,19 +412,19 @@ export class DocumentsService {
       });
 
       for (const document of documents) {
-        if (document.docStatus !== DocSTATUS.DELETED) {
+        if (document.docStatus === DocSTATUS.PROVEDEN ) {
           // Удаляем старые проводки
-          const oldEntrysList = prepareEntrysList(document, this.foundersIds, true);
-          if (oldEntrysList.length > 0) {
-            await Promise.all(
-              oldEntrysList.map(async item => {
-                await this.stocksService.deleteTwoEntries(item, transaction);
-                await this.stocksService.deleteEntrieToTMZ(item, transaction);
-                await this.oborotsService.deleteEntry(item, transaction);
-              })
-            );
-            await this.entryRepository.destroy({ where: { docId: document.id }, transaction });
-          }
+          // const oldEntrysList = prepareEntrysList(document, this.foundersIds, true);
+          // if (oldEntrysList.length > 0) {
+          //   await Promise.all(
+          //     oldEntrysList.map(async item => {
+          //       await this.stocksService.deleteTwoEntries(item, transaction);
+          //       await this.stocksService.deleteEntrieToTMZ(item, transaction);
+          //       await this.oborotsService.deleteEntry(item, transaction);
+          //     })
+          //   );
+          //   await this.entryRepository.destroy({ where: { docId: document.id }, transaction });
+          // }
 
           // Создаём новые проводки
           const newEntrysList = prepareEntrysList(document, this.foundersIds, true);
@@ -434,15 +440,18 @@ export class DocumentsService {
                 await this.oborotsService.addEntry(entry, transaction);
               })
             );
+
+            
           } else {
             throw new Error(`No entries generated for document with senderId: ${document.docValues.senderId}`);
           }
 
-          await document.update({ docStatus: DocSTATUS.PROVEDEN }, { transaction });
+          // await document.update({ docStatus: DocSTATUS.PROVEDEN }, { transaction });
         }
       }
 
       await transaction.commit();
+      console.log('Pereprovodka tugadi =============== >>>>>> ========= >>>>>')
       return documents;
     } catch (error) {
       await transaction.rollback();

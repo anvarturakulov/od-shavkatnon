@@ -39,8 +39,8 @@ import { BackupModule } from './backup/backup.module';
             database: process.env.POSTGRES_DB,
             models: [User, Reference, RefValues, Entry, DocValues, DocTableItems, Document, Stock, Oborot],
             autoLoadModels: true,
-            logging: false
-            // logging: process.env.NODE_ENV === 'development' ? false : console.log,
+            // logging: false
+            logging: process.env.NODE_ENV === 'development' ? false : console.log,
           }),
         UsersModule,
         AuthModule,
