@@ -17,14 +17,31 @@
 
 .table td div {
   text-align: center;
-  
-  /* border-bottom: 1px solid #ddd;; */
 }
+
+.table .totalTd,
+.table .totalTh {
+  font-weight: 600;
+  background: #f9f6f6;
+  text-align: center;
+  width: 100px;
+}
+
+.table .th {
+  text-align: center;
+}
+
 .noData {
   color: red;
   padding: 20px;
 }
+
 .dimensions {
   margin-top: 10px;
   font-style: italic;
+}
+
+.totalRow {
+  font-weight: bold;
+  background-color: #f9f6f6;
 }

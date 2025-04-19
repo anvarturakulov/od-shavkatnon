@@ -79,47 +79,126 @@ export const Clients = ({ className, ...props }: ClientProps): JSX.Element => {
     ),
   }));
 
+  // Вычисляем итоги по дням
+  const dayTotals = days.map((_, dayIndex) => {
+    const totalCount = clientData.reduce((sum, { values }) => sum + (values[dayIndex]?.count || 0), 0);
+    const totalSumma = clientData.reduce((sum, { values }) => sum + (values[dayIndex]?.summa || 0), 0);
+    return { count: totalCount, summa: totalSumma };
+  });
+
+  // Вычисляем общий итог (для последней ячейки)
+  const grandTotal = dayTotals.reduce(
+    (acc, total) => ({
+      count: acc.count + total.count,
+      summa: acc.summa + total.summa,
+    }),
+    { count: 0, summa: 0 }
+  );
+
   return (
     <div className={className}>
       {clientData.length === 0 ? (
-        <div className={styles.noData}>Нет данных для отображения</div>
+        <div className={styles.noData}>Бу цех буйича малумотлар йук</div>
       ) : (
         <>
           <table className={styles.table}>
             <thead>
               <tr>
-                <th>Клиент</th>
-                {days.map((day, index) => (
-                  <th key={index}>{formatDate(day)}</th>
-                ))}
+                <th>№</th>
+                <th>Мижоз</th>
+                {days.map((day, index) =>
+                  index === days.length - 1 ? (
+                    <th key={index} className={styles.totalTh}>
+                      Жами
+                    </th>
+                  ) : (
+                    <th key={index} className={styles.th}>
+                      {formatDate(day)}
+                    </th>
+                  )
+                )}
               </tr>
             </thead>
             <tbody>
               {clientData.map(({ client, values }, clientIndex) => (
                 <tr key={clientIndex}>
+                  <td>{clientIndex+1}</td>
                   <td>{client.name ?? '-'}</td>
-                  {values.map((value, dayIndex) => (
-                    <td key={dayIndex}>
-                      {value ? (
-                        <>
-                            <div>
-                                {numberValue(value.count)}
-                            </div>
-                            <div>
+                  {values.map((value, dayIndex) => {
+                    if (dayIndex !== values.length - 1) {
+                      return (
+                        <td key={dayIndex}>
+                          {value.count ? (
+                            <>
+                              <div>{numberValue(value.count)}</div>
+                              <div>
                                 <span>{numberValue(value.summa)}</span>
-                            </div>
-                        </>
-                      ) : (
-                        '-'
-                      )}
-                    </td>
-                  ))}
+                              </div>
+                            </>
+                          ) : (
+                            <div></div>
+                          )}
+                        </td>
+                      );
+                    } else {
+                      const countTotal = values.reduce((total, item) => total + item?.count, 0);
+                      const summaTotal = values.reduce((total, item) => total + item?.summa, 0);
+                      return (
+                        <td className={styles.totalTd} key={dayIndex}>
+                          <div>{numberValue(countTotal)}</div>
+                          <div>
+                            <span>{numberValue(summaTotal)}</span>
+                          </div>
+                        </td>
+                      );
+                    }
+                  })}
                 </tr>
               ))}
+              {/* Строка с итогами по дням */}
+              <tr className={styles.totalRow}>
+                <td></td>
+                <td>Жами</td>
+                {dayTotals.map((total, dayIndex) => {
+                  if (dayIndex !== days.length - 1) {
+                    return (
+                      <td key={dayIndex}>
+                        {total.count ? (
+                          <>
+                            <div>{numberValue(total.count)}</div>
+                            <div>
+                              <span>{numberValue(total.summa)}</span>
+                            </div>
+                          </>
+                        ) : (
+                          <div></div>
+                        )}
+                      </td>
+                    );
+                  } else {
+                    // Последняя ячейка с общим итогом
+                    return (
+                      <td key={dayIndex} className={styles.totalTd}>
+                        {grandTotal.count ? (
+                          <>
+                            <div>{numberValue(grandTotal.count)}</div>
+                            <div>
+                              <span>{numberValue(grandTotal.summa)}</span>
+                            </div>
+                          </>
+                        ) : (
+                          <div></div>
+                        )}
+                      </td>
+                    );
+                  }
+                })}
+              </tr>
             </tbody>
           </table>
+
           <div className={styles.dimensions}>
-            Жадвал: {clientData.length} мижозлар сони × {days.length} кунга
+            Жадвал: {clientData.length} мижозлар сони × {days.length - 1} кунга
           </div>
         </>
       )}
