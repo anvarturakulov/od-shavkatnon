@@ -7,6 +7,7 @@ import { StocksService } from 'src/stocks/stocks.service';
 import { OborotsService } from 'src/oborots/oborots.service';
 import { Document } from 'src/documents/document.model';
 import { DocSTATUS, DocumentType } from 'src/interfaces/document.interface';
+import { query } from 'src/reports/querys/query';
 
 const isDelivery = (deliverys:Reference[], id:number) => {
   if (deliverys && deliverys.length) {
@@ -50,7 +51,7 @@ export const foydaSubItem = async (
       )}
       ).length
 
-      comeProductDocsByProduct = docsMoveProduct.filter((item:Document) => {
+      comeProductDocsByProduct = docsComeProduct.filter((item:Document) => {
         return (
           item.date>= startDate && 
           item.date <= endDate && 
@@ -70,7 +71,7 @@ export const foydaSubItem = async (
           item.documentType == DocumentType.MoveProd &&
           item.docValues.senderId == sectionId  &&
           isDelivery(deliverys, item.docValues.receiverId) &&
-          item.docValues.productForChargeId == productId
+          item.docValues.analiticId == productId
       )}
       ).reduce((total, item:Document) => total + item.docValues.count, 0)
 
@@ -81,20 +82,20 @@ export const foydaSubItem = async (
           item.documentType == DocumentType.MoveProd &&
           item.docValues.receiverId == sectionId  &&
           isDelivery(deliverys, item.docValues.senderId) &&
-          item.docValues.productForChargeId == productId
+          item.docValues.analiticId == productId
         )
       }).reduce((total, item:Document) => total + item.docValues.count, 0)
 
     }
 
-    // const POKOL = await query(Schet.S28, TypeQuery.POKOL, startDate, endDate, currentSectionId, null, null, stockService, oborotsService)
-    // const KOKOL = await query(Schet.S28, TypeQuery.KOKOL, startDate, endDate, currentSectionId, null, null, stockService, oborotsService)
+    const POKOL = await query(Schet.S28, TypeQuery.POKOL, startDate, endDate, sectionId, productId, null, stockService, oborotsService)
+    const KOKOL = await query(Schet.S28, TypeQuery.KOKOL, startDate, endDate, sectionId, productId,  null, stockService, oborotsService)
 
-    // const startCount = POKOL;
-    // const endCount = KOKOL;
+    const startCount = POKOL;
+    const endCount = KOKOL;
 
-    const productionCountAllBySection = await queryKor(Schet.S28, Schet.S20, TypeQuery.OKK, startDate, endDate, sectionId, null, null, oborotsService);
-    const productionCount = await queryKor(Schet.S28, Schet.S20, TypeQuery.OKK, startDate, endDate, sectionId, productId, null, oborotsService);
+    const productionCountAllBySection = await queryKor(Schet.S28, Schet.S20, TypeQuery.ODK, startDate, endDate, sectionId, null, null, oborotsService);
+    const productionCount = await queryKor(Schet.S28, Schet.S20, TypeQuery.ODK, startDate, endDate, sectionId, productId, null, oborotsService);
 
     const brakCount = await queryKor(Schet.S20, Schet.S28, TypeQuery.OKK, startDate, endDate, sectionId, productId, null, oborotsService);
     const moveOutCount = await queryKor(Schet.S28, Schet.S28, TypeQuery.OKK, startDate, endDate, sectionId, productId, null, oborotsService);
@@ -102,7 +103,7 @@ export const foydaSubItem = async (
     const sale = await queryKor(Schet.S40, Schet.S28, TypeQuery.OKS, startDate, endDate, sectionId, productId, null, oborotsService);
 
     const countDeleviry = (countOutToDelivery-countIncomeFromDelivery) <= 0 ? 0 : (countOutToDelivery-countIncomeFromDelivery)   
-    const saleCountWithOutMove = productionCount - brakCount - moveOutCount + moveIncomeCount ;
+    const saleCountWithOutMove = startCount + productionCount - brakCount - moveOutCount + moveIncomeCount - endCount;
     
     let dAll = countDeleviry > 0 ? countDeleviry : 0
     let iAll = ( moveIncomeCount - countIncomeFromDelivery ) > 0 ? (moveIncomeCount-countIncomeFromDelivery) : 0
