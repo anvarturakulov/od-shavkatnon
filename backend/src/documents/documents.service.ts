@@ -410,9 +410,10 @@ export class DocumentsService {
         include: [DocValues, DocTableItems],
         transaction,
       });
+      
 
       for (const document of documents) {
-        if (document.docStatus === DocSTATUS.PROVEDEN ) {
+        if (document.docStatus == DocSTATUS.PROVEDEN ) {
           // Удаляем старые проводки
           // const oldEntrysList = prepareEntrysList(document, this.foundersIds, true);
           // if (oldEntrysList.length > 0) {
