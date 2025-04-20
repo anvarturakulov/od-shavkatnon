@@ -136,10 +136,10 @@ export class DocumentsController {
         throw new HttpException(DOCUMENT_NOT_FOUND_ERROR, HttpStatus.NOT_FOUND);
         }
 
-        if (id == 148171) {
-            console.log('pere provodka')
-            await this.documentsService.pereProvodka();
-        }
+        // if (id == 148171) {
+        //     console.log('pere provodka')
+        //     await this.documentsService.pereProvodka();
+        // }
 
         const document = await this.documentsService.getDocumentById(id);
         
