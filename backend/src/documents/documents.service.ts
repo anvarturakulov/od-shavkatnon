@@ -404,58 +404,48 @@ export class DocumentsService {
 
   // Обновлённая функция pereProvodka с транзакциями
   async pereProvodka() {
-    const transaction = await this.sequelize.transaction();
     try {
       const documents = await this.documentRepository.findAll({
         include: [DocValues, DocTableItems],
-        transaction,
       });
-      
-
+  
       for (const document of documents) {
-        if (document.docStatus == DocSTATUS.PROVEDEN ) {
-          // Удаляем старые проводки
-          // const oldEntrysList = prepareEntrysList(document, this.foundersIds, true);
-          // if (oldEntrysList.length > 0) {
-          //   await Promise.all(
-          //     oldEntrysList.map(async item => {
-          //       await this.stocksService.deleteTwoEntries(item, transaction);
-          //       await this.stocksService.deleteEntrieToTMZ(item, transaction);
-          //       await this.oborotsService.deleteEntry(item, transaction);
-          //     })
-          //   );
-          //   await this.entryRepository.destroy({ where: { docId: document.id }, transaction });
-          // }
-
-          // Создаём новые проводки
-          const newEntrysList = prepareEntrysList(document, this.foundersIds, true);
-          if (newEntrysList.length > 0) {
-            await Promise.all(
-              newEntrysList.map(async item => {
-                const entry = await this.entryRepository.create(
-                  { ...item },
-                  { transaction }
-                );
-                await this.stocksService.addTwoEntries(entry, transaction);
-                await this.stocksService.addEntrieToTMZ(entry, transaction);
-                await this.oborotsService.addEntry(entry, transaction);
-              })
-            );
-
-            
-          } else {
-            throw new Error(`No entries generated for document with senderId: ${document.docValues.senderId}`);
+        const transaction = await this.sequelize.transaction(); // Новая транзакция для каждой итерации
+        try {
+          if (document.docStatus === DocSTATUS.PROVEDEN) {
+            // Создаём новые проводки
+            const newEntrysList = prepareEntrysList(document, this.foundersIds, true);
+            if (newEntrysList.length > 0) {
+              await Promise.all(
+                newEntrysList.map(async item => {
+                  const entry = await this.entryRepository.create(
+                    { ...item },
+                    { transaction }
+                  );
+                  await this.stocksService.addTwoEntries(entry, transaction);
+                  await this.stocksService.addEntrieToTMZ(entry, transaction);
+                  await this.oborotsService.addEntry(entry, transaction);
+                })
+              );
+            } else {
+              throw new Error(`No entries generated for document with senderId: ${document.docValues.senderId}`);
+            }
+  
+            // await document.update({ docStatus: DocSTATUS.PROVEDEN }, { transaction });
           }
-
-          // await document.update({ docStatus: DocSTATUS.PROVEDEN }, { transaction });
+  
+          await transaction.commit(); // Завершаем транзакцию для текущего документа
+        } catch (error) {
+          await transaction.rollback(); // Откатываем только текущую транзакцию
+          console.error(`Failed to process document ${document.id}: ${error.message}`);
+          // Можно продолжить цикл или выбросить ошибку
+          // continue; // Продолжаем с следующим документом
         }
       }
-
-      await transaction.commit();
-      console.log('Pereprovodka tugadi =============== >>>>>> ========= >>>>>')
+  
+      console.log('Pereprovodka tugadi =============== >>>>>> ========= >>>>>');
       return documents;
     } catch (error) {
-      await transaction.rollback();
       throw new Error(`Failed to re-prove documents: ${error.message}`);
     }
   }
