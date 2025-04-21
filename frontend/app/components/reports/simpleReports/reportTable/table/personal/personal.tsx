@@ -19,7 +19,7 @@ export const Personal = ({className, ...props }: PersonalProps) :JSX.Element => 
         TOTALPOSUM = datas.reduce((summa: number, item:any) => summa + (item.POSUM ? -item.POSUM : 0), 0);
         TOTALTDSUM = datas.reduce((summa: number, item:any) => summa + (item.TDSUM || 0), 0);
         TOTALTKSUM = datas.reduce((summa: number, item:any) => summa + (item.TKSUM || 0), 0);
-        TOTALKOSUM = TOTALPOSUM + TOTALTDSUM - TOTALTKSUM;
+        TOTALKOSUM = TOTALPOSUM + TOTALTKSUM-TOTALTDSUM;
     }
 
     return (
@@ -57,12 +57,15 @@ export const Personal = ({className, ...props }: PersonalProps) :JSX.Element => 
                         <td className={styles.titleValue}></td>
                         <td className={styles.titleValue}></td>
                         <td className={styles.titleValue}>{numberValue(TOTALPOSUM)}</td>
-                        <td className={styles.titleValue}>{numberValue(TOTALTDSUM)}</td>
                         <td className={styles.titleValue}>{numberValue(TOTALTKSUM)}</td>
+                        <td className={styles.titleValue}>{numberValue(TOTALTDSUM)}</td>
                         <td className={styles.titleValue}>{numberValue(TOTALKOSUM)}</td>
                     </tr>
                 </thead>
-                
+                {/* <td className={styles.totalTdKol}>{numberValue((-1)*item?.POSUM)}</td>
+          <td className={styles.totalTdKol}>{numberValue(item?.TKSUM)}</td>
+          <td className={styles.totalTdKol}>{numberValue(item?.TDSUM)}</td>
+          <td className={styles.totalTdKol}>{numberValue((-1)*item?.POSUM+item?.TKSUM-item?.TDSUM)}</td> */}
             </table>
        </>
     )

@@ -39,7 +39,9 @@ export const PersonalItem = ({className, item, ...props }: PersonalItemProps) :J
               item?.subItems &&
               showInners &&
               item?.subItems.length &&
-              item?.subItems.map((element:any, key:number) => {
+              item.subItems
+              .sort((a:any, b:any) => a.date - b.date)
+              .map((element:any, key:number) => {
                   return (
                     <tr key={key}>
                       <td className={styles.number}>{key+1}</td>
@@ -60,5 +62,6 @@ export const PersonalItem = ({className, item, ...props }: PersonalItemProps) :J
       
     </>
   )
-} 
+}
+
 // XPathExpression filter for(let first of second) {third}
