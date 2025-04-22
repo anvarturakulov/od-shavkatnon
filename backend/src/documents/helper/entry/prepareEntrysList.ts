@@ -13,6 +13,7 @@ export const prepareEntrysList = (document: Document, foundersIds: string[], for
   // Бу хозирча шундай туриб турсин. Кейин тепадан келиш керак
   const recieverIsFounder = foundersIds.includes(`${document.docValues.receiverId}`)
   const senderIsFounder = foundersIds.includes(`${document.docValues.senderId}`)
+  console.log(recieverIsFounder, senderIsFounder)
 
 
   if (document) {

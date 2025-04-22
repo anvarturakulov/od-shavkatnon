@@ -359,6 +359,7 @@ export class DocumentsService {
       }
 
       const entrysList = prepareEntrysList(document, this.foundersIds, true);
+      console.log(entrysList)
       if (entrysList.length > 0) {
         await Promise.all(
           entrysList.map(async item => {

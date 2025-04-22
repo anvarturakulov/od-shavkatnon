@@ -221,17 +221,6 @@ export const getValuesForEntry = (doc: Document, newEntry: boolean, hasTable: bo
 
       case DocumentType.MoveCash:
         if (!newEntry) {
-          return {
-            debet: Schet.S00,
-            kredit: Schet.S68,
-            debetFirstSubcontoId: receiverId,
-            debetSecondSubcontoId: senderId,
-            kreditFirstSubcontoId: senderId,
-            kreditSecondSubcontoId: receiverId,
-            count: 0,
-            total
-          }
-        } else {
           if (recieverIsFounder && senderIsFounder) {
             return {
                   debet: Schet.S68,
@@ -247,6 +236,20 @@ export const getValuesForEntry = (doc: Document, newEntry: boolean, hasTable: bo
     
           if (recieverIsFounder && !senderIsFounder) {
             return {
+                  debet: Schet.S68,
+                  kredit: Schet.S00,
+                  debetFirstSubcontoId: receiverId,
+                  debetSecondSubcontoId: senderId,
+                  kreditFirstSubcontoId: senderId,
+                  kreditSecondSubcontoId: receiverId,
+                  count: 0,
+                  total
+                }
+          }
+        } else {
+    
+          if (recieverIsFounder && !senderIsFounder) {
+            return {
                   debet: Schet.S66,
                   kredit: doc.date > remaindDate ? Schet.S50 : Schet.S00,
                   debetFirstSubcontoId: receiverId,
@@ -257,7 +260,9 @@ export const getValuesForEntry = (doc: Document, newEntry: boolean, hasTable: bo
                   total
                 }
           }
-  
+          
+          if (recieverIsFounder && senderIsFounder) total = 0
+
           return {
                 debet: Schet.S50,
                 kredit: doc.date > remaindDate ? Schet.S50 : Schet.S00,
