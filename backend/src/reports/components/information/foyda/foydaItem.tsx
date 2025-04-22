@@ -49,11 +49,10 @@ export const foydaItem = async (
 
   if (data && data.length) {
     filteredData = data.filter((item: Reference)=> {
-                        return item.refValues.typeTMZ == TypeTMZ.PRODUCT
+                        return (item.refValues.typeTMZ == TypeTMZ.PRODUCT && !item.refValues.markToDeleted)
     }
   )}
 
-  // console.log(filteredData)
   for (const item of filteredData) {
     
     if (item.id != idUmumProduct) {

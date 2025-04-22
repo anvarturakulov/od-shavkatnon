@@ -68,6 +68,7 @@ export const foydaSubItem = async (
         return (
           item.date>= startDate && 
           item.date <= endDate && 
+          item.docStatus == DocSTATUS.PROVEDEN &&
           item.documentType == DocumentType.MoveProd &&
           item.docValues.senderId == sectionId  &&
           isDelivery(deliverys, item.docValues.receiverId) &&
@@ -79,6 +80,7 @@ export const foydaSubItem = async (
         return (
           item.date>= startDate && 
           item.date <= endDate && 
+          item.docStatus == DocSTATUS.PROVEDEN &&
           item.documentType == DocumentType.MoveProd &&
           item.docValues.receiverId == sectionId  &&
           isDelivery(deliverys, item.docValues.senderId) &&
