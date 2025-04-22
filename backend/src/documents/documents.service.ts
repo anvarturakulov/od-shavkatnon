@@ -303,6 +303,43 @@ export class DocumentsService {
     }
   }
 
+  // Обновлённая функция markToDeleteById с транзакциями
+  async deleteComeProduct(dateStart: number, dateEnd: number) {
+    const transaction = await this.sequelize.transaction();
+    try {
+      
+      const documents = await this.documentRepository.findAll({
+        where: {
+          date: {
+            [Op.gte]: dateStart,
+            [Op.lte]: dateEnd,
+          },
+          documentType: DocumentType.ComeProduct
+        },
+        include: [DocValues, DocTableItems],
+      });
+
+      for (const doc of documents) {
+        if (doc.docStatus != DocSTATUS.PROVEDEN) {
+          if (!doc.docValues.count) {
+            // Удаляем связанные записи
+            await DocValues.destroy({ where: { docId: doc.id } });
+            await DocTableItems.destroy({ where: { docId: doc.id } });
+            // Удаляем сам документ
+            await doc.destroy();
+          }
+          
+        }
+      }
+
+      await transaction.commit();
+      return documents;
+    } catch (error) {
+      await transaction.rollback();
+      throw new Error(`Failed for deletion: ${error.message}`);
+    }
+  }
+
   // Обновлённая функция setProvodka с транзакциями
   async setProvodka(id: number) {
     const transaction = await this.sequelize.transaction();

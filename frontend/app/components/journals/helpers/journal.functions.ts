@@ -2,6 +2,8 @@ import { Maindata } from '@/app/context/app.context.interfaces';
 import { DocSTATUS, DocumentModel, DocumentType } from '@/app/interfaces/document.interface';
 import { ReferenceModel, TypeSECTION } from '@/app/interfaces/reference.interface';
 import { UserRoles } from '@/app/interfaces/user.interface';
+import { dateNumberToString } from '@/app/service/common/converterForDates';
+import { deleteComeProducts } from '@/app/service/documents/deleteComeProducts';
 import { getDocumentById } from '@/app/service/documents/getDocumentById';
 import { markToDeleteDocument } from '@/app/service/documents/markToDeleteDocument';
 import { setProvodkaToDocument } from '@/app/service/documents/setProvodkaToDocument';
@@ -101,4 +103,18 @@ export const isDirector = (references: any, id: number | undefined | null): bool
     return item?.refValues?.typeSection == TypeSECTION.DIRECTOR
   }
   return false
+}
+
+export const cleanDocs = (dateStart: number, dateEnd: number, token: string | undefined, setMainData: Function | undefined,) =>{
+  const nowInString = dateNumberToString(Date.now())
+  const dateEndInString = dateNumberToString(dateEnd)
+  
+  if (nowInString == dateEndInString) {
+      if (confirm('Хужжатларни тозалашга бугунги кунги хужжатлар ха кираяпти. Сиз розимизсиз?')) {
+        deleteComeProducts(dateStart, dateEnd, token, setMainData)
+      }
+  } else {
+    deleteComeProducts(dateStart, dateEnd, token, setMainData)
+  }
+
 }

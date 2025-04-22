@@ -150,6 +150,18 @@ export class DocumentsController {
         return markedDoc
     }
 
+    @ApiOperation({summary: 'Пометить на удаление документа'})
+    @ApiResponse({status: 200, type: Document})
+    @Roles('ALL')
+    @UseGuards(RolesGuard)
+    @Delete('deleteComeProducts')
+    async deleteComeProduct(@Req() request: Request) {
+        const dateStart = request.query?.dateStart ? +request.query?.dateStart : 0
+        const dateEnd = request.query?.dateEnd ? +request.query?.dateEnd : 0
+        const documents = await this.documentsService.deleteComeProduct(dateStart, dateEnd);
+        return documents
+    }
+
     @ApiOperation({summary: 'Дать проводку на документ'})
     @ApiResponse({status: 200, type: Document})
     @Roles('ALL')

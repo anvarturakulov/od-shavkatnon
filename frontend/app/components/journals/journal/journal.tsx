@@ -9,7 +9,7 @@ import useSWR from 'swr';
 import cn from 'classnames';
 import Header from '../../common/header/header';
 import { getDataForSwr } from '@/app/service/common/getDataForSwr';
-import { deleteItemDocument, getDocument, getNameReference, getUserName, isDirector, isFounder, setProvodkaToDoc } from '../helpers/journal.functions';
+import { cleanDocs, deleteItemDocument, getDocument, getNameReference, getUserName, isDirector, isFounder, setProvodkaToDoc } from '../helpers/journal.functions';
 import { getDescriptionDocument } from '@/app/service/documents/getDescriptionDocument';
 import { DocSTATUS, DocumentModel, DocumentType, Interval } from '@/app/interfaces/document.interface';
 import { dateNumberToString } from '@/app/service/common/converterForDates'
@@ -19,6 +19,7 @@ import { CheckBoxInFooter } from '../helpers/checkBoxInFooter/checkBoxInFooter'
 import { dashboardUsersList, UserRoles } from '@/app/interfaces/user.interface'
 import { Doc } from '../../documents/document/doc/doc'
 import { secondsToDateString } from '../../documents/document/doc/helpers/doc.functions'
+import { Button } from '../../common/button/Button'
 
 
 interface FilterForJournal {
@@ -140,6 +141,8 @@ export default function Journal({ className, ...props}:JournalProps):JSX.Element
             }
         })
     }   
+
+    
 
     let count:number = 0;
     let total: number = 0;
@@ -331,6 +334,11 @@ export default function Journal({ className, ...props}:JournalProps):JSX.Element
                     <CheckBoxInFooter id='partners' label='Таъминотчи'/>
                 </div>
                 
+            }
+
+            {
+                contentName == DocumentType.ComeProduct &&
+                <Button appearance='ghost'className={styles.button} onClick={()=>cleanDocs(dateStartForUrl, dateEndForUrl, token, setMainData)}>Бугунги киримларни тозалаш</Button>
             }
             </div>
             
