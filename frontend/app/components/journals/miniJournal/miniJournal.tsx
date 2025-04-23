@@ -62,7 +62,15 @@ export default function MiniJournal({ className, ...props}:MiniJournalProps):JSX
                                     item.docValues?.receiverId == user?.sectionId 
                                 )
                             })
-                            .sort((a:DocumentModel, b:DocumentModel) => a.date - b.date)
+                            .sort((a:DocumentModel, b:DocumentModel) => {
+                                const dateComparison = a.date - b.date;
+
+                                if (dateComparison === 0 && a.id && b.id) {
+                                    return a.id - b.id;
+                                }
+                                
+                                return dateComparison;
+                            })
                             .map((item:DocumentModel, key: number) => (
                                 <tr 
                                     key={key} 
