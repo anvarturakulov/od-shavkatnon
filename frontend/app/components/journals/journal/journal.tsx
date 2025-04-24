@@ -3,7 +3,7 @@ import styles from './journal.module.css'
 import IcoTrash from './ico/trash.svg'
 import IcoSave from './ico/save.svg'
 import {JournalProps} from './journal.props'
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useAppContext } from '@/app/context/app.context';
 import useSWR from 'swr';
 import cn from 'classnames';
@@ -151,6 +151,44 @@ export default function Journal({ className, ...props}:JournalProps):JSX.Element
     let total: number = 0;
     let docCount: number = 0;
 
+    const filteredDocuments = useMemo(() => {
+        return (
+            documents &&
+            documents
+                .sort((a: DocumentModel, b: DocumentModel) => {
+                    const dateComparison = a.date - b.date;
+                    if (dateComparison === 0 && a.id && b.id) {
+                        return a.id - b.id;
+                    }
+                    return dateComparison;
+                })
+                .filter((item: DocumentModel) => {
+                    const { summa, receiver, sender, comment, user } = filter;
+                    const userLowerCase = user.toLowerCase();
+                    const userName = `${getUserName(item.userId, mainData)}`.toLowerCase();
+                    const analiticName = getNameReference(references, item.docValues?.analiticId);
+                    const itemComment = item.docValues?.comment;
+                    const bigString = `${itemComment}${analiticName}`.toLowerCase();
+                    const commentInLowerCase = comment.toLowerCase();
+                    const itemSender = getNameReference(references, item.docValues?.senderId);
+                    const itemReceiver = getNameReference(references, item.docValues?.receiverId);
+    
+                    if (journalChechboxs.charges && !(item.docValues?.isWorker || item.docValues?.isPartner)) return false;
+                    if (journalChechboxs.workers && !item.docValues?.isWorker) return false;
+                    if (journalChechboxs.partners && !item.docValues?.isPartner) return false;
+                    if (user !== 'Фойдаланувчи' && !userName.includes(userLowerCase)) return false;
+                    if (comment !== 'Изох' && !bigString.includes(commentInLowerCase)) return false;
+                    if (sender !== 'Берувчи' && !(itemSender && itemSender.toLowerCase().includes(sender.toLowerCase()))) return false;
+                    if (receiver !== 'Олувчи' && !(itemReceiver && itemReceiver.toLowerCase().includes(receiver.toLowerCase()))) return false;
+                    if (summa !== 'Сумма' && item.docValues?.total !== +summa) return false;
+                    if (role !== UserRoles.ADMIN && role !== UserRoles.HEADCOMPANY) {
+                        if (isDirector(references, item.docValues?.senderId)) return false;
+                        if (isFounder(references, item.docValues?.senderId) || isFounder(references, item.docValues?.receiverId)) return false;
+                    }
+                    return true;
+                })
+        );
+    }, [documents, filter, journalChechboxs, references, mainData, role]);
 
     return (
         <>
@@ -209,119 +247,44 @@ export default function Journal({ className, ...props}:JournalProps):JSX.Element
                             </tr>
                         </thead>
                         <tbody className={styles.tbody}>
-                            {documents && documents.length>0 && 
-                            documents
-                            .sort((a:DocumentModel, b:DocumentModel) => {
-                                const dateComparison = a.date - b.date;
-
-                                if (dateComparison === 0 && a.id && b.id) {
-                                    return a.id - b.id;
-                                }
-                                
-                                return dateComparison;
-                            })
-                            .filter((item:DocumentModel) => {
-                                if (journalChechboxs.charges ) {
-                                    if (!item.docValues?.isWorker && !item.docValues?.isPartner) return true
-                                } else return true
-                            })
-                            .filter((item:DocumentModel) => {
-                                if (journalChechboxs.workers ) {
-                                    if (item.docValues?.isWorker) return true
-                                } else return true
-                            })
-                            .filter((item:DocumentModel) => {
-                                if (journalChechboxs.partners ) {
-                                    if (item.docValues?.isPartner) return true
-                                } else return true
-                            })
-                            .filter((item:DocumentModel) => {
-                                const {user} = filter
-                                const userLowerCase = user.toLocaleLowerCase()
-                                const userName = `${getUserName(item.userId, mainData)}`.toLocaleLowerCase()
-                                if (user != 'Фойдаланувчи') {
-                                    if (userName.includes(userLowerCase)) return true
-                                } else return true
-                            })
-                            
-                            .filter((item:DocumentModel) => {
-                                const {comment} = filter
-                                const analiticName = getNameReference(references,item.docValues?.analiticId)
-                                const itemComment = item.docValues?.comment
-                                const bigString = `${itemComment}${analiticName}`.toLocaleLowerCase()
-                                const commentInLowerCase = comment.toLocaleLowerCase()
-                                
-                                if (comment != 'Изох') {
-                                    if (bigString.includes(commentInLowerCase)) return true 
-                                    else return false
-                                } else return true
-                            })
-                            .filter((item:DocumentModel) => {
-                                const {sender} = filter
-                                const itemSender = getNameReference(references,item.docValues?.senderId)
-                                if (sender != 'Берувчи') {
-                                    if (itemSender && itemSender.toLowerCase().includes(sender.toLocaleLowerCase())) return true
-                                } else return true
-                            })
-                            .filter((item:DocumentModel) => {
-                                const {receiver} = filter
-                                const itemReceiver = getNameReference(references,item.docValues?.receiverId)
-                                if (receiver != 'Олувчи') {
-                                    if (itemReceiver && itemReceiver.toLowerCase().includes(receiver.toLocaleLowerCase())) return true
-                                } else return true
-                            })
-                            .filter((item:DocumentModel) => {
-                                const {summa} = filter
-                                if (summa != 'Сумма') {
-                                    if (item.docValues?.total == +summa) return true
-                                } else return true
-                            })
-                            .filter((item:DocumentModel) => {
-                                if (role != UserRoles.ADMIN && role != UserRoles.HEADCOMPANY) {
-                                    if (isDirector(references, item.docValues?.senderId)) return false
-                                    if ( isFounder(references, item.docValues?.senderId) ||
-                                         isFounder(references, item.docValues?.receiverId)
-                                    ) return false
-                                }
-                                return true
-                            })
-                            .map((item:DocumentModel, key: number) => {
-                                let {t, c} = totals(item)
-                                total += item.docStatus != DocSTATUS.DELETED ? t : 0;
-                                count += item.docStatus != DocSTATUS.DELETED ? c : 0;
-                                docCount += item.docStatus != DocSTATUS.DELETED ? 1 : 0;
-                                return (
-                                    <tr 
-                                        key={key} 
-                                        className={cn(className)}
-                                        onDoubleClick={() => {getDocument(item.id, setMainData, token)}}    
-                                    >
-                                        <td className={styles.rowId}>{item.id}</td>
-                                        <td className={styles.rowDate}>{secondsToDateString(item.date)}</td>
-                                        <td className={cn(styles.documentType, {
-                                               [styles.proveden]: item.docStatus == DocSTATUS.PROVEDEN,
-                                               [styles.deleted]: item.docStatus == DocSTATUS.DELETED
-                                            })}>
-                                                {getDescriptionDocument(item.documentType)}
-                                        </td>
-                                        <td className={cn(styles.rowSumma, styles.tdSumma)}>{documentTotal(item)}</td>
-                                        <td>{getNameReference(references,item.docValues?.receiverId)}</td>
-                                        <td>{getNameReference(references,item.docValues?.senderId)}</td>
-                                        <td>{`${getNameReference(references,item.docValues?.analiticId)? getNameReference(references,item.docValues?.analiticId): ''} ${item.docValues?.comment ? `(${item.docValues?.comment})`: ''} ${item.docValues?.count ? `(${item.docValues?.count})`: ''}`}</td>
-                                        <td>{getUserName(item.userId, mainData)}</td>
-                                        <td className={styles.rowAction}>
-                                            <IcoTrash className={styles.icoTrash}
-                                            onClick = {() => deleteItemDocument(item.id, item.date, token, setMainData, mainData)}
-                                            />
-                                        </td>
-                                        <td className={styles.rowAction}>
-                                            <IcoSave className={styles.icoSave}
-                                            onClick = {() => setProvodkaToDoc(item.id, token ,item.docStatus ,setMainData, mainData, item.docValues?.receiverId, item.docValues?.senderId)}
-                                            />
-                                        </td>
-                                    </tr>
-                                 )   
-                            })
+                            {filteredDocuments && 
+                                filteredDocuments.map((item:DocumentModel, key: number) => {
+                                    let {t, c} = totals(item)
+                                    total += item.docStatus != DocSTATUS.DELETED ? t : 0;
+                                    count += item.docStatus != DocSTATUS.DELETED ? c : 0;
+                                    docCount += item.docStatus != DocSTATUS.DELETED ? 1 : 0;
+                                    return (
+                                        <tr 
+                                            key={key} 
+                                            className={cn(className)}
+                                            onDoubleClick={() => {getDocument(item.id, setMainData, token)}}    
+                                        >
+                                            <td className={styles.rowId}>{item.id}</td>
+                                            <td className={styles.rowDate}>{secondsToDateString(item.date)}</td>
+                                            <td className={cn(styles.documentType, {
+                                                [styles.proveden]: item.docStatus == DocSTATUS.PROVEDEN,
+                                                [styles.deleted]: item.docStatus == DocSTATUS.DELETED
+                                                })}>
+                                                    {getDescriptionDocument(item.documentType)}
+                                            </td>
+                                            <td className={cn(styles.rowSumma, styles.tdSumma)}>{documentTotal(item)}</td>
+                                            <td>{getNameReference(references,item.docValues?.receiverId)}</td>
+                                            <td>{getNameReference(references,item.docValues?.senderId)}</td>
+                                            <td>{`${getNameReference(references,item.docValues?.analiticId)? getNameReference(references,item.docValues?.analiticId): ''} ${item.docValues?.comment ? `(${item.docValues?.comment})`: ''} ${item.docValues?.count ? `(${item.docValues?.count})`: ''}`}</td>
+                                            <td>{getUserName(item.userId, mainData)}</td>
+                                            <td className={styles.rowAction}>
+                                                <IcoTrash className={styles.icoTrash}
+                                                onClick = {() => deleteItemDocument(item.id, item.date, token, setMainData, mainData)}
+                                                />
+                                            </td>
+                                            <td className={styles.rowAction}>
+                                                <IcoSave className={styles.icoSave}
+                                                onClick = {() => setProvodkaToDoc(item.id, token ,item.docStatus ,setMainData, mainData, item.docValues?.receiverId, item.docValues?.senderId)}
+                                                />
+                                            </td>
+                                        </tr>
+                                    )   
+                                })
                             }
                         </tbody>
                     </table>
