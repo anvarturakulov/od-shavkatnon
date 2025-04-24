@@ -64,7 +64,7 @@ export class StocksService {
     if (!created) {
       stock.count += debetKredit === DEBETKREDIT.DEBET ? count : -count;
       stock.total += debetKredit === DEBETKREDIT.DEBET ? total : -total;
-      stock.comment = stock.comment.trim() + ', '+comment
+      stock.comment = stock.comment ? stock.comment.trim(): '' + ', '+comment
       await stock.save({ transaction });
     }
 
