@@ -131,15 +131,17 @@ export default function Journal({ className, ...props}:JournalProps):JSX.Element
         
         let currentValue = prompt(title);
         
-        if (currentValue == '') currentValue = defaulValue
-
-        setFilter(filter => {
-            let newObj = {...filter}
-            return {
-                ...newObj,
-                [target] : currentValue
-            }
-        })
+        if (!currentValue) currentValue = defaulValue
+        else {
+            setFilter(filter => {
+                let newObj = {...filter}
+                return {
+                    ...newObj,
+                    [target] : currentValue
+                }
+            })
+        }
+        
     }   
 
     
