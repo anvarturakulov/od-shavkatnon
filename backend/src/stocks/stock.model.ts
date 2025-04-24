@@ -12,6 +12,7 @@ export interface StockCreationAttrs {
     total: number
     remainCount: number
     remainTotal: number
+    comment: string
 }
 
 
@@ -59,6 +60,9 @@ export class Stock extends Model<Stock, StockCreationAttrs> {
 
     @Column({ type: DataType.FLOAT })
     remainTotal: number;
+
+    @Column({ type: DataType.STRING })
+    comment: string;
     
     // @Unique({ name: 'stocks_unique_date', msg: 'One stock per date' })
     // static uniqueDateConstraint = ['schet', 'firstSubcontoId', 'secondSubcontoId', 'date'];

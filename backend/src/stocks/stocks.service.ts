@@ -41,7 +41,8 @@ export class StocksService {
     count: number,
     total: number,
     debetKredit: DEBETKREDIT,
-    transaction?: Transaction
+    comment: string,
+    transaction?: Transaction,
   ) {
     const where = this.getWhereClause(schet, date, firstSubcontoId, secondSubcontoId);
     const [stock, created] = await this.stockRepository.findOrCreate({
@@ -55,6 +56,7 @@ export class StocksService {
         total: debetKredit === DEBETKREDIT.DEBET ? total : -total,
         remainCount: 0,
         remainTotal: 0,
+        comment
       },
       transaction,
     });
@@ -62,6 +64,7 @@ export class StocksService {
     if (!created) {
       stock.count += debetKredit === DEBETKREDIT.DEBET ? count : -count;
       stock.total += debetKredit === DEBETKREDIT.DEBET ? total : -total;
+      stock.comment = stock.comment.trim() + ', '+comment
       await stock.save({ transaction });
     }
 
@@ -79,7 +82,8 @@ export class StocksService {
       entry.count,
       entry.total,
       DEBETKREDIT.DEBET,
-      transaction
+      String(entry.docId),
+      transaction,
     )
     await this.addEntry(
       entry.kredit,
@@ -89,7 +93,8 @@ export class StocksService {
       entry.count,
       entry.total,
       DEBETKREDIT.KREDIT,
-      transaction
+      String(entry.docId),
+      transaction,
     )
   }
 
@@ -109,7 +114,8 @@ export class StocksService {
         entry.count,
         entry.total,
         DEBETKREDIT.DEBET,
-        transaction
+        String(entry.docId),
+        transaction,
       );
     }
 
@@ -122,7 +128,8 @@ export class StocksService {
         entry.count,
         entry.total,
         DEBETKREDIT.KREDIT,
-        transaction
+        String(entry.docId),
+        transaction,
       );
     }
   }
