@@ -19,6 +19,7 @@ export const getSchetForQuery = (contentName: string) : DocumentTypeForReference
   const documentsForHalfstuff = [
     `${DocumentType.LeaveHalfstuff}`,
     `${DocumentType.MoveHalfstuff}`,
+    `${DocumentType.SaleHalfStuff}`,
   ]
 
   if (documentsForMaterialWithOutLeave.includes(contentName)) {

@@ -290,7 +290,8 @@ export const SelectReferenceInForm = ({ label, typeReference, visibile=true , de
                         ( contentName == DocumentType.LeaveMaterial || 
                           contentName == DocumentType.LeaveHalfstuff || 
                           contentName == DocumentType.LeaveProd ||
-                          contentName == DocumentType.SaleMaterial
+                          contentName == DocumentType.SaleMaterial ||
+                          contentName == DocumentType.SaleHalfStuff
                         ))
                         {
                             return (

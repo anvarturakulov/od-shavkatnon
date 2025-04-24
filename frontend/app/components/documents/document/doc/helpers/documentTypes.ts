@@ -19,6 +19,7 @@ export const docsDependentToMiddlePrice = [
   `${DocumentType.MoveMaterial}`,
   `${DocumentType.MoveHalfstuff}`,
   `${DocumentType.ComeHalfstuff}`,
+  `${DocumentType.SaleHalfStuff}`,
 ]
 
 export const docsNotDependentToTotal = [
