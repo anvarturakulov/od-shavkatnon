@@ -1,4 +1,6 @@
-
+.container {
+    padding: 10px 20px;
+}
 .infoBox{
     display: grid;
     grid-template-columns: 1fr;
@@ -62,6 +64,10 @@
     width: 40px;
     color: red;
     font-weight: 700;
+}
+
+.pdfBtn{
+    margin-top: 20px;
 }
 
 .docBox{

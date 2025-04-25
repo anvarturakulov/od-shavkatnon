@@ -98,7 +98,7 @@ export const DebitorKreditor = ({className, data, ...props }: DebitorKreditorPro
     return (
        <>
             <div className={styles.title}>
-                Пул окими
+                Дебитор кредитор
             </div>
 
             <div className={styles.box}>

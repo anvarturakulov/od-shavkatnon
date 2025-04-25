@@ -2,6 +2,7 @@ import { DashboardReportItem } from "../interfaces/report.interface";
 import { UserRoles } from "../interfaces/user.interface";
 
 export const DashboardReportData:Array<DashboardReportItem> = [
+    
     {
         title: 'Умум. пул окими',
         code: 'Financial',
@@ -78,6 +79,12 @@ export const DashboardReportData:Array<DashboardReportItem> = [
         id: 13,
         title: 'Таъсисчилар',
         code: 'Section-founder',
+        roles: [UserRoles.HEADCOMPANY, UserRoles.ADMIN]
+    },
+    {
+        title: 'Жамланма',
+        code: 'All',
+        id: 14,
         roles: [UserRoles.HEADCOMPANY, UserRoles.ADMIN]
     },
 

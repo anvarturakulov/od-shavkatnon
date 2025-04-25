@@ -70,7 +70,6 @@ export const information = async (
     }
 
     if (reportType == 'Sklad' || reportType == 'All') {
-        console.log('KELDI SHU ERGA SKLADGA ----- ', )
         let skladResult = await sklad(data, startDate, endDate, stocksService, oborotsService)
         result.push(skladResult);
     }

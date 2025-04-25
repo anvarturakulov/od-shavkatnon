@@ -44,9 +44,6 @@ export const getReportByType = (dashboardCurrentReportType: string, informData: 
                     <Foyda data={informData}/>
                     <DebitorKreditor data={informData}/>
                     <Cash data={informData}/>
-                    <Taking data={informData} />
-                    <Giving data={informData}/>
-                    <DebitorKreditor data={informData}/>
                     <Financial data={informData}/>
                     <Section data={informData} sectionType='buxgalter'/>
                     <Section data={informData} sectionType='filial'/>
