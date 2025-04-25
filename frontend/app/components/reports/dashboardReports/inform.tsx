@@ -101,7 +101,7 @@ export const Inform = ({ className, ...props }: InformationProps): JSX.Element =
       const formData = new FormData();
       formData.append('document', pdfBlob, `Жамланма хисобот - (${dateStartInStr}-${dateEndInStr}).pdf`);
 
-      const response = await axios.post('/api/send-pdf', formData, {
+      const response = await axios.post('/apifront/send-pdf', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
