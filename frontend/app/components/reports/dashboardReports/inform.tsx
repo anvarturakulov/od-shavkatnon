@@ -48,7 +48,7 @@ export const Inform = ({ className, ...props }: InformationProps): JSX.Element =
     }
 
     // Логируем содержимое для отладки
-    console.log('Report content:', reportRef.current.innerHTML);
+    // console.log('Report content:', reportRef.current.innerHTML);
 
     const canvas = await html2canvas(reportRef.current, {
       scale: 1,
@@ -78,7 +78,7 @@ export const Inform = ({ className, ...props }: InformationProps): JSX.Element =
     }
 
     const pdfBlob = pdf.output('blob');
-    console.log('PDF size:', pdfBlob.size / 1024 / 1024, 'MB');
+    // console.log('PDF size:', pdfBlob.size / 1024 / 1024, 'MB');
 
     // Проверка на пустой PDF
     if (pdfBlob.size === 0) {
