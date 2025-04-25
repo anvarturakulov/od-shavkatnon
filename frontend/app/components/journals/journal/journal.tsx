@@ -173,7 +173,7 @@ export default function Journal({ className, ...props}:JournalProps):JSX.Element
                     const itemSender = getNameReference(references, item.docValues?.senderId);
                     const itemReceiver = getNameReference(references, item.docValues?.receiverId);
     
-                    if (journalChechboxs.charges && !(item.docValues?.isWorker && item.docValues?.isPartner)) return false;
+                    if (journalChechboxs.charges && (item.docValues?.isWorker || item.docValues?.isPartner)) return false;
                     if (journalChechboxs.workers && !item.docValues?.isWorker) return false;
                     if (journalChechboxs.partners && !item.docValues?.isPartner) return false;
                     if (user !== 'Фойдаланувчи' && !userName.includes(userLowerCase)) return false;
