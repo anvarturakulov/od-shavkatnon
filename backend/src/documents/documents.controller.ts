@@ -14,6 +14,7 @@ import { ReferencesService } from 'src/references/references.service';
 import { DOCUMENT_NOT_FOUND_ERROR } from './document.constants';
 import { sendMessage } from './helper/entry/sendMessage';
 import { BackupService } from 'src/backup/backup.service';
+import { DuplicateDocs } from './dto/duplicateDocs.dto';
 
 @Controller('documents')
 export class DocumentsController {
@@ -216,6 +217,16 @@ export class DocumentsController {
         }
         return true
 
+    }
+
+    @ApiOperation({summary: 'Открыть новый документ'})
+    @ApiResponse({status: 200, type: Document})
+    @Roles('ALL')
+    @UseGuards(RolesGuard)
+    @Post('/duplicateDocsByTypeForDate')
+    async duplicateDocsByTypeForDate(@Body() dto:DuplicateDocs) {
+        const newDocs = this.documentsService.duplicateDocsByTypeForDate(dto);
+        return newDocs
     }
 
     @ApiOperation({summary: 'Дать проводку на документ'})

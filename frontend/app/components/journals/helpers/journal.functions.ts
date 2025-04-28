@@ -118,3 +118,13 @@ export const cleanDocs = (dateStart: number, dateEnd: number, token: string | un
   }
 
 }
+
+
+export const showDatesDuplicateWindow = (setMainData: Function | undefined) => {
+  if (setMainData) {
+    if (setMainData) {
+      setMainData('goRequestByDuplicateDocs', false)
+      setMainData('showDatesDuplicateWindow', true)
+    }
+  }
+}

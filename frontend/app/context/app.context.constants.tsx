@@ -1,4 +1,4 @@
-import { DocSTATUS, DocTableItem, DocumentModel, DocumentType, DocValues, Interval, JournalCheckboxs } from '../interfaces/document.interface'
+import { DatesForDuplicateDocs, DocSTATUS, DocTableItem, DocumentModel, DocumentType, DocValues, Interval, JournalCheckboxs } from '../interfaces/document.interface'
 import { ReportOptions, Schet } from '../interfaces/report.interface'
 import { DefinedTandirWorkers } from '../interfaces/user.interface'
 import { Maindata } from './app.context.interfaces'
@@ -62,6 +62,11 @@ export const defaultInterval:Interval = {
     dateEnd: 0
 }
 
+export const defaultDatesForDuplicateDocs:DatesForDuplicateDocs = {
+    dateFrom: 0,
+    dateTo: 0
+}
+
 export const defaultJournalCheckbox:JournalCheckboxs = {
     charges: false,
     workers: false,
@@ -118,6 +123,12 @@ export const defaultMainData: Maindata = {
         showUserWindow: false,
         isNewUser: false,
         uploadingDashboard: false,
+        dateForRequest: 0,
+        showDateWindow: false,
+        goRequestByDate: false,
+        datesForDuplicateDocs: defaultDatesForDuplicateDocs,
+        showDatesDuplicateWindow: false,
+        goRequestByDuplicateDocs: false
     },
     users: {
         user: undefined,

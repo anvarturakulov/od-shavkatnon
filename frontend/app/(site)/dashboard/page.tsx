@@ -14,6 +14,8 @@ import { Inform } from '@/app/components/reports/dashboardReports/inform';
 import UserJournal from '@/app/components/journals/userJournal/userJournal';
 import useSWR from 'swr';
 import { getDataForSwr } from '@/app/service/common/getDataForSwr';
+import { DateWindow } from '@/app/components/common/dateWindow/dateWindow';
+import { DuplicateWindow } from '@/app/components/common/duplicateWindow/duplicateWindow';
 
 export default function Dashboard() {
 
@@ -66,6 +68,8 @@ export default function Dashboard() {
           </div>
         </div>
         <IntervalWindow/>
+        <DateWindow/>
+        <DuplicateWindow/>
       </div>
       <Message/>
     </div>

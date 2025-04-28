@@ -9,7 +9,7 @@ import useSWR from 'swr';
 import cn from 'classnames';
 import Header from '../../common/header/header';
 import { getDataForSwr } from '@/app/service/common/getDataForSwr';
-import { cleanDocs, deleteItemDocument, getDocument, getNameReference, getUserName, isDirector, isFounder, setProvodkaToDoc } from '../helpers/journal.functions';
+import { cleanDocs, deleteItemDocument, getDocument, getNameReference, getUserName, isDirector, isFounder, setProvodkaToDoc, showDatesDuplicateWindow } from '../helpers/journal.functions';
 import { getDescriptionDocument } from '@/app/service/documents/getDescriptionDocument';
 import { DocSTATUS, DocumentModel, DocumentType, Interval } from '@/app/interfaces/document.interface';
 import { dateNumberToString } from '@/app/service/common/converterForDates'
@@ -20,12 +20,14 @@ import { dashboardUsersList, UserRoles } from '@/app/interfaces/user.interface'
 import { Doc } from '../../documents/document/doc/doc'
 import { secondsToDateString } from '../../documents/document/doc/helpers/doc.functions'
 import { Button } from '../../common/button/Button'
+import { duplicateDocsForDate } from '@/app/service/documents/duplicateDocsForDate'
 
 
 interface FilterForJournal {
     summa: string,
     receiver: string,
     sender: string,
+    analitic: string,
     comment: string,
     user: string
 }
@@ -34,6 +36,7 @@ const defaultFilter: FilterForJournal = {
     summa: 'Сумма',
     receiver: 'Олувчи',
     sender: 'Берувчи',
+    analitic: 'Аналитика',
     comment: 'Изох',
     user: 'Фойдаланувчи'
 }
@@ -82,7 +85,7 @@ export default function Journal({ className, ...props}:JournalProps):JSX.Element
     const [filter, setFilter] = useState<FilterForJournal>(defaultFilter);
 
     const { user } = mainData.users;
-    const { showDocumentWindow, contentName } = mainData.window;
+    const { showDocumentWindow, contentName, goRequestByDuplicateDocs } = mainData.window;
     const role = user?.role;
     const dashboardUsers = role && dashboardUsersList.includes(role);
 
@@ -105,6 +108,16 @@ export default function Journal({ className, ...props}:JournalProps):JSX.Element
         setMainData && setMainData('updateDataForDocumentJournal', false);
     }, [showDocumentWindow, updateDataForDocumentJournal])
 
+    useEffect(() => {
+        const {dateFrom, dateTo} = mainData.window.datesForDuplicateDocs
+        console.log(goRequestByDuplicateDocs, dateFrom, dateTo )
+        if (goRequestByDuplicateDocs && dateFrom && dateTo ) {
+            console.log('ready to go request')
+            duplicateDocsForDate(dateFrom, dateTo, mainData, setMainData)
+
+        }
+    }, [goRequestByDuplicateDocs])
+
     const changeFilter = (target: string) => {
         let title: string = '';
         let defaulValue: string = '';
@@ -120,6 +133,12 @@ export default function Journal({ className, ...props}:JournalProps):JSX.Element
             title = 'Берувчи ?';
             defaulValue = 'Берувчи';
         }
+
+        if (target == 'analitic') {
+            title = 'Аналитика ?';
+            defaulValue = 'Аналитика';
+        }
+
         if (target == 'comment') {
             title = 'Изох ?'; 
             defaulValue = 'Изох';
@@ -145,8 +164,6 @@ export default function Journal({ className, ...props}:JournalProps):JSX.Element
         
     }   
 
-    
-
     let count:number = 0;
     let total: number = 0;
     let docCount: number = 0;
@@ -163,7 +180,7 @@ export default function Journal({ className, ...props}:JournalProps):JSX.Element
                     return dateComparison;
                 })
                 .filter((item: DocumentModel) => {
-                    const { summa, receiver, sender, comment, user } = filter;
+                    const { summa, receiver, sender, comment, user, analitic } = filter;
                     const userLowerCase = user.toLowerCase();
                     const userName = `${getUserName(item.userId, mainData)}`.toLowerCase();
                     const analiticName = getNameReference(references, item.docValues?.analiticId);
@@ -180,6 +197,8 @@ export default function Journal({ className, ...props}:JournalProps):JSX.Element
                     if (comment !== 'Изох' && !bigString.includes(commentInLowerCase)) return false;
                     if (sender !== 'Берувчи' && !(itemSender && itemSender.toLowerCase().includes(sender.toLowerCase()))) return false;
                     if (receiver !== 'Олувчи' && !(itemReceiver && itemReceiver.toLowerCase().includes(receiver.toLowerCase()))) return false;
+                    if (analitic !== 'Аналитика' && !(analiticName && analiticName.toLowerCase().includes(analitic.toLowerCase()))) return false;
+                    
                     if (summa !== 'Сумма' && item.docValues?.total !== +summa) return false;
                     if (role !== UserRoles.ADMIN && role !== UserRoles.HEADCOMPANY) {
                         if (isDirector(references, item.docValues?.senderId)) return false;
@@ -230,20 +249,27 @@ export default function Journal({ className, ...props}:JournalProps):JSX.Element
                                     >{filter.sender}
                                 </th>
                                 <th key='8' 
+                                    onDoubleClick={() => changeFilter('analitic')}
+                                    className={cn(styles.longRow, {
+                                        [styles.red]: filter.analitic != 'Аналитика'
+                                    })}
+                                    >{filter.analitic}
+                                </th>
+                                <th key='9' 
                                     onDoubleClick={() => changeFilter('comment')}
                                     className={cn(styles.longRow, {
                                         [styles.red]: filter.comment != 'Изох'
                                     })}
                                 >{filter.comment}</th>
-                                <th key='9' 
+                                <th key='10' 
                                     onDoubleClick={() => changeFilter('user')}
                                     className={cn(styles.longRow, {
                                         [styles.red]: filter.user != 'Фойдаланувчи'
                                     })}
                                     >{filter.user}
                                 </th>
-                                <th key='10' className={styles.rowAction}>Амал</th>
                                 <th key='11' className={styles.rowAction}>Амал</th>
+                                <th key='12' className={styles.rowAction}>Амал</th>
                             </tr>
                         </thead>
                         <tbody className={styles.tbody}>
@@ -270,7 +296,8 @@ export default function Journal({ className, ...props}:JournalProps):JSX.Element
                                             <td className={cn(styles.rowSumma, styles.tdSumma)}>{documentTotal(item)}</td>
                                             <td>{getNameReference(references,item.docValues?.receiverId)}</td>
                                             <td>{getNameReference(references,item.docValues?.senderId)}</td>
-                                            <td>{`${getNameReference(references,item.docValues?.analiticId)? getNameReference(references,item.docValues?.analiticId): ''} ${item.docValues?.comment ? `(${item.docValues?.comment})`: ''} ${item.docValues?.count ? `(${item.docValues?.count})`: ''}`}</td>
+                                            <td>{getNameReference(references,item.docValues?.analiticId)}</td>
+                                            <td>{`${item.docValues?.comment ? `(${item.docValues?.comment})`: ''} ${item.docValues?.count ? `(${item.docValues?.count})`: ''}`}</td>
                                             <td>{getUserName(item.userId, mainData)}</td>
                                             <td className={styles.rowAction}>
                                                 <IcoTrash className={styles.icoTrash}
@@ -305,6 +332,11 @@ export default function Journal({ className, ...props}:JournalProps):JSX.Element
             {
                 contentName == DocumentType.ComeProduct &&
                 <Button appearance='ghost'className={styles.button} onClick={()=>cleanDocs(dateStartForUrl, dateEndForUrl, token, setMainData)}>Бугунги киримларни тозалаш</Button>
+            }
+
+            {
+                contentName == DocumentType.ZpCalculate &&
+                <Button appearance='ghost'className={styles.button} onClick={()=>showDatesDuplicateWindow(setMainData)}>Утган кундан андоза олиш</Button>
             }
             </div>
             

@@ -112,6 +112,11 @@ export interface Interval {
     dateEnd: number
 }
 
+export interface DatesForDuplicateDocs {
+    dateFrom: number,
+    dateTo: number
+}
+
 export type NameControl = 'count' | 'price' | 'total' | 'comment' | 'cashFromPartner' | 'balance'
 
 export type NameDocs = 'sd' | 'ds'

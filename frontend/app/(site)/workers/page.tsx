@@ -13,6 +13,7 @@ import { Message } from '@/app/components/common/message/message';
 import Hamirs from '@/app/components/journals/hamirs/hamirs';
 import { UserRoles } from '@/app/interfaces/user.interface';
 import { DefinedTandirWorkers } from '@/app/components/documents/document/definedTandirWorkers/definedTandirWorkers';
+import { DateWindow } from '@/app/components/common/dateWindow/dateWindow';
 
 export default function Users() {
   
@@ -68,6 +69,7 @@ export default function Users() {
             <ReportWindow />
           }
         </div>
+      <DateWindow/>
       <Message/>
       </div>
     </>

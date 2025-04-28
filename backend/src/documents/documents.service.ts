@@ -21,6 +21,7 @@ import { Op } from 'sequelize'; // Используем импорт вмест�
 import { query } from 'src/reports/querys/query';
 import { EntriesService } from 'src/entries/entries.service';
 import { BackupService } from 'src/backup/backup.service';
+import { DuplicateDocs } from './dto/duplicateDocs.dto';
 
 @Injectable()
 export class DocumentsService {
@@ -566,4 +567,92 @@ export class DocumentsService {
       }
     });
   }
+
+
+  async duplicateDocsByTypeForDate(dto: DuplicateDocs) {
+
+    const documentsFrom = await this.documentRepository.findAll({
+      where: {
+        documentType: dto.documentType,
+        date: {
+          [Op.gte]: dto.dateFrom,
+          [Op.lte]: dto.dateFrom,
+        },
+      },
+      include: [DocValues, DocTableItems],
+    });
+
+    console.log('documentsFrom.length -- ',documentsFrom.length)
+
+    const documentsTo = await this.documentRepository.findAll({
+      where: {
+        documentType: dto.documentType,
+        date: {
+          [Op.gte]: dto.dateTo,
+          [Op.lte]: dto.dateTo,
+        },
+        docStatus: DocSTATUS.OPEN || DocSTATUS.PROVEDEN 
+      },
+      include: [DocValues, DocTableItems],
+    });
+
+    if (documentsTo && documentsTo.length) return
+
+    console.log('documentsTo.length -- ',documentsTo.length)
+
+    const transaction = await this.sequelize.transaction();
+    try {
+
+      const documents = await Promise.all(
+        documentsFrom.map(async item => {
+          // const dto = convertJsonDocs(item);
+          const document = await this.documentRepository.create(
+            {
+              date: dto.dateTo,
+              documentType: dto.documentType,
+              docStatus: DocSTATUS.OPEN,
+              userId: dto.userId ? dto.userId : 0,
+            },
+          );
+
+          const { id, ...rest } = item.docValues.get({ plain: true }) || {};
+
+          const docValues = await this.docValuesRepository.create(
+            {
+              ...rest,
+              docId: document.id,
+              cashFromPartner: 100
+            },
+          );
+
+          console.log('docValues -- ', docValues)
+
+          const items = [...item.docTableItems];
+          if (items.length > 0 && items[0].analiticId !== -1) {
+            await Promise.all(
+              items.map(item =>
+                this.docTableItemsRepository.create(
+                  {
+                    ...item,
+                    docId: document.id,
+                  },
+                )
+              )
+            );
+          }
+          document.save()
+          return document;
+        })
+      );
+  
+      await transaction.commit();
+      return documents;
+    } catch (error) {
+      await transaction.rollback();
+      throw new Error(`Failed to set provodka: ${error.message}`);
+    }
+    
+  }
+
 }
+
