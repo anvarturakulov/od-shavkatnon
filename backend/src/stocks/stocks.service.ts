@@ -166,7 +166,7 @@ export class StocksService {
   async deleteTwoEntries(entry: EntryCreationAttrs, transaction?: Transaction) {
     if (this.checkEntryForDublicate(entry)) return;
 
-      this.deleteEntry(
+      await this.deleteEntry(
         entry.debet,
         entry.date,
         entry.debetFirstSubcontoId,
@@ -176,7 +176,7 @@ export class StocksService {
         DEBETKREDIT.DEBET,
         transaction
       )
-      this.deleteEntry(
+      await this.deleteEntry(
         entry.kredit,
         entry.date,
         entry.kreditFirstSubcontoId,
@@ -255,6 +255,15 @@ export class StocksService {
       transaction,
     });
 
+    if (firstSubcontoId == 19606) {
+      console.log('Length ---- ')
+      console.log(stocks.length)
+      for (const stock of stocks) {
+        console.log(stock.dataValues)
+      }
+    }
+    // ----
+
     if (previous) {
       runningCount = previous.remainCount;
       runningTotal = previous.remainTotal;
@@ -265,6 +274,10 @@ export class StocksService {
       runningTotal += stock.total;
       stock.remainCount = runningCount;
       stock.remainTotal = runningTotal;
+      if (stock.firstSubcontoId == 19606) {
+        console.log('-------------------')
+        console.log(stock.remainTotal)
+      }
       await stock.save({ transaction });
     }
   }

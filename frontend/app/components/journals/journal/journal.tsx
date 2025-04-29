@@ -110,7 +110,6 @@ export default function Journal({ className, ...props}:JournalProps):JSX.Element
 
     useEffect(() => {
         const {dateFrom, dateTo} = mainData.window.datesForDuplicateDocs
-        console.log(goRequestByDuplicateDocs, dateFrom, dateTo )
         if (goRequestByDuplicateDocs && dateFrom && dateTo ) {
             console.log('ready to go request')
             duplicateDocsForDate(dateFrom, dateTo, mainData, setMainData)
