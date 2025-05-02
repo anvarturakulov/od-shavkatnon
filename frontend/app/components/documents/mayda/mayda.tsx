@@ -19,6 +19,7 @@ import { defaultDocument } from '@/app/context/app.context.constants';
 import { InputInForm } from '../document/inputs/inputInForm/inputInForm';
 import { validateBody } from '@/app/service/documents/validateBody';
 import { updateCreateDocument } from '@/app/service/documents/updateCreateDocument';
+import { OrderStatus } from '@/app/interfaces/order.interface';
 
 export const Mayda = ({className, ...props }: MaydaProps) :JSX.Element => {
     
@@ -60,6 +61,11 @@ export const Mayda = ({className, ...props }: MaydaProps) :JSX.Element => {
             total: 0,
             cashFromPartner: 0,
             comment: '',
+            orderTakingDate: 0,
+            orderTakingTime: '',
+            orderWithDeleviry: false,
+            orderAdress: '',
+            orderStatus: OrderStatus.OPEN,
         },
         docTableItems: [],
     }   

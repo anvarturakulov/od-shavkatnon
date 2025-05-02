@@ -3,6 +3,7 @@ import { HamirModel } from '@/app/interfaces/hamir.interface';
 import { showMessage } from '../common/showMessage';
 import axios from 'axios';
 import { DocSTATUS, DocumentModel, DocumentType } from '@/app/interfaces/document.interface';
+import { OrderStatus } from '@/app/interfaces/order.interface';
 
 export const createHamirsForDayByUser = (date: number, mainData: Maindata, setMainData: Function | undefined) => {
   const { user } = mainData.users
@@ -16,7 +17,12 @@ export const createHamirsForDayByUser = (date: number, mainData: Maindata, setMa
       receiverId: 0,
       count: 0,
       price: 0,
-      total: 0
+      total: 0,
+      orderTakingDate: 0,
+      orderTakingTime: '',
+      orderWithDeleviry: false,
+      orderAdress: '',
+      orderStatus: OrderStatus.OPEN,
     },
     docStatus: DocSTATUS.OPEN,
     userId : user?.id,
