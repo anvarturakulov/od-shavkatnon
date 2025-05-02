@@ -1,31 +1,21 @@
-import { InputForDataProps } from './inputForData.props';
-import styles from './inputForData.module.css';
+import { InputForTimeProps } from './inputForTime.props';
+import styles from './inputForTime.module.css';
 import cn from 'classnames';
 import { useAppContext } from '@/app/context/app.context';
 import { Maindata } from '@/app/context/app.context.interfaces';
 import { adminAndHeadCompany, UserRoles } from '@/app/interfaces/user.interface';
 
-export const InputForData = ({label, id, className, ...props }: InputForDataProps): JSX.Element => {
+export const InputForTime = ({label, id, className, ...props }: InputForTimeProps): JSX.Element => {
     
     const {mainData, setMainData} = useAppContext();
     const { currentDocument } = mainData.document;
-    const { orderTakingDate } = currentDocument.docValues
     const { user } = mainData.users;
     const role = user?.role;
     const isAdminOrHeadCompany = role && adminAndHeadCompany.includes(role)
     
-    
     let dateDoc = currentDocument.date > 0 ? +currentDocument.date : Date.now() 
-    let dateTaking = (orderTakingDate && orderTakingDate > 0) ?  orderTakingDate: Date.now()
     
-    let currentVal
-    if (id == 'date') {
-        currentVal = (new Date(dateDoc)).toISOString().split("T")[0]
-    }
-
-    if (id == 'orderTakingDate') {
-        currentVal = (new Date(dateTaking)).toISOString().split("T")[0]
-    }
+    let currentVal = (new Date(dateDoc)).toISOString().split("T")[0]
 
     const changeElements = (e: React.FormEvent<HTMLInputElement>, setMainData: Function | undefined, mainData: Maindata) => {
         let {currentDocument} = mainData.document;
@@ -45,7 +35,7 @@ export const InputForData = ({label, id, className, ...props }: InputForDataProp
         if (target.id == 'orderTakingDate') {
             newObj = {
                 ...currentDocument,
-                docValues: {
+                DocValues: {
                     ...currentDocument.docValues,
                     orderTakingDate: valueDate
                 }
@@ -59,10 +49,6 @@ export const InputForData = ({label, id, className, ...props }: InputForDataProp
         const yesterDay = startDateToday - oneDay
 
         if (role == UserRoles.GLBUX && valueDate < yesterDay && target.id == 'date' ) return
-        if (target.id == 'orderTakingDate' && valueDate < now) {
-            alert('Сана хато киритилди')
-            return
-        }
 
         if ( setMainData ) {
             setMainData('currentDocument', {...newObj})
@@ -75,7 +61,7 @@ export const InputForData = ({label, id, className, ...props }: InputForDataProp
             <input
                 className={cn(className, styles.input)}
                 onChange={(e) => changeElements(e, setMainData, mainData)}
-                type='date'
+                type='time'
                 value={currentVal}
                 disabled = {!isAdminOrHeadCompany}
                 id = {id}

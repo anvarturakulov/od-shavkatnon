@@ -44,7 +44,8 @@ export default function MenuItems({menuData, className, ...props}:MenuItemsProps
             setMainData('showDocumentWindow', false);
             setMainData('isNewDocument', false);
             setMainData('clearControlElements', true);
-            if (contentType == 'document') {
+            
+            if (contentType == 'document' || contentName == 'order') {
                 setNewDocumentParams(setMainData, mainData)
             }
 
@@ -55,7 +56,6 @@ export default function MenuItems({menuData, className, ...props}:MenuItemsProps
                     startReport: false,
                 }
                 setMainData('reportOption', { ...newReportOptions });
-
             }
         };
     }

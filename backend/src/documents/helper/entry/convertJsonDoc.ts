@@ -1,7 +1,7 @@
 import { DocTableItemDto } from "src/documents/dto/docTableItem.dto"
 import { DocValuesDto } from "src/documents/dto/docValues.dto"
 import { UpdateCreateDocumentDto } from "src/documents/dto/updateCreateDocument.dto"
-import { DocSTATUS } from "src/interfaces/document.interface"
+import { DocSTATUS, OrderStatus } from "src/interfaces/document.interface"
 
 export const convertJsonDocs = (jsonRow:any):UpdateCreateDocumentDto => {
 
@@ -43,7 +43,12 @@ export const convertJsonDocs = (jsonRow:any):UpdateCreateDocumentDto => {
         price: jsonRow.price,
         total: jsonRow.total,
         cashFromPartner: jsonRow.jsonRow,
-        comment: jsonRow.comment
+        comment: jsonRow.comment,
+        orderTakingDate: BigInt(0),
+        orderTakingTime: '',
+        orderWithDeleviry: false,
+        orderAdress: '',
+        orderStatus: OrderStatus.OPEN,
         
     }
     let doc:UpdateCreateDocumentDto = {

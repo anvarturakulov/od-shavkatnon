@@ -16,6 +16,7 @@ import useSWR from 'swr';
 import { getDataForSwr } from '@/app/service/common/getDataForSwr';
 import { DateWindow } from '@/app/components/common/dateWindow/dateWindow';
 import { DuplicateWindow } from '@/app/components/common/duplicateWindow/duplicateWindow';
+import OrderJournal from '@/app/components/journals/orderJournal/orderJournal';
 
 export default function Dashboard() {
 
@@ -58,6 +59,10 @@ export default function Dashboard() {
 
           <div className={styles.journalBox}>
             { contentType=='servis' && <UserJournal/> }
+          </div>
+
+          <div className={styles.journalBox}>
+            { contentType=='order' && <OrderJournal/> }
           </div>
 
           <div className={styles.journalBox}>

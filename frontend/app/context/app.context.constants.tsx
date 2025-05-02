@@ -1,4 +1,5 @@
 import { DatesForDuplicateDocs, DocSTATUS, DocTableItem, DocumentModel, DocumentType, DocValues, Interval, JournalCheckboxs } from '../interfaces/document.interface'
+import { OrderStatus } from '../interfaces/order.interface'
 import { ReportOptions, Schet } from '../interfaces/report.interface'
 import { DefinedTandirWorkers } from '../interfaces/user.interface'
 import { Maindata } from './app.context.interfaces'
@@ -30,6 +31,11 @@ export const defaultDocValue: DocValues = {
     total: 0,
     cashFromPartner: 0,
     comment: '',
+    orderTakingDate: 0,
+    orderTakingTime: '',
+    orderWithDeleviry: false,
+    orderAdress: '',
+    orderStatus: OrderStatus.OPEN,
 }
 
 export const defaultDocument:DocumentModel = {

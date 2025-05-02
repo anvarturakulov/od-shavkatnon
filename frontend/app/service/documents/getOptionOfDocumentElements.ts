@@ -97,6 +97,10 @@ export const getOptionOfDocumentElements = (documentType: string): OptionsForDoc
         `${DocumentType.ComeProductImport}`,
     ]
 
+    const documentsOrder = [
+        `${DocumentType.Order}`,
+    ]
+
     
     if (documentsComeMaterial.includes(documentType)) {
         senderType = TypeReference.PARTNERS
@@ -456,6 +460,23 @@ export const getOptionOfDocumentElements = (documentType: string): OptionsForDoc
 
         priceIsVisible = false;
         countIsVisible = false;
+        balansIsVisible = false;
+    }
+
+    if (documentsOrder.includes(documentType)) {
+        senderType = TypeReference.STORAGES
+        senderLabel = 'Жунатувчи булим'
+        senderIsVisible = true
+
+        receiverType = TypeReference.PARTNERS
+        receiverLabel = 'Мижоз'
+        recieverIsVisible = true
+
+        analiticType = TypeReference.TMZ
+        analiticLabel = 'Тайёр махсулот'
+        analiticIsVisible = true
+
+        totalIsDisabled = true;
         balansIsVisible = false;
     }
 

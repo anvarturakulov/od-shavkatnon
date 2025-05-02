@@ -54,3 +54,23 @@
     cursor: pointer;
     margin: 10px 0px;
 }
+
+
+.infoBox{
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: center;
+    gap: 5px;
+}
+
+.dataBox{
+    display: grid;
+    grid-template-columns: 5fr 1fr;
+    gap: 10px
+}
+
+.dataBoxForOrder{
+    display: grid;
+    grid-template-columns: 3fr 3fr;
+    gap: 10px
+}

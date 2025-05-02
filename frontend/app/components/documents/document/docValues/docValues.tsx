@@ -15,21 +15,26 @@ import AddIco from './ico/add.svg'
 import { getPriceAndBalance } from '@/app/service/documents/getPriceBalance';
 import { UserRoles } from '@/app/interfaces/user.interface';
 import { useEffect } from 'react';
+import { InputForData } from '../inputs/inputForData/inputForData';
+import { Info } from '@/app/components';
+import { InputForTime } from '../inputs/inputForTime/inputForTime';
+import { useRef } from 'react';
 
 export const DocValues = ({ className, ...props }: DocValuesProps): JSX.Element => {
     
     const {mainData, setMainData} = useAppContext();
-    const { contentName, isNewDocument } = mainData.window;
+    const { contentName, isNewDocument, contentTitle } = mainData.window;
     const { currentDocument} = mainData.document;
     const { user } = mainData.users;
     const role = user?.role;
     const storageIdFromUser = user?.sectionId;
-    
+    const firstInputRef = useRef<HTMLInputElement>(null);
+
     let options: OptionsForDocument = getOptionOfDocumentElements(contentName)
 
     let hasWorkers = (contentName == DocumentType.LeaveCash )
     let hasPartners = contentName == DocumentType.LeaveCash;
-    let hasFounder = contentName == DocumentType.LeaveCash;
+
     let hasCash = (
         (contentName == DocumentType.MoveCash) ||
         (contentName == DocumentType.LeaveCash && (role == UserRoles.GLBUX || role == UserRoles.HEADCOMPANY))
@@ -40,8 +45,31 @@ export const DocValues = ({ className, ...props }: DocValuesProps): JSX.Element 
     let definedItemIdForReceiver = getDefinedItemIdForReceiver(role, storageIdFromUser, contentName)
     let definedItemIdForSender = getDefinedItemIdForSender(role, storageIdFromUser, contentName)
 
+    const orderDateAndTime = (
+        <div className={styles.dataBoxForOrder}>
+            <InputForData label={'Олиб кетиш санаси'} id='orderTakingDate'/>
+            <InputForTime label={'Олиб кетиш вакти'}/>    
+        </div>
+    )
+
+    useEffect(() => {
+        firstInputRef.current?.focus();
+    }, []);
+   
     return (
         <>
+            <div className={styles.infoBox}>
+                <div className={styles.dataBox}>
+                    <InputForData label={contentTitle} id='date' ref={firstInputRef}/>
+                    
+                      <Info content={`${currentDocument.id}`} label='№' className={styles.docNumber}/>
+                </div>
+                { 
+                    contentName == DocumentType.Order && 
+                    orderDateAndTime
+                }
+            </div>
+
             <div className={styles.partnersBox}>
                 <SelectReferenceInForm 
                     label={options.receiverLabel} 
@@ -51,8 +79,6 @@ export const DocValues = ({ className, ...props }: DocValuesProps): JSX.Element 
                     type='receiver'
                     definedItemId= {definedItemIdForReceiver}
                 />
-
-                
 
                 <SelectReferenceInForm 
                     label={options.senderLabel} 

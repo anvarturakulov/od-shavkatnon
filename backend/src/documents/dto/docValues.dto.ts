@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
-import {IsString, IsNumber, IsBoolean, IsInt} from 'class-validator';
+import {IsString, IsNumber, IsBoolean, IsInt, IsEnum} from 'class-validator';
+import { OrderStatus } from "src/interfaces/document.interface";
 
 export class DocValuesDto {
 
@@ -71,4 +72,24 @@ export class DocValuesDto {
     @IsString({message: 'comment - должен быть строкой'})
     comment: string;
 
+
+    @ApiProperty({example:'1738368000000', description: 'Дата получения заказа в миллисекундах'})
+    @IsInt({message: 'date - должен быть натуральным числом'})
+    orderTakingDate: bigint;
+    
+    @ApiProperty({example:'....', description: 'Время получения заказа'})
+    @IsString({message: 'orderTakingTime - должен быть строкой'})
+    orderTakingTime: string;
+    
+    @ApiProperty({example:'true', description: 'Заказ с доставкой'})
+    @IsBoolean({message: 'orderWithDeleviry Значание должно быть TRUE или FALSE'})
+    orderWithDeleviry: boolean;
+     
+    @ApiProperty({example:'....', description: 'Адрес доставки заказа'})
+    @IsString({message: 'orderAdress - должен быть строкой'})
+    orderAdress: string;
+    
+    @ApiProperty({example:'OPEN', description: 'Тип статуса заказа - ( OPEN || DELETED || COMPLETED || ERROR )'})
+    @IsEnum(OrderStatus, {message: 'orderStatus - должен быть из списка типов партнеров'})
+    orderStatus: OrderStatus
 }

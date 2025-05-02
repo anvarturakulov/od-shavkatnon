@@ -1,6 +1,7 @@
 import { DocumentType } from "../interfaces/document.interface";
 import {ServiceType } from "../interfaces/general.interface";
 import { MenuItem } from "../interfaces/menu.interface";
+import { OrderTypeTitle } from "../interfaces/order.interface";
 import { TypeReference } from "../interfaces/reference.interface";
 import { ReportType } from "../interfaces/report.interface";
 import { UserRoles } from "../interfaces/user.interface";
@@ -125,6 +126,37 @@ export const MenuData:Array<MenuItem> = [
                 roles: 
                 [UserRoles.HEADCOMPANY, UserRoles.ADMIN]
             },
+        ]
+    },
+    {
+        title: 'Бюртмалар',
+        isOpened: false,
+        subMenu: [
+            { 
+                title: DocumentType.Order, description:OrderTypeTitle.OPEN, 
+                type: 'order', active:false,
+                roles: 
+                [UserRoles.ADMIN]
+            },
+            { 
+                title: DocumentType.Order, description:OrderTypeTitle.COMPLETED, 
+                type: 'order', active:false,
+                roles: 
+                [UserRoles.ADMIN]
+            },
+            { 
+                title: DocumentType.Order, description:OrderTypeTitle.EXPIRED, 
+                type: 'order', active:false,
+                roles: 
+                [UserRoles.ADMIN]
+            },
+            { 
+                title: DocumentType.Order, description:OrderTypeTitle.DELETED, 
+                type: 'order', active:false,
+                roles: 
+                [UserRoles.ADMIN]
+            },
+
         ]
     },
     {

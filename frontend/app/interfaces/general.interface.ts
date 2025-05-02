@@ -1,4 +1,4 @@
-export type ContentType = 'document' | 'reference' | 'servis' | 'report'
+export type ContentType = 'document' | 'reference' | 'servis' | 'report' | 'order'
 
 export interface DashboardSettings {
     mainPage: boolean,

@@ -9,6 +9,7 @@ import { Maindata } from '@/app/context/app.context.interfaces';
 import { dateNumberToString } from '@/app/service/common/converterForDates'
 import { setNewDocumentParams } from '@/app/service/documents/setNewDocumentParams'
 import { UserRoles } from '@/app/interfaces/user.interface'
+import { OrderTypeTitle } from '@/app/interfaces/order.interface'
 
 export default function Header({ windowFor ,className, count, total, ...props }: HeaderProps): JSX.Element {
     
@@ -16,9 +17,9 @@ export default function Header({ windowFor ,className, count, total, ...props }:
     const {dateStart, dateEnd} = mainData.window.interval
     const {user} = mainData.users
 
-    const {contentType, contentTitle, showReferenceWindow, isNewReference, showDocumentWindow, isNewDocument } = mainData.window 
+    const {contentType, contentTitle, contentName, showReferenceWindow, isNewReference, showDocumentWindow, isNewDocument } = mainData.window 
     
-    const strFirst =  
+    let strFirst =  
         contentType == 'document' ? 
             (isNewDocument) ?  'буйича янги хужжат тузиш':
                                'буйича хужжатни куриш'  
@@ -26,7 +27,13 @@ export default function Header({ windowFor ,className, count, total, ...props }:
             (isNewReference) ? 'буйича янги элемент очиш':
                                'буйича элементни куриш';
 
-    const strSecond =  contentType == 'document' ? 'буйича хужжатлар руйхати' : 'руйхати'
+    let strSecond =  contentType == 'document' ? 'буйича хужжатлар руйхати' : 'руйхати'
+
+    if (contentType == 'order') {
+        strFirst = (isNewDocument) ? 'тузиш': 'буйича руйхатни куриш' 
+        strSecond =  'буйича руйхат'
+    }
+
 
     let dateStartInStr = dateNumberToString(dateStart)
     let dateEndInStr = dateNumberToString(dateEnd)
@@ -35,10 +42,27 @@ export default function Header({ windowFor ,className, count, total, ...props }:
         if (setMainData) {
             setMainData('clearControlElements', false);
             setNewDocumentParams(setMainData, mainData)
-            setMainData(windowFor == 'reference' ? 'showReferenceWindow': 'showDocumentWindow' , true);
-            setMainData(windowFor == 'reference' ? 'isNewReference' : 'isNewDocument', true);
+            
+            if (windowFor == 'reference') {
+                setMainData('showReferenceWindow', true);
+                setMainData('isNewReference', true);    
+            }
+
+            if (windowFor == 'document' || windowFor == 'order') {
+                setMainData('showDocumentWindow' , true);
+                setMainData('isNewDocument', true);
+            }
         }
     }
+
+    let showAddBtn = true
+    if (
+        user?.role == UserRoles.GUEST || 
+        (contentType == 'order' && contentTitle != OrderTypeTitle.OPEN)
+    )
+        {
+            showAddBtn = false
+        } 
 
     return (
         <>
@@ -68,21 +92,21 @@ export default function Header({ windowFor ,className, count, total, ...props }:
                         />
                         :
                         <>
-                                <DateIco 
-                                    className={styles.ico}
-                                    onClick={(mainData: Maindata) => {
-                                        if (setMainData) {
-                                            setMainData('showIntervalWindow', true);
-                                            }
-                                        }}
+                            <DateIco 
+                                className={styles.ico}
+                                onClick={(mainData: Maindata) => {
+                                    if (setMainData) {
+                                        setMainData('showIntervalWindow', true);
+                                        }
+                                    }}
+                            />
+                            {
+                            showAddBtn &&
+                            <AddIco 
+                                className={styles.ico}
+                                onClick={() => addNewElement(setMainData, mainData)} 
                                 />
-                                {
-                                user?.role != UserRoles.GUEST &&
-                                <AddIco 
-                                    className={styles.ico}
-                                    onClick={() => addNewElement(setMainData, mainData)} 
-                                    />
-                                }
+                            }
                         </>
                         
                     }

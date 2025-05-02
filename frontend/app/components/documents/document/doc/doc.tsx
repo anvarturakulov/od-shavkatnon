@@ -12,12 +12,14 @@ import { Maindata } from '@/app/context/app.context.interfaces';
 import { validateBody } from '@/app/service/documents/validateBody';
 import { showMessage } from '@/app/service/common/showMessage';
 import { updateCreateDocument } from '@/app/service/documents/updateCreateDocument';
-import { defaultDocument, defaultDocValue } from '@/app/context/app.context.constants';
+import { InputInForm } from '../inputs/inputInForm/inputInForm';
+import cn from 'classnames';
+import { InputForTime } from '../inputs/inputForTime/inputForTime';
 
 export const Doc = ({className, ...props }: DocProps) :JSX.Element => {
     
     const {mainData, setMainData} = useAppContext();
-    const { contentTitle, isNewDocument } = mainData.window;
+    const { contentTitle, isNewDocument, contentName } = mainData.window;
     const { user } = mainData.users
     const { currentDocument } = mainData.document;
     const [disabled, setDisabled] = useState<boolean>(false)
@@ -28,22 +30,7 @@ export const Doc = ({className, ...props }: DocProps) :JSX.Element => {
         }
     },[])
 
-    // useEffect(() => {
-    //     if (isNewDocument && currentDocument.docValues.analiticId !== 0) {
-    //         const newDocument = {
-    //             ...currentDocument,
-    //             userId: mainData.users.user?.id,
-    //             documentType: mainData.window.contentName,
-    //             docValues: {
-    //                 ...currentDocument.docValues,
-    //                 analiticId: 0,
-    //                 productForChargeId: 0,
-                    
-    //             }
-    //         };
-    //         setMainData && setMainData('currentDocument', newDocument);
-    //     }
-    // }, [isNewDocument]);
+    
 
     useEffect(() => {
         if (isNewDocument) {
@@ -61,7 +48,6 @@ export const Doc = ({className, ...props }: DocProps) :JSX.Element => {
             };
             if (setMainData) {
                 setMainData('currentDocument', newDocument);
-                // setMainData('isNewDocument', false)
             }
 
         }
@@ -109,15 +95,22 @@ export const Doc = ({className, ...props }: DocProps) :JSX.Element => {
         </div>
     )
 
+    
 
+    console.log(contentName)
     return (
         <div className={styles.docBox}>
-            <div className={styles.infoBox}>
+            {/* <div className={styles.infoBox}>
                 <div className={styles.dataBox}>
-                    <InputForData label={contentTitle}/>
-                    <Info content={`${currentDocument.id}`} label='№' className={styles.docNumber}/>
+                    <InputForData label={contentTitle} id='date'/>
+                    
+                      <Info content={`${currentDocument.id}`} label='№' className={styles.docNumber}/>
                 </div>
-            </div>
+                { 
+                    contentName == DocumentType.Order && 
+                    orderDateAndTime
+                }
+            </div> */}
 
             <DocValues/>
             {/* {currentDocument.docValues.firstWorkerId} */}

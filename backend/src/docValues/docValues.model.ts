@@ -1,6 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { BelongsTo, Column, DataType, Model, Table, HasMany, ForeignKey } from "sequelize-typescript";
 import { Document } from "src/documents/document.model";
+import { OrderStatus } from "src/interfaces/document.interface";
 import { Reference } from "src/references/reference.model";
 
 export interface DocValuesCreationAttrs {
@@ -22,7 +23,12 @@ export interface DocValuesCreationAttrs {
     count: number
     price: number
     total: number
-    cashFromPartner: number
+    cashFromPartner: number,
+    orderTakingDate: bigint,
+    orderTakingTime: string,
+    orderWithDeleviry: boolean,
+    orderAdress: string,
+    orderStatus: OrderStatus,
 }
 
 @Table({tableName: 'docvalues'})
@@ -119,5 +125,25 @@ export class DocValues extends Model<DocValues, DocValuesCreationAttrs> {
     @ApiProperty({example:'....', description: 'Комментарий к документу'})
     @Column({type: DataType.STRING})
     comment: string;
+
+    @ApiProperty({example:'1738368000000', description: 'Дата получения заказа в миллисекундах'})
+    @Column({type: DataType.BIGINT})
+    orderTakingDate: bigint;
+
+    @ApiProperty({example:'....', description: 'Время получения заказа'})
+    @Column({type: DataType.STRING})
+    orderTakingTime: string;
+
+    @ApiProperty({example:'true', description: 'Заказ с доставкой'})
+    @Column({type: DataType.BOOLEAN, defaultValue: false})
+    orderWithDeleviry: boolean;
+ 
+    @ApiProperty({example:'....', description: 'Адрес доставки заказа'})
+    @Column({type: DataType.STRING})
+    orderAdress: string;
+
+    @ApiProperty({example:'OPEN', description: 'Тип статуса заказа - ( OPEN || DELETED || COMPLETED || ERROR )'})
+    @Column({type: DataType.ENUM(...Object.values(OrderStatus))})
+    orderStatus: OrderStatus
 
 }

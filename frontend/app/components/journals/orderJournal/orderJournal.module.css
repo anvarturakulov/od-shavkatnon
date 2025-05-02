@@ -1,0 +1,199 @@
+.container {
+    /* max-width: 1200px; */
+    width: 100%;
+    margin: 0 auto;
+    user-select: none;
+}
+
+.table {
+    border-collapse: collapse;
+    width: 100%;
+    border: 1px solid #f9f9f9;
+    margin-bottom: 10px;
+}
+
+.table td,
+.table th {
+    border-left: 0.1px dotted #ddd;
+    text-align: left;
+    padding: 10px 7px;
+}
+
+.table tr:nth-child(even) {
+    background-color: #f5f5f5;
+    
+}
+
+.table tr {
+    margin: 5px 0;
+    border: 0.5px solid #e6e6e6;
+}
+
+.table tr:hover {
+    margin: 5px 0;
+    border: 1px solid green;
+    /* background-color: #f5f5f5; */
+}
+
+.table th {
+    font-weight: bold;
+}
+
+.table thead,
+.table tbody tr {
+    display: table;
+    table-layout: fixed;
+    width: 100%;
+}
+
+.table thead {
+    width: calc(100% - 1.1em);
+    position: relative;
+}
+
+.table tbody {
+    display: block;
+    max-height: 400px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.table thead th:last-child:after {
+    content: ' ';
+    position: absolute;
+    /* background-color: #337ab7; */
+    width: 1.1em;
+    height: 40px;
+    right: -1.1em;
+    top: 0;
+}
+
+.rowId{
+    width: 80px;
+}
+
+.rowDate{
+    width: 100px;
+}
+
+.rowAction{
+    width: 50px;
+}
+
+.rowSumma{
+    width: 120px;
+}
+
+.tdSumma{
+    text-align: right!important;
+}
+
+.trRow{
+    cursor: zoom-in;
+    /* cursor: ; */
+}
+
+.btns{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 5px;
+}
+
+.documentType {
+    background: yellow;
+}
+
+.deleted{
+    color: white;
+    background: red;
+    text-decoration: line-through;
+}
+
+.proveden {
+    background-color: green;
+    color: #fff;
+}
+
+.saved{
+    color: #000;
+    background-color: rgba(236, 236, 11, 0.3)!important;
+}
+
+.error{
+    color: #fff;
+    background-color: red!important;
+}
+
+.icoTrash{
+    width: 20px;
+    cursor: pointer;
+    margin: 0 auto;
+}
+
+.icoShow {
+    width: 20px;
+    cursor: pointer;
+    margin: 0 auto;
+}
+
+.icoSave{
+    width: 20px;
+    cursor: pointer;
+    margin: 0 auto;
+}
+
+.icoProveden{
+    fill: green;
+}
+
+.icoTrash:hover{
+    fill: red;
+}
+
+.icoShow:hover{
+    fill: blue;
+}
+
+.title{
+    font-size: 20px;
+    line-height: 24px;
+}
+
+.header{
+    display: flex;
+    justify-content: space-between;
+}
+
+.newElement{
+    margin-bottom: 20px;
+}
+
+.red {
+    color: red;
+    background-color: yellow;
+    text-transform: uppercase;
+    text-align: center!important;
+}
+
+.footer{
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 10px;
+    align-items: center;
+}
+
+.label{
+    margin-left: 10px;
+}
+
+.checkboxs{
+    display: grid;
+    grid-template-columns: auto auto auto; 
+    gap: 10px;
+}
+
+.button{
+    width: 250px;
+    padding: 5px 10px;
+}

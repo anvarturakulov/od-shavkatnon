@@ -35,6 +35,17 @@ export const updateCreateDocument = (mainData: Maindata, setMainData: Function |
     }
   }
 
+  if (body.docValues.senderId == 0) {
+    let newDocValues = {...body.docValues}
+    body = {
+      ...body,
+      docValues: {
+        ...newDocValues,
+        senderId: newDocValues.receiverId
+      }
+    }
+  }
+
 
   if (isNewDocument) {
     if (docsForNoProveden.includes(contentName)) {

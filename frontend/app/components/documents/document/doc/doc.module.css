@@ -1,16 +1,4 @@
 
-.infoBox{
-    display: grid;
-    grid-template-columns: 1fr;
-    align-items: center;
-    gap: 5px;
-}
-
-.dataBox{
-    display: grid;
-    grid-template-columns: 5fr 1fr;
-    gap: 10px
-}
 
 .TMZ{
     border: 0.6px dotted var(--black-300);

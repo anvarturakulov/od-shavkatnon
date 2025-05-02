@@ -13,6 +13,10 @@ import { getPropertySubconto } from '@/app/service/reports/getPropertySubconto';
 import { docsDependentToBalance, docsDependentToMiddlePrice } from '../../doc/helpers/documentTypes';
 import { UserRoles } from '@/app/interfaces/user.interface';
 import { useEffect, useState } from 'react';
+import { reciever } from './query/reciever';
+import { sender } from './query/sender';
+import { analitic } from './query/analitic';
+import { productForCharge } from './query/productForCharge';
 
 export const SelectReferenceInForm = ({ label, typeReference, visibile=true , definedItemId ,currentItemId, type, maydaSavdo, className, ...props }: SelectReferenceInFormProps): JSX.Element => {
     const {mainData, setMainData} = useAppContext();
@@ -89,7 +93,7 @@ export const SelectReferenceInForm = ({ label, typeReference, visibile=true , de
         
     }
     
-    if (visibile == false) return <></>
+    if (!visibile) return <></>
 
     let typeDocumentForReference = getTypeDocumentForReference(contentName);
     let flagDisabled = Boolean(definedItemId)
@@ -141,215 +145,12 @@ export const SelectReferenceInForm = ({ label, typeReference, visibile=true , de
                 })
                 
                 .filter((item: ReferenceModel) => {
-                    if ((type == 'receiver' || type == 'sender') &&
-                        ( contentName == DocumentType.MoveProd ))
-                        {
-                            return ( 
-                                item.refValues?.typeSection == TypeSECTION.FILIAL  ||
-                                item.refValues?.typeSection == TypeSECTION.DELIVERY || 
-                                item.refValues?.typeSection == TypeSECTION.STORAGE 
-                            ) 
-                        }
-                    
-                    if ((type == 'receiver' || type == 'sender') && 
-                         ( contentName == DocumentType.MoveHalfstuff || 
-                           contentName == DocumentType.MoveMaterial ||
-                           contentName == DocumentType.ComeHalfstuff ))
-                        {
-                            return (
-                                item.refValues?.typeSection == TypeSECTION.FILIAL  || 
-                                item.refValues?.typeSection == TypeSECTION.STORAGE
-                            ) 
-                        }
-                    
-                    if (type == 'receiver' && contentName == DocumentType.ComeProduct ) {
-                            return (
-                                item.refValues?.typeSection == TypeSECTION.FILIAL  || 
-                                item.refValues?.typeSection == TypeSECTION.STORAGE
-                            ) 
-                        }
-
-                    if (type == 'sender' && contentName == DocumentType.ComeProduct ) {
-                        // console.log(item.refValues?.typeSection)
-                        return (item.refValues?.typeSection == TypeSECTION.TANDIR)
-                    }
-
-                    type == 'productForCharge'
-                    
-                    if (type == 'productForCharge') {
-                        return (item.refValues?.typeTMZ == TypeTMZ.PRODUCT)
-                    }
-
-                    if ((type == 'receiver') && 
-                        contentName == DocumentType.LeaveCash) {
-                        if ( user?.role == UserRoles.ADMIN || user?.role == UserRoles.HEADCOMPANY ) {
-                            return (
-                                item.refValues?.typeSection == TypeSECTION.FILIAL || 
-                                item.refValues?.typeSection == TypeSECTION.FOUNDER ||
-                                item.refValues?.typeSection == TypeSECTION.COMMON || 
-                                item.refValues?.typeSection == TypeSECTION.DIRECTOR ||
-                                item.refValues?.typeSection == TypeSECTION.STORAGE
-                            ) 
-                        } else if (user?.role == UserRoles.GLBUX || user?.role == UserRoles.ZAMGLBUX) {
-                            return (
-                                item.refValues?.typeSection == TypeSECTION.FILIAL ||
-                                item.refValues?.typeSection == TypeSECTION.COMMON ||
-                                item.refValues?.typeSection == TypeSECTION.STORAGE 
-                            )
-                        } else {
-                            return (
-                                item.refValues?.typeSection == TypeSECTION.FILIAL || 
-                                item.refValues?.typeSection == TypeSECTION.STORAGE || 
-                                item.refValues?.typeSection == TypeSECTION.DELIVERY || 
-                                item.refValues?.typeSection == TypeSECTION.ACCOUNTANT || 
-                                item.refValues?.typeSection == TypeSECTION.COMMON
-                            )
-                        }
-                    }
-
-                    if (type == 'receiver' && contentName == DocumentType.TakeProfit) {
-                        return (item.refValues?.typeSection == TypeSECTION.FOUNDER)
-                    }
-
-                    if ((type == 'sender') && 
-                        contentName == DocumentType.LeaveCash) {
-                        if ( user?.role == UserRoles.ADMIN || user?.role == UserRoles.HEADCOMPANY ) {
-                          return (
-                            item.refValues?.typeSection == TypeSECTION.FILIAL ||
-                            item.refValues?.typeSection == TypeSECTION.ACCOUNTANT || 
-                            item.refValues?.typeSection == TypeSECTION.FOUNDER ||
-                            item.refValues?.typeSection == TypeSECTION.DIRECTOR ||
-                            item.refValues?.typeSection == TypeSECTION.STORAGE
-                        ) 
-                        } 
-                    }
-
-                    if ((type == 'sender' || type == 'receiver') && 
-                        contentName == DocumentType.MoveCash) {
-                        if ( user?.role == UserRoles.ADMIN || user?.role == UserRoles.HEADCOMPANY ) {
-                            return (
-                                item.refValues?.typeSection == TypeSECTION.FILIAL ||
-                                item.refValues?.typeSection == TypeSECTION.STORAGE ||
-                                item.refValues?.typeSection == TypeSECTION.DELIVERY ||
-                                item.refValues?.typeSection == TypeSECTION.ACCOUNTANT  ||
-                                item.refValues?.typeSection == TypeSECTION.FOUNDER ||
-                                item.refValues?.typeSection == TypeSECTION.DIRECTOR
-                            ) 
-                        } else if (user?.role == UserRoles.GLBUX) {
-                            return (
-                                item.refValues?.typeSection == TypeSECTION.FILIAL ||
-                                item.refValues?.typeSection == TypeSECTION.STORAGE ||
-                                item.refValues?.typeSection == TypeSECTION.DELIVERY ||
-                                item.refValues?.typeSection == TypeSECTION.ACCOUNTANT ||
-                                item.refValues?.typeSection == TypeSECTION.DIRECTOR
-                            )
-                        } else {
-                            return (
-                                item.refValues?.typeSection == TypeSECTION.FILIAL ||
-                                item.refValues?.typeSection == TypeSECTION.STORAGE ||
-                                item.refValues?.typeSection == TypeSECTION.DELIVERY ||
-                                item.refValues?.typeSection == TypeSECTION.ACCOUNTANT ||
-                                item.refValues?.typeSection == TypeSECTION.DIRECTOR
-                            )
-                        }
-                    }
-
-                    if (type == 'receiver' && contentName == DocumentType.ZpCalculate)
-                        {
-                            return (
-                                item.refValues?.typeSection == TypeSECTION.FILIAL ||
-                                item.refValues?.typeSection == TypeSECTION.COMMON
-                            ) 
-                        }
-                    
-                    if (type == 'receiver' && contentName == DocumentType.ServicesFromPartners)
-                        {
-                            return item.refValues?.typeSection == TypeSECTION.FILIAL 
-                        }
-
-                    if (type == 'receiver' && contentName == DocumentType.ComeCashFromPartners)
-                        {
-                            if ( user?.role == UserRoles.ADMIN || user?.role == UserRoles.HEADCOMPANY ) {
-                              return (
-                                item.refValues?.typeSection == TypeSECTION.ACCOUNTANT ||
-                                item.refValues?.typeSection == TypeSECTION.FOUNDER
-                            ) 
-                            } 
-                            return ( item.refValues?.typeSection == TypeSECTION.ACCOUNTANT ) 
-                        }
-
-                    if (type == 'receiver' && contentName == DocumentType.ComeMaterial)
-                        {
-                            return ( 
-                                item.refValues?.typeSection == TypeSECTION.FILIAL ||
-                                item.refValues?.typeSection == TypeSECTION.STORAGE
-                            ) 
-                        }
-                    
-                    if (type == 'sender' && 
-                        ( contentName == DocumentType.LeaveMaterial || 
-                          contentName == DocumentType.LeaveHalfstuff || 
-                          contentName == DocumentType.LeaveProd ||
-                          contentName == DocumentType.SaleMaterial ||
-                          contentName == DocumentType.SaleHalfStuff
-                        ))
-                        {
-                            return (
-                                item.refValues?.typeSection == TypeSECTION.FILIAL ||
-                                item.refValues?.typeSection == TypeSECTION.STORAGE
-                            ) 
-                        }
-                    
-                    if ( type == 'sender' && contentName == DocumentType.SaleProd) 
-                        {
-                            return (
-                                item.refValues?.typeSection == TypeSECTION.FILIAL ||
-                                item.refValues?.typeSection == TypeSECTION.DELIVERY
-                            ) 
-                        }
-
-                    if (type == 'sender' && ( contentName == DocumentType.ComeMaterial || contentName == DocumentType.ComeCashFromPartners || 
-                        contentName == DocumentType.ComeProductImport )) {
-                        return ( item.refValues?.typePartners == TypePartners.SUPPLIERS ) 
-                    }
-
-                    if (type == 'receiver' && contentName == DocumentType.SaleHalfStuff ) {
-                        return ( item.refValues?.typePartners == TypePartners.SUPPLIERS ) 
-                    }
-
-                    if (type == 'sender' && typeReference == TypeReference.CHARGES &&
-                        contentName == DocumentType.ServicesFromPartners
-                    ) {
-                        return !item.refValues?.longCharge
-                    }
-
-                    if (type == 'analitic' && typeReference == TypeReference.PARTNERS)
-                        {
-                            return item.refValues?.typePartners == TypePartners.SUPPLIERS 
-                        }
-                    if (type == 'analitic' && typeReference == TypeReference.CHARGES) {
-                        if (user?.role == UserRoles.HEADSECTION) {
-                            return !item.refValues?.longCharge && !item.refValues?.shavkatCharge
-                        }
-                        if (
-                            currentDocument.docValues.senderId == 19948 || 
-                            currentDocument.docValues.senderId == 19949 
-                        )
-                            return item.refValues?.shavkatCharge
-                        else return !item.refValues?.shavkatCharge
-
-                    }
-
-                    if (
-                            contentName == DocumentType.SaleProd 
-                            && type == 'receiver'
-                            && user?.role != UserRoles.HEADCOMPANY
-                            && user?.role != UserRoles.ADMIN
-                        ) {
-                            return item.refValues?.clientForSectionId == user?.sectionId
-                        }
-
-                    return true
+                    return (
+                        reciever(item, type, contentName, typeReference, mainData) ||
+                        sender(item, type, contentName, typeReference, mainData) ||
+                        analitic(item, type, contentName, typeReference, mainData) ||
+                        productForCharge(item, type, contentName, typeReference, mainData)
+                    )
                 })
                 
                 .sort(sortByName)
@@ -360,12 +161,7 @@ export const SelectReferenceInForm = ({ label, typeReference, visibile=true , de
                         key = {item.id}
                         value={item.name}
                         data-type={item.typeReference} 
-                        data-id={item.id}
-                        // selected={
-                        //     item.id == definedItemId || 
-                        //     item.id == currentItemId || 
-                        //     definedTandirWorkers(item.id, mainData, type) } 
-                        >
+                        data-id={item.id}>
                             {item.name}
                     </option>  
                 ))}

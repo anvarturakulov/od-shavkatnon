@@ -25,6 +25,7 @@ export enum DocumentType {
 
     ServicesFromPartners = 'ServicesFromPartners',
 
+    Order = 'Order',
     Error = 'Error'
 }
 
@@ -33,6 +34,14 @@ export enum DocSTATUS {
     DELETED = 'DELETED',
     PROVEDEN = 'PROVEDEN'
 }
+
+export enum OrderStatus {
+    OPEN = 'OPEN',
+    DELETED = 'DELETED',
+    COMPLETED = 'COMPLETED',
+    EXPIRED = 'EXPIRED'
+}
+
 // export interface DocumentTableItem {
 //     isWorker: boolean;
 //     referenceId: string;

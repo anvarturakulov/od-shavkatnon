@@ -1,3 +1,4 @@
+import { OrderStatus } from './order.interface';
 import { TypeReference } from './reference.interface'
 
 export enum DocSTATUS {
@@ -33,6 +34,7 @@ export enum DocumentType {
 
     ServicesFromPartners = 'ServicesFromPartners',
 
+    Order = 'Order',
     Error = 'Error'
 }
 
@@ -63,6 +65,11 @@ export interface DocValues {
     total: number,
     cashFromPartner?: number,
     comment?: string,
+    orderTakingDate?: number,
+    orderTakingTime?: string,
+    orderWithDeleviry?: boolean,
+    orderAdress?: string,
+    orderStatus: OrderStatus,
 }
 
 export interface DocumentModel {
@@ -117,7 +124,10 @@ export interface DatesForDuplicateDocs {
     dateTo: number
 }
 
-export type NameControl = 'count' | 'price' | 'total' | 'comment' | 'cashFromPartner' | 'balance'
+export type NameControl = 'count' | 'price' | 'total' |
+                          'comment' | 'cashFromPartner' | 
+                          'balance' | 'orderTakingTime' |
+                          'orderAdress' 
 
 export type NameDocs = 'sd' | 'ds'
 
