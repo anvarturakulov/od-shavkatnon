@@ -168,6 +168,10 @@ export default function Journal({ className, ...props}:JournalProps):JSX.Element
     let docCount: number = 0;
 
     const filteredDocuments = useMemo(() => {
+        if (!Array.isArray(documents)) {
+            console.error('documents is not an array:', documents);
+            return []; // Возвращаем пустой массив в случае ошибки
+        }
         return (
             documents &&
             documents
