@@ -24,6 +24,11 @@ export default function Footer({ windowFor ,className, count, total, docCount, .
 
             }
 
+            {
+                docCount!=undefined && docCount>0 && total &&
+                <div>{`Уртача киймат: ${numberValue(total/docCount)}`}</div>
+            }
+
         </div>
     )
 }
