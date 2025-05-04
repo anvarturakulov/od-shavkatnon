@@ -362,6 +362,7 @@ export const getOptionOfDocumentElements = (documentType: string): OptionsForDoc
         countIsVisible = false;
         priceIsVisible = false;
         balansIsVisible = false;
+        commentIsVisible = true;
     }
 
     if (documentsMoveCash.includes(documentType)) {
