@@ -45,7 +45,7 @@ export const getValuesForEntry = (doc: Document, newEntry: boolean, hasTable: bo
         }
         if (recieverIsFounder) {
           return {
-            debet: Schet.S66,
+            debet: Schet.S68,
             kredit: Schet.S00,
             ...objects
           };

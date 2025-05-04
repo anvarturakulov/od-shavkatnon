@@ -7,7 +7,7 @@ import { CheckBoxInTable } from '../inputs/checkBoxInForm/checkBoxInForm';
 import { getOptionOfDocumentElements } from '@/app/service/documents/getOptionOfDocumentElements';
 import { InputInForm } from '../inputs/inputInForm/inputInForm';
 import { SelectReferenceInForm } from '../selects/selectReferenceInForm/selectReferenceInForm';
-import { addItems, getDefinedItemIdForReceiver, getDefinedItemIdForSender, getLabelForAnalitic, getTypeReferenceForAnalitic, saveItemId, visibilityCommentValueInDocument } from './doc.values.functions';
+import { addItems, getDefinedItemIdForReceiver, getDefinedItemIdForSender, getLabelForAnalitic, getTypeReferenceForAnalitic, saveItemId } from './doc.values.functions';
 import { TypeReference } from '@/app/interfaces/reference.interface';
 import { defaultDocumentTableItem } from '@/app/context/app.context.constants';
 import { DocTable } from '../docTable/docTable';
@@ -15,7 +15,7 @@ import AddIco from './ico/add.svg'
 import { getPriceAndBalance } from '@/app/service/documents/getPriceBalance';
 import { UserRoles } from '@/app/interfaces/user.interface';
 import { useEffect } from 'react';
-import { InputForData } from '../inputs/inputForData/inputForData';
+import { InputForDate } from '../inputs/inputForDate/inputForDate';
 import { Info } from '@/app/components';
 import { InputForTime } from '../inputs/inputForTime/inputForTime';
 import { useRef } from 'react';
@@ -45,10 +45,13 @@ export const DocValues = ({ className, ...props }: DocValuesProps): JSX.Element 
     let definedItemIdForReceiver = getDefinedItemIdForReceiver(role, storageIdFromUser, contentName)
     let definedItemIdForSender = getDefinedItemIdForSender(role, storageIdFromUser, contentName)
 
+    const labelForDate = currentDocument.docValues.orderWithDeleviry ? 'Етказиб бериш санаси' : 'Олиб кетиш санаси'
+    const labelForTime = currentDocument.docValues.orderWithDeleviry ? 'Етказиб бериш вакти' : 'Олиб кетиш вакти'
+
     const orderDateAndTime = (
         <div className={styles.dataBoxForOrder}>
-            <InputForData label={'Олиб кетиш санаси'} id='orderTakingDate'/>
-            <InputForTime label={'Олиб кетиш вакти'}/>    
+            <InputForDate label={labelForDate} id='orderTakingDate'/>
+            <InputForTime label={labelForTime}/>    
         </div>
     )
 
@@ -60,15 +63,32 @@ export const DocValues = ({ className, ...props }: DocValuesProps): JSX.Element 
         <>
             <div className={styles.infoBox}>
                 <div className={styles.dataBox}>
-                    <InputForData label={contentTitle} id='date' ref={firstInputRef}/>
+                    <InputForDate label={contentTitle} id='date' ref={firstInputRef}/>
                     
                       <Info content={`${currentDocument.id}`} label='№' className={styles.docNumber}/>
                 </div>
-                { 
-                    contentName == DocumentType.Order && 
-                    orderDateAndTime
-                }
+                
             </div>
+
+            {
+                contentName == DocumentType.Order && 
+                <div className={styles.deleviryBox}>
+                    <CheckBoxInTable label = 'Ектазиб бериш билан бирга' id={'orderWithDeleviry'}/>
+                    <InputInForm 
+                        nameControl='orderAdress' 
+                        type='text' 
+                        label='' 
+                        visible={currentDocument.docValues.orderWithDeleviry} 
+                        isNewDocument
+                        disabled ={false}
+                        placeholder='Ектазиб бериш манзили'
+                        />
+                </div>
+            }
+            { 
+                contentName == DocumentType.Order && 
+                orderDateAndTime
+            }
 
             <div className={styles.partnersBox}>
                 <SelectReferenceInForm 
@@ -181,7 +201,16 @@ export const DocValues = ({ className, ...props }: DocValuesProps): JSX.Element 
                             visible={options.totalIsVisible}
                             disabled={options.totalIsDisabled}
                             />
-                        <InputInForm nameControl='comment' type='text' label='Изох' visible={visibilityCommentValueInDocument(contentName, mainData.users.user)}/>
+                        
+                        <InputInForm 
+                            nameControl='cashFromPartner' 
+                            type='number' 
+                            label={options.cashFromPartnerLabel} 
+                            visible={options.cashFromPartnerVisible}
+                            disabled={false}
+                            />
+
+                        <InputInForm nameControl='comment' type='text' label='Изох' visible={options.commentIsVisible}/>
 
                     </>
                 }

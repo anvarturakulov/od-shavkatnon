@@ -1,11 +1,11 @@
-import { InputForDataProps } from './inputForData.props';
-import styles from './inputForData.module.css';
+import { InputForDateProps } from './inputForDate.props';
+import styles from './inputForDate.module.css';
 import cn from 'classnames';
 import { useAppContext } from '@/app/context/app.context';
 import { Maindata } from '@/app/context/app.context.interfaces';
 import { adminAndHeadCompany, UserRoles } from '@/app/interfaces/user.interface';
 
-export const InputForData = ({label, id, className, ...props }: InputForDataProps): JSX.Element => {
+export const InputForDate = ({label, id, className, ...props }: InputForDateProps): JSX.Element => {
     
     const {mainData, setMainData} = useAppContext();
     const { currentDocument } = mainData.document;

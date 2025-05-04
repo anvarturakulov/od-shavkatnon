@@ -4,7 +4,7 @@ import { DocProps } from './doc.props';
 import styles from './doc.module.css';
 import { Button, DocValues, Info } from '@/app/components';
 import { useAppContext } from '@/app/context/app.context';
-import { InputForData } from '../inputs/inputForData/inputForData';
+import { InputForDate } from '../inputs/inputForDate/inputForDate';
 import { cancelSubmit, saveUser } from './helpers/doc.functions';
 import { isUsersForProveden } from '@/app/service/common/users';
 import { DocSTATUS, DocumentModel, DocumentType } from '@/app/interfaces/document.interface';

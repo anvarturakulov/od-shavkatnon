@@ -25,9 +25,10 @@ export const CheckBoxInTable = ({ className, id, label, ...props }: checkBoxInFo
             currentVal = currentDocument.docValues['isCash']
         }
 
-        // if (id == 'proveden') {
-        //     currentVal = currentDocument['proveden']
-        // }
+        if (id == 'orderWithDeleviry') {
+            currentVal = currentDocument.docValues['orderWithDeleviry']
+        }
+        
     }
 
     const changeElements = (e: React.FormEvent<HTMLInputElement>, setMainData: Function | undefined, mainData: Maindata, id: CheckboxIdTypes) => {
@@ -59,6 +60,10 @@ export const CheckBoxInTable = ({ className, id, label, ...props }: checkBoxInFo
 
             if (id == 'cash') {
                 currentValues.docValues.isCash = target.checked
+            }
+
+            if (id == 'orderWithDeleviry') {
+                currentValues.docValues.orderWithDeleviry = target.checked
             }
 
             if ( setMainData ) {

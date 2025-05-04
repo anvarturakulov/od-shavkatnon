@@ -88,24 +88,6 @@ export const getDefinedItemIdForSender = (role: UserRoles | undefined, storageId
   return 0
 }
 
-
-export const visibilityCommentValueInDocument = (contentName: string, user: User | undefined): boolean => {
-  const documents = [
-    `${DocumentType.MoveCash}`,
-    `${DocumentType.LeaveCash}`,
-    `${DocumentType.MoveHalfstuff}`,
-    `${DocumentType.LeaveHalfstuff}`,
-    `${DocumentType.ComeProduct}`,
-    `${DocumentType.ZpCalculate}`
-  ]
-
-  if (user) {
-    if (documents.includes(contentName)) return true
-  }
-
-  return false
-}
-
 export const addItems = (setMainData: Function | undefined, mainData: Maindata, newItem: DocTableItem) => {
 
   let newObj = { ...mainData.document.currentDocument };

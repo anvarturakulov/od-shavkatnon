@@ -54,7 +54,7 @@ export const InputInForm = ({visible, label, className, nameControl, isNewDocume
             }
         }
         
-        if (nameControl=='comment') {
+        if (nameControl=='comment' || nameControl=='orderAdress') {
             newValues = {
                 ...currentDocument,
                 docValues: {
@@ -82,11 +82,13 @@ export const InputInForm = ({visible, label, className, nameControl, isNewDocume
     if (visible == false) return <></>;
     
     return (
-        <div className={styles.box}>
+        <div className={cn(className, styles.box, {
+            [styles.boxWithLabel]: label !=''
+        })}>
             {label !='' && <div className={styles.label}>{label}</div>}
             <input
                 className={cn(className, styles.input, {
-                    [styles.comment]: nameControl=='comment'
+                    [styles.comment]: nameControl=='comment',
                 })}
                 {...props}
                 onChange={(e) => changeElements(e, setMainData, mainData, nameControl)}

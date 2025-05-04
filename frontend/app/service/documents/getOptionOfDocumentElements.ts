@@ -21,6 +21,8 @@ export const getOptionOfDocumentElements = (documentType: string): OptionsForDoc
     let totalIsVisible = true;
     let totalIsDisabled = false;
 
+    let commentIsVisible = false
+
     const documentsComeMaterial = [
         `${DocumentType.ComeMaterial}`,
     ]
@@ -134,6 +136,7 @@ export const getOptionOfDocumentElements = (documentType: string): OptionsForDoc
         priceIsVisible = false;
         totalIsVisible = false;
         balansIsVisible = false;
+        commentIsVisible = true;
     }
 
     if (documentsComeProductImport.includes(documentType)) {
@@ -287,6 +290,7 @@ export const getOptionOfDocumentElements = (documentType: string): OptionsForDoc
 
         totalIsDisabled = true;
         priceIsDisabled = true;
+        commentIsVisible = true;
     }
 
     if (documentsMoveProd.includes(documentType)) {
@@ -338,6 +342,7 @@ export const getOptionOfDocumentElements = (documentType: string): OptionsForDoc
 
         priceIsDisabled = true;
         totalIsDisabled = true;
+        commentIsVisible = true;
 
     }
 
@@ -375,6 +380,7 @@ export const getOptionOfDocumentElements = (documentType: string): OptionsForDoc
         countIsVisible = false;
         priceIsVisible = false;
         balansIsVisible = false;
+        commentIsVisible = true;
 
     }
 
@@ -398,6 +404,7 @@ export const getOptionOfDocumentElements = (documentType: string): OptionsForDoc
         priceIsVisible = false;
         countIsVisible = false;
         balansIsVisible = false;
+        commentIsVisible = true;
 
     }
 
@@ -421,6 +428,7 @@ export const getOptionOfDocumentElements = (documentType: string): OptionsForDoc
         priceIsVisible = false;
         countIsVisible = false;
         balansIsVisible = false;
+        commentIsVisible = true;
     }
 
     if (documentsTakeProfit.includes(documentType)) {
@@ -478,6 +486,10 @@ export const getOptionOfDocumentElements = (documentType: string): OptionsForDoc
 
         totalIsDisabled = true;
         balansIsVisible = false;
+        cashFromPartnerLabel = 'Олинган пул'
+        cashFromPartnerVisible = true
+        commentIsVisible = true
+        
     }
 
     return {
@@ -501,6 +513,7 @@ export const getOptionOfDocumentElements = (documentType: string): OptionsForDoc
         totalIsVisible,
         priceIsDisabled,
         totalIsDisabled,
-        balansIsVisible
+        balansIsVisible,
+        commentIsVisible
     }
 }

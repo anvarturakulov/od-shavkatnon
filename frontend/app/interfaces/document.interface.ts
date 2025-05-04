@@ -110,6 +110,7 @@ export interface OptionsForDocument {
     priceIsDisabled: boolean,
     totalIsDisabled: boolean,
     balansIsVisible: boolean,
+    commentIsVisible: boolean
 }
 
 export type DocumentTypeForReference = 'MATERIAL' | 'PRODUCT' | 'HALFSTUFF' | 'OTHER'

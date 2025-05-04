@@ -14,8 +14,24 @@ export const analitic = (item: ReferenceModel, type: string, contentName: string
             return item.refValues?.typePartners == TypePartners.SUPPLIERS 
         }
 
-        // if (typeReference == TypeReference.TMZ && ) {
-        //     return item.refValues?.typePartners == TypePartners.SUPPLIERS 
+        // if (typeReference == TypeReference.TMZ && item.refValues?.typeTMZ == 'PRODUCT') {
+        //     const getValue = (jsonString: string | undefined, key: string) => {
+        //         try{
+        //           if (jsonString) {
+        //             const object = JSON.parse(jsonString)
+        //             if (key in object) return object[key]
+        //           } 
+        //           return undefined
+        //         } catch {
+        //           return undefined
+        //         }
+        //     }
+            
+        //     const value = getValue(item.refValues?.comment, 'common')
+            
+        //     if (value) {
+        //         return false
+        //     } 
         // }
 
         if (typeReference == TypeReference.CHARGES) {
