@@ -87,7 +87,7 @@ export class OborotsService {
     const { count, total } = entry;
 
     if (!oborot) {
-      throw new Error(`Oborot not found for entry (docId) ${entry.docId}`)
+      throw new Error(`Oborot not found for entry (docId) ${entry.docId} entry ${entry}`)
     }
 
     oborot.count -= count;
