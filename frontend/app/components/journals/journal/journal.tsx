@@ -302,7 +302,7 @@ export default function Journal({ className, ...props}:JournalProps):JSX.Element
                                             <td>{getNameReference(references,item.docValues?.receiverId)}</td>
                                             <td>{getNameReference(references,item.docValues?.senderId)}</td>
                                             <td>{getNameReference(references,item.docValues?.analiticId)}</td>
-                                            <td>{`${(item.docValues?.comment || productForChargeName)  ? `(${item.docValues?.productForChargeId} - ${item.docValues?.comment})`: ''} ${item.docValues?.count ? `(${item.docValues?.count})`: ''}`}</td>
+                                            <td>{`${(item.docValues?.comment || productForChargeName)  ? `${productForChargeName} - ${item.docValues?.comment}`: ''} ${item.docValues?.count ? `(${item.docValues?.count})`: ''}`}</td>
                                             <td>{getUserName(item.userId, mainData)}</td>
                                             <td className={styles.rowAction}>
                                                 <IcoTrash className={styles.icoTrash}
