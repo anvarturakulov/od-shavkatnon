@@ -283,6 +283,7 @@ export default function Journal({ className, ...props}:JournalProps):JSX.Element
                                     total += item.docStatus != DocSTATUS.DELETED ? t : 0;
                                     count += item.docStatus != DocSTATUS.DELETED ? c : 0;
                                     docCount += item.docStatus != DocSTATUS.DELETED ? 1 : 0;
+                                    const productForChargeName = getNameReference(references,item.docValues?.productForChargeId)
                                     return (
                                         <tr 
                                             key={key} 
@@ -301,7 +302,7 @@ export default function Journal({ className, ...props}:JournalProps):JSX.Element
                                             <td>{getNameReference(references,item.docValues?.receiverId)}</td>
                                             <td>{getNameReference(references,item.docValues?.senderId)}</td>
                                             <td>{getNameReference(references,item.docValues?.analiticId)}</td>
-                                            <td>{`${item.docValues?.comment ? `(${item.docValues?.comment})`: ''} ${item.docValues?.count ? `(${item.docValues?.count})`: ''}`}</td>
+                                            <td>{`${(item.docValues?.comment || productForChargeName)  ? `(${item.docValues?.productForChargeId} - ${item.docValues?.comment})`: ''} ${item.docValues?.count ? `(${item.docValues?.count})`: ''}`}</td>
                                             <td>{getUserName(item.userId, mainData)}</td>
                                             <td className={styles.rowAction}>
                                                 <IcoTrash className={styles.icoTrash}
