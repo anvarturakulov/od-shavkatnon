@@ -187,8 +187,9 @@ export default function Journal({ className, ...props}:JournalProps):JSX.Element
                     const userLowerCase = user.toLowerCase();
                     const userName = `${getUserName(item.userId, mainData)}`.toLowerCase();
                     const analiticName = getNameReference(references, item.docValues?.analiticId);
+                    const productName = getNameReference(references, item.docValues?.productForChargeId);
                     const itemComment = item.docValues?.comment;
-                    const bigString = `${itemComment}`.toLowerCase();
+                    const bigString = `${productName}${itemComment}`.toLowerCase();
                     const commentInLowerCase = comment.toLowerCase();
                     const itemSender = getNameReference(references, item.docValues?.senderId);
                     const itemReceiver = getNameReference(references, item.docValues?.receiverId);
