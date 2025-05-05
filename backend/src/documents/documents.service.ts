@@ -285,7 +285,12 @@ export class DocumentsService {
             await this.stocksService.deleteEntrieToTMZ(entry, transaction);
             await this.oborotsService.deleteEntry(entry, transaction);
           }
-          await this.entryRepository.destroy({ where: { docId: document.id }, transaction });
+          // await this.entryRepository.destroy({ where: { docId: document.id }, transaction });
+          const entriesToDelete = await this.entryRepository.findAll({ where: { docId: document.id }, transaction });
+          const deletedRows = await this.entryRepository.destroy({ where: { docId: document.id }, transaction });
+          if (deletedRows !== entriesToDelete.length) {
+            throw new Error(`Expected to delete ${entriesToDelete.length} entries, but deleted ${deletedRows}`);
+          }
         }
       }
 
