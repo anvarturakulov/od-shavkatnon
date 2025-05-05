@@ -148,7 +148,7 @@ export class StocksService {
     const stock = await this.stockRepository.findOne({ where, transaction });
 
     if (!stock) {
-      return;
+      throw new Error(`Stock not found for( schet = ${schet}, date = ${date} , firstSubcontoId = ${firstSubcontoId}, secondSubcontoId = ${secondSubcontoId}, debetKredit = ${debetKredit})`)
     }
 
     stock.count -= debetKredit === DEBETKREDIT.DEBET ? count : -count;
