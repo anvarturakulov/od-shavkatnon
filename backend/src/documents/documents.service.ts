@@ -294,7 +294,14 @@ export class DocumentsService {
         }
       }
 
+      // await document.update({ docStatus: newStatus }, { transaction });
+      
       await document.update({ docStatus: newStatus }, { transaction });
+      // Проверяем, обновился ли статус (опционально)
+      await document.reload({ transaction });
+      if (document.docStatus !== newStatus) {
+        throw new Error(`Failed to update document status for document with id ${id}`);
+      }
 
       if (!this.startBotListining) {
         this.startBotListining = true;
