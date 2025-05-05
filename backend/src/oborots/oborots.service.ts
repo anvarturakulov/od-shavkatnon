@@ -89,9 +89,9 @@ export class OborotsService {
     if (!oborot) {
       throw new Error(`Oborot not found for entry (docId) ${entry.docId} 
                       debetFirstSubcontoId ${entry.debetFirstSubcontoId}
-                      debetFirstSubcontoId ${entry.debetFirstSubcontoId}
-                      debetFirstSubcontoId ${entry.debetFirstSubcontoId}
-                      debetFirstSubcontoId ${entry.debetFirstSubcontoId}
+                      debetSecondSubcontoId ${entry.debetSecondSubcontoId}
+                      debetSecondSubcontoId ${entry.debetSecondSubcontoId}
+                      debetSecondSubcontoId ${entry.debetSecondSubcontoId}
                       `)
     }
 
