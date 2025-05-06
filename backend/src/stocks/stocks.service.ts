@@ -72,7 +72,7 @@ export class StocksService {
   }
 
   async addTwoEntries(entry: EntryCreationAttrs, transaction?: Transaction) {
-    if (this.checkEntryForDublicate(entry)) return;
+    if (this.checkEntryForDublicate(entry)) return true;
 
     await this.addEntry(
       entry.debet,
@@ -301,7 +301,10 @@ export class StocksService {
 
     const stock = await this.stockRepository.findOne({
       where,
-      order: [['date', 'DESC']],
+      order: [
+        ['date', 'DESC'],
+        ['id', 'DESC']
+      ],
       transaction,
     });
 
