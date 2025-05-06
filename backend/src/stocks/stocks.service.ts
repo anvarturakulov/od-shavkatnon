@@ -251,7 +251,10 @@ export class StocksService {
         secondSubcontoId: this.schetsWithOneSubconto.includes(schet as Schet) ? null : secondSubcontoId,
         date: { [Op.lt]: fromDate },
       },
-      order: [['date', 'DESC']],
+      order: [
+        ['date', 'DESC'],
+        ['id', 'DESC']
+      ],
       transaction,
     });
 
