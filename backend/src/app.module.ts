@@ -40,7 +40,7 @@ import { BackupModule } from './backup/backup.module';
             models: [User, Reference, RefValues, Entry, DocValues, DocTableItems, Document, Stock, Oborot],
             autoLoadModels: true,
             // logging: false
-            logging: process.env.NODE_ENV === 'development' ? false : console.log,
+            logging: false,
           }),
         UsersModule,
         AuthModule,

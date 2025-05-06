@@ -72,4 +72,8 @@ export class CreateReferenceValueDto {
     @IsString({message: 'telegramId - должен быть строкой'})
     telegramId?: string;
 
+    @ApiProperty({example:'....', description: 'Номер телефона'})
+    @IsString({message: 'Номер телефона должно быть строкой'})
+    phone?: string;
+
 }

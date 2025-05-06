@@ -101,5 +101,16 @@ export class RefValues extends Model<RefValues, RefValuesCreationAttrs> {
     @Column({type: DataType.STRING})
     telegramId?: string;
     
+    @ApiProperty({example:'....', description: 'Номер телефона'})
+    @Column({
+        type: DataType.STRING, allowNull: true,
+        unique: true,
+        validate: {
+          is: {
+            args: /^\+?[1-9]\d{1,11}$/, // Пример регулярного выражения для номера телефона
+            msg: 'Некорректный формат номера телефона',
+          }}
+        })
+    phone?: string;
 
 }

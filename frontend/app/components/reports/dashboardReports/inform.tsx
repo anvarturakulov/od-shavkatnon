@@ -11,6 +11,7 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { Button } from '../../common/button/Button';
 import { dateNumberToString } from '@/app/service/common/converterForDates';
+import { adminAndHeadCompany } from '@/app/interfaces/user.interface';
 
 export const totalByKey = (key: string, data: any[]) => {
   let total = 0;
@@ -35,6 +36,7 @@ export const totalByKeyForFinancial = (key: string, data: any[]) => {
 export const Inform = ({ className, ...props }: InformationProps): JSX.Element => {
   const { mainData, setMainData } = useAppContext();
   const { uploadingDashboard } = mainData.window;
+  const { user } = mainData.users
   const { informData, dashboardCurrentReportType } = mainData.report;
   const reportType = dashboardCurrentReportType;
   const reportRef = useRef<HTMLDivElement>(null);
@@ -115,11 +117,15 @@ export const Inform = ({ className, ...props }: InformationProps): JSX.Element =
     }
   };
 
+
+  const role = user?.role;
+  const isAdminOrHeadCompany = role && adminAndHeadCompany.includes(role)
+
   return (
     <div ref={reportRef} className={styles.container}>
       <RefreshPanel />
       {!uploadingDashboard && getReportByType(reportType, informData)}
-      {uploadingDashboard && <LoadingIco />}
+      {uploadingDashboard && <LoadingIco /> && isAdminOrHeadCompany}
       <Button appearance='primary' onClick={sendToTelegram} className={styles.pdfBtn}>
         Архивга олиш
       </Button>
