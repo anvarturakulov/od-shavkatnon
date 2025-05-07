@@ -43,38 +43,60 @@ export class StocksService {
     debetKredit: DEBETKREDIT,
     comment: string,
     transaction?: Transaction,
-  ) {
-    const where = this.getWhereClause(schet, date, firstSubcontoId, secondSubcontoId);
-    const [stock, created] = await this.stockRepository.findOrCreate({
-      where,
-      defaults: {
-        schet,
-        date,
-        firstSubcontoId,
-        secondSubcontoId: this.schetsWithOneSubconto.includes(schet) ? null : secondSubcontoId,
-        count: debetKredit === DEBETKREDIT.DEBET ? count : -count,
-        total: debetKredit === DEBETKREDIT.DEBET ? total : -total,
-        remainCount: 0,
-        remainTotal: 0,
-        comment
-      },
-      transaction,
-    });
+  ): Promise<Stock> {
+    try {
+      const where = this.getWhereClause(schet, date, firstSubcontoId, secondSubcontoId);
+      const [stock, created] = await this.stockRepository.findOrCreate({
+        where,
+        defaults: {
+          schet,
+          date,
+          firstSubcontoId,
+          secondSubcontoId: this.schetsWithOneSubconto.includes(schet) ? null : secondSubcontoId,
+          count: debetKredit === DEBETKREDIT.DEBET ? count : -count,
+          total: debetKredit === DEBETKREDIT.DEBET ? total : -total,
+          remainCount: 0,
+          remainTotal: 0,
+          comment,
+        },
+        transaction,
+      });
 
-    if (!created) {
-      stock.count += debetKredit === DEBETKREDIT.DEBET ? count : -count;
-      stock.total += debetKredit === DEBETKREDIT.DEBET ? total : -total;
-      stock.comment = stock.comment ? stock.comment.trim(): '' + ', '+comment
-      await stock.save({ transaction });
+      if (!stock) {
+        throw new Error(
+          `Failed to find or create stock for schet=${schet}, date=${date}, firstSubcontoId=${firstSubcontoId}, secondSubcontoId=${secondSubcontoId}`
+        );
+      }
+
+      if (!created) {
+        stock.count += debetKredit === DEBETKREDIT.DEBET ? count : -count;
+        stock.total += debetKredit === DEBETKREDIT.DEBET ? total : -total;
+        stock.comment = stock.comment ? `${stock.comment.trim()}, ${comment}` : comment;
+        const updatedStock = await stock.save({ transaction });
+        if (!updatedStock) {
+          throw new Error(
+            `Failed to update stock for schet=${schet}, date=${date}, firstSubcontoId=${firstSubcontoId}, secondSubcontoId=${secondSubcontoId}`
+          );
+        }
+      }
+
+      await this.recalculateRemains(schet, firstSubcontoId, secondSubcontoId, date, transaction);
+
+      return stock;
+    } catch (error) {
+      console.error('Error in addEntry:', error.message);
+      throw new Error(
+        `Failed to add entry for schet=${schet}, date=${date}, firstSubcontoId=${firstSubcontoId}, secondSubcontoId=${secondSubcontoId}: ${error.message}`
+      );
     }
-
-    await this.recalculateRemains(schet, firstSubcontoId, secondSubcontoId, date, transaction);
   }
 
-  async addTwoEntries(entry: EntryCreationAttrs, transaction?: Transaction) {
-    if (this.checkEntryForDublicate(entry)) return true;
+  async addTwoEntries(entry: EntryCreationAttrs, transaction?: Transaction): Promise<Stock[]> {
+    if (this.checkEntryForDublicate(entry)) {
+      return []; // Возвращаем пустой массив, если запись является дубликатом
+    }
 
-    await this.addEntry(
+    const debetStock = await this.addEntry(
       entry.debet,
       entry.date,
       entry.debetFirstSubcontoId,
@@ -84,8 +106,9 @@ export class StocksService {
       DEBETKREDIT.DEBET,
       String(entry.docId),
       transaction,
-    )
-    await this.addEntry(
+    );
+
+    const kreditStock = await this.addEntry(
       entry.kredit,
       entry.date,
       entry.kreditFirstSubcontoId,
@@ -95,18 +118,22 @@ export class StocksService {
       DEBETKREDIT.KREDIT,
       String(entry.docId),
       transaction,
-    )
+    );
+
+    return [debetStock, kreditStock];
   }
 
-  async addEntrieToTMZ(entry: EntryCreationAttrs, transaction?: Transaction) {
-    if (this.checkEntryForDublicate(entry)) return;
-
+  async addEntrieToTMZ(entry: EntryCreationAttrs, transaction?: Transaction): Promise<Stock | null> {
+    if (this.checkEntryForDublicate(entry)) {
+      return null; // Возвращаем null, чтобы указать, что объект не создавался из-за дубликата
+    }
+  
     const tmzSchets = [Schet.S10, Schet.S21];
     const tmzInDebet = tmzSchets.includes(entry.debet) && !tmzSchets.includes(entry.kredit);
     const tmzInKredit = !tmzSchets.includes(entry.debet) && tmzSchets.includes(entry.kredit);
-
+  
     if (tmzInDebet) {
-      await this.addEntry(
+      return await this.addEntry(
         entry.debet,
         entry.date,
         entry.debetSecondSubcontoId,
@@ -118,9 +145,9 @@ export class StocksService {
         transaction,
       );
     }
-
+  
     if (tmzInKredit) {
-      await this.addEntry(
+      return await this.addEntry(
         entry.kredit,
         entry.date,
         entry.kreditSecondSubcontoId,
@@ -132,6 +159,8 @@ export class StocksService {
         transaction,
       );
     }
+  
+    return null; // Возвращаем null, если не было условий для создания записи
   }
 
   async deleteEntry(
@@ -146,6 +175,7 @@ export class StocksService {
   ) {
     const where = this.getWhereClause(schet, date, firstSubcontoId, secondSubcontoId);
     const stock = await this.stockRepository.findOne({ where, transaction });
+    console.log('where -- ', where, 'count - ', count, 'total - ', total)
 
     if (!stock) {
       throw new Error(`Stock not found for( schet = ${schet}, date = ${date} , firstSubcontoId = ${firstSubcontoId}, secondSubcontoId = ${secondSubcontoId}, debetKredit = ${debetKredit})`)

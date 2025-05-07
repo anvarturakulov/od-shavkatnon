@@ -40,25 +40,10 @@ export class OborotsService {
     return where;
   }
 
-  async addEntry(entry: EntryCreationAttrs, transaction?: Transaction) {
-    const where = this.getWhereClause(entry);
-    const {
-      date,
-      debet,
-      debetFirstSubcontoId,
-      debetSecondSubcontoId,
-      debetThirdSubcontoId,
-      kredit,
-      kreditFirstSubcontoId,
-      kreditSecondSubcontoId,
-      kreditThirdSubcontoId,
-      count,
-      total,
-    } = entry;
-
-    const [oborot, created] = await this.oborotRepository.findOrCreate({
-      where,
-      defaults: {
+  async addEntry(entry: EntryCreationAttrs, transaction?: Transaction): Promise<Oborot> {
+    try {
+      const where = this.getWhereClause(entry);
+      const {
         date,
         debet,
         debetFirstSubcontoId,
@@ -70,14 +55,49 @@ export class OborotsService {
         kreditThirdSubcontoId,
         count,
         total,
-      },
-      transaction,
-    });
-
-    if (!created) {
-      oborot.count += count;
-      oborot.total += total;
-      await oborot.save({ transaction });
+      } = entry;
+  
+      const [oborot, created] = await this.oborotRepository.findOrCreate({
+        where,
+        defaults: {
+          date,
+          debet,
+          debetFirstSubcontoId,
+          debetSecondSubcontoId,
+          debetThirdSubcontoId,
+          kredit,
+          kreditFirstSubcontoId,
+          kreditSecondSubcontoId,
+          kreditThirdSubcontoId,
+          count,
+          total,
+        },
+        transaction,
+      });
+  
+      if (!oborot) {
+        throw new Error(
+          `Failed to find or create oborot for entry (docId=${entry.docId}, debet=${debet}, kredit=${kredit})`
+        );
+      }
+  
+      if (!created) {
+        oborot.count += count;
+        oborot.total += total;
+        const updatedOborot = await oborot.save({ transaction });
+        if (!updatedOborot) {
+          throw new Error(
+            `Failed to update oborot for entry (docId=${entry.docId}, debet=${debet}, kredit=${kredit})`
+          );
+        }
+      }
+  
+      return oborot;
+    } catch (error) {
+      console.error('Error in addEntry:', error.message);
+      throw new Error(
+        `Failed to add oborot entry for docId=${entry.docId}, debet=${entry.debet}, kredit=${entry.kredit}: ${error.message}`
+      );
     }
   }
 
