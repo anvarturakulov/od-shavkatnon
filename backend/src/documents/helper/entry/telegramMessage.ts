@@ -21,9 +21,7 @@ export type ReferencesForTelegramMessage = {
   sender: Reference | undefined,
   receiver: Reference | undefined,
   analitic: Reference | undefined,
-  firstWorker: Reference | undefined,
-  secondWorker: Reference | undefined,
-  thirdWorker: Reference | undefined,
+  productForCharge: Reference | undefined
 }
 
 export const numberValue = (price: number): string => {
@@ -43,6 +41,7 @@ const prepareCheck = (body: UpdateCreateDocumentDto, user: User, references: Ref
   let receiver = references.receiver?.name ? `Олувчи -- - ${references.receiver.name}` : ''
   let analitic = references.analitic?.name ? `Аналитика -- - ${references.analitic.name}` : ''
   let sender = references.sender?.name ? `Жунатувчи -- - ${references.sender.name}` : ''
+  let productForCharge = references.productForCharge?.name ? `Махсулот тури - ${references.productForCharge.name}` : ''
 
   let count = body.docValues.count > 0 ? `Сон --- ${numberValue(body.docValues.count)} та` : ''
   let price = body.docValues.price > 0 ? `Нарх --- ${numberValue(body.docValues.price)}` : ''
@@ -60,6 +59,7 @@ const prepareCheck = (body: UpdateCreateDocumentDto, user: User, references: Ref
    ${receiver}
    ${sender}
    ${analitic}
+   ${productForCharge}
    ${count} ${price}
    ${total} 
    ${comment}
@@ -93,10 +93,10 @@ const prepareCheckForZP = (body: UpdateCreateDocumentDto, references: References
 
   let receiver = references.receiver?.name ? `Цех -- - ${references.receiver.name}` : ''
   let analitic = references.analitic?.name ? `Ходим -- - ${references.analitic.name}` : ''
-
+  let productForCharge = references.productForCharge?.name ? `${references.productForCharge.name}` : ''
   let total = body.docValues.total > 0 ? `Сумма --- ${numberValue(body.docValues.total)}` : ''
-
-  let comment = body.docValues.comment ? `Изох: ${body.docValues.comment}` : ''
+  const comment = body.docValues.comment ? body.docValues.comment : ''
+  const com = `Изох: ${productForCharge} ${comment}`
 
   return (
     `==========================

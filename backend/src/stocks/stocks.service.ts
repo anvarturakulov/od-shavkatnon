@@ -175,7 +175,7 @@ export class StocksService {
   ) {
     const where = this.getWhereClause(schet, date, firstSubcontoId, secondSubcontoId);
     const stock = await this.stockRepository.findOne({ where, transaction });
-    console.log('where -- ', where, 'count - ', count, 'total - ', total)
+    // console.log('where -- ', where, 'count - ', count, 'total - ', total)
 
     if (!stock) {
       throw new Error(`Stock not found for( schet = ${schet}, date = ${date} , firstSubcontoId = ${firstSubcontoId}, secondSubcontoId = ${secondSubcontoId}, debetKredit = ${debetKredit})`)

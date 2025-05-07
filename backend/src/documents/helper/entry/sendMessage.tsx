@@ -8,18 +8,17 @@ export const sendMessage = async (dto: UpdateCreateDocumentDto, newDocument: boo
         
         const user = await usersService.getUserById(dto.userId);
 
-        let sender, receiver, analitic, firstWorker, secondWorker, thirdWorker
+        let sender, receiver, analitic, productForCharge
         if (dto.docValues.senderId) sender = await referencesService.getReferenceById(dto.docValues.senderId);
         if (dto.docValues.receiverId) receiver = await referencesService.getReferenceById(dto.docValues.receiverId);
         if (dto.docValues.analiticId) analitic = await referencesService.getReferenceById(dto.docValues.analiticId);
+        if (dto.docValues.productForChargeId) productForCharge = await referencesService.getReferenceById(dto.docValues.productForChargeId);
 
         let references: ReferencesForTelegramMessage = {
             sender,
             receiver,
             analitic,
-            firstWorker,
-            secondWorker,
-            thirdWorker,
+            productForCharge,
         }
         if (!messageInDeleting) messageInDeleting = ''
 
