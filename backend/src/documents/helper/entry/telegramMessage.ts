@@ -96,7 +96,7 @@ const prepareCheckForZP = (body: UpdateCreateDocumentDto, references: References
   let productForCharge = references.productForCharge?.name ? `${references.productForCharge.name}` : ''
   let total = body.docValues.total > 0 ? `Сумма --- ${numberValue(body.docValues.total)}` : ''
   const comment = body.docValues.comment ? body.docValues.comment : ''
-  const com = `Изох: ${productForCharge} ${comment}`
+  const productForChargeWithComment = `Изох: ${productForCharge} ${comment}`
 
   return (
     `==========================
@@ -107,7 +107,7 @@ const prepareCheckForZP = (body: UpdateCreateDocumentDto, references: References
    ${receiver}
    ${analitic}
    ${total} 
-   ${comment}
+   ${productForChargeWithComment}
    ==========================
    МЕХНАТИНГИЗ УЧУН РАХМАТ!
    ==========================
