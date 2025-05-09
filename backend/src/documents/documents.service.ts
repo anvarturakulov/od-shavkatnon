@@ -215,11 +215,10 @@ export class DocumentsService {
         }
 
         const entrysList = prepareEntrysList(doc, this.foundersIds, true);
-        
 
         if (entrysList.length > 0) {
           for (const item of entrysList) {
-            // console.log('Processing entry:', JSON.stringify(item, null, 2)); // Логирование для отладки
+            console.log('Processing entry:', JSON.stringify(item, null, 2)); // Логирование для отладки
             const entry = await this.entryRepository.create(
               { ...item },
               { transaction }
@@ -227,34 +226,21 @@ export class DocumentsService {
             if (!entry) {
               throw new Error('Failed to create entry');
             }
-        
-            // console.log('Created entry:', {
-            //   docId: entry.docId,
-            //   date: entry.date,
-            //   debet: entry.debet,
-            //   kredit: entry.kredit,
-            //   count: entry.count,
-            //   total: entry.total,
-            // });
-        
+
             const stockEntries = await this.stocksService.addTwoEntries(entry, transaction);
-            // Проверяем, что stockEntries не undefined, и допускаем пустой массив (дубликат)
             if (stockEntries === undefined) {
               throw new Error('Failed to add stock entries');
             }
         
             const tmzEntry = await this.stocksService.addEntrieToTMZ(entry, transaction);
-            // Проверяем, что tmzEntry не undefined, и допускаем null (дубликат или отсутствие условий)
             if (tmzEntry === undefined) {
               throw new Error('Failed to add TMZ entry');
             }
         
-            // console.log('Calling oborotsService.addEntry for entry:', entry.docId);
             const oborotEntry = await this.oborotsService.addEntry(entry, transaction);
             if (!oborotEntry) {
               throw new Error('Failed to add oborot entry');
             }
-            // console.log('Created oborotEntry:', oborotEntry.toJSON());
           }
         }
 

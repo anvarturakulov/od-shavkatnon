@@ -185,7 +185,7 @@ export class StocksService {
     stock.total -= debetKredit === DEBETKREDIT.DEBET ? total : -total;
 
     if (stock.count === 0 && stock.total === 0) {
-      await stock.destroy({ transaction });
+      // await stock.destroy({ transaction });
     } else {
       await stock.save({ transaction });
     }
