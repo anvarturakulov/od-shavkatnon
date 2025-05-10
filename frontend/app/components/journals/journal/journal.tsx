@@ -58,8 +58,12 @@ const totals = (item: DocumentModel) => {
     if (( item.documentType == DocumentType.LeaveMaterial ||  item.documentType == DocumentType.ComeHalfstuff) 
         && item.docTableItems?.length ) {
         let t = item.docTableItems.reduce((summa, item) => summa + item.total,0)
-        let c = item.docTableItems.reduce((count, item) => count + item.count,0)
         total = t;
+    }
+
+    if (( item.documentType == DocumentType.LeaveMaterial) 
+        && item.docTableItems?.length ) {
+        let c = item.docTableItems.reduce((count, item) => count + item.count,0)
         count = c;
     }
 
