@@ -175,7 +175,7 @@ export class StocksService {
   ) {
     const where = this.getWhereClause(schet, date, firstSubcontoId, secondSubcontoId);
     const stock = await this.stockRepository.findOne({ where, transaction });
-    // console.log('where -- ', where, 'count - ', count, 'total - ', total)
+    // console.log('deleting - where -- ', where, 'count - ', count, 'total - ', total)
 
     if (!stock) {
       throw new Error(`Stock not found for( schet = ${schet}, date = ${date} , firstSubcontoId = ${firstSubcontoId}, secondSubcontoId = ${secondSubcontoId}, debetKredit = ${debetKredit})`)
@@ -184,11 +184,15 @@ export class StocksService {
     stock.count -= debetKredit === DEBETKREDIT.DEBET ? count : -count;
     stock.total -= debetKredit === DEBETKREDIT.DEBET ? total : -total;
 
-    if (stock.count === 0 && stock.total === 0) {
-      // await stock.destroy({ transaction });
-    } else {
-      await stock.save({ transaction });
-    }
+
+
+    // if (stock.count === 0 && stock.total === 0) {
+    //   // await stock.destroy({ transaction });
+    // } else {
+    //   await stock.save({ transaction });
+    // }
+
+    await stock.save({ transaction });
 
     await this.recalculateRemains(schet, firstSubcontoId, secondSubcontoId, date, transaction);
   }
