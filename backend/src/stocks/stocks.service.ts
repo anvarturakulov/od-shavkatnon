@@ -190,7 +190,7 @@ export class StocksService {
     //   // await stock.destroy({ transaction });
     // } else {
     //   await stock.save({ transaction });
-    // }
+    // }  
 
     await stock.save({ transaction });
 

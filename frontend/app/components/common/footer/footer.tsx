@@ -29,6 +29,11 @@ export default function Footer({ windowFor ,className, count, total, docCount, .
                 <div>{` Урта сон: ${numberValue(count/docCount)}`}</div>
             }
 
+            {
+                count !=undefined && count >0 && count && total &&
+                <div>{` Урта киймат: ${numberValue(total/count)}`}</div>
+            }
+
         </div>
     )
 }
