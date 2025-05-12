@@ -47,6 +47,10 @@ export class User extends Model<User, UserCreationAttrs> {
     @Column({type: DataType.INTEGER})
     sectionId: number
 
+    @ApiProperty({example:'Телеграм ID', description: 'Телеграм Id'})
+    @Column({type: DataType.STRING})
+    telegramId: string;
+
     @ApiProperty({example:'CLIENTS', description: 'Тип партнера - ( CLIENTS || SUPPLIERS )'})
     @Column({type: DataType.ENUM(...Object.values(UserRoles))})
     role: UserRoles

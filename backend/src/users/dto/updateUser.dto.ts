@@ -35,4 +35,7 @@ export class UpdateUserDto {
     // @IsNumber({}, {message: 'sectionId - должен быть натуральным числом'})
     readonly sectionId: number
 
+    @ApiProperty({example:'11111111111', description: 'telegramId'})
+    @IsString({message: 'telegramId - должно быть строкой'})
+    readonly telegramId: string;
 }

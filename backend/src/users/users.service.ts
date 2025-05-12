@@ -43,7 +43,7 @@ export class UsersService {
 
     async updateUserById(id: number, dto:UpdateUserDto) {
         const user = await this.userRepository.findByPk(id)
-        const { email, password, name, banned, banReason, role, sectionId } = dto
+        const { email, password, name, banned, banReason, role, sectionId, telegramId } = dto
         const hashPassword = await bcrypt.hash(dto.password, 5);
         if (user) {
             user.email = email
@@ -53,6 +53,7 @@ export class UsersService {
             user.banned = banned
             user.banReason = banReason
             user.sectionId = sectionId
+            user.telegramId = telegramId
             await user.save()
             return user
         }

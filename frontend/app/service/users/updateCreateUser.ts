@@ -22,8 +22,6 @@ export const updateCreateUser = (
   }
 
   const id = body.id;
-  
-  // if (body.sectionId == '') delete body.sectionId
   delete body.id;
 
   const uriPost = process.env.NEXT_PUBLIC_DOMAIN + '/api/auth/registration';

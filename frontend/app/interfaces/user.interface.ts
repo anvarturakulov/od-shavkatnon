@@ -20,7 +20,8 @@ export interface User {
     name: string,
     banned?: boolean,
     banReason?: string,
-    sectionId?: number, 
+    sectionId?: number,
+    telegramId?: string,
     role: UserRoles,
 }
 
@@ -33,6 +34,7 @@ export interface UserModel {
     banned?: boolean,
     banReason?: string,
     sectionId?: number,
+    telegramId?: string,
     role: UserRoles
 }
 

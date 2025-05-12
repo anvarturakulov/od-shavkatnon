@@ -22,6 +22,7 @@ export const User = ({ className, ...props }: UserProps) :JSX.Element => {
         password: '',
         name: '',
         sectionId: 0,
+        telegramId: '',
         role: UserRoles.USER,
         banReason: '',
         banned: false,
@@ -83,10 +84,14 @@ export const User = ({ className, ...props }: UserProps) :JSX.Element => {
                     <div>Исми</div>
                     <input value={body.name} type="text" id='name' className={styles.input} onChange={(e)=>changeElements(e)}/>
                 </div>
-            
+                <div></div>
                 <div className={styles.nameBox}>
                     <div>storageId</div>
                     <input value={body.sectionId} type="number" id='sectionId' className={styles.input} onChange={(e)=>changeElements(e)}/>
+                </div>
+                <div className={styles.nameBox}>
+                    <div>telegramId</div>
+                    <input value={body.telegramId} type="text" id='telegramId' className={styles.input} onChange={(e)=>changeElements(e)}/>
                 </div>
             </div>
 
