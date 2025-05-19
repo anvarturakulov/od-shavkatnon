@@ -121,7 +121,13 @@ export class OborotsService {
     // if (oborot.count === 0 && oborot.total === 0) {
     //   await oborot.destroy({ transaction });
     // } else {
-    await oborot.save({ transaction });
+    
+    try {
+      await oborot.save({ transaction });
+    } catch (error) {
+      console.error('Ошибка при сохранении oborots:', error);
+      throw error;
+    }
     // }
   }
 

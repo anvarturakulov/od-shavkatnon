@@ -184,15 +184,14 @@ export class StocksService {
     stock.count -= debetKredit === DEBETKREDIT.DEBET ? count : -count;
     stock.total -= debetKredit === DEBETKREDIT.DEBET ? total : -total;
 
+    // await stock.save({ transaction });
 
-
-    // if (stock.count === 0 && stock.total === 0) {
-    //   // await stock.destroy({ transaction });
-    // } else {
-    //   await stock.save({ transaction });
-    // }  
-
-    await stock.save({ transaction });
+    try {
+      await stock.save({ transaction });
+    } catch (error) {
+      console.error('Ошибка при сохранении stock:', error);
+      throw error;
+    }
 
     await this.recalculateRemains(schet, firstSubcontoId, secondSubcontoId, date, transaction);
   }
