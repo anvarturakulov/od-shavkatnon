@@ -118,11 +118,11 @@ export class OborotsService {
     oborot.count -= count;
     oborot.total -= total;
 
-    if (oborot.count === 0 && oborot.total === 0) {
-      await oborot.destroy({ transaction });
-    } else {
-      await oborot.save({ transaction });
-    }
+    // if (oborot.count === 0 && oborot.total === 0) {
+    //   await oborot.destroy({ transaction });
+    // } else {
+    await oborot.save({ transaction });
+    // }
   }
 
   async getOborotByDate(

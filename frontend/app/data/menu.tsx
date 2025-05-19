@@ -86,13 +86,24 @@ export const MenuData:Array<MenuItem> = [
                  UserRoles.DELIVERY, UserRoles.SELLER, UserRoles.GUEST]
             },
             { 
+                title: DocumentType.SaleProdByOrder, description:'Махсулот сотуви буюртмачиларга',
+                type: 'document', active: false,
+                roles: 
+                [UserRoles.HEADCOMPANY, UserRoles.ADMIN, UserRoles.HEADSECTION, UserRoles.GLBUX]
+            },
+            { 
                 title: DocumentType.ComeProductImport, description:'Махсулотнинг хамкордан кирими',
                 type: 'document', active: false,
                 roles: 
                 [UserRoles.HEADCOMPANY, UserRoles.ADMIN, UserRoles.GLBUX, UserRoles.GUEST, UserRoles.ZAMGLBUX]
             },
             { 
-                title: DocumentType.ComeCashFromPartners, description:'Пул кирими (мижоз ва таъминотчи)',
+                title: DocumentType.ComeCashFromPartners, description:'Пул кирими (таъминотчи ва хамкорлардан)',
+                type: 'document', active: false,
+                roles: [UserRoles.HEADCOMPANY, UserRoles.ADMIN, UserRoles.GLBUX, UserRoles.GUEST]
+            },
+            { 
+                title: DocumentType.ComeCashFromClients, description:'Пул кирими (буюртмачилардан)',
                 type: 'document', active: false,
                 roles: [UserRoles.HEADCOMPANY, UserRoles.ADMIN, UserRoles.GLBUX, UserRoles.GUEST]
             },

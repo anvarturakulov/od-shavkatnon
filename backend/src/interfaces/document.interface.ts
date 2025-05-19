@@ -6,6 +6,7 @@ export enum DocumentType {
     ComeProductImport = 'ComeProductImport',
 
     SaleProd = 'SaleProd',
+    SaleProdByOrder = 'SaleProdByOrder',
     SaleMaterial = 'SaleMaterial',
     SaleHalfStuff = 'SaleHalfStuff',
 
@@ -17,6 +18,7 @@ export enum DocumentType {
     MoveMaterial = 'MoveMaterial',
     MoveHalfstuff = 'MoveHalfstuff',
 
+    ComeCashFromClients = 'ComeCashFromClients',
     ComeCashFromPartners = 'ComeCashFromPartners',
     MoveCash = 'MoveCash',
     LeaveCash = 'LeaveCash',
