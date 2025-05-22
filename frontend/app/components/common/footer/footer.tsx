@@ -2,10 +2,15 @@ import { numberValue } from '@/app/service/common/converters'
 import styles from './footer.module.css'
 import { FooterProps } from './footer.props'
 
-export default function Footer({ windowFor ,className, count, total, docCount, ...props }: FooterProps): JSX.Element {
+export default function Footer({ windowFor ,className, count, total, docCount, label, ...props }: FooterProps): JSX.Element {
     if (windowFor == 'reference') return <></>
+    
     return (
         <div className={styles.box}>
+            { windowFor == 'order' &&
+                <div>{label}</div>
+            }
+
             {
                 count!=undefined && count>0 && 
                 <div>{`Сон: ${numberValue(count)}`}</div>
@@ -25,12 +30,12 @@ export default function Footer({ windowFor ,className, count, total, docCount, .
             }
 
             {
-                docCount!=undefined && docCount>0 && count &&
+                docCount!=undefined && docCount>0 && count && windowFor != 'order' &&
                 <div>{` Урта сон: ${numberValue(count/docCount)}`}</div>
             }
 
             {
-                count !=undefined && count >0 && count && total &&
+                count !=undefined && count >0 && count && total && windowFor != 'order' &&
                 <div>{` Урта киймат: ${numberValue(total/count)}`}</div>
             }
 

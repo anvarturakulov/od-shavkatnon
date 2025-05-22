@@ -81,7 +81,7 @@
 }
 
 .rowSumma{
-    width: 120px;
+    width: 100px;
 }
 
 .tdSumma{
@@ -178,7 +178,7 @@
 
 .footer{
     display: grid;
-    grid-template-columns: auto auto;
+    grid-template-columns: 1fr;
     gap: 10px;
     align-items: center;
 }

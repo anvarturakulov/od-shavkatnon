@@ -8,17 +8,18 @@ import useSWR from 'swr';
 import cn from 'classnames';
 import Header from '../../common/header/header';
 import { getDataForSwr } from '@/app/service/common/getDataForSwr';
-import { deleteItemDocument, getDocument, getNameReference, getUserName, setProvodkaToDoc } from '../helpers/journal.functions';
+import { deleteItemDocument, getDocument, getNameReference, getPhoneReference, getUserName, setProvodkaToDoc } from '../helpers/journal.functions';
 import { getDescriptionDocument } from '@/app/service/documents/getDescriptionDocument';
-import { DocSTATUS, DocumentModel } from '@/app/interfaces/document.interface';
+import { DocSTATUS, DocumentModel, DocumentType } from '@/app/interfaces/document.interface';
 import { dateNumberToString } from '@/app/service/common/converterForDates'
 import Footer from '../../common/footer/footer'
 import { numberValue } from '@/app/service/common/converters'
 import { dashboardUsersList, UserRoles } from '@/app/interfaces/user.interface'
 import { Doc } from '../../documents/document/doc/doc'
-import { secondsToDateString } from '../../documents/document/doc/helpers/doc.functions'
+import { secondsToDateString, secondsToDateStringWitoutTime } from '../../documents/document/doc/helpers/doc.functions'
 import { OrderJournalProps } from './orderJournal.props'
 import { defineUrlTypeForOrder } from '@/app/service/orders/defineUrlTypeForOrder';
+import { OrderTypeTitle } from '@/app/interfaces/order.interface';
 
 interface FilterForJournal {
     takingDate: string,
@@ -30,7 +31,10 @@ interface FilterForJournal {
     deleviry: string,
     comment: string,
     user: string,
+    phone: string,
+    status: string
 }
+
     
 const defaultFilter: FilterForJournal = {
     summa: 'Сумма',
@@ -41,7 +45,9 @@ const defaultFilter: FilterForJournal = {
     user: 'Фойдаланувчи',
     takingDate: 'Бюртма санаси',
     count: 'Сон',
-    deleviry: 'Етказиб бориш бор'
+    deleviry: 'Етказиб бориш бор',
+    phone: 'Тел ракам',
+    status: 'Холат'
 }
 
 const documentTotal = (item: DocumentModel) => {
@@ -53,6 +59,7 @@ const totals = (item: DocumentModel) => {
     let count = item.docValues?.count;
     return {t: total, c:count}
 }
+
 
 export default function OrderJournal({ className, ...props}:OrderJournalProps):JSX.Element {
     
@@ -73,14 +80,15 @@ export default function OrderJournal({ className, ...props}:OrderJournalProps):J
     const [filter, setFilter] = useState<FilterForJournal>(defaultFilter);
 
     const { user } = mainData.users;
-    const { showDocumentWindow, contentName } = mainData.window;
+    const { showDocumentWindow, contentName, contentTitle } = mainData.window;
+    console.log(contentTitle)
     const role = user?.role;
     const dashboardUsers = role && dashboardUsersList.includes(role);
 
     const token = user?.token;
     const urlType = defineUrlTypeForOrder(contentName)
     
-    let url = process.env.NEXT_PUBLIC_DOMAIN+'/api/orders/'+urlType+'&dateStart='+dateStartForUrl+'&dateEnd='+dateEndForUrl;
+    let url = process.env.NEXT_PUBLIC_DOMAIN+'/api/documents/byTypeForDate'+'?documentType='+DocumentType.Order+'&dateStart='+dateStartForUrl+'&dateEnd='+dateEndForUrl;
     
     const urlReferences = process.env.NEXT_PUBLIC_DOMAIN+'/api/references/all/';
 
@@ -131,6 +139,16 @@ export default function OrderJournal({ className, ...props}:OrderJournalProps):J
             title = 'Буюртма сони ?';
             defaulValue = 'Буюртма сони';
         }
+
+        if (target == 'phone') {
+            title = 'Тел ракам ?';
+            defaulValue = 'Тел ракам';
+        }
+
+        if (target == 'status') {
+            title = 'Холат ?';
+            defaulValue = 'Холат';
+        }
         
         let currentValue = prompt(title);
         
@@ -148,31 +166,47 @@ export default function OrderJournal({ className, ...props}:OrderJournalProps):J
         
     }   
 
-    let count:number = 0;
-    let total: number = 0;
-    let docCount: number = 0;
-
     const filteredDocuments = useMemo(() => {
         return (
             documents && documents.length > 0 &&
             documents
                 .sort((a: DocumentModel, b: DocumentModel) => {
-                    const dateComparison = a.date - b.date;
-                    if (dateComparison === 0 && a.id && b.id) {
-                        return a.id - b.id;
+                    let dateComparison
+                    if (a.docValues.orderTakingDate && b.docValues.orderTakingDate) {
+                        dateComparison = a.docValues.orderTakingDate - b.docValues.orderTakingDate;
+                        if (dateComparison) {
+                            return a.docValues.orderTakingDate - b.docValues.orderTakingDate;
+                        }
+                    } else {
+                        if (a.id && b.id) {
+                            dateComparison = a.id - b.id;
+                            if (dateComparison) {
+                                return a.id - b.id;
+                            }
+                        }
                     }
-                    return dateComparison;
                 })
                 .filter((item: DocumentModel) => {
-                    const { summa, receiver, sender, comment, user, analitic } = filter;
+                    if (contentTitle == OrderTypeTitle.OPEN) return item.docStatus == DocSTATUS.OPEN
+                    if (contentTitle == OrderTypeTitle.TOMORROW) return item.docStatus == DocSTATUS.OPEN
+                    if (contentTitle == OrderTypeTitle.COMPLETED) return item.docStatus == DocSTATUS.PROVEDEN
+                    if (contentTitle == OrderTypeTitle.DELETED) return item.docStatus == DocSTATUS.DELETED
+                    
+                })
+                .filter((item: DocumentModel) => {
+                    const { summa, receiver, sender, comment, user, analitic, phone, status } = filter;
                     const userLowerCase = user.toLowerCase();
+                    // const phone = user.toLowerCase();
                     const userName = `${getUserName(item.userId, mainData)}`.toLowerCase();
                     const analiticName = getNameReference(references, item.docValues?.analiticId);
                     const itemComment = item.docValues?.comment;
                     const bigString = `${itemComment}`.toLowerCase();
                     const commentInLowerCase = comment.toLowerCase();
                     const itemSender = getNameReference(references, item.docValues?.senderId);
-                    const itemReceiver = getNameReference(references, item.docValues?.receiverId);
+                    const itemReceiver = getNameReference(references, item.docValues?.receiverId)+' '+getPhoneReference(references, item.docValues?.receiverId);
+                    const itemStatus = item.docStatus == DocSTATUS.OPEN ? 'ОЧИК':
+                                       item.docStatus == DocSTATUS.PROVEDEN ? 'БАЖАРИЛГАН' : 'УЧИРИЛГАН' 
+                    // const itemPhone = getPhoneReference(references, item.docValues?.receiverId);
     
                     if (user !== 'Фойдаланувчи' && !userName.includes(userLowerCase)) return false;
                     if (comment !== 'Изох' && !bigString.includes(commentInLowerCase)) return false;
@@ -180,11 +214,16 @@ export default function OrderJournal({ className, ...props}:OrderJournalProps):J
                     if (receiver !== 'Олувчи' && !(itemReceiver && itemReceiver.toLowerCase().includes(receiver.toLowerCase()))) return false;
                     if (analitic !== 'Аналитика' && !(analiticName && analiticName.toLowerCase().includes(analitic.toLowerCase()))) return false;
                     if (summa !== 'Сумма' && item.docValues?.total !== +summa) return false;
+                    // if (phone !== 'Тел ракам' && !phone.includes(itemPhone)) return false;
                     
                     return true;
                 })
         );
     }, [documents, filter, references, mainData]);
+
+    let count = 0,
+        total = 0,
+        docCount = 0
 
     return (
         <>
@@ -203,23 +242,8 @@ export default function OrderJournal({ className, ...props}:OrderJournalProps):J
                             <tr key='-1'>
                                 <th key='1' className={styles.rowId}>Раками </th>
                                 <th key='2' className={styles.rowDate}>Сана</th>
-                                <th key='4' className={styles.rowDate}>Олиб кетиш санаси</th>
-                                <th key='5' className={styles.rowDate}>Олиб кетиш вакти</th>
-                                <th key='6' 
-                                    onDoubleClick={() => changeFilter('analitic')}
-                                    className={cn(styles.longRow, {
-                                        [styles.red]: filter.analitic != 'Аналитика'
-                                    })}
-                                    >{filter.analitic}
-                                </th>
-                                <th key='7'>{filter.count}</th>
-                                <th key='8' 
-                                    onDoubleClick={() => changeFilter('summa')} 
-                                    className={cn(styles.rowSumma, {
-                                        [styles.red]: filter.summa != 'Сумма'
-                                    })}
-                                    >{filter.summa}
-                                </th>
+                                <th key='4' className={styles.rowDate}>Олиб кетиш</th>
+                                {/* <th key='5' className={styles.rowDate}>Олиб кетиш вакти</th> */}
                                 <th key='9' 
                                     onDoubleClick={() => changeFilter('receiver')}
                                     className={cn(styles.longRow, {
@@ -227,6 +251,27 @@ export default function OrderJournal({ className, ...props}:OrderJournalProps):J
                                     })}    
                                     >{filter.receiver}
                                 </th>
+                                
+                                <th key='6' 
+                                    onDoubleClick={() => changeFilter('analitic')}
+                                    className={cn(styles.longRow, {
+                                        [styles.red]: filter.analitic != 'Аналитика'
+                                    })}
+                                    >{filter.analitic}
+                                </th>
+                                <th key='7'
+                                    className={cn(styles.rowSumma, {
+                                        [styles.red]: filter.count != 'Сон'
+                                    })}
+                                    >{filter.count}</th>
+                                <th key='8' 
+                                    onDoubleClick={() => changeFilter('summa')} 
+                                    className={cn(styles.rowSumma, {
+                                        [styles.red]: filter.summa != 'Сумма'
+                                    })}
+                                    >{filter.summa}
+                                </th>
+
                                 <th key='10' 
                                     onDoubleClick={() => changeFilter('sender')}
                                     className={cn(styles.longRow, {
@@ -256,28 +301,39 @@ export default function OrderJournal({ className, ...props}:OrderJournalProps):J
                             {filteredDocuments && 
                                 filteredDocuments.map((item:DocumentModel, key: number) => {
                                     let {t, c} = totals(item)
-                                    total += item.docStatus != DocSTATUS.DELETED ? t : 0;
-                                    count += item.docStatus != DocSTATUS.DELETED ? c : 0;
-                                    docCount += item.docStatus != DocSTATUS.DELETED ? 1 : 0;
+                                    
+                                    total += t ? t : 0;
+                                    count += c ? c : 0;
+                                    docCount += 1 ? 1 : 0;
+
                                     return (
                                         <tr 
                                             key={key} 
                                             className={cn(className)}
-                                            onDoubleClick={() => {getDocument(item.id, setMainData, token)}}    
+                                            // onDoubleClick={() => {getDocument(item.id, setMainData, token)}}    
                                         >
                                             <td className={styles.rowId}>{item.id}</td>
-                                            <td className={styles.rowDate}>{secondsToDateString(item.date)}</td>
-                                            <td className={cn(styles.documentType, {
+                                            <td className={cn(styles.rowDate, {
                                                 [styles.proveden]: item.docStatus == DocSTATUS.PROVEDEN,
                                                 [styles.deleted]: item.docStatus == DocSTATUS.DELETED
                                                 })}>
-                                                    {getDescriptionDocument(item.documentType)}
+                                                    {secondsToDateString(item.date)}
                                             </td>
-                                            <td className={cn(styles.rowSumma, styles.tdSumma)}>{documentTotal(item)}</td>
-                                            <td>{getNameReference(references,item.docValues?.receiverId)}</td>
-                                            <td>{getNameReference(references,item.docValues?.senderId)}</td>
+                                            {/* <td className={styles.rowDate}>{}</td> */}
+                                            <td className={styles.rowDate}>
+                                                <div>{secondsToDateStringWitoutTime(item.docValues?.orderTakingDate)}</div>
+                                                <div>{item.docValues?.orderTakingTime}</div>
+                                            </td>
+                                            <td>
+                                                {getNameReference(references,item.docValues?.receiverId)}  
+                                                <span> {getPhoneReference(references,item.docValues?.receiverId)}</span>
+                                            </td>
                                             <td>{getNameReference(references,item.docValues?.analiticId)}</td>
-                                            <td>{`${item.docValues?.comment ? `(${item.docValues?.comment})`: ''} ${item.docValues?.count ? `(${item.docValues?.count})`: ''}`}</td>
+                                            <td className={cn(styles.rowSumma, styles.tdSumma)}>{numberValue(item.docValues?.count)}</td>
+                                            <td className={cn(styles.rowSumma, styles.tdSumma)}>{documentTotal(item)}</td>
+                                            <td>{getNameReference(references,item.docValues?.senderId)}</td>
+                                            <td>{item.docValues?.orderAdress}</td>
+                                            <td>{`${item.docValues?.comment ? `${item.docValues?.comment}`: ''}`}</td>
                                             <td>{getUserName(item.userId, mainData)}</td>
                                             <td className={styles.rowAction}>
                                                 <IcoTrash className={styles.icoTrash}
@@ -298,7 +354,9 @@ export default function OrderJournal({ className, ...props}:OrderJournalProps):J
                 </div>
             }
             <div className={styles.footer}>
-                {dashboardUsers && <Footer windowFor='document' total={total} count={count} docCount={docCount}/>} 
+                <div>
+                    {dashboardUsers && <Footer label='' windowFor='order' total={total} count={count} docCount={docCount}/>} 
+                </div>
             </div>
             
         </>

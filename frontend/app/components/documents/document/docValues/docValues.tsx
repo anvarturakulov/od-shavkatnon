@@ -64,8 +64,7 @@ export const DocValues = ({ className, ...props }: DocValuesProps): JSX.Element 
             <div className={styles.infoBox}>
                 <div className={styles.dataBox}>
                     <InputForDate label={contentTitle} id='date' ref={firstInputRef}/>
-                    
-                      <Info content={`${currentDocument.id}`} label='№' className={styles.docNumber}/>
+                    <Info content={`${currentDocument.id}`} label='№' className={styles.docNumber}/>
                 </div>
                 
             </div>

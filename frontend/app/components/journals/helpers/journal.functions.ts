@@ -31,6 +31,13 @@ export const getNameReference = (references: any, id: number | undefined | null)
   return 'Аникланмади'
 }
 
+export const getPhoneReference = (references: any, id: number | undefined | null): string => {
+  if (references && references.length > 0) {
+    return references.filter((item: ReferenceModel) => item.id == id)[0]?.refValues?.phone
+  }
+  return '-'
+}
+
 export const getUserName = (id: number, mainData: Maindata): string => {
   const { usersName } = mainData.users
   if (usersName && usersName.length > 0) {

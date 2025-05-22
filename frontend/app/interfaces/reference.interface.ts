@@ -9,7 +9,8 @@ export enum TypeReference {
 
 export enum TypePartners {
     CLIENTS = 'CLIENTS',
-    SUPPLIERS = 'SUPPLIERS'
+    ORDERCLIENTS = 'ORDERCLIENTS',
+    SUPPLIERS = 'SUPPLIERS',
 }
 
 export enum TypeTMZ {

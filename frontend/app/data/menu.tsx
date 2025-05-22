@@ -85,12 +85,7 @@ export const MenuData:Array<MenuItem> = [
                 [UserRoles.HEADCOMPANY, UserRoles.ADMIN, UserRoles.HEADSECTION, UserRoles.GLBUX, 
                  UserRoles.DELIVERY, UserRoles.SELLER, UserRoles.GUEST]
             },
-            { 
-                title: DocumentType.SaleProdByOrder, description:'Махсулот сотуви буюртмачиларга',
-                type: 'document', active: false,
-                roles: 
-                [UserRoles.HEADCOMPANY, UserRoles.ADMIN, UserRoles.HEADSECTION, UserRoles.GLBUX]
-            },
+            
             { 
                 title: DocumentType.ComeProductImport, description:'Махсулотнинг хамкордан кирими',
                 type: 'document', active: false,
@@ -102,11 +97,7 @@ export const MenuData:Array<MenuItem> = [
                 type: 'document', active: false,
                 roles: [UserRoles.HEADCOMPANY, UserRoles.ADMIN, UserRoles.GLBUX, UserRoles.GUEST]
             },
-            { 
-                title: DocumentType.ComeCashFromClients, description:'Пул кирими (буюртмачилардан)',
-                type: 'document', active: false,
-                roles: [UserRoles.HEADCOMPANY, UserRoles.ADMIN, UserRoles.GLBUX, UserRoles.GUEST]
-            },
+            
             { 
                 title: DocumentType.MoveCash, description:'Пул силжиши',
                 type: 'document', active: false,
@@ -147,26 +138,45 @@ export const MenuData:Array<MenuItem> = [
                 title: DocumentType.Order, description:OrderTypeTitle.OPEN, 
                 type: 'order', active:false,
                 roles: 
-                [UserRoles.ADMIN]
+                [UserRoles.HEADCOMPANY, UserRoles.ADMIN, UserRoles.GLBUX, UserRoles.GUEST]
+            },
+            { 
+                title: DocumentType.Order, description:OrderTypeTitle.TOMORROW, 
+                type: 'order', active:false,
+                roles: 
+                [UserRoles.HEADCOMPANY, UserRoles.ADMIN, UserRoles.GLBUX, UserRoles.GUEST]
             },
             { 
                 title: DocumentType.Order, description:OrderTypeTitle.COMPLETED, 
                 type: 'order', active:false,
                 roles: 
-                [UserRoles.ADMIN]
+                [UserRoles.HEADCOMPANY, UserRoles.ADMIN, UserRoles.GLBUX, UserRoles.GUEST]
             },
             { 
                 title: DocumentType.Order, description:OrderTypeTitle.EXPIRED, 
                 type: 'order', active:false,
                 roles: 
-                [UserRoles.ADMIN]
+                [UserRoles.HEADCOMPANY, UserRoles.ADMIN, UserRoles.GLBUX, UserRoles.GUEST]
             },
             { 
                 title: DocumentType.Order, description:OrderTypeTitle.DELETED, 
                 type: 'order', active:false,
                 roles: 
-                [UserRoles.ADMIN]
+                [UserRoles.HEADCOMPANY, UserRoles.ADMIN, UserRoles.GLBUX, UserRoles.GUEST]
             },
+            
+            { 
+                title: DocumentType.ComeCashFromClients, description:'Буюртма - пул кирими',
+                type: 'document', active: false,
+                roles: [UserRoles.HEADCOMPANY, UserRoles.ADMIN, UserRoles.GLBUX, UserRoles.GUEST]
+            },
+            { 
+                title: DocumentType.SaleProdByOrder, description:'Буюртма - сотув',
+                type: 'document', active: false,
+                roles: 
+                [UserRoles.HEADCOMPANY, UserRoles.ADMIN, UserRoles.HEADSECTION, UserRoles.GLBUX]
+            },
+
 
         ]
     },

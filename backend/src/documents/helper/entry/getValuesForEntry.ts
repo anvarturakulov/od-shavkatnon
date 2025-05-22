@@ -400,6 +400,30 @@ export const getValuesForEntry = (doc: Document, newEntry: boolean, hasTable: bo
           count,
           total,
         };
+      
+      case DocumentType.ComeCashFromClients:
+        return {
+          debet: Schet.S50,
+          kredit: Schet.S41,
+          debetFirstSubcontoId: senderId,
+          debetSecondSubcontoId: receiverId,
+          kreditFirstSubcontoId: senderId,
+          kreditSecondSubcontoId: receiverId,
+          count,
+          total,
+        };
+      
+      case DocumentType.SaleProd:
+        return {
+          debet: Schet.S41,
+          kredit: Schet.S28,
+          debetFirstSubcontoId: senderId,
+          debetSecondSubcontoId: receiverId,
+          kreditFirstSubcontoId: senderId,
+          kreditSecondSubcontoId: analiticId,
+          count,
+          total,
+        }
     }
   }
 
