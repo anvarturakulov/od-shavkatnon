@@ -405,15 +405,15 @@ export const getValuesForEntry = (doc: Document, newEntry: boolean, hasTable: bo
         return {
           debet: Schet.S50,
           kredit: Schet.S41,
-          debetFirstSubcontoId: senderId,
-          debetSecondSubcontoId: receiverId,
-          kreditFirstSubcontoId: senderId,
-          kreditSecondSubcontoId: receiverId,
+          debetFirstSubcontoId: receiverId,
+          debetSecondSubcontoId: senderId,
+          kreditFirstSubcontoId: receiverId,
+          kreditSecondSubcontoId: senderId,
           count,
           total,
         };
       
-      case DocumentType.SaleProd:
+      case DocumentType.SaleProdByOrder:
         return {
           debet: Schet.S41,
           kredit: Schet.S28,

@@ -47,9 +47,14 @@ export const getUserName = (id: number, mainData: Maindata): string => {
   return 'Аникланмади'
 }
 
-export const deleteItemDocument = (id: number | undefined, docDate: number| undefined, token: string | undefined, setMainData: Function | undefined, mainData: Maindata) => {
+export const deleteItemDocument = (id: number | undefined, docDate: number| undefined, token: string | undefined, setMainData: Function | undefined, mainData: Maindata, setIsDisabled : Function) => {
   const { user } = mainData.users
   const { contentName } = mainData.window
+
+  setIsDisabled(true);
+  setTimeout(() => {
+    setIsDisabled(false);
+  }, 2000); 
 
   if (docDate == undefined) docDate = 0
   const oneDay = (24 * 60 * 60 * 1000)
@@ -72,7 +77,12 @@ export const deleteItemDocument = (id: number | undefined, docDate: number| unde
   }
 }
 
-export const setProvodkaToDoc = (id: number | undefined, token: string | undefined, docStatus: DocSTATUS, setMainData: Function | undefined, mainData: Maindata, receiverId: number | undefined, senderId: number | undefined) => {
+export const setProvodkaToDoc = (id: number | undefined, token: string | undefined, docStatus: DocSTATUS, setMainData: Function | undefined, mainData: Maindata, receiverId: number | undefined, senderId: number | undefined, setIsDisabled: Function) => {
+  setIsDisabled(true);
+  setTimeout(() => {
+    setIsDisabled(false);
+  }, 2000);
+
   if (docStatus == DocSTATUS.OPEN) {
     let yes = confirm('Хужжатга провдка берамизми')
     const { user } = mainData.users
@@ -123,9 +133,7 @@ export const cleanDocs = (dateStart: number, dateEnd: number, token: string | un
   } else {
     deleteComeProducts(dateStart, dateEnd, token, setMainData)
   }
-
 }
-
 
 export const showDatesDuplicateWindow = (setMainData: Function | undefined) => {
   if (setMainData) {

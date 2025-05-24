@@ -71,18 +71,18 @@ export class ReportsController {
   @Get('/oborotka')
   @UsePipes(new ValidationPipe({ transform: true }))
   async getOborotka(@Query() query: GetEntriesQueryDto) {
-    console.time('Controller');
+    // console.time('Controller');
     const req: QuerySimple = {...requestTransform(query)}
-    const startTime = Date.now()
+    // const startTime = Date.now()
     const report = await this.reportsService.getOborotka(req);
-    const endTime = Date.now()
-    if (report) report.startTime = startTime
-    report.endTime = endTime
+    // const endTime = Date.now()
+    // if (report) report.startTime = startTime
+    // report.endTime = endTime
 
     if (!report) {
       throw new NotFoundException(REPORT_NOT_PREPARE);
     }
-    console.timeEnd('Controller');
+    // console.timeEnd('Controller');
     return report;
   }
 

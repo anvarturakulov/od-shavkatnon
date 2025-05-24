@@ -75,6 +75,7 @@ export default function Journal({ className, ...props}:JournalProps):JSX.Element
     const {mainData, setMainData} = useAppContext();
     const {dateStart, dateEnd} = mainData.window.interval;
     const { journalChechboxs, updateDataForDocumentJournal } = mainData.journal;
+    const [isDisabled, setIsDisabled] = useState(false);
 
     let dateStartForUrl = dateStart
     let dateEndForUrl = dateEnd
@@ -309,13 +310,19 @@ export default function Journal({ className, ...props}:JournalProps):JSX.Element
                                             <td>{`${productForChargeName ? `${productForChargeName} - `: ''}${item.docValues?.comment ? `${item.docValues?.comment} - `: ''} ${item.docValues?.count ? `${item.docValues?.count}`: ''}`}</td>
                                             <td>{getUserName(item.userId, mainData)}</td>
                                             <td className={styles.rowAction}>
-                                                <IcoTrash className={styles.icoTrash}
-                                                onClick = {() => deleteItemDocument(item.id, item.date, token, setMainData, mainData)}
+                                                <IcoTrash className={cn(styles.icoTrash, {
+                                                    [styles.disabled] : isDisabled
+                                                })}
+                                                onClick = {() => deleteItemDocument(item.id, item.date, token, setMainData, mainData, setIsDisabled)}
+                                                disabled = {isDisabled}
                                                 />
                                             </td>
                                             <td className={styles.rowAction}>
-                                                <IcoSave className={styles.icoSave}
-                                                onClick = {() => setProvodkaToDoc(item.id, token ,item.docStatus ,setMainData, mainData, item.docValues?.receiverId, item.docValues?.senderId)}
+                                                <IcoSave className={cn(styles.icoTrash, {
+                                                    [styles.disabled] : isDisabled
+                                                })}
+                                                onClick = {() => setProvodkaToDoc(item.id, token ,item.docStatus ,setMainData, mainData, item.docValues?.receiverId, item.docValues?.senderId, setIsDisabled)}
+                                                disabled = {isDisabled}
                                                 />
                                             </td>
                                         </tr>

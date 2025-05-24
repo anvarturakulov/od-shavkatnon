@@ -54,9 +54,16 @@ export const secondsToDateString = (seconds: number | undefined): String => {
     return ''
 }
 
-export const secondsToDateStringWitoutTime = (seconds: number | undefined): String => {
+export const secondsToDateStringWitoutTime = (seconds: number | undefined): string => {
     if (seconds) {
         return new Date(+seconds).toLocaleDateString()
+    }
+    return ''
+}
+
+export const secondsDateToString = (seconds: number | undefined): string => {
+    if (seconds) {
+        return new Date(+seconds).toDateString()
     }
     return ''
 }

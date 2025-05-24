@@ -59,8 +59,8 @@ export const OborotkaItem = ({className, item, ...props }: OborotkaItemProps) :J
                           <td className={styles.number}>{key+1}</td>
                           <td id='itemName' className={styles.title}>{element?.name}</td>
 
-                          <td></td>
-                          <td></td>
+                          <td>{numberValue(element?.subPOSUM > 0 ? element?.subPOSUM : 0)}</td>
+                          <td>{numberValue(element?.subPOSUM <= 0 ? (-1)*element?.subPOSUM : 0)}</td>
                           <td 
                             onDoubleClick={() => getAnalitic(setMainData, mainData, item?.sectionId, element?.sectionId, DEBETKREDIT.DEBET)}
                             >
@@ -73,8 +73,8 @@ export const OborotkaItem = ({className, item, ...props }: OborotkaItemProps) :J
                               {numberValue(element?.subTKSUM)}
                           </td>
                           
-                          <td></td>
-                          <td></td>
+                          <td>{numberValue(element?.subKOSUM > 0 ? element?.subKOSUM : 0)}</td>
+                          <td>{numberValue(element?.subKOSUM <= 0 ? (-1)*element?.subKOSUM : 0)}</td>
                         </tr>
                     )
                 })

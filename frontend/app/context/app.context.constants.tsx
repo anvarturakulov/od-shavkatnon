@@ -76,7 +76,8 @@ export const defaultDatesForDuplicateDocs:DatesForDuplicateDocs = {
 export const defaultJournalCheckbox:JournalCheckboxs = {
     charges: false,
     workers: false,
-    partners: false
+    partners: false,
+    order: false,
 }
 
 export const defaultMainData: Maindata = {

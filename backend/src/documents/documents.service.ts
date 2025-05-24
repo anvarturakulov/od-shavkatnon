@@ -72,6 +72,46 @@ export class DocumentsService {
     return documents;
   }
 
+  
+async getAllOrdersForDate(order:boolean, dateStart: number, dateEnd: number) {
+    
+    let whereClouse:any = {
+      documentType: DocumentType.Order,
+      date: {
+        [Op.gte]: dateStart,
+        [Op.lte]: dateEnd,
+      },
+    };
+
+    const include:any = [
+      { model: DocValues },
+      { model: DocTableItems },
+    ];
+
+    if (order == true) {
+      whereClouse = {
+        documentType: DocumentType.Order,
+      };
+      include[0] = {
+        model: DocValues,
+        where: {
+          orderTakingDate: {
+            [Op.gte]: dateStart,
+            [Op.lte]: dateEnd,
+          },
+        },
+      };
+    }
+
+    const documents = await this.documentRepository.findAll({
+      where: whereClouse,
+      include,
+    });
+
+    return documents;
+  }
+
+
   async getAllDocsByDate(dateStart: number, dateEnd: number) {
     const documents = await this.documentRepository.findAll({
       where: {

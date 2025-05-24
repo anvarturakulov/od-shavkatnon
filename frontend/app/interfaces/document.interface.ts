@@ -138,4 +138,5 @@ export interface JournalCheckboxs {
     charges: boolean,
     workers: boolean,
     partners: boolean,
+    order: boolean,
 }

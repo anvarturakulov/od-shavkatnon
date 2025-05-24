@@ -38,16 +38,20 @@ export const oborotkaItem = async (
   if (secondList && secondList.length) {
     for (const secondSubcontoId of secondList) {
       const subPromises = [
+        query(schet, TypeQuery.POSUM, startDate, endDate, firstSubcontoId, secondSubcontoId, null, stocksService, oborotsService),
+        query(schet, TypeQuery.KOSUM, startDate, endDate, firstSubcontoId, secondSubcontoId, null, stocksService, oborotsService),
         query(schet, TypeQuery.TDSUM, startDate, endDate, firstSubcontoId, secondSubcontoId, null, stocksService, oborotsService),
         query(schet, TypeQuery.TKSUM, startDate, endDate, firstSubcontoId, secondSubcontoId, null, stocksService, oborotsService),
       ];
       
-      const [subTDSUM, subTKSUM] = await Promise.all(subPromises);
+      const [subPOSUM, subKOSUM, subTDSUM, subTKSUM] = await Promise.all(subPromises);
       
-      if (subTDSUM || subTKSUM ) {
+      if (subTDSUM || subTKSUM || subKOSUM || subPOSUM) {
         let subElement = {
           name: getName(data, secondSubcontoId),
           sectionId: secondSubcontoId,
+          subPOSUM,
+          subKOSUM,
           subTDSUM,
           subTKSUM,
         };
@@ -64,7 +68,7 @@ export const oborotkaItem = async (
   // const [TDSUM, TKSUM] = await Promise.all(topPromises);
   
 
-  if (!POSUM && !POSUM && !TDSUM && !TKSUM) return {};
+  if (!POSUM && !POSUM && !TDSUM && !TKSUM && subResults.length == 0) return {};
 
   let element = {
     name: getName(data, firstSubcontoId),

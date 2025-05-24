@@ -46,6 +46,8 @@ export const oborotkaAll = async (
     
     let result:any[] = [];
     let subcontosList = getSubcontosList(entrys, schet)
+    // console.log(schet)
+    // console.log(subcontosList)
 
     let oborotkaResult = await oborotka(data, subcontosList, startDate, endDate, schet, stocksService, oborotsService)
     result.push(oborotkaResult);

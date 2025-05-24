@@ -92,13 +92,13 @@ export class ReportsService {
 
     async getOborotka(queryOborotka: QuerySimple) {
         let references = await this.referencesService.getAllReferences();
-        console.time('Get Entries');
+        // console.time('Get Entries');
         let entrys = await this.entriesService.getAllEntries();
-        console.timeEnd('Get Entries');
+        // console.timeEnd('Get Entries');
         let { startDate, endDate, schet } = queryOborotka;
-        console.time('Oborotka');
+        // console.time('Oborotka');
         let result = oborotkaAll(references, entrys, startDate, endDate, schet, this.stocksService, this.oborotsService)
-        console.timeEnd('Oborotka');
+        // console.timeEnd('Oborotka');
         return result
     }
 

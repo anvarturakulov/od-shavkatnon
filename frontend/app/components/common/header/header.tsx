@@ -63,6 +63,15 @@ export default function Header({ windowFor ,className, count, total, ...props }:
         {
             showAddBtn = false
         } 
+    
+    if (contentTitle == OrderTypeTitle.TOMORROW) return (
+        <div className={styles.box}>
+            <div className={cn(styles.title, 
+                            {[styles.newWindow] : (isNewReference|| isNewDocument)})}
+                >{contentTitle} { ( showReferenceWindow || showDocumentWindow ) ? strFirst : strSecond }
+            </div>
+        </div>
+    )
 
     return (
         <>

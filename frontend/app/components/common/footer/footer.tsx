@@ -7,10 +7,6 @@ export default function Footer({ windowFor ,className, count, total, docCount, l
     
     return (
         <div className={styles.box}>
-            { windowFor == 'order' &&
-                <div>{label}</div>
-            }
-
             {
                 count!=undefined && count>0 && 
                 <div>{`Сон: ${numberValue(count)}`}</div>

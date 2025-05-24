@@ -16,10 +16,11 @@ import Footer from '../../common/footer/footer'
 import { numberValue } from '@/app/service/common/converters'
 import { dashboardUsersList, UserRoles } from '@/app/interfaces/user.interface'
 import { Doc } from '../../documents/document/doc/doc'
-import { secondsToDateString, secondsToDateStringWitoutTime } from '../../documents/document/doc/helpers/doc.functions'
+import { secondsDateToString, secondsToDateString, secondsToDateStringWitoutTime } from '../../documents/document/doc/helpers/doc.functions'
 import { OrderJournalProps } from './orderJournal.props'
 import { defineUrlTypeForOrder } from '@/app/service/orders/defineUrlTypeForOrder';
 import { OrderTypeTitle } from '@/app/interfaces/order.interface';
+import { CheckBoxInFooter } from '../helpers/checkBoxInFooter/checkBoxInFooter';
 
 interface FilterForJournal {
     takingDate: string,
@@ -66,6 +67,7 @@ export default function OrderJournal({ className, ...props}:OrderJournalProps):J
     const {mainData, setMainData} = useAppContext();
     const {dateStart, dateEnd} = mainData.window.interval;
     const { updateDataForDocumentJournal } = mainData.journal;
+    const { journalChechboxs } = mainData.journal;
 
     let dateStartForUrl = dateStart
     let dateEndForUrl = dateEnd
@@ -81,14 +83,17 @@ export default function OrderJournal({ className, ...props}:OrderJournalProps):J
 
     const { user } = mainData.users;
     const { showDocumentWindow, contentName, contentTitle } = mainData.window;
-    console.log(contentTitle)
+    // console.log(contentTitle)
     const role = user?.role;
     const dashboardUsers = role && dashboardUsersList.includes(role);
 
     const token = user?.token;
-    const urlType = defineUrlTypeForOrder(contentName)
     
-    let url = process.env.NEXT_PUBLIC_DOMAIN+'/api/documents/byTypeForDate'+'?documentType='+DocumentType.Order+'&dateStart='+dateStartForUrl+'&dateEnd='+dateEndForUrl;
+    let url = process.env.NEXT_PUBLIC_DOMAIN+'/api/documents/byOrderDocumentsForDate'+'?order='+journalChechboxs.order+'&dateStart='+dateStartForUrl+'&dateEnd='+dateEndForUrl;
+    
+    if (contentTitle == OrderTypeTitle.TOMORROW) {
+        url = process.env.NEXT_PUBLIC_DOMAIN+'/api/documents/byType/'+DocumentType.Order;
+    }
     
     const urlReferences = process.env.NEXT_PUBLIC_DOMAIN+'/api/references/all/';
 
@@ -187,10 +192,33 @@ export default function OrderJournal({ className, ...props}:OrderJournalProps):J
                     }
                 })
                 .filter((item: DocumentModel) => {
-                    if (contentTitle == OrderTypeTitle.OPEN) return item.docStatus == DocSTATUS.OPEN
-                    if (contentTitle == OrderTypeTitle.TOMORROW) return item.docStatus == DocSTATUS.OPEN
+                    if (contentTitle == OrderTypeTitle.OPEN) {
+                        const dateOrderInStr = secondsDateToString(item.docValues?.orderTakingDate)
+                        const dateOrderInStartDay = Date.parse(dateOrderInStr)
+                        const dateNowInStr = secondsDateToString(Date.now())
+                        const dateNowInStartDay = Date.parse(dateNowInStr)
+                        return (item.docStatus == DocSTATUS.OPEN && dateOrderInStartDay >= dateNowInStartDay)
+
+                        // return item.docStatus == DocSTATUS.OPEN
+                    }
+                    if (contentTitle == OrderTypeTitle.TOMORROW) {
+                        const dateOrderInStr = secondsDateToString(item.docValues?.orderTakingDate)
+                        const dateOrderInStartDay = Date.parse(dateOrderInStr)
+                        const dateNowInStr = secondsDateToString(Date.now())
+                        const dateNowInStartDay = Date.parse(dateNowInStr)
+                        return (item.docStatus == DocSTATUS.OPEN && (dateOrderInStartDay - dateNowInStartDay) == 86400000)
+
+                    }
                     if (contentTitle == OrderTypeTitle.COMPLETED) return item.docStatus == DocSTATUS.PROVEDEN
                     if (contentTitle == OrderTypeTitle.DELETED) return item.docStatus == DocSTATUS.DELETED
+                    if (contentTitle == OrderTypeTitle.EXPIRED) {
+                        const dateOrderInStr = secondsDateToString(item.docValues?.orderTakingDate)
+                        const dateOrderInStartDay = Date.parse(dateOrderInStr)
+                        const dateNowInStr = secondsDateToString(Date.now())
+                        const dateNowInStartDay = Date.parse(dateNowInStr)
+                        return (item.docStatus == DocSTATUS.OPEN && dateOrderInStartDay < dateNowInStartDay)
+
+                    }
                     
                 })
                 .filter((item: DocumentModel) => {
@@ -204,10 +232,7 @@ export default function OrderJournal({ className, ...props}:OrderJournalProps):J
                     const commentInLowerCase = comment.toLowerCase();
                     const itemSender = getNameReference(references, item.docValues?.senderId);
                     const itemReceiver = getNameReference(references, item.docValues?.receiverId)+' '+getPhoneReference(references, item.docValues?.receiverId);
-                    const itemStatus = item.docStatus == DocSTATUS.OPEN ? 'ОЧИК':
-                                       item.docStatus == DocSTATUS.PROVEDEN ? 'БАЖАРИЛГАН' : 'УЧИРИЛГАН' 
-                    // const itemPhone = getPhoneReference(references, item.docValues?.receiverId);
-    
+                    
                     if (user !== 'Фойдаланувчи' && !userName.includes(userLowerCase)) return false;
                     if (comment !== 'Изох' && !bigString.includes(commentInLowerCase)) return false;
                     if (sender !== 'Берувчи' && !(itemSender && itemSender.toLowerCase().includes(sender.toLowerCase()))) return false;
@@ -315,7 +340,8 @@ export default function OrderJournal({ className, ...props}:OrderJournalProps):J
                                             <td className={styles.rowId}>{item.id}</td>
                                             <td className={cn(styles.rowDate, {
                                                 [styles.proveden]: item.docStatus == DocSTATUS.PROVEDEN,
-                                                [styles.deleted]: item.docStatus == DocSTATUS.DELETED
+                                                [styles.deleted]: item.docStatus == DocSTATUS.DELETED,
+                                                [styles.expired]: contentTitle == OrderTypeTitle.EXPIRED
                                                 })}>
                                                     {secondsToDateString(item.date)}
                                             </td>
@@ -324,8 +350,8 @@ export default function OrderJournal({ className, ...props}:OrderJournalProps):J
                                                 <div>{secondsToDateStringWitoutTime(item.docValues?.orderTakingDate)}</div>
                                                 <div>{item.docValues?.orderTakingTime}</div>
                                             </td>
-                                            <td>
-                                                {getNameReference(references,item.docValues?.receiverId)}  
+                                            <td> {item.docValues?.receiverId}
+                                                {getNameReference(references,item.docValues?.receiverId)}   
                                                 <span> {getPhoneReference(references,item.docValues?.receiverId)}</span>
                                             </td>
                                             <td>{getNameReference(references,item.docValues?.analiticId)}</td>
@@ -354,9 +380,15 @@ export default function OrderJournal({ className, ...props}:OrderJournalProps):J
                 </div>
             }
             <div className={styles.footer}>
-                <div>
-                    {dashboardUsers && <Footer label='' windowFor='order' total={total} count={count} docCount={docCount}/>} 
-                </div>
+                {
+                dashboardUsers && 
+                
+                <Footer label='' windowFor='order' total={total} count={count} docCount={docCount}/>
+                }
+                {
+                    contentTitle != OrderTypeTitle.TOMORROW &&
+                    <CheckBoxInFooter id='order' label='Буюртмани олиш санаси буйича интервал'/>                
+                }
             </div>
             
         </>
