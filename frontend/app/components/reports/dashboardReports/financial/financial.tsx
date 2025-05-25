@@ -27,6 +27,7 @@ export const Financial = ({ className, data, ...props }: FinancialProps): JSX.El
 
     const totals = {
       incomeSale: total('incomeSale', financialData),
+      incomeOrder: total('incomeOrder', financialData) ,
       incomeOther: total('incomeOther', financialData),
       outZP: total('outZP', financialData),
       outPartner: total('outPartner', financialData),
@@ -36,7 +37,7 @@ export const Financial = ({ className, data, ...props }: FinancialProps): JSX.El
       endBalans: totalByKey('endBalans', cashData),
     };
 
-    const incomeAll = totals.incomeSale + totals.incomeOther;
+    const incomeAll = totals.incomeSale + totals.incomeOther + totals.incomeOrder;
     const outAll = totals.outZP + totals.outPartner + totals.outFounder + totals.outCharge;
 
     const innerReport = financialData.find((item: any) => item?.innerReportType === currentFinancialInnerReportType);
@@ -67,6 +68,12 @@ export const Financial = ({ className, data, ...props }: FinancialProps): JSX.El
               >
                 <th>Корхонага кирган тирик савдо пули</th>
                 <th className={styles.totalTd}>{numberValue(totals.incomeSale)}</th>
+              </tr>
+              <tr
+                onDoubleClick={() => setMainData && setMainData('currentFinancialInnerReportType', 'incomeOrder')}
+              >
+                <th>Корхонага кирган тирик заказлар пули</th>
+                <th className={styles.totalTd}>{numberValue(totals.incomeOrder)}</th>
               </tr>
               <tr
                 onDoubleClick={() => setMainData && setMainData('currentFinancialInnerReportType', 'incomeOther')}

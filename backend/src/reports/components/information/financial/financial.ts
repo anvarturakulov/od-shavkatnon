@@ -16,6 +16,7 @@ export const financial = async (
         outIncome(data, startDate, endDate, Schet.S20, Schet.S50, TypeReference.CHARGES, 'outCharge', 'out', true, oborotsService),
         outIncome(data, startDate, endDate, Schet.S40, Schet.S28, TypeReference.STORAGES, 'incomeSale', 'income', false, oborotsService),
         outIncome(data, startDate, endDate, Schet.S50, Schet.S60, TypeReference.PARTNERS, 'incomeOther', 'income', false, oborotsService),
+        outIncome(data, startDate, endDate, Schet.S41, Schet.S28, TypeReference.STORAGES, 'incomeOrder', 'income', false, oborotsService),
     ];
     
     const results = await Promise.all(promises);

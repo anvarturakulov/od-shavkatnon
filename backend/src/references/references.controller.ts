@@ -24,6 +24,16 @@ export class ReferencesController {
         return refs
     }
 
+    @ApiOperation({summary: 'Получение всех справочников для журнала заказов'})
+    @ApiResponse({status: 200, type: [Reference]})
+    @Roles('ALL')
+    @UseGuards(RolesGuard)
+    @Get('allForOrdersJournal')
+    getAllForOrdersJournal() {
+        const refs = this.referencesService.getAllReferencesForOrders()
+        return refs
+    }
+
     @ApiOperation({summary: 'Получение справочников по типу'})
     @ApiResponse({status: 200, type: [Reference]})
     @Roles('ALL')

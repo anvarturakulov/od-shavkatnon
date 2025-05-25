@@ -54,6 +54,7 @@ export const sectionItem = async (
       queryKor(Schet.S28, Schet.S60, TypeQuery.ODK, startDate, endDate, currentSectionId, item.id, null, oborotsService), // productionImportCol
       queryKor(Schet.S20, Schet.S28, TypeQuery.OKK, startDate, endDate, currentSectionId, item.id, null, oborotsService), // OBKOLK2028
       queryKor(Schet.S40, Schet.S28, TypeQuery.OKK, startDate, endDate, currentSectionId, item.id, null, oborotsService), // OBKOLK4028
+      queryKor(Schet.S41, Schet.S28, TypeQuery.OKK, startDate, endDate, currentSectionId, item.id, null, oborotsService), // OBKOLK4128
       // query(Schet.S28, TypeQuery.TDKOL, startDate, endDate, currentSectionId, null, null, stocksService, oborotsService), // TDKOL
       // query(Schet.S28, TypeQuery.TKKOL, startDate, endDate, currentSectionId, null, null, stocksService, oborotsService), // TKKOL
     ];
@@ -67,6 +68,7 @@ export const sectionItem = async (
       productionImportCol,
       OBKOLK2028,
       OBKOLK4028,
+      OBKOLK4128,
       
     ] = await Promise.all(promises);
     
@@ -79,6 +81,7 @@ export const sectionItem = async (
       prodCountNon: OBKOLD2820,
       moveIncomeCountNon: OBKOLD2828 + productionImportCol,
       saleCountNon: OBKOLK4028,
+      saleCountOrder: OBKOLK4128, 
       maydaSavdoCount,
       brakCountNon: OBKOLK2028,
       moveOutNon: OBKOLK2828,

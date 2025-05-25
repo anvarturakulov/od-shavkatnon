@@ -46,6 +46,13 @@ export const SectionItem = ({className, item, sectionType, ...props }: SectionIt
                                     </div>
                                 </div>
                                 <div className={cn(styles.row, styles.rowCount)}>
+                                    <div className={styles.title}>Заказга берилган нон</div>
+                                    <div>
+                                        {numberValue(element?.saleCountOrder)}
+                                         
+                                    </div>
+                                </div>
+                                <div className={cn(styles.row, styles.rowCount)}>
                                     <div className={styles.title}>Брак(истем.) нон</div>
                                     <div>{numberValue(element?.brakCountNon)}</div>
                                 </div>

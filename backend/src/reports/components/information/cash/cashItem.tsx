@@ -17,6 +17,7 @@ export const cashItem = async (
     query(Schet.S50, TypeQuery.POSUM, startDate, endDate, currentSectionId, null, null, stocksService, oborotsService), // POSUM
     query(Schet.S50, TypeQuery.KOSUM, startDate, endDate, currentSectionId, null, null, stocksService, oborotsService), // KOSUM
     queryKor(Schet.S50, Schet.S40, TypeQuery.ODS, startDate, endDate, currentSectionId, null, null, oborotsService), // TRADEINCOME
+    queryKor(Schet.S50, Schet.S41, TypeQuery.ODS, startDate, endDate, currentSectionId, null, null, oborotsService), // ORDERINCOME
     queryKor(Schet.S50, Schet.S60, TypeQuery.ODS, startDate, endDate, currentSectionId, null, null, oborotsService), // TRADEINCOME
     queryKor(Schet.S50, Schet.S50, TypeQuery.ODS, startDate, endDate, currentSectionId, null, null, oborotsService), // MOVEINCOME
     queryKor(Schet.S50, Schet.S50, TypeQuery.OKS, startDate, endDate, currentSectionId, null, null, oborotsService), // MOVEOUT
@@ -30,6 +31,7 @@ export const cashItem = async (
     POSUM,
     KOSUM,
     TRADEINCOME40,
+    ORDERINCOME41,
     TRADEINCOME60,
     MOVEINCOME,
     MOVEOUT,
@@ -45,9 +47,9 @@ export const cashItem = async (
   return {
     section: title,
     startBalans: POSUM,
-    sale: TRADEINCOME40+TRADEINCOME60,
+    sale: TRADEINCOME40+TRADEINCOME60 + ORDERINCOME41,
     moveIncome: MOVEINCOME,
-    allIncome: TRADEINCOME40 + MOVEINCOME + TRADEINCOME60,
+    allIncome: TRADEINCOME40 + MOVEINCOME + TRADEINCOME60 + ORDERINCOME41,
     charges: CHARGES,
     forPartner: FORPARTNERS,
     moveOut: MOVEOUT,

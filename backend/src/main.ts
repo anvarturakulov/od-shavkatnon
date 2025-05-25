@@ -13,7 +13,6 @@ async function start() {
       origin: [
         "https://osondastur.uz",
         "http://localhost:3000",
-        "http://localhost:3001",
         "http://localhost:5000",
         "http://localhost:7000",
       ],

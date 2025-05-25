@@ -102,7 +102,8 @@ export const foydaSubItem = async (
     const brakCount = await queryKor(Schet.S20, Schet.S28, TypeQuery.OKK, startDate, endDate, sectionId, productId, null, oborotsService);
     const moveOutCount = await queryKor(Schet.S28, Schet.S28, TypeQuery.OKK, startDate, endDate, sectionId, productId, null, oborotsService);
     const moveIncomeCount = await queryKor(Schet.S28, Schet.S28, TypeQuery.ODK, startDate, endDate, sectionId, productId, null, oborotsService);
-    const sale = await queryKor(Schet.S40, Schet.S28, TypeQuery.OKS, startDate, endDate, sectionId, productId, null, oborotsService);
+    const sale = await queryKor(Schet.S40, Schet.S28, TypeQuery.OKS, startDate, endDate, sectionId, productId, null, oborotsService) + 
+                 await queryKor(Schet.S41, Schet.S28, TypeQuery.OKS, startDate, endDate, sectionId, productId, null, oborotsService)    ;
 
     const countDeleviry = (countOutToDelivery-countIncomeFromDelivery) <= 0 ? 0 : (countOutToDelivery-countIncomeFromDelivery)   
     const saleCountWithOutMove = startCount + productionCount - brakCount - moveOutCount + moveIncomeCount - endCount;

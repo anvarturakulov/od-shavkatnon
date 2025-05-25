@@ -5,6 +5,7 @@ import IcoSave from './ico/save.svg'
 import { useEffect, useMemo, useState } from 'react';
 import { useAppContext } from '@/app/context/app.context';
 import useSWR from 'swr';
+import { mutate } from 'swr';
 import cn from 'classnames';
 import Header from '../../common/header/header';
 import { getDataForSwr } from '@/app/service/common/getDataForSwr';
@@ -96,16 +97,21 @@ export default function OrderJournal({ className, ...props}:OrderJournalProps):J
         url = process.env.NEXT_PUBLIC_DOMAIN+'/api/documents/byType/'+DocumentType.Order;
     }
     
-    const urlReferences = process.env.NEXT_PUBLIC_DOMAIN+'/api/references/all/';
-
-    const { data : documents, mutate } = useSWR(url, (url) => getDataForSwr(url, token));
+    const urlReferences = process.env.NEXT_PUBLIC_DOMAIN+'/api/references/allForOrdersJournal/';
+    const { data : documents, mutate: mutateDocs } = useSWR(url, (url) => getDataForSwr(url, token));
     const { data : references, mutate: mutateReferences } = useSWR(urlReferences, (urlReferences) => getDataForSwr(urlReferences, token));
     
     useEffect(() => {
-        mutate()
-        mutateReferences()
+        mutateDocs()
+        mutateReferences();
         setMainData && setMainData('updateDataForDocumentJournal', false);
     }, [showDocumentWindow, updateDataForDocumentJournal])
+
+    // useEffect(() => {
+    //     mutateReferences()
+    // }, [])
+
+
     
     const changeFilter = (target: string) => {
         let title: string = '';
@@ -351,7 +357,7 @@ export default function OrderJournal({ className, ...props}:OrderJournalProps):J
                                                 <div>{secondsToDateStringWitoutTime(item.docValues?.orderTakingDate)}</div>
                                                 <div>{item.docValues?.orderTakingTime}</div>
                                             </td>
-                                            <td> {item.docValues?.receiverId}
+                                            <td> 
                                                 {getNameReference(references,item.docValues?.receiverId)}   
                                                 <span> {getPhoneReference(references,item.docValues?.receiverId)}</span>
                                             </td>
