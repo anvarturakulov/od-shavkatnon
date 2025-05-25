@@ -38,6 +38,12 @@ export class ReferencesService implements OnModuleInit {
     return references
   }
 
+  // Получение всех references
+  async getAllReferencesFromBase(): Promise<Reference[]> {
+    const references = await this.referenceRepository.findAll({ include: [RefValues] });
+    return references
+  }
+
   // Получение deliverys из кэша
   async getDeliverys(): Promise<Reference[]> {
     return this.refList.filter(ref => ref.refValues?.typeSection === 'DELIVERY');
