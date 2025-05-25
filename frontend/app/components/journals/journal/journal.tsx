@@ -101,7 +101,11 @@ export default function Journal({ className, ...props}:JournalProps):JSX.Element
         let url = process.env.NEXT_PUBLIC_DOMAIN+'/api/documents/all/';
     }
 
-    const urlReferences = process.env.NEXT_PUBLIC_DOMAIN+'/api/references/all/';
+    let urlReferences = process.env.NEXT_PUBLIC_DOMAIN+'/api/references/all/';
+
+    if (contentName == DocumentType.ComeCashFromClients || contentName == DocumentType.SaleProdByOrder) {
+        urlReferences = process.env.NEXT_PUBLIC_DOMAIN+'/api/references/allForOrdersJournal/';
+    }
 
     const { data : documents, mutate } = useSWR(url, (url) => getDataForSwr(url, token));
     const { data : references, mutate: mutateReferences } = useSWR(urlReferences, (urlReferences) => getDataForSwr(urlReferences, token));
