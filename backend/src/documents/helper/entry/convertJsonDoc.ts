@@ -49,6 +49,19 @@ export const convertJsonDocs = (jsonRow:any):UpdateCreateDocumentDto => {
         orderWithDeleviry: false,
         orderAdress: '',
         orderStatus: OrderStatus.OPEN,
+        cashFromPartnerSecond: 0,
+        cashFromPartnerThird: 0,
+        orderTakingDateSecond: BigInt(0),
+        orderTakingTimeSecond: '',
+        orderTakingDateThird: BigInt(0),
+        orderTakingTimeThird: '',
+        countFirst: 0,
+        countSecond: 0,
+        countThird: 0,
+        saleFirst: 0,
+        saleSecond: 0,
+        saleThird: 0,    
+
         
     }
     let doc:UpdateCreateDocumentDto = {
