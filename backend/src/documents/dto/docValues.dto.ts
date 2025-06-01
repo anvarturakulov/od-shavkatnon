@@ -68,10 +68,17 @@ export class DocValuesDto {
     @IsNumber({}, {message: 'cashFromPartner - должно быть номером'})
     cashFromPartner: number;
 
+    @ApiProperty({example:'150000', description: 'Полученные деньги с партнера'})
+    @IsNumber({}, {message: 'cashFromPartnerSecond - должно быть номером'})
+    cashFromPartnerSecond: number;
+
+    @ApiProperty({example:'150000', description: 'Полученные деньги с партнера'})
+    @IsNumber({}, {message: 'cashFromPartnerThird - должно быть номером'})
+    cashFromPartnerThird: number;
+
     @ApiProperty({example:'....', description: 'Комментарий к документу'})
     @IsString({message: 'comment - должен быть строкой'})
     comment: string;
-
 
     @ApiProperty({example:'1738368000000', description: 'Дата получения заказа в миллисекундах'})
     @IsInt({message: 'date - должен быть натуральным числом'})
@@ -81,6 +88,22 @@ export class DocValuesDto {
     @IsString({message: 'orderTakingTime - должен быть строкой'})
     orderTakingTime: string;
     
+     @ApiProperty({example:'1738368000000', description: 'Дата получения заказа в миллисекундах'})
+    @IsInt({message: 'date - должен быть натуральным числом'})
+    orderTakingDateSecond: bigint;
+    
+    @ApiProperty({example:'....', description: 'Время получения заказа'})
+    @IsString({message: 'orderTakingTime - должен быть строкой'})
+    orderTakingTimeSecond: string;
+
+     @ApiProperty({example:'1738368000000', description: 'Дата получения заказа в миллисекундах'})
+    @IsInt({message: 'date - должен быть натуральным числом'})
+    orderTakingDateThird: bigint;
+    
+    @ApiProperty({example:'....', description: 'Время получения заказа'})
+    @IsString({message: 'orderTakingTime - должен быть строкой'})
+    orderTakingTimeThird: string;
+
     @ApiProperty({example:'true', description: 'Заказ с доставкой'})
     @IsBoolean({message: 'orderWithDeleviry Значание должно быть TRUE или FALSE'})
     orderWithDeleviry: boolean;
@@ -92,4 +115,28 @@ export class DocValuesDto {
     @ApiProperty({example:'OPEN', description: 'Тип статуса заказа - ( OPEN || DELETED || COMPLETED || ERROR )'})
     @IsEnum(OrderStatus, {message: 'orderStatus - должен быть из списка типов партнеров'})
     orderStatus: OrderStatus
+
+    @ApiProperty({example:'10', description: 'Количество 1'})
+    @IsNumber({}, {message: 'count 1 - должно быть номером'})
+    countFirst: number;
+
+    @ApiProperty({example:'10', description: 'Количество 2'})
+    @IsNumber({}, {message: 'count 2 - должно быть номером'})
+    countSecond: number;
+
+    @ApiProperty({example:'10', description: 'Количество 3'})
+    @IsNumber({}, {message: 'count 3 - должно быть номером'})
+    countThird: number;
+
+    @ApiProperty({example:'10', description: 'Количество 1'})
+    @IsNumber({}, {message: 'saleFirst - должно быть номером'})
+    saleFirst: number;
+
+    @ApiProperty({example:'10', description: 'Количество 2'})
+    @IsNumber({}, {message: 'saleSecond - должно быть номером'})
+    saleSecond: number;
+
+    @ApiProperty({example:'10', description: 'Количество 3'})
+    @IsNumber({}, {message: 'saleThird - должно быть номером'})
+    saleThird: number;
 }

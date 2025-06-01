@@ -24,11 +24,23 @@ export interface DocValuesCreationAttrs {
     price: number
     total: number
     cashFromPartner: number,
+    cashFromPartnerSecond: number,
+    cashFromPartnerThird: number,
     orderTakingDate: bigint,
     orderTakingTime: string,
+    orderTakingDateSecond: bigint,
+    orderTakingTimeSecond: string,
+    orderTakingDateThird: bigint,
+    orderTakingTimeThird: string,
     orderWithDeleviry: boolean,
     orderAdress: string,
     orderStatus: OrderStatus,
+    countFirst: number,
+    countSecond: number,
+    countThird: number,
+    saleFirst: number,
+    saleSecond: number,
+    saleThird: number,
 }
 
 @Table({tableName: 'docvalues'})
@@ -121,6 +133,14 @@ export class DocValues extends Model<DocValues, DocValuesCreationAttrs> {
     @ApiProperty({example:'150000', description: 'Полученные деньги с партнера'})
     @Column({type: DataType.FLOAT})
     cashFromPartner: number;
+    
+    @ApiProperty({example:'150000', description: 'Полученные деньги с партнера'})
+    @Column({type: DataType.FLOAT})
+    cashFromPartnerSecond: number;
+
+    @ApiProperty({example:'150000', description: 'Полученные деньги с партнера'})
+    @Column({type: DataType.FLOAT})
+    cashFromPartnerThird: number;
 
     @ApiProperty({example:'....', description: 'Комментарий к документу'})
     @Column({type: DataType.STRING})
@@ -134,6 +154,22 @@ export class DocValues extends Model<DocValues, DocValuesCreationAttrs> {
     @Column({type: DataType.STRING})
     orderTakingTime: string;
 
+    @ApiProperty({example:'1738368000000', description: 'Дата получения заказа в миллисекундах'})
+    @Column({type: DataType.BIGINT})
+    orderTakingDateSecond: bigint;
+
+    @ApiProperty({example:'....', description: 'Время получения заказа'})
+    @Column({type: DataType.STRING})
+    orderTakingTimeSecond: string;
+
+    @ApiProperty({example:'1738368000000', description: 'Дата получения заказа в миллисекундах'})
+    @Column({type: DataType.BIGINT})
+    orderTakingDateThird: bigint;
+
+    @ApiProperty({example:'....', description: 'Время получения заказа'})
+    @Column({type: DataType.STRING})
+    orderTakingTimeThird: string;
+
     @ApiProperty({example:'true', description: 'Заказ с доставкой'})
     @Column({type: DataType.BOOLEAN, defaultValue: false})
     orderWithDeleviry: boolean;
@@ -145,5 +181,29 @@ export class DocValues extends Model<DocValues, DocValuesCreationAttrs> {
     @ApiProperty({example:'OPEN', description: 'Тип статуса заказа - ( OPEN || DELETED || COMPLETED || ERROR )'})
     @Column({type: DataType.ENUM(...Object.values(OrderStatus))})
     orderStatus: OrderStatus
+
+    @ApiProperty({example:'10', description: 'Количество 1'})
+    @Column({type: DataType.FLOAT})
+    countFirst: number;
+
+    @ApiProperty({example:'10', description: 'Количество 2'})
+    @Column({type: DataType.FLOAT})
+    countSecond: number;
+
+    @ApiProperty({example:'10', description: 'Количество 3'})
+    @Column({type: DataType.FLOAT})
+    countThird: number;
+
+    @ApiProperty({example:'10', description: 'Количество 1'})
+    @Column({type: DataType.FLOAT})
+    saleFirst: number;
+
+    @ApiProperty({example:'10', description: 'Количество 2'})
+    @Column({type: DataType.FLOAT})
+    saleSecond: number;
+
+    @ApiProperty({example:'10', description: 'Количество 3'})
+    @Column({type: DataType.FLOAT})
+    saleThird: number;
 
 }

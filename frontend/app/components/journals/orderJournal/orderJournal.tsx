@@ -296,12 +296,23 @@ export default function OrderJournal({ className, ...props}:OrderJournalProps):J
                                         [styles.red]: filter.count != 'Сон'
                                     })}
                                     >{filter.count}</th>
+                                
+                                <th key='71'
+                                    className={cn(styles.rowSumma)}
+                                    >Берилган сон
+                                </th>
+
                                 <th key='8' 
                                     onDoubleClick={() => changeFilter('summa')} 
                                     className={cn(styles.rowSumma, {
                                         [styles.red]: filter.summa != 'Сумма'
                                     })}
                                     >{filter.summa}
+                                </th>
+
+                                <th key='81' 
+                                    className={cn(styles.rowSumma)}
+                                    >Олинган пул
                                 </th>
 
                                 <th key='10' 
@@ -311,7 +322,7 @@ export default function OrderJournal({ className, ...props}:OrderJournalProps):J
                                     })}
                                     >{filter.sender}
                                 </th>
-                                <th key='11'>Етказиб бериш</th>
+                                {/* <th key='11'>Етказиб бериш</th> */}
                                 <th key='12' 
                                     onDoubleClick={() => changeFilter('comment')}
                                     className={cn(styles.longRow, {
@@ -363,9 +374,11 @@ export default function OrderJournal({ className, ...props}:OrderJournalProps):J
                                             </td>
                                             <td>{getNameReference(references,item.docValues?.analiticId)}</td>
                                             <td className={cn(styles.rowSumma, styles.tdSumma)}>{numberValue(item.docValues?.count)}</td>
+                                            <td className={cn(styles.rowSumma, styles.tdSumma)}>{numberValue(item.docValues?.saleFirst+item.docValues?.saleSecond+item.docValues?.saleThird)}</td>
                                             <td className={cn(styles.rowSumma, styles.tdSumma)}>{documentTotal(item)}</td>
+                                            <td className={cn(styles.rowSumma, styles.tdSumma)}>{numberValue(item.docValues?.cashFromPartner?item.docValues?.cashFromPartner:0 + item.docValues?.cashFromPartnerSecond+item.docValues?.cashFromPartnerThird)}</td>
                                             <td>{getNameReference(references,item.docValues?.senderId)}</td>
-                                            <td>{item.docValues?.orderAdress}</td>
+                                            {/* <td>{item.docValues?.orderAdress}</td> */}
                                             <td>{`${item.docValues?.comment ? `${item.docValues?.comment}`: ''}`}</td>
                                             <td>{getUserName(item.userId, mainData)}</td>
                                             <td className={styles.rowAction}>
