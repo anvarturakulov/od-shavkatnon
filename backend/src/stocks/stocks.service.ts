@@ -42,7 +42,7 @@ export class StocksService {
     total: number,
     debetKredit: DEBETKREDIT,
     comment: string,
-    transaction?: Transaction,
+    transaction: Transaction,
   ): Promise<Stock> {
     try {
       const where = this.getWhereClause(schet, date, firstSubcontoId, secondSubcontoId);
@@ -91,7 +91,7 @@ export class StocksService {
     }
   }
 
-  async addTwoEntries(entry: EntryCreationAttrs, transaction?: Transaction): Promise<Stock[]> {
+  async addTwoEntries(entry: EntryCreationAttrs, transaction: Transaction): Promise<Stock[]> {
     if (this.checkEntryForDublicate(entry)) {
       return []; // Возвращаем пустой массив, если запись является дубликатом
     }
@@ -123,7 +123,7 @@ export class StocksService {
     return [debetStock, kreditStock];
   }
 
-  async addEntrieToTMZ(entry: EntryCreationAttrs, transaction?: Transaction): Promise<Stock | null> {
+  async addEntrieToTMZ(entry: EntryCreationAttrs, transaction: Transaction): Promise<Stock | null> {
     if (this.checkEntryForDublicate(entry)) {
       return null; // Возвращаем null, чтобы указать, что объект не создавался из-за дубликата
     }
@@ -171,7 +171,7 @@ export class StocksService {
     count: number,
     total: number,
     debetKredit: DEBETKREDIT,
-    transaction?: Transaction
+    transaction: Transaction
   ) {
     const where = this.getWhereClause(schet, date, firstSubcontoId, secondSubcontoId);
     const stock = await this.stockRepository.findOne({ where, transaction });
@@ -189,14 +189,14 @@ export class StocksService {
     try {
       await stock.save({ transaction });
     } catch (error) {
-      console.error('Ошибка при сохранении stock:', error);
-      throw error;
+      console.error(`Failed to save stock for schet=${schet}, date=${date}, debetKredit=${debetKredit}:`, error);
+      throw new Error(`Failed to save stock: ${error.message}`);
     }
 
     await this.recalculateRemains(schet, firstSubcontoId, secondSubcontoId, date, transaction);
   }
 
-  async deleteTwoEntries(entry: EntryCreationAttrs, transaction?: Transaction) {
+  async deleteTwoEntries(entry: EntryCreationAttrs, transaction: Transaction) {
     if (this.checkEntryForDublicate(entry)) return;
 
       await this.deleteEntry(
@@ -221,7 +221,7 @@ export class StocksService {
       )
   }
 
-  async deleteEntrieToTMZ(entry: EntryCreationAttrs, transaction?: Transaction) {
+  async deleteEntrieToTMZ(entry: EntryCreationAttrs, transaction: Transaction) {
     if (this.checkEntryForDublicate(entry)) return;
 
     const tmzSchets = [Schet.S10, Schet.S21];
@@ -260,7 +260,7 @@ export class StocksService {
     firstSubcontoId: number | null,
     secondSubcontoId: number | null,
     fromDate: bigint,
-    transaction?: Transaction
+    transaction: Transaction
   ) {
     const where = {
       schet,
@@ -291,30 +291,23 @@ export class StocksService {
       transaction,
     });
 
-    if (firstSubcontoId == 19606) {
-      console.log('Length ---- ')
-      console.log(stocks.length)
-      for (const stock of stocks) {
-        console.log(stock.dataValues)
-      }
-    }
-    // ----
-
+    
     if (previous) {
       runningCount = previous.remainCount;
       runningTotal = previous.remainTotal;
     }
 
     for (const stock of stocks) {
-      runningCount += stock.count;
-      runningTotal += stock.total;
-      stock.remainCount = runningCount;
-      stock.remainTotal = runningTotal;
-      if (stock.firstSubcontoId == 19606) {
-        console.log('-------------------')
-        console.log(stock.remainTotal)
+      try {
+        runningCount += stock.count;
+        runningTotal += stock.total;
+        stock.remainCount = runningCount;
+        stock.remainTotal = runningTotal;
+        await stock.save({ transaction });
+      } catch (error) {
+        console.error(`Failed to save stock for schet=${schet}, id=${stock.id}:`, error);
+        throw new Error(`Failed to save stock in recalculateRemains: ${error.message}`);
       }
-      await stock.save({ transaction });
     }
   }
 

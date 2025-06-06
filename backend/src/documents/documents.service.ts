@@ -303,6 +303,9 @@ async getAllOrdersForDate(order:boolean, dateStart: number, dateEnd: number) {
   // Обновлённая функция markToDeleteById с транзакциями
   async markToDeleteById(id: number, bot: TelegramBot) {
     const transaction = await this.sequelize.transaction();
+    if (!transaction) {
+      throw new Error('Failed to create transaction');
+    }
     try {
       const document = await this.documentRepository.findOne({
         where: { id },
@@ -328,13 +331,6 @@ async getAllOrdersForDate(order:boolean, dateStart: number, dateEnd: number) {
           transaction,
         });
         if (entrysList.length > 0) {
-          // await Promise.all(
-          //   entrysList.map(async entry => {
-          //     await this.stocksService.deleteTwoEntries(entry, transaction);
-          //     await this.stocksService.deleteEntrieToTMZ(entry, transaction);
-          //     await this.oborotsService.deleteEntry(entry, transaction);
-          //   })
-          // );
 
           for (const entry of entrysList) {
             await this.stocksService.deleteTwoEntries(entry, transaction);
@@ -359,12 +355,11 @@ async getAllOrdersForDate(order:boolean, dateStart: number, dateEnd: number) {
         throw new Error(`Failed to update document status for document with id ${id}`);
       }
 
+      await transaction.commit();
       if (!this.startBotListining) {
         this.startBotListining = true;
         this.botListining(bot);
       }
-
-      await transaction.commit();
       return document;
     } catch (error) {
       await transaction.rollback();

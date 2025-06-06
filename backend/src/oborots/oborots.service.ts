@@ -101,7 +101,7 @@ export class OborotsService {
     }
   }
 
-  async deleteEntry(entry: EntryCreationAttrs, transaction?: Transaction) {
+  async deleteEntry(entry: EntryCreationAttrs, transaction: Transaction) {
     const where = this.getWhereClause(entry);
     const oborot = await this.oborotRepository.findOne({ where, transaction });
     const { count, total } = entry;
@@ -118,17 +118,12 @@ export class OborotsService {
     oborot.count -= count;
     oborot.total -= total;
 
-    // if (oborot.count === 0 && oborot.total === 0) {
-    //   await oborot.destroy({ transaction });
-    // } else {
-    
     try {
       await oborot.save({ transaction });
     } catch (error) {
-      console.error('Ошибка при сохранении oborots:', error);
-      throw error;
+      console.error(`Failed to save oborot for docId=${entry.docId}:`, error);
+      throw new Error(`Failed to save oborot: ${error.message}`);
     }
-    // }
   }
 
   async getOborotByDate(
