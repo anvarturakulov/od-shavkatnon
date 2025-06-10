@@ -76,12 +76,12 @@ export default function Auth() {
             <Htag tag='h3'>{`Иштихон тумани 'Шавкат Нон' хусусий корхонасида ишлаб чикариш ва савдо фаолиятини автоматизация килувчи веб-дастур`}</Htag>
             <Input value={body.email} placeholder='Email' label='' id='email' onChange={(e)=>changeElements(e)}/>
             <Input value={body.password} placeholder='Password' type='password' label='' id='password' onChange={(e)=>changeElements(e)}/>
-            {/* <ReCAPTCHA
+            <ReCAPTCHA
               sitekey={process.env.NEXT_PUBLIC_GOOGLE_RECAPTCHA_KEY ? process.env.NEXT_PUBLIC_GOOGLE_RECAPTCHA_KEY : ' '}
               onChange={() => changeVal()}
-            /> */}
+            />
             <button 
-              disabled={!capVal}
+              disabled={capVal}
               className={styles.button} 
               // appearance='primary' 
               onClick={() => onSubmit(body, setMainData)}>
