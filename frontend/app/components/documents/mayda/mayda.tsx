@@ -151,7 +151,7 @@ export const Mayda = ({className, ...props }: MaydaProps) :JSX.Element => {
             ...currentDocument
         }
         if (user?.id) body.userId = user.id
-        console.log(body)
+        // console.log(body)
         if (!validateBody(body)) {
             showMessage('Хужжатни тулдиришда хатолик бор.', 'error', setMainData);
         } else {

@@ -31,12 +31,12 @@ export const Clients = ({ className, ...props }: ClientProps): JSX.Element => {
   const { clients } = mainData.report;
 
   useEffect(() => {
-    console.log('clients:', clients);
-    console.log('reportData:', clients);
-    console.log('values:', clients?.values);
-    console.log('days:', clients?.days);
-    console.log('clientsList:', clients?.values?.[0]);
-    console.log('clientData:', clients?.values?.[0] ? clientsList : []);
+    // console.log('clients:', clients);
+    // console.log('reportData:', clients);
+    // console.log('values:', clients?.values);
+    // console.log('days:', clients?.days);
+    // console.log('clientsList:', clients?.values?.[0]);
+    // console.log('clientData:', clients?.values?.[0] ? clientsList : []);
   }, [clients]);
 
   // Проверяем, есть ли данные

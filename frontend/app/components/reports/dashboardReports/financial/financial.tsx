@@ -21,7 +21,7 @@ export const Financial = ({ className, data, ...props }: FinancialProps): JSX.El
 
   // Предвычисляем данные с помощью useMemo
   const { financialData, cashData, totals, innerValues } = useMemo(() => {
-    console.time('Data Processing');
+    // console.time('Data Processing');
     const financialData = data?.find((item: any) => item?.reportType === 'FINANCIAL')?.values || [];
     const cashData = data?.find((item: any) => item?.reportType === 'CASH')?.values || [];
 
@@ -43,7 +43,7 @@ export const Financial = ({ className, data, ...props }: FinancialProps): JSX.El
     const innerReport = financialData.find((item: any) => item?.innerReportType === currentFinancialInnerReportType);
     const innerValues = innerReport?.innerValues || [];
 
-    console.timeEnd('Data Processing');
+    // console.timeEnd('Data Processing');
     return { financialData, cashData, totals: { ...totals, incomeAll, outAll }, innerValues };
   }, [data, currentFinancialInnerReportType]);
 

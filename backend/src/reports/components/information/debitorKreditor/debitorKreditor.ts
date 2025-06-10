@@ -12,7 +12,7 @@ export const debitorKreditor = async (
     stocksService: StocksService,
     oborotsService: OborotsService
 ) => {
-    console.time('DebitorKreditor');
+    // console.time('DebitorKreditor');
 
     const tasks = [
         debitorKreditorInners(data, startDate, endDate, Schet.S10, TypeReference.TMZ, 'MATERIAL', stocksService, oborotsService)
@@ -35,7 +35,7 @@ export const debitorKreditor = async (
 
 
     const result = await Promise.all(tasks);
-    console.timeEnd('DebitorKreditor');
+    // console.timeEnd('DebitorKreditor');
     return result;
 };
 

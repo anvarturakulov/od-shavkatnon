@@ -247,7 +247,7 @@ export class DocumentsController {
         
         if (count && analiticId) {
             const doc = await this.documentsService.updateHamirsById(id, count, analiticId)
-            console.log('analiticId --', doc.docValues.analiticId, '----', 'count --', doc.docValues.count)
+            // console.log('analiticId --', doc.docValues.analiticId, '----', 'count --', doc.docValues.count)
 
             const docForProvodka = await this.documentsService.setProvodka(id);
             

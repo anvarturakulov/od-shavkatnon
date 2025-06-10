@@ -97,7 +97,7 @@ export const Doc = ({className, ...props }: DocProps) :JSX.Element => {
 
     
 
-    console.log(contentName)
+    // console.log(contentName)
     return (
         <div className={styles.docBox}>
             {/* <div className={styles.infoBox}>

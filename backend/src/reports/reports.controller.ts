@@ -41,13 +41,13 @@ export class ReportsController {
   @Get('/information')
   @UsePipes(new ValidationPipe({ transform: true }))
   async getInformation(@Query() query: GetEntriesQueryDto) {
-    console.time('Controller');
+    // console.time('Controller');
     const req: QuerySimple = {...requestTransform(query)}
     const report = await this.reportsService.getInformation(req);
     if (!report) {
       throw new NotFoundException(REPORT_NOT_PREPARE);
     }
-    console.timeEnd('Controller');
+    // console.timeEnd('Controller');
     return report;
   }
 

@@ -187,7 +187,12 @@ export class StocksService {
     // await stock.save({ transaction });
 
     try {
-      await stock.save({ transaction });
+      const updatedStock = await stock.save({ transaction });
+      if (!updatedStock) {
+        throw new Error(
+          `Failed to update stock for schet=${schet}, date=${date}, firstSubcontoId=${firstSubcontoId}, secondSubcontoId=${secondSubcontoId}`
+        );
+      }
     } catch (error) {
       console.error(`Failed to save stock for schet=${schet}, date=${date}, debetKredit=${debetKredit}:`, error);
       throw new Error(`Failed to save stock: ${error.message}`);

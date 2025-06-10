@@ -258,7 +258,7 @@ async getAllOrdersForDate(order:boolean, dateStart: number, dateEnd: number) {
 
         if (entrysList.length > 0) {
           for (const item of entrysList) {
-            console.log('Processing entry:', JSON.stringify(item, null, 2)); // Логирование для отладки
+            // console.log('Processing entry:', JSON.stringify(item, null, 2)); // Логирование для отладки
             const entry = await this.entryRepository.create(
               { ...item },
               { transaction }
@@ -423,7 +423,7 @@ async getAllOrdersForDate(order:boolean, dateStart: number, dateEnd: number) {
       }
 
       const entrysList = prepareEntrysList(document, this.foundersIds, true);
-      console.log(entrysList)
+      // console.log(entrysList)
       if (entrysList.length > 0) {
         await Promise.all(
           entrysList.map(async item => {
@@ -645,7 +645,7 @@ async getAllOrdersForDate(order:boolean, dateStart: number, dateEnd: number) {
       include: [DocValues, DocTableItems],
     });
 
-    console.log('documentsFrom.length -- ',documentsFrom.length)
+    // console.log('documentsFrom.length -- ',documentsFrom.length)
 
     const documentsTo = await this.documentRepository.findAll({
       where: {
@@ -661,7 +661,7 @@ async getAllOrdersForDate(order:boolean, dateStart: number, dateEnd: number) {
 
     if (documentsTo && documentsTo.length) return
 
-    console.log('documentsTo.length -- ',documentsTo.length)
+    // console.log('documentsTo.length -- ',documentsTo.length)
 
     const transaction = await this.sequelize.transaction();
     try {
@@ -688,7 +688,7 @@ async getAllOrdersForDate(order:boolean, dateStart: number, dateEnd: number) {
             },
           );
 
-          console.log('docValues -- ', docValues)
+          // console.log('docValues -- ', docValues)
 
           const items = [...item.docTableItems];
           if (items.length > 0 && items[0].analiticId !== -1) {

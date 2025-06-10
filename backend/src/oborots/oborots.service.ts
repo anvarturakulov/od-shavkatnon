@@ -119,7 +119,12 @@ export class OborotsService {
     oborot.total -= total;
 
     try {
-      await oborot.save({ transaction });
+      const updatedOborot = await oborot.save({ transaction });
+      if (!updatedOborot) {
+        throw new Error(
+          `Failed to update oborot for where=${where}`
+        );
+      }
     } catch (error) {
       console.error(`Failed to save oborot for docId=${entry.docId}:`, error);
       throw new Error(`Failed to save oborot: ${error.message}`);

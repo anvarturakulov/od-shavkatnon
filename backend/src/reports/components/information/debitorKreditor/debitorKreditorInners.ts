@@ -73,7 +73,7 @@ export const debitorKreditorInners = async (
     stockService: StocksService,
     oborotsService: OborotsService
 ) => {
-    console.time(`${reportId}-Total`);
+    // console.time(`${reportId}-Total`);
 
     let innersDebitStart: any[] = [];
     let innersKreditStart: any[] = [];
@@ -141,6 +141,6 @@ export const debitorKreditorInners = async (
         innersKreditEnd: [...innersKreditEnd],
     };
 
-    console.timeEnd(`${reportId}-Total`);
+    // console.timeEnd(`${reportId}-Total`);
     return output;
 };

@@ -21,16 +21,16 @@ export const getInformation = (
   let url = process.env.NEXT_PUBLIC_DOMAIN + '/api/reports/information'+'?startDate='+interval.dateStart+'&endDate='+interval.dateEnd
   +'&reportType='+reportType+'&user='+user?.name;
   
-  console.time('Fetch');
+  // console.time('Fetch');
   axios.get(url, config)
     .then(function (response) {
-      console.time('Response');
+      // console.time('Response');
       if (setMainData && !response.data?.user) {
         setMainData('informData', [ ...response.data ]);
         setMainData && setMainData('uploadingDashboard', false)
       }
-      console.timeEnd('Response');
-      console.timeEnd('Fetch');
+      // console.timeEnd('Response');
+      // console.timeEnd('Fetch');
     })
     .catch(function (error) {
       if (setMainData) {

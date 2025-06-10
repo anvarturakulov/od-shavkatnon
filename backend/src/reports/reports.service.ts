@@ -69,9 +69,9 @@ export class ReportsService {
         let references = await this.referencesService.getAllReferences();
         let deliverys = await this.referencesService.getDeliverys();
         let {startDate, endDate, reportType} = queryInformation;
-        console.time('Information');
+        // console.time('Information');
         let inform = await information(references, startDate, endDate, reportType, deliverys, this.sequelize, this.stocksService, this.oborotsService, this.documentsService);
-        console.timeEnd('Information');
+        // console.timeEnd('Information');
         return inform;
     }
 
@@ -92,13 +92,9 @@ export class ReportsService {
 
     async getOborotka(queryOborotka: QuerySimple) {
         let references = await this.referencesService.getAllReferencesFromBase();
-        // console.time('Get Entries');
         let entrys = await this.entriesService.getAllEntries();
-        // console.timeEnd('Get Entries');
         let { startDate, endDate, schet } = queryOborotka;
-        // console.time('Oborotka');
         let result = oborotkaAll(references, entrys, startDate, endDate, schet, this.stocksService, this.oborotsService)
-        // console.timeEnd('Oborotka');
         return result
     }
 
@@ -138,7 +134,7 @@ export class ReportsService {
     async getClients(queryMatOtchet: QuerySimple) {
         let references = await this.referencesService.getAllReferences();
         let { startDate, endDate, sectionId } = queryMatOtchet;
-        console.log('SECTION ID', sectionId)
+        // console.log('SECTION ID', sectionId)
         let result = clients(references, startDate, endDate, sectionId, this.stocksService, this.oborotsService)
         return result
     }

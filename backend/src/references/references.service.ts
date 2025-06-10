@@ -22,9 +22,9 @@ export class ReferencesService implements OnModuleInit {
 
   // Обновление кэша
   private async updateRefList() {
-    console.time('UpdateRefList');
+    // console.time('UpdateRefList');
     this.refList = await this.referenceRepository.findAll({ include: [RefValues] });
-    console.timeEnd('UpdateRefList');
+    // console.timeEnd('UpdateRefList');
   }
 
   // Получение всех references из кэша

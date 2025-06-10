@@ -8,9 +8,9 @@ export async function POST(req: NextRequest) {
     const chatId = process.env.TELEGRAM_USER_IDS;
     const botToken = process.env.BOT_TOKENBACKUP;
 
-    console.log('chatId:', chatId);
-    console.log('botToken:', botToken ? 'Token exists' : 'Token missing');
-    console.log('File size:', file.size / 1024 / 1024, 'MB');
+    // console.log('chatId:', chatId);
+    // console.log('botToken:', botToken ? 'Token exists' : 'Token missing');
+    // console.log('File size:', file.size / 1024 / 1024, 'MB');
 
     if (!chatId || !botToken) {
       return NextResponse.json({ error: 'Missing Telegram configuration' }, { status: 500 });
