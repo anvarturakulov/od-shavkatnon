@@ -332,7 +332,7 @@ async getAllOrdersForDate(order:boolean, dateStart: number, dateEnd: number) {
         });
         if (entrysList.length > 0) {
           console.log(entrysList)
-          
+
           for (const entry of entrysList) {
             await this.stocksService.deleteTwoEntries(entry, transaction);
             await this.stocksService.deleteEntrieToTMZ(entry, transaction);
@@ -424,19 +424,31 @@ async getAllOrdersForDate(order:boolean, dateStart: number, dateEnd: number) {
       }
 
       const entrysList = prepareEntrysList(document, this.foundersIds, true);
+      
+      const entries = await this.entryRepository.findAll({ where: { docId: document.id }, transaction });
+
       // console.log(entrysList)
-      if (entrysList.length > 0) {
-        await Promise.all(
-          entrysList.map(async item => {
-            const entry = await this.entryRepository.create(
-              { ...item },
-              { transaction }
-            );
-            await this.stocksService.addTwoEntries(entry, transaction);
-            await this.stocksService.addEntrieToTMZ(entry, transaction);
-            await this.oborotsService.addEntry(entry, transaction);
-          })
-        );
+      if (entrysList.length > 0 && !entries) {
+        // await Promise.all(
+        //   entrysList.map(async item => {
+        //     const entry = await this.entryRepository.create(
+        //       { ...item },
+        //       { transaction }
+        //     );
+        //     await this.stocksService.addTwoEntries(entry, transaction);
+        //     await this.stocksService.addEntrieToTMZ(entry, transaction);
+        //     await this.oborotsService.addEntry(entry, transaction);
+        //   })
+        // );
+        for (const item of entrysList) {
+          const entry = await this.entryRepository.create(
+            { ...item },
+            { transaction }
+          );
+          await this.stocksService.addTwoEntries(entry, transaction);
+          await this.stocksService.addEntrieToTMZ(entry, transaction);
+          await this.oborotsService.addEntry(entry, transaction);
+        }
       }
 
       await document.update({ docStatus: DocSTATUS.PROVEDEN }, { transaction });
