@@ -318,7 +318,7 @@ export default function Journal({ className, ...props}:JournalProps):JSX.Element
                                                     [styles.disabled] : isDisabled
                                                 })}
                                                 onClick = {() => deleteItemDocument(item.id, item.date, token, setMainData, mainData, setIsDisabled)}
-                                                disabled = {isDisabled}
+                                                // disabled = {isDisabled}
                                                 />
                                             </td>
                                             <td className={styles.rowAction}>
@@ -326,7 +326,7 @@ export default function Journal({ className, ...props}:JournalProps):JSX.Element
                                                     [styles.disabled] : isDisabled
                                                 })}
                                                 onClick = {() => setProvodkaToDoc(item.id, token ,item.docStatus ,setMainData, mainData, item.docValues?.receiverId, item.docValues?.senderId, setIsDisabled)}
-                                                disabled = {isDisabled}
+                                                // disabled = {isDisabled}
                                                 />
                                             </td>
                                         </tr>

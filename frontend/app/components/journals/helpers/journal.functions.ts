@@ -51,10 +51,10 @@ export const deleteItemDocument = (id: number | undefined, docDate: number| unde
   const { user } = mainData.users
   const { contentName } = mainData.window
 
-  setIsDisabled(true);
-  setTimeout(() => {
-    setIsDisabled(false);
-  }, 2000); 
+  // setIsDisabled(true);
+  // setTimeout(() => {
+  //   setIsDisabled(false);
+  // }, 2000); 
 
   if (docDate == undefined) docDate = 0
   const oneDay = (24 * 60 * 60 * 1000)
@@ -78,10 +78,10 @@ export const deleteItemDocument = (id: number | undefined, docDate: number| unde
 }
 
 export const setProvodkaToDoc = (id: number | undefined, token: string | undefined, docStatus: DocSTATUS, setMainData: Function | undefined, mainData: Maindata, receiverId: number | undefined, senderId: number | undefined, setIsDisabled: Function) => {
-  setIsDisabled(true);
-  setTimeout(() => {
-    setIsDisabled(false);
-  }, 2000);
+  // setIsDisabled(true);
+  // setTimeout(() => {
+  //   setIsDisabled(false);
+  // }, 2000);
 
   if (docStatus == DocSTATUS.OPEN) {
     let yes = confirm('Хужжатга провдка берамизми')
