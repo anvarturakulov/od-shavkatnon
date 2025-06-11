@@ -428,7 +428,7 @@ async getAllOrdersForDate(order:boolean, dateStart: number, dateEnd: number) {
       const entries = await this.entryRepository.findAll({ where: { docId: document.id }, transaction });
 
       // console.log(entrysList)
-      if (entrysList.length > 0) {
+      if (entrysList.length > 0 && !entries.length) {
         // await Promise.all(
         //   entrysList.map(async item => {
         //     const entry = await this.entryRepository.create(
