@@ -331,13 +331,14 @@ async getAllOrdersForDate(order:boolean, dateStart: number, dateEnd: number) {
           transaction,
         });
         if (entrysList.length > 0) {
-
+          console.log(entrysList)
+          
           for (const entry of entrysList) {
             await this.stocksService.deleteTwoEntries(entry, transaction);
             await this.stocksService.deleteEntrieToTMZ(entry, transaction);
             await this.oborotsService.deleteEntry(entry, transaction);
           }
-          // await this.entryRepository.destroy({ where: { docId: document.id }, transaction });
+
           const entriesToDelete = await this.entryRepository.findAll({ where: { docId: document.id }, transaction });
           const deletedRows = await this.entryRepository.destroy({ where: { docId: document.id }, transaction });
           if (deletedRows !== entriesToDelete.length) {
