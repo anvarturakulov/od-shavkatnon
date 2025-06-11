@@ -84,7 +84,7 @@ export const SectionItem = ({className, item, sectionType, ...props }: SectionIt
                 </div>
 
                 <div className={styles.row}>
-                    <div className={styles.title}>Пул кирим (махс. сот)</div>
+                    <div className={styles.title}>Пул кирим (буюртма)</div>
                     <div className={styles.value}>{numberValue(item?.incomeFromOrderSumma)}</div>
                 </div>
 
