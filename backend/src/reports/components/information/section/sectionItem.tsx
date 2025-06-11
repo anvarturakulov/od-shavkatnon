@@ -96,7 +96,8 @@ export const sectionItem = async (
   const promises = [
     query(schetCash, TypeQuery.POSUM, startDate, endDate, currentSectionId, null, null, stocksService, oborotsService), // POSUM
     query(schetCash, TypeQuery.KOSUM, startDate, endDate, currentSectionId, null, null, stocksService, oborotsService), // KOSUM (было POSUM, возможно ошибка)
-    query(schetCash, TypeQuery.TDSUM, startDate, endDate, currentSectionId, null, null, stocksService, oborotsService), // TDSUM
+    queryKor(schetCash, Schet.S40, TypeQuery.ODS, startDate, endDate, currentSectionId, null, null, oborotsService), // TDSUMSale
+    queryKor(schetCash, Schet.S41, TypeQuery.ODS, startDate, endDate, currentSectionId, null, null, oborotsService), // TDSUMOrder
     query(schetCash, TypeQuery.TKSUM, startDate, endDate, currentSectionId, null, null, stocksService, oborotsService), // TKSUM
     queryKor(schetCash, schetCash, TypeQuery.ODS, startDate, endDate, currentSectionId, null, null, oborotsService), // MOVEINN
     queryKor(schetCash, schetCash, TypeQuery.OKS, startDate, endDate, currentSectionId, null, null, oborotsService), // MOVEOUT
@@ -105,7 +106,8 @@ export const sectionItem = async (
   const [
     POSUM,
     KOSUM,
-    TDSUM,
+    TDSUMSale,
+    TDSUMOrder,
     TKSUM,
     MOVEINN,
     MOVEOUT,
@@ -116,7 +118,8 @@ export const sectionItem = async (
     sectionId: currentSectionId,
     counts : [...results],
     startBalansSumma: POSUM,
-    incomeFromSaleSumma: TDSUM - MOVEINN,
+    incomeFromSaleSumma: TDSUMSale,
+    incomeFromOrderSumma: TDSUMOrder,
     incomeFromMoveSumma: MOVEINN,
     outFromMoveSumma: MOVEOUT,
     chargesSumma: TKSUM - MOVEOUT,

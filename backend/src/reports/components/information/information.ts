@@ -8,7 +8,7 @@ import { foyda } from "./foyda/foyda";
 import { giving } from "./giving/giving";
 import { material } from "./material/material";
 import { norma } from "./norma/norma";
-import { section } from "./section-Try-Change/section";
+import { section } from "./section/section";
 import { sklad } from "./sklad/sklad";
 import { taking } from "./takingTry-Change/taking";
 import { Reference } from "src/references/reference.model";

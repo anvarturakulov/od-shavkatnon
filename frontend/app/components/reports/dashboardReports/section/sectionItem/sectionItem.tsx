@@ -84,6 +84,11 @@ export const SectionItem = ({className, item, sectionType, ...props }: SectionIt
                 </div>
 
                 <div className={styles.row}>
+                    <div className={styles.title}>Пул кирим (махс. сот)</div>
+                    <div className={styles.value}>{numberValue(item?.incomeFromOrderSumma)}</div>
+                </div>
+
+                <div className={styles.row}>
                     <div className={styles.title}>Пул силжиш кирим</div>
                     <div className={styles.value}>{numberValue(item?.incomeFromMoveSumma)}</div>
                 </div>
