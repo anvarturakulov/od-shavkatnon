@@ -406,64 +406,66 @@ async getAllOrdersForDate(order:boolean, dateStart: number, dateEnd: number) {
   }
 
   // Обновлённая функция setProvodka с транзакциями
-  async setProvodka(id: number) {
-    const transaction = await this.sequelize.transaction();
-    try {
-      const document = await this.documentRepository.findOne({
-        where: { id },
-        include: [DocValues, DocTableItems],
-        transaction,
-        lock: transaction.LOCK.UPDATE,
-      });
+ async setProvodka(id: number) {
+  const transaction = await this.sequelize.transaction();
+  try {
+    const document = await this.documentRepository.findOne({
+      where: { id },
+      transaction,
+      lock: transaction.LOCK.UPDATE, // Блокировка на таблице documents
+    });
 
-      if (!document) {
-        throw new Error(`Document with id ${id} not found`);
-      }
-
-      if (document.docStatus === DocSTATUS.PROVEDEN) {
-        throw new Error(`Document with id ${id} is already proved`);
-      }
-
-      const entrysList = prepareEntrysList(document, this.foundersIds, true);
-      
-      const entries = await this.entryRepository.findAll({ where: { docId: document.id }, transaction });
-      
-      if (entries.length > 0) {
-        throw new Error(`Document with id ${id} is already has entries`);
-      }
-      // console.log(entrysList)
-      if (entrysList.length > 0 && !entries.length) {
-        // await Promise.all(
-        //   entrysList.map(async item => {
-        //     const entry = await this.entryRepository.create(
-        //       { ...item },
-        //       { transaction }
-        //     );
-        //     await this.stocksService.addTwoEntries(entry, transaction);
-        //     await this.stocksService.addEntrieToTMZ(entry, transaction);
-        //     await this.oborotsService.addEntry(entry, transaction);
-        //   })
-        // );
-        for (const item of entrysList) {
-          const entry = await this.entryRepository.create(
-            { ...item },
-            { transaction }
-          );
-          await this.stocksService.addTwoEntries(entry, transaction);
-          await this.stocksService.addEntrieToTMZ(entry, transaction);
-          await this.oborotsService.addEntry(entry, transaction);
-        }
-      }
-
-      await document.update({ docStatus: DocSTATUS.PROVEDEN }, { transaction });
-
-      await transaction.commit();
-      return document;
-    } catch (error) {
-      await transaction.rollback();
-      throw new Error(`Failed to set provodka: ${error.message}`);
+    if (!document) {
+      throw new Error(`Document with id ${id} not found`);
     }
+
+    if (document.docStatus === DocSTATUS.PROVEDEN) {
+      throw new Error(`Document with id ${id} is already proved`);
+    }
+    
+
+    const documentWithRelations = await this.documentRepository.findOne({
+      where: { id },
+      include: [
+        { model: DocValues }, // Опционально, если DocValues тоже может быть null
+        { model: DocTableItems }, // Опционально для DocTableItems
+      ],
+      transaction,
+    });
+
+    if (!documentWithRelations) {
+      throw new Error(`Document with id ${id} not found`);
+    }
+
+    const entrysList = prepareEntrysList(documentWithRelations, this.foundersIds, true);
+
+    const entries = await this.entryRepository.findAll({ where: { docId: document.id }, transaction });
+
+    if (entries.length > 0) {
+      throw new Error(`Document with id ${id} is already has entries`);
+    }
+
+    if (entrysList.length > 0 && !entries.length) {
+      for (const item of entrysList) {
+        const entry = await this.entryRepository.create(
+          { ...item },
+          { transaction }
+        );
+        await this.stocksService.addTwoEntries(entry, transaction);
+        await this.stocksService.addEntrieToTMZ(entry, transaction);
+        await this.oborotsService.addEntry(entry, transaction);
+      }
+    }
+
+    await document.update({ docStatus: DocSTATUS.PROVEDEN }, { transaction });
+
+    await transaction.commit();
+    return document;
+  } catch (error) {
+    await transaction.rollback();
+    throw new Error(`Failed to set provodka: ${error.message}`);
   }
+}
 
   // Обновлённая функция createMany с транзакциями
   async createMany(list: any[]) {
