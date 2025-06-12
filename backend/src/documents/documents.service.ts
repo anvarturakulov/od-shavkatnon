@@ -331,7 +331,7 @@ async getAllOrdersForDate(order:boolean, dateStart: number, dateEnd: number) {
           transaction,
         });
         if (entrysList.length > 0) {
-          console.log(entrysList)
+          // console.log(entrysList)
 
           for (const entry of entrysList) {
             await this.stocksService.deleteTwoEntries(entry, transaction);
@@ -413,6 +413,7 @@ async getAllOrdersForDate(order:boolean, dateStart: number, dateEnd: number) {
         where: { id },
         include: [DocValues, DocTableItems],
         transaction,
+        lock: transaction.LOCK.UPDATE,
       });
 
       if (!document) {
