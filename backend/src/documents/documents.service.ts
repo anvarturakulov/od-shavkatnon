@@ -426,7 +426,10 @@ async getAllOrdersForDate(order:boolean, dateStart: number, dateEnd: number) {
       const entrysList = prepareEntrysList(document, this.foundersIds, true);
       
       const entries = await this.entryRepository.findAll({ where: { docId: document.id }, transaction });
-
+      
+      if (entries.length > 0) {
+        throw new Error(`Document with id ${id} is already has entries`);
+      }
       // console.log(entrysList)
       if (entrysList.length > 0 && !entries.length) {
         // await Promise.all(
